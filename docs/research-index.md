@@ -2,6 +2,8 @@
 
 Living research is kept in the GitHub Wiki. Stable specs and accepted decisions are promoted back into this repository.
 
+If the Wiki needs to be initialized manually, seed pages are available in `docs/wiki-seed/`.
+
 ## Wiki Pages
 
 - Home
