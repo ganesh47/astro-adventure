@@ -55,8 +55,7 @@ jobs:
     needs: repo-hygiene
     env:
       UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_IMAGE: unityci/editor:ubuntu-6000.4.2f1-base-3.2.2
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -65,7 +64,7 @@ jobs:
         if: env.UNITY_LICENSE == ''
         run: |
           echo "::notice::UNITY_LICENSE is not configured, so Unity scene validation is skipped."
-          echo "::notice::Add UNITY_LICENSE, UNITY_EMAIL, and UNITY_PASSWORD repository secrets to enable this job."
+          echo "::notice::Add a UNITY_LICENSE repository secret to enable this job."
 
       - name: Cache Unity Library
         if: env.UNITY_LICENSE != ''
@@ -78,18 +77,38 @@ jobs:
 
       - name: Run Unity scene validator
         if: env.UNITY_LICENSE != ''
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          projectPath: AstroAdventureM0
-          unityVersion: 6000.4.4f1
-          targetPlatform: StandaloneLinux64
-          buildMethod: M0SceneValidator.Run
-          buildsPath: artifacts/build-placeholder
-          allowDirtyBuild: true
+        run: |
+          set -euo pipefail
+          if [[ "${UNITY_LICENSE}" == \<* ]]; then
+            echo "::notice::UNITY_LICENSE contains a local Unity entitlement XML, which is not portable to GitHub-hosted Docker runners."
+            echo "::notice::Set UNITY_LICENSE to a legacy .ulf license file, or run this job on a self-hosted Unity runner, to enable full Unity scene validation."
+            exit 0
+          fi
+
+          mkdir -p artifacts/scene-validation
+          cleanup_permissions() {
+            sudo chown -R "$(id -u):$(id -g)" AstroAdventureM0/Library artifacts/scene-validation 2>/dev/null || true
+          }
+          trap cleanup_permissions EXIT
+          docker run --rm \
+            -e HOME=/tmp/unity-home \
+            -e UNITY_LICENSE \
+            -e ASTRO_SCENE_VALIDATION_DIR=/workspace/artifacts/scene-validation \
+            -v "${PWD}:/workspace" \
+            -w /workspace \
+            "${UNITY_IMAGE}" \
+            bash -lc '
+              set -euo pipefail
+              mkdir -p "${HOME}/.local/share/unity3d/Unity"
+              printf "%s" "${UNITY_LICENSE}" > "${HOME}/.local/share/unity3d/Unity/Unity_lic.ulf"
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -quit \
+                -projectPath /workspace/AstroAdventureM0 \
+                -executeMethod M0SceneValidator.Run \
+                -logFile /workspace/artifacts/scene-validation/unity-validation.log
+            '
 
       - name: Create validation MP4
         if: always() && env.UNITY_LICENSE != ''

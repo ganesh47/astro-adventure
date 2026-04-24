@@ -4,7 +4,7 @@ Minimal Unity proof project for `M0: Xbox Dev Mode Proof`.
 
 ## Open
 
-Open this folder in Unity Hub or directly with Unity `6000.4.4f1`:
+Open this folder in Unity Hub or directly with Unity `6000.4.2f1`:
 
 ```text
 C:\Users\vaunz\projects\Astro-Adventure\astro-adventure\AstroAdventureM0
@@ -43,19 +43,19 @@ The validator opens Unity in batch mode, checks the scene structure and camera f
 artifacts/scene-validation/
 ```
 
-The GitHub Actions workflow `.github/workflows/m0-scene-validation.yml` runs repository hygiene immediately. Full Unity scene validation runs through GameCI after these repository secrets are configured:
+The GitHub Actions workflow `.github/workflows/m0-scene-validation.yml` runs repository hygiene immediately. Full Unity scene validation runs in a matching GameCI Unity editor Docker image after this repository secret is configured:
 
 ```text
 UNITY_LICENSE
-UNITY_EMAIL
-UNITY_PASSWORD
 ```
+
+For GitHub-hosted Docker validation, use the full contents of a legacy `.ulf` license file. Local Unity entitlement XML files are machine-bound; the workflow detects them and skips full Unity validation with a notice instead of failing the whole CI run.
 
 Setup references:
 
 - GitHub repository secrets: <https://docs.github.com/actions/security-guides/encrypted-secrets>
 - GameCI Unity activation: <https://game.ci/docs/github/activation/>
-- GameCI Unity builder: <https://game.ci/docs/github/builder/>
+- GameCI Unity Docker images: <https://game.ci/docs/docker/docker-images/>
 
 ## Notes
 
