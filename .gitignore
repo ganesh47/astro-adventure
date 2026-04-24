@@ -65,6 +65,9 @@ $RECYCLE.BIN/
 .env.*
 !.env.example
 
+# Local validation output
+artifacts/
+
 # Private or restricted artifacts must not be committed here.
 *.pfx
 *.p12
@@ -75,4 +78,3 @@ $RECYCLE.BIN/
 *.jks
 *.key
 *.pem
-

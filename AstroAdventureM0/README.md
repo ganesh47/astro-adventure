@@ -29,6 +29,20 @@ Assets/Scenes/M0_DeploymentProof.unity
 
 The scene should show three destinations, a small explorer ship, focus text, and status text. Controller input should move the ship, cycle focus, scan a destination, and briefly pulse haptics when supported.
 
+## Automated Validation
+
+From the public repo root, run:
+
+```bash
+tools/validate-m0-scene.sh
+```
+
+The validator opens Unity in batch mode, checks the scene structure and camera framing, captures focus/scan screenshots, and creates a short MP4 when `ffmpeg` is available. Output is local-only:
+
+```text
+artifacts/scene-validation/
+```
+
 ## Notes
 
 - Generated folders such as `Library/`, `Logs/`, `Temp/`, `Obj/`, and `UserSettings/` are ignored.
