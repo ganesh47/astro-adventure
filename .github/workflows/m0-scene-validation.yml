@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Reject tracked Unity generated folders
         run: |
@@ -59,7 +59,7 @@ jobs:
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Explain skipped Unity validation
         if: env.UNITY_LICENSE == ''
@@ -69,7 +69,7 @@ jobs:
 
       - name: Cache Unity Library
         if: env.UNITY_LICENSE != ''
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: AstroAdventureM0/Library
           key: Library-AstroAdventureM0-${{ runner.os }}-${{ hashFiles('AstroAdventureM0/Packages/packages-lock.json', 'AstroAdventureM0/ProjectSettings/ProjectVersion.txt') }}
@@ -106,7 +106,7 @@ jobs:
 
       - name: Upload scene validation artifacts
         if: always() && env.UNITY_LICENSE != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: m0-scene-validation
           path: artifacts/scene-validation
