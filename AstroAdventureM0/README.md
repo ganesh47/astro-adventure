@@ -43,6 +43,20 @@ The validator opens Unity in batch mode, checks the scene structure and camera f
 artifacts/scene-validation/
 ```
 
+The GitHub Actions workflow `.github/workflows/m0-scene-validation.yml` runs repository hygiene immediately. Full Unity scene validation runs through GameCI after these repository secrets are configured:
+
+```text
+UNITY_LICENSE
+UNITY_EMAIL
+UNITY_PASSWORD
+```
+
+Setup references:
+
+- GitHub repository secrets: <https://docs.github.com/actions/security-guides/encrypted-secrets>
+- GameCI Unity activation: <https://game.ci/docs/github/activation/>
+- GameCI Unity builder: <https://game.ci/docs/github/builder/>
+
 ## Notes
 
 - Generated folders such as `Library/`, `Logs/`, `Temp/`, `Obj/`, and `UserSettings/` are ignored.

@@ -1,0 +1,113 @@
+name: M0 Scene Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/m0-scene-validation.yml"
+      - "AstroAdventureM0/**"
+      - "tools/validate-m0-scene.sh"
+      - ".gitignore"
+  pull_request:
+    paths:
+      - ".github/workflows/m0-scene-validation.yml"
+      - "AstroAdventureM0/**"
+      - "tools/validate-m0-scene.sh"
+      - ".gitignore"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repo-hygiene:
+    name: Repository Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reject tracked Unity generated folders
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -E '(^|/)AstroAdventureM0/(Library|Logs|UserSettings|Temp|Obj|Build|Builds)/'; then
+            echo "Generated Unity folders must not be tracked."
+            exit 1
+          fi
+
+      - name: Check validation script syntax
+        run: bash -n tools/validate-m0-scene.sh
+
+      - name: Check required M0 files
+        run: |
+          set -euo pipefail
+          test -f AstroAdventureM0/Assets/Scenes/M0_DeploymentProof.unity
+          test -f AstroAdventureM0/Assets/Scripts/M0ControllerTest.cs
+          test -f AstroAdventureM0/Assets/Editor/M0SceneValidator.cs
+          test -f AstroAdventureM0/Assets/Input/AstroAdventureControls.inputactions
+          test -f AstroAdventureM0/Packages/manifest.json
+          test -f AstroAdventureM0/ProjectSettings/ProjectVersion.txt
+
+  unity-scene-validation:
+    name: Unity Scene Validation
+    runs-on: ubuntu-latest
+    needs: repo-hygiene
+    env:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Explain skipped Unity validation
+        if: env.UNITY_LICENSE == ''
+        run: |
+          echo "::notice::UNITY_LICENSE is not configured, so Unity scene validation is skipped."
+          echo "::notice::Add UNITY_LICENSE, UNITY_EMAIL, and UNITY_PASSWORD repository secrets to enable this job."
+
+      - name: Cache Unity Library
+        if: env.UNITY_LICENSE != ''
+        uses: actions/cache@v4
+        with:
+          path: AstroAdventureM0/Library
+          key: Library-AstroAdventureM0-${{ runner.os }}-${{ hashFiles('AstroAdventureM0/Packages/packages-lock.json', 'AstroAdventureM0/ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: |
+            Library-AstroAdventureM0-${{ runner.os }}-
+
+      - name: Run Unity scene validator
+        if: env.UNITY_LICENSE != ''
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: AstroAdventureM0
+          unityVersion: 6000.4.4f1
+          targetPlatform: StandaloneLinux64
+          buildMethod: M0SceneValidator.Run
+          buildsPath: artifacts/build-placeholder
+          allowDirtyBuild: true
+
+      - name: Create validation MP4
+        if: always() && env.UNITY_LICENSE != ''
+        run: |
+          set -euo pipefail
+          if compgen -G "artifacts/scene-validation/*.png" > /dev/null && command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -y \
+              -framerate 1 \
+              -pattern_type glob \
+              -i "artifacts/scene-validation/*.png" \
+              -vf "scale=1280:-2,format=yuv420p" \
+              "artifacts/scene-validation/m0-scene-validation.mp4"
+          fi
+
+      - name: Upload scene validation artifacts
+        if: always() && env.UNITY_LICENSE != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: m0-scene-validation
+          path: artifacts/scene-validation
+          if-no-files-found: warn
