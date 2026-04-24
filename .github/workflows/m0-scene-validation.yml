@@ -54,20 +54,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: repo-hygiene
     env:
-      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
       UNITY_IMAGE: unityci/editor:ubuntu-6000.4.2f1-base-3.2.2
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Explain skipped Unity validation
-        if: env.UNITY_LICENSE == ''
+      - name: Explain skipped Unity validation secrets
+        if: env.UNITY_SERIAL == '' || env.UNITY_EMAIL == '' || env.UNITY_PASSWORD == ''
         run: |
-          echo "::notice::UNITY_LICENSE is not configured, so Unity scene validation is skipped."
-          echo "::notice::Add a UNITY_LICENSE repository secret to enable this job."
+          echo "::notice::Unity scene validation is skipped until UNITY_SERIAL, UNITY_EMAIL, and UNITY_PASSWORD are configured."
+          echo "::notice::UNITY_SERIAL is extracted from the Unity Personal .ulf DeveloperData field."
 
       - name: Cache Unity Library
-        if: env.UNITY_LICENSE != ''
+        if: env.UNITY_SERIAL != '' && env.UNITY_EMAIL != '' && env.UNITY_PASSWORD != ''
         uses: actions/cache@v5
         with:
           path: AstroAdventureM0/Library
@@ -76,15 +78,9 @@ jobs:
             Library-AstroAdventureM0-${{ runner.os }}-
 
       - name: Run Unity scene validator
-        if: env.UNITY_LICENSE != ''
+        if: env.UNITY_SERIAL != '' && env.UNITY_EMAIL != '' && env.UNITY_PASSWORD != ''
         run: |
           set -euo pipefail
-          if [[ "${UNITY_LICENSE}" == \<* ]]; then
-            echo "::notice::UNITY_LICENSE contains a local Unity entitlement XML, which is not portable to GitHub-hosted Docker runners."
-            echo "::notice::Set UNITY_LICENSE to a legacy .ulf license file, or run this job on a self-hosted Unity runner, to enable full Unity scene validation."
-            exit 0
-          fi
-
           mkdir -p artifacts/scene-validation
           cleanup_permissions() {
             sudo chown -R "$(id -u):$(id -g)" AstroAdventureM0/Library artifacts/scene-validation 2>/dev/null || true
@@ -92,7 +88,9 @@ jobs:
           trap cleanup_permissions EXIT
           docker run --rm \
             -e HOME=/tmp/unity-home \
-            -e UNITY_LICENSE \
+            -e UNITY_EMAIL \
+            -e UNITY_PASSWORD \
+            -e UNITY_SERIAL \
             -e ASTRO_SCENE_VALIDATION_DIR=/workspace/artifacts/scene-validation \
             -v "${PWD}:/workspace" \
             -w /workspace \
@@ -100,7 +98,26 @@ jobs:
             bash -lc '
               set -euo pipefail
               mkdir -p "${HOME}/.local/share/unity3d/Unity"
-              printf "%s" "${UNITY_LICENSE}" > "${HOME}/.local/share/unity3d/Unity/Unity_lic.ulf"
+              return_license() {
+                unity-editor \
+                  -batchmode \
+                  -nographics \
+                  -quit \
+                  -returnlicense \
+                  -username "${UNITY_EMAIL}" \
+                  -password "${UNITY_PASSWORD}" \
+                  -logFile /workspace/artifacts/scene-validation/unity-return-license.log \
+                  >/dev/null 2>&1 || true
+              }
+              trap return_license EXIT
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -quit \
+                -username "${UNITY_EMAIL}" \
+                -password "${UNITY_PASSWORD}" \
+                -serial "${UNITY_SERIAL}" \
+                -logFile /workspace/artifacts/scene-validation/unity-activation.log
               unity-editor \
                 -batchmode \
                 -nographics \
@@ -111,7 +128,7 @@ jobs:
             '
 
       - name: Create validation MP4
-        if: always() && env.UNITY_LICENSE != ''
+        if: always() && env.UNITY_SERIAL != '' && env.UNITY_EMAIL != '' && env.UNITY_PASSWORD != ''
         run: |
           set -euo pipefail
           if compgen -G "artifacts/scene-validation/*.png" > /dev/null && command -v ffmpeg >/dev/null 2>&1; then
@@ -124,7 +141,7 @@ jobs:
           fi
 
       - name: Upload scene validation artifacts
-        if: always() && env.UNITY_LICENSE != ''
+        if: always() && env.UNITY_SERIAL != '' && env.UNITY_EMAIL != '' && env.UNITY_PASSWORD != ''
         uses: actions/upload-artifact@v6
         with:
           name: m0-scene-validation
