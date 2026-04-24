@@ -1,0 +1,78 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+
+# Unity generated files
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+sysinfo.txt
+
+# Unity package/cache output
+*.unitypackage
+*.app
+*.apk
+*.aab
+*.ipa
+*.xcodeproj
+*.xcworkspace
+ExportedObj/
+StreamingAssets/aa.meta
+Assets/AssetStoreTools*
+
+# Addressables, builds, and profiling output
+ServerData/
+AddressableAssetsData/*/*.bin*
+addressables_content_state.bin
+*.traceevents
+*.data
+
+# IDE/editor folders
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Private or restricted artifacts must not be committed here.
+*.pfx
+*.p12
+*.cer
+*.cert
+*.mobileprovision
+*.keystore
+*.jks
+*.key
+*.pem
+

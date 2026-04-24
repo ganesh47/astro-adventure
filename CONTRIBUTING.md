@@ -14,6 +14,8 @@ Astro Adventure uses issue-first development. Please open or reference a GitHub 
 
 Only add assets that are original, public-domain, permissively licensed, or otherwise approved for public redistribution. Paid marketplace assets, restricted SDK samples, and generated builds with restricted dependencies belong outside this repository.
 
+Unity-generated files, binary assets, Git LFS timing, and public/private artifact boundaries are covered in `docs/specs/unity-binary-asset-hygiene.md`.
+
 ## Kid Safety
 
 Content should be age-appropriate for kids ages 8-12, avoid manipulative reward loops, use encouraging explanations, and support accessibility from the start.

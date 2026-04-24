@@ -19,5 +19,8 @@ If the Wiki needs to be initialized manually, seed pages are available in `docs/
 
 - `docs/vision.md`
 - `docs/architecture.md`
+- `docs/specs/m0-xbox-dev-mode-proof.md`
+- `docs/specs/pc-toolchain-checklist.md`
+- `docs/specs/multi-agent-prioritization.md`
 - `docs/decisions/0001-unity-first.md`
 - `assets/manifest/assets.csv`
