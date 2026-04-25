@@ -21,12 +21,20 @@ void AAstroAdventurePlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAstroAdventurePlayerController::Confirm);
     InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, IE_Pressed, this, &AAstroAdventurePlayerController::Confirm);
 
-    InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAstroAdventurePlayerController::Back);
+    InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
     InputComponent->BindKey(EKeys::BackSpace, IE_Pressed, this, &AAstroAdventurePlayerController::Back);
     InputComponent->BindKey(EKeys::Gamepad_FaceButton_Right, IE_Pressed, this, &AAstroAdventurePlayerController::Back);
 
     InputComponent->BindKey(EKeys::H, IE_Pressed, this, &AAstroAdventurePlayerController::Hint);
     InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, IE_Pressed, this, &AAstroAdventurePlayerController::Hint);
+
+    InputComponent->BindKey(EKeys::M, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
+    InputComponent->BindKey(EKeys::Gamepad_LeftTrigger, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
+
+    InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
+    InputComponent->BindKey(EKeys::Gamepad_RightTrigger, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
+
+    InputComponent->BindKey(EKeys::Gamepad_Special_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
 
     InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
     InputComponent->BindKey(EKeys::Gamepad_DPad_Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
@@ -37,8 +45,8 @@ void AAstroAdventurePlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerTwo);
     InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerThree);
 
-    InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAstroAdventurePlayerController::QuitGame);
-    InputComponent->BindKey(EKeys::Gamepad_Special_Right, IE_Pressed, this, &AAstroAdventurePlayerController::QuitGame);
+    InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
+    InputComponent->BindKey(EKeys::Gamepad_Special_Right, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
 }
 
 void AAstroAdventurePlayerController::FocusNext()
@@ -81,11 +89,35 @@ void AAstroAdventurePlayerController::Hint()
     }
 }
 
+void AAstroAdventurePlayerController::MoreInfo()
+{
+    if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
+    {
+        GameMode->ToggleDeepDive();
+    }
+}
+
+void AAstroAdventurePlayerController::Passport()
+{
+    if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
+    {
+        GameMode->TogglePassport();
+    }
+}
+
+void AAstroAdventurePlayerController::Pause()
+{
+    if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
+    {
+        GameMode->TogglePause();
+    }
+}
+
 void AAstroAdventurePlayerController::AnswerUp()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
-        GameMode->MoveQuizFocus(-1);
+        GameMode->FocusPreviousDestination();
     }
 }
 
@@ -93,7 +125,7 @@ void AAstroAdventurePlayerController::AnswerDown()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
-        GameMode->MoveQuizFocus(1);
+        GameMode->FocusNextDestination();
     }
 }
 

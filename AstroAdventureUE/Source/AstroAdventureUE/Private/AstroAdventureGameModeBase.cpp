@@ -7,19 +7,22 @@
 #include "AstroPlayerPawn.h"
 #include "AstroProgressSaveGame.h"
 #include "Algo/Count.h"
-#include "Camera/CameraActor.h"
+#include "Components/LightComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/PointLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 const TCHAR* AAstroAdventureGameModeBase::SaveSlotName = TEXT("AstroAdventureM0Progress");
 
 AAstroAdventureGameModeBase::AAstroAdventureGameModeBase()
 {
-    MissionId = TEXT("M0_DeploymentProof");
+    MissionId = TEXT("SolarPassport_FirstExpedition");
     DefaultPawnClass = AAstroPlayerPawn::StaticClass();
     PlayerControllerClass = AAstroAdventurePlayerController::StaticClass();
     HUDClass = AAstroMissionHUD::StaticClass();
@@ -28,71 +31,96 @@ AAstroAdventureGameModeBase::AAstroAdventureGameModeBase()
 void AAstroAdventureGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
+    UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), TEXT("DisableAllScreenMessages"));
+
     BuildLessons();
     LoadProgress();
     SpawnRuntimeScene();
+    CurrentScreen = EAstroMissionScreen::AgeSelect;
     UpdateDestinationFocus();
+}
+
+void AAstroAdventureGameModeBase::AddLesson(
+    const TCHAR* Id,
+    const TCHAR* Name,
+    const TCHAR* QuickFact,
+    const TCHAR* WowFact,
+    const TCHAR* VisualClue,
+    const TCHAR* Ages4To6,
+    const TCHAR* Ages7To9,
+    const TCHAR* Ages10To12,
+    const TCHAR* DeepDive,
+    const TCHAR* Compare,
+    const TCHAR* Glossary,
+    const TCHAR* SourceUrl,
+    const TCHAR* QuizPrompt,
+    const TCHAR* CorrectId,
+    const TCHAR* CorrectText,
+    const TCHAR* WrongOneId,
+    const TCHAR* WrongOneText,
+    const TCHAR* WrongTwoId,
+    const TCHAR* WrongTwoText,
+    const TCHAR* CorrectFeedback,
+    const TCHAR* RetryFeedback,
+    const TCHAR* Hint,
+    const FLinearColor& Color,
+    const float MapScale,
+    const bool bRequired)
+{
+    auto MakeChoice = [](const TCHAR* ChoiceId, const TCHAR* Text)
+    {
+        FAstroQuizChoice Choice;
+        Choice.ChoiceId = FName(ChoiceId);
+        Choice.Text = FText::FromString(Text);
+        return Choice;
+    };
+
+    FAstroDestinationLesson Lesson;
+    Lesson.DestinationId = FName(Id);
+    Lesson.DisplayName = FText::FromString(Name);
+    Lesson.DiscoveryFact = FText::FromString(QuickFact);
+    Lesson.WowFact = FText::FromString(WowFact);
+    Lesson.VisualClue = FText::FromString(VisualClue);
+    Lesson.Ages4To6Text = FText::FromString(Ages4To6);
+    Lesson.Ages7To9Text = FText::FromString(Ages7To9);
+    Lesson.Ages10To12Text = FText::FromString(Ages10To12);
+    Lesson.DeepDiveText = FText::FromString(DeepDive);
+    Lesson.CompareFact = FText::FromString(Compare);
+    Lesson.GlossaryText = FText::FromString(Glossary);
+    Lesson.SourceUrl = SourceUrl;
+    Lesson.QuizPrompt = FText::FromString(QuizPrompt);
+    Lesson.Choices = {
+        MakeChoice(CorrectId, CorrectText),
+        MakeChoice(WrongOneId, WrongOneText),
+        MakeChoice(WrongTwoId, WrongTwoText)
+    };
+    Lesson.CorrectChoiceId = FName(CorrectId);
+    Lesson.CorrectFeedback = FText::FromString(CorrectFeedback);
+    Lesson.RetryFeedback = FText::FromString(RetryFeedback);
+    Lesson.HintText = FText::FromString(Hint);
+    Lesson.DisplayColor = Color;
+    Lesson.MapScale = MapScale;
+    Lesson.bRequiredForMission = bRequired;
+    Lessons.Add(Lesson);
 }
 
 void AAstroAdventureGameModeBase::BuildLessons()
 {
     Lessons.Reset();
 
-    auto MakeChoice = [](const TCHAR* Id, const TCHAR* Text)
-    {
-        FAstroQuizChoice Choice;
-        Choice.ChoiceId = FName(Id);
-        Choice.Text = FText::FromString(Text);
-        return Choice;
-    };
-
-    FAstroDestinationLesson Mercury;
-    Mercury.DestinationId = TEXT("mercury");
-    Mercury.DisplayName = FText::FromString(TEXT("Mercury"));
-    Mercury.DiscoveryFact = FText::FromString(TEXT("Mercury is the closest planet to the Sun."));
-    Mercury.Ages4To6Text = FText::FromString(TEXT("Mercury is tiny and super close to the Sun."));
-    Mercury.Ages7To9Text = FText::FromString(TEXT("Mercury is the closest planet to the Sun. It zooms around fast!"));
-    Mercury.Ages10To12Text = FText::FromString(TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."));
-    Mercury.SourceUrl = TEXT("https://science.nasa.gov/mercury/");
-    Mercury.QuizPrompt = FText::FromString(TEXT("Which clue helps identify Mercury?"));
-    Mercury.Choices = {MakeChoice(TEXT("sun"), TEXT("It is the closest planet to the Sun.")), MakeChoice(TEXT("rust"), TEXT("It is famous for red rusty dust.")), MakeChoice(TEXT("ice"), TEXT("It is an icy moon of Jupiter."))};
-    Mercury.CorrectChoiceId = TEXT("sun");
-    Mercury.CorrectFeedback = FText::FromString(TEXT("Nice scan! Mercury is the Sun-neighbor clue."));
-    Mercury.RetryFeedback = FText::FromString(TEXT("Almost. Look for the clue about the Sun."));
-    Mercury.HintText = FText::FromString(TEXT("Look for the clue that mentions the Sun."));
-    Lessons.Add(Mercury);
-
-    FAstroDestinationLesson Mars;
-    Mars.DestinationId = TEXT("mars");
-    Mars.DisplayName = FText::FromString(TEXT("Mars"));
-    Mars.DiscoveryFact = FText::FromString(TEXT("Mars looks red because rusty iron is mixed into its dust."));
-    Mars.Ages4To6Text = FText::FromString(TEXT("Mars is the red planet."));
-    Mars.Ages7To9Text = FText::FromString(TEXT("Mars looks red because rusty iron is mixed into its dust."));
-    Mars.Ages10To12Text = FText::FromString(TEXT("Mars has iron-rich dust and rocks. Oxidation, a rusting process, gives much of the surface its reddish color."));
-    Mars.SourceUrl = TEXT("https://science.nasa.gov/mars/");
-    Mars.QuizPrompt = FText::FromString(TEXT("Why does Mars look red from far away?"));
-    Mars.Choices = {MakeChoice(TEXT("rust"), TEXT("Rusty iron is mixed into its dust.")), MakeChoice(TEXT("plants"), TEXT("It is covered in red plants.")), MakeChoice(TEXT("jupiter"), TEXT("Jupiter shines red light on it."))};
-    Mars.CorrectChoiceId = TEXT("rust");
-    Mars.CorrectFeedback = FText::FromString(TEXT("Great detective work! Rusty dust gives Mars its red color."));
-    Mars.RetryFeedback = FText::FromString(TEXT("Try again. Which answer talks about red dust?"));
-    Mars.HintText = FText::FromString(TEXT("Rust can turn iron reddish."));
-    Lessons.Add(Mars);
-
-    FAstroDestinationLesson Europa;
-    Europa.DestinationId = TEXT("europa");
-    Europa.DisplayName = FText::FromString(TEXT("Europa"));
-    Europa.DiscoveryFact = FText::FromString(TEXT("Europa is an icy moon of Jupiter that may hide an ocean under the ice."));
-    Europa.Ages4To6Text = FText::FromString(TEXT("Europa is an icy moon."));
-    Europa.Ages7To9Text = FText::FromString(TEXT("Europa is an icy moon of Jupiter. Scientists hunt for ocean clues under the ice."));
-    Europa.Ages10To12Text = FText::FromString(TEXT("Europa's icy shell and evidence for a salty ocean make it an important place to study how moons can hold liquid water."));
-    Europa.SourceUrl = TEXT("https://science.nasa.gov/jupiter/moons/europa/");
-    Europa.QuizPrompt = FText::FromString(TEXT("What kind of world is Europa?"));
-    Europa.Choices = {MakeChoice(TEXT("icy_moon"), TEXT("An icy moon of Jupiter.")), MakeChoice(TEXT("small_planet"), TEXT("The smallest planet near the Sun.")), MakeChoice(TEXT("red_planet"), TEXT("A red planet with rusty dust."))};
-    Europa.CorrectChoiceId = TEXT("icy_moon");
-    Europa.CorrectFeedback = FText::FromString(TEXT("Excellent explorer! Europa is Jupiter's icy moon."));
-    Europa.RetryFeedback = FText::FromString(TEXT("Try again. Europa travels around Jupiter."));
-    Europa.HintText = FText::FromString(TEXT("Europa travels around Jupiter."));
-    Lessons.Add(Europa);
+    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is our star and the center of this expedition."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look for the warm glowing giant with safe-distance rings."), TEXT("The Sun is a bright star."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("What is the Sun?"), TEXT("star"), TEXT("A star that lights the Solar System."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.8f, true);
+    AddLesson(TEXT("mercury"), TEXT("Mercury"), TEXT("Mercury is the closest planet to the Sun."), TEXT("It has a very short year because it races around the Sun quickly."), TEXT("Small gray world with craters and a heat badge."), TEXT("Mercury is tiny and close to the Sun."), TEXT("Mercury is closest to the Sun. It zooms around fast!"), TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."), TEXT("Mercury has many craters because it has almost no thick atmosphere to burn up incoming space rocks."), TEXT("Mercury is much smaller than Earth and much closer to the Sun."), TEXT("Crater: a bowl-shaped mark made when a rock from space hits a surface."), TEXT("https://science.nasa.gov/mercury/"), TEXT("Which clue helps identify Mercury?"), TEXT("sun"), TEXT("It is the closest planet to the Sun."), TEXT("rust"), TEXT("It is famous for red rusty dust."), TEXT("rings"), TEXT("It has giant bright rings."), TEXT("Nice scan! Mercury is the Sun-neighbor clue."), TEXT("Almost. Look for the clue about the Sun."), TEXT("Look for the clue that mentions the Sun."), FLinearColor(0.62f, 0.62f, 0.58f), 0.72f, true);
+    AddLesson(TEXT("venus"), TEXT("Venus"), TEXT("Venus is wrapped in thick clouds and is extremely hot."), TEXT("Venus is the hottest planet even though Mercury is closer to the Sun."), TEXT("Creamy gold cloud world with a heat shield icon."), TEXT("Venus is a hot cloudy planet."), TEXT("Venus has thick clouds that trap heat like a blanket."), TEXT("Venus has a thick atmosphere that creates an extreme greenhouse effect, making its surface hotter than Mercury."), TEXT("A greenhouse effect happens when an atmosphere lets sunlight in but traps heat. Venus is the Solar System's strongest example."), TEXT("Venus is close to Earth's size, but its atmosphere makes it very different from Earth."), TEXT("Atmosphere: the layer of gases around a planet or moon."), TEXT("https://science.nasa.gov/venus/"), TEXT("Why is Venus so hot?"), TEXT("clouds"), TEXT("Its thick atmosphere traps heat."), TEXT("ice"), TEXT("It is covered in blue ice."), TEXT("tiny"), TEXT("It is the smallest moon."), TEXT("Great! Venus is a cloudy heat-trapping world."), TEXT("Try again. Think about the thick clouds."), TEXT("A thick atmosphere can hold in heat."), FLinearColor(1.0f, 0.76f, 0.42f), 0.9f, true);
+    AddLesson(TEXT("earth"), TEXT("Earth"), TEXT("Earth is our home world with liquid water on the surface."), TEXT("Earth has air, oceans, land, clouds, and life."), TEXT("Blue oceans, green-brown land, and white cloud clue."), TEXT("Earth is our home planet."), TEXT("Earth has water, air, land, clouds, and living things."), TEXT("Earth's liquid water, protective atmosphere, and distance from the Sun help make it habitable."), TEXT("Scientists compare other worlds to Earth to ask what conditions help life survive."), TEXT("Earth is bigger than Mercury and Mars, smaller than the gas giants, and has one large Moon."), TEXT("Planet: a large round world that orbits a star."), TEXT("https://science.nasa.gov/earth/"), TEXT("Which clue makes Earth special?"), TEXT("water"), TEXT("It has liquid water and life."), TEXT("rings"), TEXT("It has the largest rings."), TEXT("storm"), TEXT("It has the Great Red Spot."), TEXT("Home badge unlocked! Earth is the water-and-life clue."), TEXT("Try again. Look for water and life."), TEXT("Earth is the planet we live on."), FLinearColor(0.18f, 0.56f, 1.0f), 1.0f, true);
+    AddLesson(TEXT("moon"), TEXT("Moon"), TEXT("The Moon orbits Earth."), TEXT("Its craters are clues from ancient impacts."), TEXT("Gray cratered companion linked to Earth."), TEXT("The Moon goes around Earth."), TEXT("The Moon is Earth's natural satellite. It has many craters."), TEXT("The Moon's phases come from how sunlight hits the Moon as it orbits Earth."), TEXT("A moon is a natural object that orbits a planet. Earth's Moon helps us study craters, phases, and gravity."), TEXT("The Moon is much smaller than Earth and much closer than the planets."), TEXT("Moon: a natural object that travels around a planet."), TEXT("https://science.nasa.gov/moon/"), TEXT("What does the Moon orbit?"), TEXT("earth"), TEXT("Earth."), TEXT("sun_star"), TEXT("It is the Sun's twin star."), TEXT("jupiter"), TEXT("Only Jupiter."), TEXT("Correct! The Moon is Earth's companion."), TEXT("Try again. The Moon is linked to our home planet."), TEXT("Look near Earth."), FLinearColor(0.78f, 0.78f, 0.74f), 0.42f, true);
+    AddLesson(TEXT("mars"), TEXT("Mars"), TEXT("Mars looks red because rusty iron is mixed into its dust."), TEXT("Mars has giant volcanoes, deep canyons, and signs that water flowed long ago."), TEXT("Rust-red dusty world with a canyon clue."), TEXT("Mars is the red planet."), TEXT("Mars looks red because rusty iron is mixed into its dust."), TEXT("Mars has iron-rich dust and rocks. Oxidation, a rusting process, gives much of the surface its reddish color."), TEXT("Mars is a favorite exploration target because it preserves clues about water, climate, and whether places beyond Earth could have been habitable."), TEXT("Mars is smaller and colder than Earth, with a thinner atmosphere."), TEXT("Rotation: one full spin of a world; revolution: one full trip around the Sun."), TEXT("https://science.nasa.gov/mars/"), TEXT("Why does Mars look red from far away?"), TEXT("rust"), TEXT("Rusty iron is mixed into its dust."), TEXT("plants"), TEXT("It is covered in red plants."), TEXT("jupiter"), TEXT("Jupiter shines red light on it."), TEXT("Great detective work! Rusty dust gives Mars its red color."), TEXT("Try again. Which answer talks about red dust?"), TEXT("Rust can turn iron reddish."), FLinearColor(0.88f, 0.22f, 0.10f), 0.82f, true);
+    AddLesson(TEXT("asteroid_belt"), TEXT("Asteroid Belt"), TEXT("The asteroid belt is a region of many small rocky objects."), TEXT("It sits mostly between Mars and Jupiter, but it is not a solid wall."), TEXT("A sparkling rock path between Mars and Jupiter."), TEXT("Asteroids are space rocks."), TEXT("Many asteroids travel around the Sun between Mars and Jupiter."), TEXT("Asteroids are leftover rocky pieces from Solar System formation. Their orbits help scientists study early Solar System history."), TEXT("The belt is spread out across a huge region. A spacecraft can travel through safely with careful planning."), TEXT("Asteroids are much smaller than planets, but together they tell a big history story."), TEXT("Asteroid: a small rocky object that orbits the Sun."), TEXT("https://science.nasa.gov/solar-system/asteroids/"), TEXT("Where is the main asteroid belt?"), TEXT("between"), TEXT("Mostly between Mars and Jupiter."), TEXT("inside_sun"), TEXT("Inside the Sun."), TEXT("after_neptune"), TEXT("Only beyond Neptune."), TEXT("Rock route mapped! The asteroid belt is between Mars and Jupiter."), TEXT("Try again. Look between the red planet and the huge striped planet."), TEXT("The belt comes after Mars on this route."), FLinearColor(0.76f, 0.58f, 0.36f), 0.55f, true);
+    AddLesson(TEXT("jupiter"), TEXT("Jupiter"), TEXT("Jupiter is the largest planet in the Solar System."), TEXT("Its Great Red Spot is a giant storm."), TEXT("Huge striped gas giant with a storm badge."), TEXT("Jupiter is the biggest planet."), TEXT("Jupiter is huge, striped, and has many moons."), TEXT("Jupiter is a gas giant. Its gravity shapes many small objects and moons around it."), TEXT("Jupiter does not have a solid surface like Earth. Its clouds form bands, storms, and colorful stripes."), TEXT("Jupiter is far larger than Earth and all the inner rocky planets."), TEXT("Gas giant: a huge planet made mostly of gases and fluids."), TEXT("https://science.nasa.gov/jupiter/"), TEXT("Which planet is the largest?"), TEXT("jupiter"), TEXT("Jupiter."), TEXT("mercury"), TEXT("Mercury."), TEXT("mars"), TEXT("Mars."), TEXT("Giant badge earned! Jupiter is the largest planet."), TEXT("Try again. Find the huge striped world."), TEXT("Jupiter is bigger than every other planet."), FLinearColor(0.94f, 0.64f, 0.36f), 1.55f, true);
+    AddLesson(TEXT("europa"), TEXT("Europa"), TEXT("Europa is an icy moon of Jupiter that may hide an ocean under the ice."), TEXT("Scientists are curious because liquid water is one ingredient for habitability."), TEXT("Blue-white cracked ice near Jupiter."), TEXT("Europa is an icy moon."), TEXT("Europa is an icy moon of Jupiter. Scientists hunt for ocean clues under the ice."), TEXT("Europa's icy shell and evidence for a salty ocean make it an important place to study how moons can hold liquid water."), TEXT("Europa shows that moons can be worlds with layers, activity, and big science questions."), TEXT("Europa is much smaller than Jupiter and orbits it, so it is a moon, not a planet."), TEXT("Orbit: the path one object follows around another."), TEXT("https://science.nasa.gov/jupiter/moons/europa/"), TEXT("What kind of world is Europa?"), TEXT("icy_moon"), TEXT("An icy moon of Jupiter."), TEXT("small_planet"), TEXT("The smallest planet near the Sun."), TEXT("red_planet"), TEXT("A red planet with rusty dust."), TEXT("Excellent explorer! Europa is Jupiter's icy moon."), TEXT("Try again. Europa travels around Jupiter."), TEXT("Europa is near Jupiter on the map."), FLinearColor(0.45f, 0.82f, 1.0f), 0.46f, true);
+    AddLesson(TEXT("saturn"), TEXT("Saturn"), TEXT("Saturn is famous for its wide bright rings."), TEXT("The rings are made of many icy and rocky pieces."), TEXT("Golden world with a flat ring halo."), TEXT("Saturn has big rings."), TEXT("Saturn's rings are made of ice and rock pieces going around the planet."), TEXT("Saturn is a gas giant. Its ring system helps scientists study gravity, collisions, and orbiting material."), TEXT("The rings look solid from far away, but they are countless pieces traveling around Saturn."), TEXT("Saturn is smaller than Jupiter but much larger than Earth."), TEXT("Gravity: a pull between objects with mass."), TEXT("https://science.nasa.gov/saturn/"), TEXT("Which planet is famous for rings?"), TEXT("saturn"), TEXT("Saturn."), TEXT("earth"), TEXT("Earth."), TEXT("venus"), TEXT("Venus."), TEXT("Ring badge unlocked! Saturn is the ring champion."), TEXT("Try again. Look for the planet with rings."), TEXT("Saturn wears a bright ring system."), FLinearColor(0.95f, 0.78f, 0.34f), 1.35f, true);
+    AddLesson(TEXT("uranus"), TEXT("Uranus"), TEXT("Uranus is an ice giant that spins tilted on its side."), TEXT("Its sideways tilt makes its seasons unusual."), TEXT("Pale cyan planet with a tilted axis clue."), TEXT("Uranus is a cold blue-green planet."), TEXT("Uranus spins with a big tilt, almost like it is rolling around the Sun."), TEXT("Uranus is an ice giant with a sideways rotation compared with most planets."), TEXT("A planet's tilt affects seasons. Uranus has one of the strangest tilts in the Solar System."), TEXT("Uranus is larger than Earth but smaller than Jupiter and Saturn."), TEXT("Ice giant: a large cold planet with water, ammonia, and methane-rich materials."), TEXT("https://science.nasa.gov/uranus/"), TEXT("What is unusual about Uranus?"), TEXT("tilt"), TEXT("It spins tilted on its side."), TEXT("closest"), TEXT("It is closest to the Sun."), TEXT("red"), TEXT("It is red from rusty dust."), TEXT("Tilt clue solved! Uranus spins sideways."), TEXT("Try again. Think about the sideways clue."), TEXT("Uranus is the tilted ice giant."), FLinearColor(0.54f, 0.92f, 0.96f), 1.12f, true);
+    AddLesson(TEXT("neptune"), TEXT("Neptune"), TEXT("Neptune is the farthest major planet from the Sun."), TEXT("It is a deep blue ice giant with very strong winds."), TEXT("Deep blue world with wind streaks."), TEXT("Neptune is a far blue planet."), TEXT("Neptune is far from the Sun and has strong winds."), TEXT("Neptune is an ice giant. Its blue color and storms help scientists compare the outer planets."), TEXT("Even far from the Sun, Neptune has active weather. Distance does not mean a world is boring."), TEXT("Neptune is similar in size to Uranus and far smaller than Jupiter."), TEXT("Scale: comparing sizes, distances, or times to understand how big space is."), TEXT("https://science.nasa.gov/neptune/"), TEXT("Which major planet is farthest from the Sun?"), TEXT("neptune"), TEXT("Neptune."), TEXT("venus"), TEXT("Venus."), TEXT("moon"), TEXT("The Moon."), TEXT("Far-out scan complete! Neptune is the farthest major planet."), TEXT("Try again. Follow the route to the deep blue world at the edge."), TEXT("Neptune is the last major planet on this map."), FLinearColor(0.10f, 0.28f, 1.0f), 1.08f, true);
+    AddLesson(TEXT("pluto"), TEXT("Pluto / Kuiper Preview"), TEXT("Pluto is a dwarf planet in the distant Kuiper Belt."), TEXT("The Kuiper Belt is a faraway region with many icy worlds."), TEXT("Tiny icy bonus world at the edge of the route."), TEXT("Pluto is a tiny faraway world."), TEXT("Pluto is a dwarf planet beyond Neptune."), TEXT("Pluto and other Kuiper Belt objects help scientists study distant icy leftovers from Solar System formation."), TEXT("Dwarf planets are round worlds that orbit the Sun but do not clear their orbital neighborhoods like the eight major planets."), TEXT("Pluto is much smaller than Earth's Moon and far beyond Neptune."), TEXT("Dwarf planet: a round world orbiting the Sun that shares its orbital region with many other objects."), TEXT("https://science.nasa.gov/dwarf-planets/pluto/"), TEXT("What is Pluto called today?"), TEXT("dwarf"), TEXT("A dwarf planet."), TEXT("star"), TEXT("A star."), TEXT("gas"), TEXT("A gas giant."), TEXT("Bonus clue saved! Pluto is a dwarf planet."), TEXT("Try again. Pluto is small and far away."), TEXT("Pluto is a dwarf planet in the Kuiper Belt."), FLinearColor(0.82f, 0.74f, 0.64f), 0.38f, false);
 }
 
 void AAstroAdventureGameModeBase::SpawnRuntimeScene()
@@ -104,57 +132,137 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
 
     if (!UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass()))
     {
-        GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), FVector(-500.0f, 0.0f, 80.0f), FRotator::ZeroRotator);
+        GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), FVector(-980.0f, 0.0f, 115.0f), FRotator::ZeroRotator);
     }
 
-    GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-600.0f, -500.0f, 800.0f), FRotator(-42.0f, -35.0f, 0.0f));
-    GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-520.0f, -720.0f, 280.0f), FRotator::ZeroRotator);
+    ADirectionalLight* KeyLight = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-900.0f, -900.0f, 900.0f), FRotator(-45.0f, -28.0f, 0.0f));
+    if (KeyLight && KeyLight->GetLightComponent())
+    {
+        KeyLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        KeyLight->GetLightComponent()->SetIntensity(4.0f);
+    }
+
+    APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-980.0f, 0.0f, 170.0f), FRotator::ZeroRotator);
+    if (SunLight && SunLight->GetLightComponent())
+    {
+        SunLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        SunLight->GetLightComponent()->SetIntensity(9000.0f);
+        SunLight->GetLightComponent()->SetLightColor(FLinearColor(1.0f, 0.76f, 0.28f));
+    }
+
+    SpawnBackdrop();
 
     const FVector Positions[] = {
-        FVector(0.0f, -500.0f, 120.0f),
-        FVector(330.0f, 0.0f, 155.0f),
-        FVector(0.0f, 500.0f, 120.0f)
-    };
-    const FLinearColor Colors[] = {
-        FLinearColor(0.62f, 0.62f, 0.58f),
-        FLinearColor(0.85f, 0.25f, 0.12f),
-        FLinearColor(0.45f, 0.78f, 1.0f)
+        FVector(-980.0f, 0.0f, 160.0f),
+        FVector(-690.0f, -360.0f, 115.0f),
+        FVector(-510.0f, 300.0f, 125.0f),
+        FVector(-285.0f, -235.0f, 120.0f),
+        FVector(-185.0f, -115.0f, 105.0f),
+        FVector(0.0f, 245.0f, 120.0f),
+        FVector(175.0f, -40.0f, 110.0f),
+        FVector(380.0f, 210.0f, 145.0f),
+        FVector(500.0f, 350.0f, 118.0f),
+        FVector(690.0f, -210.0f, 142.0f),
+        FVector(900.0f, 230.0f, 138.0f),
+        FVector(1100.0f, -130.0f, 136.0f),
+        FVector(1285.0f, 310.0f, 108.0f)
     };
 
     DestinationActors.Reset();
+    ScanBeamActors.Reset();
     for (int32 Index = 0; Index < Lessons.Num(); ++Index)
     {
         AAstroDestinationActor* Actor = GetWorld()->SpawnActor<AAstroDestinationActor>(AAstroDestinationActor::StaticClass(), Positions[Index], FRotator::ZeroRotator);
         if (Actor)
         {
-            Actor->Configure(Lessons[Index], Colors[Index]);
+            Actor->Configure(Lessons[Index], Lessons[Index].DisplayColor, Lessons[Index].MapScale);
             Actor->SetDiscovered(GetMutableProgress(Lessons[Index].DestinationId).bQuizCompleted);
             DestinationActors.Add(Actor);
+            SpawnOrbitMarker(Positions[Index], 80.0f + Lessons[Index].MapScale * 35.0f, Lessons[Index].DisplayColor);
         }
     }
 
-    if (UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere")))
-    {
-        AStaticMeshActor* Sun = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector(-440.0f, -720.0f, 110.0f), FRotator::ZeroRotator);
-        if (Sun)
-        {
-            Sun->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Sun->SetActorScale3D(FVector(0.85f));
-#if WITH_EDITOR
-            Sun->SetActorLabel(TEXT("Friendly Sun Beacon"));
-#endif
-        }
+    SpawnAsteroidBelt(FVector(175.0f, -40.0f, 108.0f));
 
-        for (int32 Index = 0; Index < 36; ++Index)
+    PlayerPawn = Cast<AAstroPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+    if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex))
+    {
+        PlayerPawn->SetTravelTarget(DestinationActors[FocusedDestinationIndex]->GetActorLocation() + FVector(-145.0f, 0.0f, 70.0f));
+    }
+}
+
+void AAstroAdventureGameModeBase::SpawnOrbitMarker(const FVector& Center, const float Radius, const FLinearColor& Color)
+{
+    UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    if (!SphereMesh || !GetWorld())
+    {
+        return;
+    }
+
+    for (int32 Index = 0; Index < 18; ++Index)
+    {
+        const float Angle = (2.0f * PI * Index) / 18.0f;
+        const FVector Location = Center + FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, -42.0f);
+        AStaticMeshActor* Dot = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), Location, FRotator::ZeroRotator);
+        if (Dot)
         {
-            const float X = FMath::FRandRange(-260.0f, 520.0f);
-            const float Y = FMath::FRandRange(-820.0f, 820.0f);
-            const float Z = FMath::FRandRange(300.0f, 620.0f);
-            AStaticMeshActor* Star = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector(X, Y, Z), FRotator::ZeroRotator);
-            if (Star)
+            Dot->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+            Dot->SetActorScale3D(FVector(0.022f));
+            Dot->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            if (UMaterialInstanceDynamic* Material = Dot->GetStaticMeshComponent()->CreateAndSetMaterialInstanceDynamic(0))
             {
-                Star->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-                Star->SetActorScale3D(FVector(FMath::FRandRange(0.025f, 0.055f)));
+                Material->SetVectorParameterValue(TEXT("Color"), Color * 0.55f);
+                Material->SetVectorParameterValue(TEXT("BaseColor"), Color * 0.55f);
+                Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * 0.25f);
+            }
+        }
+    }
+}
+
+void AAstroAdventureGameModeBase::SpawnAsteroidBelt(const FVector& Center)
+{
+    UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    if (!SphereMesh || !GetWorld())
+    {
+        return;
+    }
+
+    for (int32 Index = 0; Index < 42; ++Index)
+    {
+        const float Angle = FMath::FRandRange(0.0f, 2.0f * PI);
+        const float Radius = FMath::FRandRange(80.0f, 180.0f);
+        AStaticMeshActor* Rock = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), Center + FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, FMath::FRandRange(-18.0f, 28.0f)), FRotator::ZeroRotator);
+        if (Rock)
+        {
+            Rock->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+            Rock->SetActorScale3D(FVector(FMath::FRandRange(0.03f, 0.09f)));
+            Rock->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        }
+    }
+}
+
+void AAstroAdventureGameModeBase::SpawnBackdrop()
+{
+    UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    if (!SphereMesh || !GetWorld())
+    {
+        return;
+    }
+
+    for (int32 Index = 0; Index < 150; ++Index)
+    {
+        const FLinearColor Color = Index % 5 == 0 ? FLinearColor(0.5f, 0.9f, 1.0f) : Index % 7 == 0 ? FLinearColor(1.0f, 0.72f, 0.36f) : FLinearColor(0.86f, 0.9f, 1.0f);
+        AStaticMeshActor* Star = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector(FMath::FRandRange(-1220.0f, 1460.0f), FMath::FRandRange(-720.0f, 720.0f), FMath::FRandRange(280.0f, 720.0f)), FRotator::ZeroRotator);
+        if (Star)
+        {
+            Star->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+            Star->SetActorScale3D(FVector(FMath::FRandRange(0.015f, 0.055f)));
+            Star->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            if (UMaterialInstanceDynamic* Material = Star->GetStaticMeshComponent()->CreateAndSetMaterialInstanceDynamic(0))
+            {
+                Material->SetVectorParameterValue(TEXT("Color"), Color);
+                Material->SetVectorParameterValue(TEXT("BaseColor"), Color);
+                Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * 0.85f);
             }
         }
     }
@@ -173,7 +281,8 @@ void AAstroAdventureGameModeBase::LoadProgress()
     }
 
     ProgressSave->MissionId = MissionId;
-    ProgressSave->AgeBand = ActiveAgeBand;
+    ActiveAgeBand = ProgressSave->AgeBand;
+    AgeSelectIndex = ActiveAgeBand == EAstroAgeBand::Ages4To6 ? 0 : ActiveAgeBand == EAstroAgeBand::Ages7To9 ? 1 : 2;
 
     for (const FAstroDestinationLesson& Lesson : Lessons)
     {
@@ -191,31 +300,68 @@ void AAstroAdventureGameModeBase::SaveProgress() const
 
 void AAstroAdventureGameModeBase::FocusNextDestination()
 {
-    if (Lessons.IsEmpty() || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback)
+    if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+    {
+        AgeSelectIndex = (AgeSelectIndex + 1) % 3;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        PauseMenuIndex = (PauseMenuIndex + 1) % 4;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
         MoveQuizFocus(1);
         return;
     }
 
-    FocusedDestinationIndex = (FocusedDestinationIndex + 1) % Lessons.Num();
-    UpdateDestinationFocus();
+    if (!Lessons.IsEmpty())
+    {
+        FocusedDestinationIndex = (FocusedDestinationIndex + 1) % Lessons.Num();
+        UpdateDestinationFocus();
+    }
 }
 
 void AAstroAdventureGameModeBase::FocusPreviousDestination()
 {
-    if (Lessons.IsEmpty() || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback)
+    if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+    {
+        AgeSelectIndex = (AgeSelectIndex + 2) % 3;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        PauseMenuIndex = (PauseMenuIndex + 3) % 4;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
         MoveQuizFocus(-1);
         return;
     }
 
-    FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
-    UpdateDestinationFocus();
+    if (!Lessons.IsEmpty())
+    {
+        FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
+        UpdateDestinationFocus();
+    }
 }
 
 void AAstroAdventureGameModeBase::Confirm()
 {
     const FAstroDestinationLesson* Lesson = GetFocusedLesson();
+    if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+    {
+        SelectAgeBand(AgeSelectIndex);
+        CurrentScreen = EAstroMissionScreen::MissionPrompt;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        ExecutePauseSelection();
+        return;
+    }
     if (!Lesson)
     {
         return;
@@ -229,11 +375,16 @@ void AAstroAdventureGameModeBase::Confirm()
         break;
     case EAstroMissionScreen::Navigation:
         MarkScanned(Lesson->DestinationId);
+        LastScanTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
         CurrentScreen = EAstroMissionScreen::DiscoveryCard;
         break;
     case EAstroMissionScreen::DiscoveryCard:
+    case EAstroMissionScreen::DeepDive:
         FocusedQuizChoiceIndex = 0;
         CurrentScreen = EAstroMissionScreen::Quiz;
+        break;
+    case EAstroMissionScreen::Passport:
+        CurrentScreen = EAstroMissionScreen::Navigation;
         break;
     case EAstroMissionScreen::Quiz:
         SubmitAnswer(FocusedQuizChoiceIndex);
@@ -250,7 +401,7 @@ void AAstroAdventureGameModeBase::Confirm()
         }
         break;
     case EAstroMissionScreen::MissionComplete:
-        CurrentScreen = EAstroMissionScreen::Navigation;
+        CurrentScreen = EAstroMissionScreen::Passport;
         break;
     default:
         break;
@@ -262,11 +413,19 @@ void AAstroAdventureGameModeBase::Confirm()
 void AAstroAdventureGameModeBase::Back()
 {
     bShowingHint = false;
-    if (CurrentScreen == EAstroMissionScreen::Quiz)
+    if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+    {
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        CurrentScreen = PreviousScreen;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
         CurrentScreen = EAstroMissionScreen::DiscoveryCard;
     }
-    else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::QuizFeedback)
+    else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::Passport)
     {
         CurrentScreen = EAstroMissionScreen::Navigation;
     }
@@ -275,6 +434,44 @@ void AAstroAdventureGameModeBase::Back()
 void AAstroAdventureGameModeBase::RequestHint()
 {
     bShowingHint = true;
+}
+
+void AAstroAdventureGameModeBase::ToggleDeepDive()
+{
+    if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+    {
+        CurrentScreen = EAstroMissionScreen::DeepDive;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::DeepDive)
+    {
+        CurrentScreen = EAstroMissionScreen::DiscoveryCard;
+    }
+}
+
+void AAstroAdventureGameModeBase::TogglePassport()
+{
+    if (CurrentScreen == EAstroMissionScreen::Passport)
+    {
+        CurrentScreen = EAstroMissionScreen::Navigation;
+    }
+    else if (CurrentScreen != EAstroMissionScreen::AgeSelect && CurrentScreen != EAstroMissionScreen::PauseMenu)
+    {
+        CurrentScreen = EAstroMissionScreen::Passport;
+    }
+}
+
+void AAstroAdventureGameModeBase::TogglePause()
+{
+    if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        CurrentScreen = PreviousScreen;
+    }
+    else
+    {
+        PreviousScreen = CurrentScreen;
+        PauseMenuIndex = 0;
+        CurrentScreen = EAstroMissionScreen::PauseMenu;
+    }
 }
 
 void AAstroAdventureGameModeBase::MoveQuizFocus(const int32 Direction)
@@ -312,13 +509,7 @@ void AAstroAdventureGameModeBase::SubmitAnswer(const int32 ChoiceIndex)
 
 FString AAstroAdventureGameModeBase::GetHudStatusLine() const
 {
-    const int32 CompleteCount = ProgressSave ? Algo::CountIf(Lessons, [this](const FAstroDestinationLesson& Lesson)
-    {
-        const FAstroDestinationProgress* Progress = ProgressSave->DestinationProgress.Find(Lesson.DestinationId);
-        return Progress && Progress->bQuizCompleted;
-    }) : 0;
-
-    return FString::Printf(TEXT("Discovery cards %d/%d | Explorer mode ages %s"), CompleteCount, Lessons.Num(), ActiveAgeBand == EAstroAgeBand::Ages4To6 ? TEXT("4-6") : ActiveAgeBand == EAstroAgeBand::Ages7To9 ? TEXT("7-9") : TEXT("10-12"));
+    return FString::Printf(TEXT("Solar Passport %d/%d stamps | Explorer mode ages %s"), CountCompletedStops(), Lessons.Num(), ActiveAgeBand == EAstroAgeBand::Ages4To6 ? TEXT("4-6") : ActiveAgeBand == EAstroAgeBand::Ages7To9 ? TEXT("7-9") : TEXT("10-12"));
 }
 
 FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
@@ -328,18 +519,26 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
 
     switch (CurrentScreen)
     {
+    case EAstroMissionScreen::AgeSelect:
+        return TEXT("Choose your explorer mode");
     case EAstroMissionScreen::MissionPrompt:
-        return TEXT("Ready, space explorer? Scan three worlds and collect their clue cards.");
+        return TEXT("Solar Passport: First Expedition");
     case EAstroMissionScreen::Navigation:
-        return FString::Printf(TEXT("Fly to %s, then press Scan!"), *Name);
+        return FString::Printf(TEXT("Glide to %s, then scan for a discovery stamp!"), *Name);
     case EAstroMissionScreen::DiscoveryCard:
         return FString::Printf(TEXT("%s discovery card unlocked!"), *Name);
+    case EAstroMissionScreen::DeepDive:
+        return FString::Printf(TEXT("Look closer: %s"), *Name);
+    case EAstroMissionScreen::Passport:
+        return TEXT("Solar Passport discovery log");
     case EAstroMissionScreen::Quiz:
         return Lesson ? Lesson->QuizPrompt.ToString() : TEXT("Quiz");
     case EAstroMissionScreen::QuizFeedback:
         return LastFeedback;
     case EAstroMissionScreen::MissionComplete:
-        return TEXT("Mission complete! You matched three space clues like a real explorer.");
+        return TEXT("Mission complete! Your Solar Passport has a full first-expedition route.");
+    case EAstroMissionScreen::PauseMenu:
+        return TEXT("Paused");
     default:
         return TEXT("");
     }
@@ -349,16 +548,52 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 {
     TArray<FString> Lines;
     const FAstroDestinationLesson* Lesson = GetFocusedLesson();
+
+    if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+    {
+        const TCHAR* Options[] = {TEXT("Ages 4-6: picture clues and tiny facts"), TEXT("Ages 7-9: clue matching and wow facts"), TEXT("Ages 10-12: deeper why/how and scale")};
+        for (int32 Index = 0; Index < 3; ++Index)
+        {
+            Lines.Add(FString::Printf(TEXT("%s %s"), Index == AgeSelectIndex ? TEXT(">") : TEXT(" "), Options[Index]));
+        }
+        Lines.Add(TEXT("Confirm to launch. You can change this later from Pause."));
+        return Lines;
+    }
+
+    if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        const TCHAR* Options[] = {TEXT("Resume"), TEXT("Restart mission"), TEXT("Change age"), TEXT("Quit to desktop")};
+        for (int32 Index = 0; Index < 4; ++Index)
+        {
+            Lines.Add(FString::Printf(TEXT("%s %s"), Index == PauseMenuIndex ? TEXT(">") : TEXT(" "), Options[Index]));
+        }
+        return Lines;
+    }
+
     if (!Lesson)
     {
         return Lines;
     }
 
-    if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+    if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
-        Lines.Add(Lesson->DiscoveryFact.ToString());
+        Lines.Add(TEXT("Pilot the comet ship, scan the Solar System, answer tiny science challenges, and collect passport stamps."));
+        Lines.Add(TEXT("Main route: Sun, planets, Moon, asteroid belt, Europa, and Pluto preview."));
+    }
+    else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+    {
+        Lines.Add(FString::Printf(TEXT("Quick fact: %s"), *Lesson->DiscoveryFact.ToString()));
+        Lines.Add(FString::Printf(TEXT("Wow fact: %s"), *Lesson->WowFact.ToString()));
+        Lines.Add(FString::Printf(TEXT("Visual clue: %s"), *Lesson->VisualClue.ToString()));
         Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
-        Lines.Add(FString::Printf(TEXT("Source: %s"), *Lesson->SourceUrl));
+        Lines.Add(TEXT("Press M / LT for More Info, or Confirm for the quiz."));
+    }
+    else if (CurrentScreen == EAstroMissionScreen::DeepDive)
+    {
+        Lines.Add(Lesson->DeepDiveText.ToString());
+        Lines.Add(FString::Printf(TEXT("Compare: %s"), *Lesson->CompareFact.ToString()));
+        Lines.Add(FString::Printf(TEXT("Word explorer: %s"), *Lesson->GlossaryText.ToString()));
+        Lines.Add(TEXT("Sources are tracked in public docs/manifest; kid cards stay link-free."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
@@ -370,15 +605,39 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     }
     else if (CurrentScreen == EAstroMissionScreen::QuizFeedback)
     {
-        Lines.Add(bLastAnswerCorrect ? TEXT("Confirm to save this discovery.") : TEXT("Confirm to retry, or ask for a hint."));
+        Lines.Add(bLastAnswerCorrect ? TEXT("Stamp saved! Confirm to continue the route.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
     {
+        Lines.Add(TEXT("Atlas route: Sun -> Mercury -> Venus -> Earth/Moon -> Mars -> asteroid belt -> Jupiter/Europa -> Saturn -> Uranus -> Neptune -> Pluto preview."));
         for (int32 Index = 0; Index < Lessons.Num(); ++Index)
         {
             const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[Index].DestinationId) : nullptr;
-            Lines.Add(FString::Printf(TEXT("%s %s - %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("card collected") : Progress && Progress->bScanned ? TEXT("quiz ready") : TEXT("waiting for scan")));
+            Lines.Add(FString::Printf(TEXT("%s %s - %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("passport stamped") : Progress && Progress->bScanned ? TEXT("quiz ready") : TEXT("ready to scan")));
+            if (Lines.Num() >= 8)
+            {
+                Lines.Add(TEXT("Open Passport for the full log."));
+                break;
+            }
         }
+    }
+    else if (CurrentScreen == EAstroMissionScreen::Passport)
+    {
+        for (const FAstroDestinationLesson& Entry : Lessons)
+        {
+            const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Entry.DestinationId) : nullptr;
+            Lines.Add(FString::Printf(TEXT("%s %s | mastery %d | review box %d"), Progress && Progress->bQuizCompleted ? TEXT("*") : TEXT("-"), *Entry.DisplayName.ToString(), Progress ? Progress->MasteryScore : 0, Progress ? Progress->ReviewBox : 0));
+            if (Lines.Num() >= 10)
+            {
+                Lines.Add(TEXT("More stamps continue across the route."));
+                break;
+            }
+        }
+    }
+    else if (CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        Lines.Add(TEXT("Review your Passport, replay the route, change age mode, or quit from Pause."));
+        Lines.Add(TEXT("You matched visual clues, facts, and quiz answers across the Solar System."));
     }
 
     if (bShowingHint)
@@ -400,6 +659,11 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
             DestinationActors[Index]->SetDiscovered(Progress && Progress->bQuizCompleted);
         }
     }
+
+    if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex) && DestinationActors[FocusedDestinationIndex])
+    {
+        PlayerPawn->SetTravelTarget(DestinationActors[FocusedDestinationIndex]->GetActorLocation() + FVector(-145.0f, 0.0f, 70.0f));
+    }
 }
 
 void AAstroAdventureGameModeBase::MarkScanned(const FName DestinationId)
@@ -420,6 +684,60 @@ void AAstroAdventureGameModeBase::CompleteQuiz(const FName DestinationId, const 
     SaveProgress();
 }
 
+void AAstroAdventureGameModeBase::SelectAgeBand(const int32 Index)
+{
+    ActiveAgeBand = Index == 0 ? EAstroAgeBand::Ages4To6 : Index == 1 ? EAstroAgeBand::Ages7To9 : EAstroAgeBand::Ages10To12;
+    if (ProgressSave)
+    {
+        ProgressSave->AgeBand = ActiveAgeBand;
+    }
+    SaveProgress();
+}
+
+void AAstroAdventureGameModeBase::ExecutePauseSelection()
+{
+    if (PauseMenuIndex == 0)
+    {
+        CurrentScreen = PreviousScreen;
+    }
+    else if (PauseMenuIndex == 1)
+    {
+        if (ProgressSave)
+        {
+            ProgressSave->DestinationProgress.Reset();
+            for (const FAstroDestinationLesson& Lesson : Lessons)
+            {
+                GetMutableProgress(Lesson.DestinationId);
+            }
+        }
+        SaveProgress();
+        CurrentScreen = EAstroMissionScreen::MissionPrompt;
+        UpdateDestinationFocus();
+    }
+    else if (PauseMenuIndex == 2)
+    {
+        CurrentScreen = EAstroMissionScreen::AgeSelect;
+    }
+    else
+    {
+        UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
+    }
+}
+
+int32 AAstroAdventureGameModeBase::CountCompletedStops() const
+{
+    return ProgressSave ? Algo::CountIf(Lessons, [this](const FAstroDestinationLesson& Lesson)
+    {
+        const FAstroDestinationProgress* Progress = ProgressSave->DestinationProgress.Find(Lesson.DestinationId);
+        return Progress && Progress->bQuizCompleted;
+    }) : 0;
+}
+
+bool AAstroAdventureGameModeBase::IsScanEffectActive() const
+{
+    return GetWorld() && GetWorld()->GetTimeSeconds() - LastScanTime < 1.35f;
+}
+
 bool AAstroAdventureGameModeBase::IsMissionComplete() const
 {
     if (!ProgressSave)
@@ -429,6 +747,11 @@ bool AAstroAdventureGameModeBase::IsMissionComplete() const
 
     for (const FAstroDestinationLesson& Lesson : Lessons)
     {
+        if (!Lesson.bRequiredForMission)
+        {
+            continue;
+        }
+
         const FAstroDestinationProgress* Progress = ProgressSave->DestinationProgress.Find(Lesson.DestinationId);
         if (!Progress || !Progress->bQuizCompleted)
         {

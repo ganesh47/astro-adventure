@@ -7,6 +7,7 @@
 
 class UStaticMeshComponent;
 class UTextRenderComponent;
+class UMaterialInstanceDynamic;
 
 UCLASS()
 class ASTROADVENTUREUE_API AAstroDestinationActor : public AActor
@@ -23,6 +24,9 @@ public:
     UStaticMeshComponent* BodyMesh;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
+    UStaticMeshComponent* FocusHalo;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
     UTextRenderComponent* Label;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
@@ -31,11 +35,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
     FText DisplayName;
 
-    void Configure(const FAstroDestinationLesson& Lesson, const FLinearColor& Color);
+    void Configure(const FAstroDestinationLesson& Lesson, const FLinearColor& Color, float VisualScale);
     void SetFocused(bool bFocused);
     void SetDiscovered(bool bDiscovered);
 
 private:
     FLinearColor BaseColor = FLinearColor::White;
     bool bIsDiscovered = false;
+    float BaseVisualScale = 1.0f;
+
+    void ApplyColor(UStaticMeshComponent* Mesh, const FLinearColor& Color, float EmissiveStrength);
 };

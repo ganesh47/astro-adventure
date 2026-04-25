@@ -18,6 +18,9 @@ private:
     void Confirm();
     void Back();
     void Hint();
+    void MoreInfo();
+    void Passport();
+    void Pause();
     void AnswerUp();
     void AnswerDown();
     void AnswerOne();
