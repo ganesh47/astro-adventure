@@ -13,7 +13,7 @@ The proof is intentionally small:
 - Three destinations: Mercury, Mars, Europa.
 - Keyboard and Xbox-style controller input.
 - Focus cycle, scan action, discovery card, quiz panel, and mission completion state.
-- Automated self-hosted validation that confirms required project assets and gameplay contracts.
+- Local/manual validation that confirms required project assets and gameplay contracts.
 
 ## Non-Goals
 
@@ -48,7 +48,7 @@ The initial facts and quiz copy come from `first-mission-loop.md` and `first-qui
 
 ## Validation Contract
 
-The self-hosted Unreal validation workflow must eventually verify:
+Local Unreal validation must verify:
 
 - `AstroAdventureUE.uproject` targets Unreal 5.7.
 - Enhanced Input and CommonUI are enabled.
@@ -59,4 +59,4 @@ The self-hosted Unreal validation workflow must eventually verify:
 - Quiz data exists for Mercury, Mars, and Europa.
 - The mission can reach completion without timers, monetized rewards, or punitive failure.
 
-Until binary Unreal assets are created, CI validates the text project shell and fails full self-hosted validation if UE 5.7.4 is not installed.
+Until binary Unreal assets are created, public CI validates the text project shell and local validation records whether UE 5.7.4 build and automation checks passed.

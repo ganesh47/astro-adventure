@@ -6,15 +6,14 @@ Primary Unreal Engine project for Astro Adventure.
 
 Target engine: Unreal Engine `5.7.4`.
 
-Do not scaffold, compile, or validate this project with the locally installed UE 5.4. Install UE 5.7.4 first and point the self-hosted runner to that engine path.
+Do not scaffold, compile, or validate this project with older Unreal installs. Install Unreal Engine 5.7.4 first and keep build validation local unless the project later adds an explicitly approved scheduled runner.
 
-Expected local command path after install:
+Local examples use a caller-provided engine root:
 
-```text
-G:\Unreal\UE_5.7\Engine\Binaries\Win64\UnrealEditor-Cmd.exe
+```powershell
+$env:UNREAL_ENGINE_ROOT = "<path-to-UE_5.7>"
+& "$env:UNREAL_ENGINE_ROOT\Engine\Build\BatchFiles\Build.bat" AstroAdventureUEEditor Win64 Development "$PWD\AstroAdventureUE.uproject" -WaitMutex -NoHotReload
 ```
-
-If Epic Launcher installs UE 5.7.4 elsewhere, set `UNREAL_ENGINE_ROOT` for the self-hosted runner.
 
 ## M0 Parity Target
 
@@ -24,6 +23,6 @@ If Epic Launcher installs UE 5.7.4 elsewhere, set `UNREAL_ENGINE_ROOT` for the s
 - Mercury, Mars, and Europa destinations.
 - Keyboard and Xbox-style controller movement.
 - Focus cycle, scan action, discovery card, quiz, completion state.
-- Automated validation through the self-hosted Unreal workflow.
+- Local Unreal build and automation validation.
 
 Binary assets are intentionally not committed yet. The first Unreal editor pass should create the map, input mapping context, UI, and data assets named in `Content/README.md`.

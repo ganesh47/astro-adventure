@@ -5,7 +5,7 @@ Astro Adventure is now Unreal-first, with Unreal Engine `5.7.4` as the locked ta
 ## Direction
 
 - Use `AstroAdventureUE/` as the primary game project.
-- Build a small C++ shell so project compilation, automation, and self-hosted CI are deterministic.
+- Build a small C++ shell so project compilation and local automation are deterministic.
 - Keep gameplay iteration Blueprint-first for the ship, focus/scan loop, mission flow, UI, and quiz panels.
 - Use Enhanced Input for keyboard and Xbox-style controller input.
 - Use UMG/CommonUI-style patterns for controller-first UI.
@@ -18,8 +18,8 @@ Astro Adventure is now Unreal-first, with Unreal Engine `5.7.4` as the locked ta
 
 `M3: Xbox Dev Mode Proof` later proves local Xbox deployment using private evidence and public-safe status notes.
 
-## CI Shape
+## Validation Shape
 
 Public pull request checks run on GitHub-hosted runners and validate repository hygiene, public/private boundaries, asset manifest rows, and Unreal project metadata.
 
-Full Unreal validation runs only on a trusted self-hosted Windows runner labeled `self-hosted`, `Windows`, `Unreal`, and `AstroAdventure`. The self-hosted runner must use Unreal Engine `5.7.4`; the existing local UE 5.4 install is not an accepted fallback.
+Full Unreal builds, editor validation, package/cook checks, screenshots, and other high-cost artifacts run locally by maintainers and are attached to releases only after explicit review. The public repo should not require always-on local runner services for routine validation.

@@ -10,6 +10,7 @@ Validation should keep the public repository safe, reproducible, and useful with
 - Asset manifest validation for source URL, license, author, public repo approval, Xbox review status, and notes.
 - Unreal source hygiene checks that reject build outputs, caches, packages, secrets, and non-redistributable binaries.
 - Public-safe smoke validation for local Unreal project structure and automation scripts.
+- Expensive Unreal builds, package/cook runs, screenshots, and playable artifacts are produced locally/manual by maintainers unless a future scheduled runner policy is explicitly approved.
 
 ## Security Requirements
 
@@ -33,3 +34,4 @@ Private-only:
 - An asset change should fail if approval fields are missing or license/source data is incomplete.
 - An Unreal change should fail if generated build artifacts, DerivedDataCache, intermediate files, package outputs, private SDK content, or credential-like strings are added.
 - An Xbox validation note should fail review if it contains private identifiers or restricted program details.
+- A local build evidence note should use sanitized tool versions and pass/fail status, not personal usernames, hostnames, device names, local IP addresses, exact private filesystem paths, or runner identities.
