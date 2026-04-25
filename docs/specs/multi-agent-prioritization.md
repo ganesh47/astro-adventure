@@ -2,34 +2,29 @@
 
 ## Goal
 
-Use four distinct work threads organized by risk area, with `M0: Xbox Dev Mode Proof` as the first priority. Deep M1 gameplay work should wait until the platform path, public/private boundaries, and repository hygiene are stable.
+Use concurrent agent work while keeping public CI safe and Unreal validation trustworthy. `M0: Unreal Parity` is the first priority.
 
 ## Agent Threads
 
-| Thread | Owns | Primary issues |
-| --- | --- | --- |
-| Platform proof | Xbox Dev Mode research, PC toolchain, local deployment notes | #2, #5, #6 |
-| Unity prototype and hygiene | Unity ignore policy, controller input, minimal scene prep | #3, #4, #12, #17 |
-| Docs and design system | Wiki, boundary audit, accessibility, controller-first UI, early specs | #1, #8, #13, #16 |
-| Private release guardrails | Secrets, artifacts, release records, private boundaries | private #1-#4 |
+| Thread | Owns |
+| --- | --- |
+| Platform and CI | UE 5.7.4 install path, self-hosted runner, workflows, Xbox Dev Mode research |
+| Unreal prototype | C++ shell, Blueprint map, input, focus/scan loop, validation contracts |
+| Curriculum and gameplay | Mercury/Mars/Europa facts, discovery cards, quiz copy, kid-safe feedback |
+| Asset and boundary QA | Manifest rows, licenses, public/private boundary, private release guardrails |
 
 ## Wave Order
 
-1. Guardrails before artifacts: complete private release policies, public/private audit, and Unity binary hygiene.
-2. Prove the platform path: document Xbox Dev Mode research, PC toolchain, deployment notes, Wiki setup, and controller input.
-3. Build the minimal M0 proof: create the smallest Unity scene only after hygiene and input decisions are clear.
-4. Prepare M1: accessibility, controller-first UI, first mission, first quiz, solar navigation, and asset workflow.
-
-## Current Status
-
-- Guardrail docs are in place for public repo boundaries, Unity asset hygiene, private secrets, private artifacts, and release records.
-- M0 platform path is documented but blocked pending physical PC/Xbox verification.
-- The minimal Unity scene is planned but not created because this workspace does not include a Unity project or editor-generated baseline.
-- M1 design groundwork is started through accessibility and controller-first UI baselines, without beginning deep gameplay production.
+1. Pivot guardrails: Unreal docs, ignore/LFS rules, public/private boundaries, CI split.
+2. Unreal M0 shell: project compiles and validates on the self-hosted runner.
+3. M0 parity: map, ship, destinations, scan, quiz, completion.
+4. Xbox proof prep: private release records, package/evidence workflow, Dev Mode verification.
+5. M1 gameplay: polished first mission loop after M0 is stable.
 
 ## Coordination Rules
 
+- Public PRs run only hosted hygiene checks.
+- Self-hosted Unreal jobs run only on `main` or maintainer-triggered workflows.
 - Public issues and docs must not quote private Xbox publishing details.
 - Stable decisions belong in `docs/specs/`; living research begins in the GitHub Wiki.
-- Cross-thread handoffs should be issue comments with links to specs or private docs.
 - Private evidence, packages, credentials, certificates, and restricted platform material stay outside the public repo.

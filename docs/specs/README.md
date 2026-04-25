@@ -6,12 +6,20 @@ Drafts should begin as GitHub issues. Once accepted, summarize the stable decisi
 
 ## Current Specs
 
-- `m0-xbox-dev-mode-proof.md` - public-safe M0 proof procedure, verification template, and blocked/proven status.
-- `pc-toolchain-checklist.md` - reproducible Windows, Unity, Visual Studio, SDK, and Xbox Dev Mode setup checklist.
-- `multi-agent-prioritization.md` - issue execution order and four-thread ownership model.
+- `m0-unreal-parity.md` - first Unreal playable proof for Mercury, Mars, Europa navigation, scan, quiz, and validation.
+- `m0-xbox-dev-mode-proof.md` - public-safe Xbox Dev Mode procedure and private evidence boundary for a later milestone.
+- `pc-toolchain-checklist.md` - reproducible Windows, Unreal 5.7.4, Visual Studio, and Xbox Dev Mode setup checklist.
+- `multi-agent-prioritization.md` - issue execution order and agent ownership model.
 - `controller-input-spike.md` - controller mapping, haptics guidance, and M0 input validation.
-- `minimal-unity-scene-plan.md` - safe implementation plan for the M0 Unity scene and solar navigation prototype.
-- `unity-binary-asset-hygiene.md` - Unity ignore policy, binary asset rules, Git LFS decision, and public/private artifact boundary.
+- `unreal-asset-hygiene.md` - Unreal ignore policy, binary asset rules, Git LFS expectations, and public/private artifact boundary.
+- `first-mission-loop.md` - first M1 mission loop for Mercury, Mars, and Europa.
+- `first-quiz-loop.md` - first destination quiz/reflection loop and example sourced questions.
+- `learning-design.md` - retrieval, spaced practice, feedback, and kid-safe learning loop requirements.
+- `age-bands.md` - age 4-12 audience bands, reading assumptions, accessibility, and privacy guardrails.
+- `educational-progression.md` - astronomy concept progression from observation to comparison and evidence.
+- `devsecops-validation.md` - public-safe validation expectations for docs, assets, Unreal automation, and CI.
+- `unreal-xbox-path.md` - public Unreal-to-Xbox planning path and private platform boundary.
+- `asset-manifest-workflow-validation.md` - manifest candidate examples and allowed review values.
 
 ## Current Baselines
 

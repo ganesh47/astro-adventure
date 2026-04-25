@@ -5,7 +5,7 @@ This is the seed content for the GitHub Wiki. Stable decisions and accepted spec
 ## Research Map
 
 - [Xbox Dev Mode Research](Xbox-Dev-Mode-Research)
-- [Unity Xbox Path](Unity-Xbox-Path)
+- [Unreal Xbox Path](Unreal-Xbox-Path)
 - [Astronomy Curriculum](Astronomy-Curriculum)
 - [Planet And Solar System Facts](Planet-And-Solar-System-Facts)
 - [Controller Interaction Ideas](Controller-Interaction-Ideas)
@@ -23,7 +23,7 @@ Stable decisions should live in the repository under `docs/specs/` and can be su
 ## Current Questions
 
 - What is the smallest reliable Xbox Dev Mode deployment proof?
-- Which Unity version and Windows tooling should be standardized first?
+- Which Unreal 5.7.4 install path and Windows tooling should be standardized first?
 - Which astronomy concepts are most playful for ages 8-12?
 - Which asset sources are safe for a public open-source repo?
 - What first mission and quiz loop best exercise controller-first accessibility without deep production scope?

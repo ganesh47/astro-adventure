@@ -1,0 +1,23 @@
+name: PR Hygiene
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-hygiene:
+    name: Public Repo Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Reject generated or private artifacts
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/validate-public-repo.ps1
