@@ -3,6 +3,7 @@
 #include "AstroAdventureGameModeBase.h"
 #include "Engine/World.h"
 #include "InputCoreTypes.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void AAstroAdventurePlayerController::SetupInputComponent()
 {
@@ -35,6 +36,9 @@ void AAstroAdventurePlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerOne);
     InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerTwo);
     InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerThree);
+
+    InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAstroAdventurePlayerController::QuitGame);
+    InputComponent->BindKey(EKeys::Gamepad_Special_Right, IE_Pressed, this, &AAstroAdventurePlayerController::QuitGame);
 }
 
 void AAstroAdventurePlayerController::FocusNext()
@@ -115,4 +119,9 @@ void AAstroAdventurePlayerController::AnswerThree()
     {
         GameMode->SubmitAnswer(2);
     }
+}
+
+void AAstroAdventurePlayerController::QuitGame()
+{
+    UKismetSystemLibrary::QuitGame(this, this, EQuitPreference::Quit, false);
 }

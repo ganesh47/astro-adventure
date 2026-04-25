@@ -9,6 +9,8 @@
 #include "Algo/Count.h"
 #include "Camera/CameraActor.h"
 #include "Engine/DirectionalLight.h"
+#include "Engine/PointLight.h"
+#include "Engine/StaticMeshActor.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -48,15 +50,15 @@ void AAstroAdventureGameModeBase::BuildLessons()
     Mercury.DestinationId = TEXT("mercury");
     Mercury.DisplayName = FText::FromString(TEXT("Mercury"));
     Mercury.DiscoveryFact = FText::FromString(TEXT("Mercury is the closest planet to the Sun."));
-    Mercury.Ages4To6Text = FText::FromString(TEXT("Mercury is a tiny planet near the Sun."));
-    Mercury.Ages7To9Text = FText::FromString(TEXT("Mercury is the closest planet to the Sun and moves around it very quickly."));
+    Mercury.Ages4To6Text = FText::FromString(TEXT("Mercury is tiny and super close to the Sun."));
+    Mercury.Ages7To9Text = FText::FromString(TEXT("Mercury is the closest planet to the Sun. It zooms around fast!"));
     Mercury.Ages10To12Text = FText::FromString(TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."));
     Mercury.SourceUrl = TEXT("https://science.nasa.gov/mercury/");
     Mercury.QuizPrompt = FText::FromString(TEXT("Which clue helps identify Mercury?"));
     Mercury.Choices = {MakeChoice(TEXT("sun"), TEXT("It is the closest planet to the Sun.")), MakeChoice(TEXT("rust"), TEXT("It is famous for red rusty dust.")), MakeChoice(TEXT("ice"), TEXT("It is an icy moon of Jupiter."))};
     Mercury.CorrectChoiceId = TEXT("sun");
-    Mercury.CorrectFeedback = FText::FromString(TEXT("Yes. Mercury orbits closest to the Sun."));
-    Mercury.RetryFeedback = FText::FromString(TEXT("Try the clue about where Mercury travels."));
+    Mercury.CorrectFeedback = FText::FromString(TEXT("Nice scan! Mercury is the Sun-neighbor clue."));
+    Mercury.RetryFeedback = FText::FromString(TEXT("Almost. Look for the clue about the Sun."));
     Mercury.HintText = FText::FromString(TEXT("Look for the clue that mentions the Sun."));
     Lessons.Add(Mercury);
 
@@ -65,14 +67,14 @@ void AAstroAdventureGameModeBase::BuildLessons()
     Mars.DisplayName = FText::FromString(TEXT("Mars"));
     Mars.DiscoveryFact = FText::FromString(TEXT("Mars looks red because rusty iron is mixed into its dust."));
     Mars.Ages4To6Text = FText::FromString(TEXT("Mars is the red planet."));
-    Mars.Ages7To9Text = FText::FromString(TEXT("Mars looks red because iron in its rocks and dust has rusted."));
+    Mars.Ages7To9Text = FText::FromString(TEXT("Mars looks red because rusty iron is mixed into its dust."));
     Mars.Ages10To12Text = FText::FromString(TEXT("Mars has iron-rich dust and rocks. Oxidation, a rusting process, gives much of the surface its reddish color."));
     Mars.SourceUrl = TEXT("https://science.nasa.gov/mars/");
     Mars.QuizPrompt = FText::FromString(TEXT("Why does Mars look red from far away?"));
     Mars.Choices = {MakeChoice(TEXT("rust"), TEXT("Rusty iron is mixed into its dust.")), MakeChoice(TEXT("plants"), TEXT("It is covered in red plants.")), MakeChoice(TEXT("jupiter"), TEXT("Jupiter shines red light on it."))};
     Mars.CorrectChoiceId = TEXT("rust");
-    Mars.CorrectFeedback = FText::FromString(TEXT("Yes. Iron in Mars rocks and dust has rusted, which makes Mars look red."));
-    Mars.RetryFeedback = FText::FromString(TEXT("Try the answer that matches the dust clue."));
+    Mars.CorrectFeedback = FText::FromString(TEXT("Great detective work! Rusty dust gives Mars its red color."));
+    Mars.RetryFeedback = FText::FromString(TEXT("Try again. Which answer talks about red dust?"));
     Mars.HintText = FText::FromString(TEXT("Rust can turn iron reddish."));
     Lessons.Add(Mars);
 
@@ -81,14 +83,14 @@ void AAstroAdventureGameModeBase::BuildLessons()
     Europa.DisplayName = FText::FromString(TEXT("Europa"));
     Europa.DiscoveryFact = FText::FromString(TEXT("Europa is an icy moon of Jupiter that may hide an ocean under the ice."));
     Europa.Ages4To6Text = FText::FromString(TEXT("Europa is an icy moon."));
-    Europa.Ages7To9Text = FText::FromString(TEXT("Europa is an icy moon of Jupiter. Scientists study clues about an ocean under its ice."));
+    Europa.Ages7To9Text = FText::FromString(TEXT("Europa is an icy moon of Jupiter. Scientists hunt for ocean clues under the ice."));
     Europa.Ages10To12Text = FText::FromString(TEXT("Europa's icy shell and evidence for a salty ocean make it an important place to study how moons can hold liquid water."));
     Europa.SourceUrl = TEXT("https://science.nasa.gov/jupiter/moons/europa/");
     Europa.QuizPrompt = FText::FromString(TEXT("What kind of world is Europa?"));
     Europa.Choices = {MakeChoice(TEXT("icy_moon"), TEXT("An icy moon of Jupiter.")), MakeChoice(TEXT("small_planet"), TEXT("The smallest planet near the Sun.")), MakeChoice(TEXT("red_planet"), TEXT("A red planet with rusty dust."))};
     Europa.CorrectChoiceId = TEXT("icy_moon");
-    Europa.CorrectFeedback = FText::FromString(TEXT("Yes. Europa is an icy moon, and scientists study its hidden ocean clues."));
-    Europa.RetryFeedback = FText::FromString(TEXT("Try the clue that says Europa is a moon, not a planet."));
+    Europa.CorrectFeedback = FText::FromString(TEXT("Excellent explorer! Europa is Jupiter's icy moon."));
+    Europa.RetryFeedback = FText::FromString(TEXT("Try again. Europa travels around Jupiter."));
     Europa.HintText = FText::FromString(TEXT("Europa travels around Jupiter."));
     Lessons.Add(Europa);
 }
@@ -106,11 +108,12 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     }
 
     GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-600.0f, -500.0f, 800.0f), FRotator(-42.0f, -35.0f, 0.0f));
+    GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-520.0f, -720.0f, 280.0f), FRotator::ZeroRotator);
 
     const FVector Positions[] = {
-        FVector(0.0f, -420.0f, 120.0f),
-        FVector(280.0f, 0.0f, 150.0f),
-        FVector(0.0f, 420.0f, 110.0f)
+        FVector(0.0f, -500.0f, 120.0f),
+        FVector(330.0f, 0.0f, 155.0f),
+        FVector(0.0f, 500.0f, 120.0f)
     };
     const FLinearColor Colors[] = {
         FLinearColor(0.62f, 0.62f, 0.58f),
@@ -127,6 +130,32 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
             Actor->Configure(Lessons[Index], Colors[Index]);
             Actor->SetDiscovered(GetMutableProgress(Lessons[Index].DestinationId).bQuizCompleted);
             DestinationActors.Add(Actor);
+        }
+    }
+
+    if (UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere")))
+    {
+        AStaticMeshActor* Sun = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector(-440.0f, -720.0f, 110.0f), FRotator::ZeroRotator);
+        if (Sun)
+        {
+            Sun->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+            Sun->SetActorScale3D(FVector(0.85f));
+#if WITH_EDITOR
+            Sun->SetActorLabel(TEXT("Friendly Sun Beacon"));
+#endif
+        }
+
+        for (int32 Index = 0; Index < 36; ++Index)
+        {
+            const float X = FMath::FRandRange(-260.0f, 520.0f);
+            const float Y = FMath::FRandRange(-820.0f, 820.0f);
+            const float Z = FMath::FRandRange(300.0f, 620.0f);
+            AStaticMeshActor* Star = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector(X, Y, Z), FRotator::ZeroRotator);
+            if (Star)
+            {
+                Star->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+                Star->SetActorScale3D(FVector(FMath::FRandRange(0.025f, 0.055f)));
+            }
         }
     }
 }
@@ -289,7 +318,7 @@ FString AAstroAdventureGameModeBase::GetHudStatusLine() const
         return Progress && Progress->bQuizCompleted;
     }) : 0;
 
-    return FString::Printf(TEXT("Mission %s | Progress %d/%d | Age band %s"), *MissionId.ToString(), CompleteCount, Lessons.Num(), ActiveAgeBand == EAstroAgeBand::Ages4To6 ? TEXT("4-6") : ActiveAgeBand == EAstroAgeBand::Ages7To9 ? TEXT("7-9") : TEXT("10-12"));
+    return FString::Printf(TEXT("Discovery cards %d/%d | Explorer mode ages %s"), CompleteCount, Lessons.Num(), ActiveAgeBand == EAstroAgeBand::Ages4To6 ? TEXT("4-6") : ActiveAgeBand == EAstroAgeBand::Ages7To9 ? TEXT("7-9") : TEXT("10-12"));
 }
 
 FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
@@ -300,17 +329,17 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     switch (CurrentScreen)
     {
     case EAstroMissionScreen::MissionPrompt:
-        return TEXT("Mission Control: Scan Mercury, Mars, and Europa. Match each world to its clue.");
+        return TEXT("Ready, space explorer? Scan three worlds and collect their clue cards.");
     case EAstroMissionScreen::Navigation:
-        return FString::Printf(TEXT("Focused destination: %s. Confirm to scan."), *Name);
+        return FString::Printf(TEXT("Fly to %s, then press Scan!"), *Name);
     case EAstroMissionScreen::DiscoveryCard:
-        return FString::Printf(TEXT("Discovery card - %s"), *Name);
+        return FString::Printf(TEXT("%s discovery card unlocked!"), *Name);
     case EAstroMissionScreen::Quiz:
         return Lesson ? Lesson->QuizPrompt.ToString() : TEXT("Quiz");
     case EAstroMissionScreen::QuizFeedback:
         return LastFeedback;
     case EAstroMissionScreen::MissionComplete:
-        return TEXT("Mission complete: you matched three space clues. Different worlds have different clues.");
+        return TEXT("Mission complete! You matched three space clues like a real explorer.");
     default:
         return TEXT("");
     }
@@ -348,7 +377,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         for (int32 Index = 0; Index < Lessons.Num(); ++Index)
         {
             const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[Index].DestinationId) : nullptr;
-            Lines.Add(FString::Printf(TEXT("%s %s - %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("discovered") : Progress && Progress->bScanned ? TEXT("scanned") : TEXT("ready")));
+            Lines.Add(FString::Printf(TEXT("%s %s - %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("card collected") : Progress && Progress->bScanned ? TEXT("quiz ready") : TEXT("waiting for scan")));
         }
     }
 
