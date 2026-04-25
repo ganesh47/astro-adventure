@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Verify Unreal 5.7.4 is installed
-        shell: pwsh
+        shell: powershell
         run: |
           $editorCmd = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Binaries\Win64\UnrealEditor-Cmd.exe"
           $buildBat = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\BatchFiles\Build.bat"
@@ -53,19 +53,19 @@ jobs:
           "Unreal Engine $actual found at $env:UNREAL_ENGINE_ROOT"
 
       - name: Compile Unreal editor target
-        shell: pwsh
+        shell: powershell
         run: |
           $buildBat = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\BatchFiles\Build.bat"
           & $buildBat AstroAdventureUEEditor Win64 Development "$env:GITHUB_WORKSPACE\$env:PROJECT_PATH" -WaitMutex -NoHotReload
 
       - name: Run Astro Adventure learning automation tests
-        shell: pwsh
+        shell: powershell
         run: |
           $editorCmd = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Binaries\Win64\UnrealEditor-Cmd.exe"
           & $editorCmd "$env:GITHUB_WORKSPACE\$env:PROJECT_PATH" -ExecCmds="Automation RunTests AstroAdventure.Learning;Quit" -unattended -nop4 -nosplash -ReportExportPath="$env:GITHUB_WORKSPACE\artifacts\unreal-validation\automation"
 
       - name: Record Unreal validation summary
-        shell: pwsh
+        shell: powershell
         run: |
           New-Item -ItemType Directory -Force -Path artifacts\unreal-validation | Out-Null
           $buildVersion = Get-Content (Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\Build.version") -Raw | ConvertFrom-Json
