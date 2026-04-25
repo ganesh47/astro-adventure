@@ -1,0 +1,88 @@
+name: Unreal Main Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/unreal-main-validation.yml"
+      - "AstroAdventureUE/**"
+      - "assets/manifest/**"
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unreal-validation:
+    name: Unreal 5.7.4 Self-Hosted Validation
+    runs-on:
+      - self-hosted
+      - Windows
+      - Unreal
+      - AstroAdventure
+    env:
+      UNREAL_ENGINE_ROOT: ${{ vars.UNREAL_ENGINE_ROOT || 'G:\Unreal\UE_5.7' }}
+      EXPECTED_UNREAL_VERSION: 5.7.4
+      PROJECT_PATH: AstroAdventureUE\AstroAdventureUE.uproject
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Verify Unreal 5.7.4 is installed
+        shell: pwsh
+        run: |
+          $editorCmd = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Binaries\Win64\UnrealEditor-Cmd.exe"
+          $buildBat = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\BatchFiles\Build.bat"
+          $buildVersion = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\Build.version"
+          if (-not (Test-Path $editorCmd)) {
+            throw "UnrealEditor-Cmd.exe not found at $editorCmd. Install Unreal Engine 5.7.4 and set UNREAL_ENGINE_ROOT if needed."
+          }
+          if (-not (Test-Path $buildBat)) {
+            throw "Build.bat not found at $buildBat."
+          }
+          if (-not (Test-Path $buildVersion)) {
+            throw "Build.version not found at $buildVersion."
+          }
+          $version = Get-Content $buildVersion -Raw | ConvertFrom-Json
+          $actual = "$($version.MajorVersion).$($version.MinorVersion).$($version.PatchVersion)"
+          if ($actual -ne $env:EXPECTED_UNREAL_VERSION) {
+            throw "Expected Unreal Engine $env:EXPECTED_UNREAL_VERSION, but Build.version reported $actual."
+          }
+          "Unreal Engine $actual found at $env:UNREAL_ENGINE_ROOT"
+
+      - name: Compile Unreal editor target
+        shell: pwsh
+        run: |
+          $buildBat = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\BatchFiles\Build.bat"
+          & $buildBat AstroAdventureUEEditor Win64 Development "$env:GITHUB_WORKSPACE\$env:PROJECT_PATH" -WaitMutex -NoHotReload
+
+      - name: Run Astro Adventure learning automation tests
+        shell: pwsh
+        run: |
+          $editorCmd = Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Binaries\Win64\UnrealEditor-Cmd.exe"
+          & $editorCmd "$env:GITHUB_WORKSPACE\$env:PROJECT_PATH" -ExecCmds="Automation RunTests AstroAdventure.Learning;Quit" -unattended -nop4 -nosplash -ReportExportPath="$env:GITHUB_WORKSPACE\artifacts\unreal-validation\automation"
+
+      - name: Record Unreal validation summary
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts\unreal-validation | Out-Null
+          $buildVersion = Get-Content (Join-Path $env:UNREAL_ENGINE_ROOT "Engine\Build\Build.version") -Raw | ConvertFrom-Json
+          @(
+            "Astro Adventure Unreal validation"
+            "Unreal: $($buildVersion.MajorVersion).$($buildVersion.MinorVersion).$($buildVersion.PatchVersion)-$($buildVersion.Changelist)"
+            "Project: $env:PROJECT_PATH"
+            "Editor target: compiled"
+            "Learning automation: AstroAdventure.Learning requested"
+            "M0 runtime scene: source-generated from game mode for alpha"
+            "M0 authored map automation: deferred until /Game/Maps/M0_DeploymentProof exists"
+          ) | Set-Content artifacts\unreal-validation\validation-summary.txt
+
+      - name: Upload Unreal validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: unreal-validation
+          path: artifacts/unreal-validation
+          if-no-files-found: warn

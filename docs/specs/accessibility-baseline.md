@@ -67,6 +67,6 @@ Run this checklist for first playable menus, mission prompts, and quiz loops.
 
 ## Open Questions
 
-- What minimum on-screen text size should the Unity prototype enforce for TV play?
+- What minimum on-screen text size should the Unreal prototype enforce for TV play?
 - Should reduced-motion and vibration toggles exist in M1 or be simulated through documented defaults first?
 - Which reading-level check should curriculum review use for player-facing copy?

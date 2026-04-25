@@ -1,21 +1,23 @@
 # Astro Adventure
 
-Astro Adventure is an open-source, Unity-first educational game/app for kids ages 8-12. The project teaches astronomy, space, planets, and related physics ideas through playful missions, controller-friendly interactions, quizzes, and discovery.
+Astro Adventure is an open-source, Unreal-first educational game for kids ages 4-12. The project teaches astronomy, space, planets, moons, and related physics ideas through age-banded, controller-friendly missions, discovery cards, quizzes, and playful exploration.
 
 ## Current Status
 
-This repository is in foundation mode. The first milestone is `M0: Xbox Dev Mode Proof`, which proves that we can build a minimal Unity experience on PC and deploy it to an Xbox on the local network before we invest deeply in gameplay production.
+This repository is pivoting to Unreal Engine `5.7.4`. The first milestone is `M0: Unreal Parity`, which rebuilds the original Mercury, Mars, and Europa proof as an Unreal project before deeper gameplay production. The current prerelease line starts at `v0.1.0-alpha.1`.
+
+Xbox remains the primary long-term target. Windows desktop is the first validation target, and full Unreal validation runs on a trusted self-hosted Windows runner rather than on untrusted public pull request jobs.
 
 ## Repository Split
 
-- `ganesh47/astro-adventure`: public game source, open educational content, approved assets, specs, issues, research outcomes, and community collaboration.
-- `ganesh47/astro-adventure-private`: private Xbox release artifacts, certificates, Partner Center notes, restricted SDK notes, store metadata drafts, and non-redistributable materials.
+- `ganesh47/astro-adventure`: public Unreal game source, open educational content, approved assets, specs, issues, research outcomes, and community collaboration.
+- `ganesh47/astro-adventure-private`: private Xbox release artifacts, certificates, Partner Center notes, restricted SDK/GDK notes, store metadata drafts, and non-redistributable materials.
 
 ## Documentation
 
-- Living research starts in the GitHub Wiki.
-- Stable specs, accepted decisions, contribution rules, and manifests live in this repository under `docs/` and `assets/manifest/`.
+- Stable specs, accepted decisions, contribution rules, and manifests live under `docs/` and `assets/manifest/`.
 - Every asset considered for the public repo must be tracked in `assets/manifest/assets.csv`.
+- Unreal project setup starts in `AstroAdventureUE/README.md`.
 
 ## Licensing
 

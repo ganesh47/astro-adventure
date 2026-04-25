@@ -16,7 +16,7 @@ This spec depends on `docs/specs/accessibility-baseline.md`.
 - Help/hint: reveal age-appropriate guidance when the current screen supports it.
 - Directional navigation: move focus between selectable elements in predictable screen order.
 
-Final button glyphs should be assigned during Unity input implementation and kept consistent across PC and Xbox builds.
+Final button glyphs should be assigned during Unreal input implementation and kept consistent across PC and Xbox builds.
 
 ## Focus Behavior
 

@@ -39,7 +39,7 @@ Use this checklist before opening M0/M1 pull requests, initializing public Wiki 
 
 As of this spec, the public docs already state the intended split in `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `docs/architecture.md`. The asset manifest also has approval fields for public repository and Xbox build review.
 
-The remaining risk is procedural: contributors need to apply the boundary before adding Unity project files, Xbox Dev Mode notes, Wiki pages, and asset examples. Future audit comments should summarize public-safe findings without quoting sensitive evidence.
+The remaining risk is procedural: contributors need to apply the boundary before adding Unreal project files, Xbox Dev Mode notes, Wiki pages, and asset examples. Future audit comments should summarize public-safe findings without quoting sensitive evidence.
 
 ## Follow-up Triggers
 

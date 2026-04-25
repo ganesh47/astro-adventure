@@ -1,1 +1,4 @@
-id,title,type,source_url,license,author,ai_generated,tool,notes,approved_for_public_repo,approved_for_xbox_build
+id,title,type,source_url,license,author,ai_generated,tool,notes,approved_for_public_repo,approved_for_xbox_build,review_status,rejection_reason
+candidate_public_domain_starfield,Public Domain Starfield Candidate,image,https://images.nasa.gov/details/PIA21923,public-domain,NASA,no,none,Candidate record only; no asset file is committed; review source metadata and NASA media guidelines before use,yes,not-reviewed,accepted,
+candidate_original_ai_planet_icon,Original AI Planet Icon Candidate,image,original,original-project-owned,Astro Adventure contributors,yes,AI-assisted drawing workflow,Candidate record only; no asset file is committed; keep prompt/source notes in the asset review issue before use,yes,not-reviewed,accepted,
+candidate_private_marketplace_ship,Private Marketplace Ship Candidate,model,private-only,proprietary-private-only,Third-party marketplace creator,no,none,Rejected candidate only; do not commit source or derived files to the public repo,no,no,rejected,Private-only or redistribution-unclear asset

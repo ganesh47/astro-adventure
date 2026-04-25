@@ -2,18 +2,12 @@
 
 ## Status
 
-Accepted for foundation work.
+Superseded by [Decision 0002: Unreal 5.7.4 Pivot](0002-unreal-5-7-4-pivot.md).
 
-## Decision
+## Original Decision
 
-Astro Adventure will start with a Unity-first prototype while keeping research notes open for Unreal, Godot, UWP, and future Xbox GDK paths.
+Astro Adventure started with a Unity-first prototype while keeping research notes open for Unreal, Godot, UWP, and future Xbox paths.
 
-## Rationale
+## Supersession
 
-Unity is a practical starting point for a kid-focused educational game because it supports fast iteration, controller input, PC prototyping, and a future Xbox path. The first milestone still prioritizes proving Xbox Dev Mode deployment before committing to deep production work.
-
-## Consequences
-
-- Initial technical specs should assume Unity unless a later decision changes direction.
-- Restricted Xbox publishing artifacts remain private.
-- Engine comparison research can continue in the Wiki.
+The project no longer maintains an active Unity implementation. Unity proved useful for early exploration, but the active platform path is now Unreal Engine `5.7.4` because Xbox is the primary target and full validation will run on a trusted self-hosted Windows runner.
