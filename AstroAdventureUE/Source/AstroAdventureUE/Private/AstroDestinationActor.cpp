@@ -25,8 +25,9 @@ AAstroDestinationActor::AAstroDestinationActor()
     Label->SetupAttachment(Root);
     Label->SetHorizontalAlignment(EHTA_Center);
     Label->SetTextRenderColor(FColor::White);
-    Label->SetWorldSize(52.0f);
-    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 110.0f));
+    Label->SetWorldSize(68.0f);
+    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 145.0f));
+    Label->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
 }
 
 void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, const FLinearColor& Color)
@@ -42,6 +43,8 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
     if (UMaterialInstanceDynamic* Material = BodyMesh->CreateAndSetMaterialInstanceDynamic(0))
     {
         Material->SetVectorParameterValue(TEXT("Color"), BaseColor);
+        Material->SetVectorParameterValue(TEXT("BaseColor"), BaseColor);
+        Material->SetVectorParameterValue(TEXT("EmissiveColor"), BaseColor * 0.35f);
     }
 }
 
@@ -50,12 +53,12 @@ void AAstroDestinationActor::SetFocused(const bool bFocused)
     const float Scale = bFocused ? 1.28f : 1.0f;
     SetActorScale3D(FVector(Scale));
     BodyMesh->SetRenderCustomDepth(bFocused);
-    Label->SetTextRenderColor(bFocused ? FColor::Yellow : FColor::White);
+    Label->SetTextRenderColor(bFocused ? FColor(255, 236, 84) : FColor(190, 220, 255));
 }
 
 void AAstroDestinationActor::SetDiscovered(const bool bDiscovered)
 {
     bIsDiscovered = bDiscovered;
-    const FString Prefix = bIsDiscovered ? TEXT("[Discovered] ") : TEXT("");
+    const FString Prefix = bIsDiscovered ? TEXT("* ") : TEXT("");
     Label->SetText(FText::FromString(Prefix + DisplayName.ToString()));
 }

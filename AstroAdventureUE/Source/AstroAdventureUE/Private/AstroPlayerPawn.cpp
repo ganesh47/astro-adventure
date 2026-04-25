@@ -24,8 +24,8 @@ AAstroPlayerPawn::AAstroPlayerPawn()
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(Root);
-    Camera->SetRelativeLocation(FVector(-760.0f, 0.0f, 520.0f));
-    Camera->SetRelativeRotation(FRotator(-34.0f, 0.0f, 0.0f));
+    Camera->SetRelativeLocation(FVector(-920.0f, 0.0f, 640.0f));
+    Camera->SetRelativeRotation(FRotator(-38.0f, 0.0f, 0.0f));
 
     Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
     Movement->MaxSpeed = 650.0f;

@@ -23,4 +23,5 @@ private:
     void AnswerOne();
     void AnswerTwo();
     void AnswerThree();
+    void QuitGame();
 };
