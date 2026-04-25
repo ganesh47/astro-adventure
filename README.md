@@ -6,7 +6,7 @@ Astro Adventure is an open-source, Unreal-first educational game for kids ages 4
 
 This repository is pivoting to Unreal Engine `5.7.4`. The first milestone is `M0: Unreal Parity`, which rebuilds the original Mercury, Mars, and Europa proof as an Unreal project before deeper gameplay production. The current prerelease line starts at `v0.1.0-alpha.1`.
 
-Xbox remains the primary long-term target. Windows desktop is the first validation target, and full Unreal validation runs on a trusted self-hosted Windows runner rather than on untrusted public pull request jobs.
+Xbox remains the primary long-term target. Windows desktop is the first validation target. GitHub Actions is limited to low-cost public DevSecOps checks; Unreal builds, packaged artifacts, screenshots, and other expensive validation outputs are produced locally and published only when intentionally reviewed.
 
 ## Repository Split
 

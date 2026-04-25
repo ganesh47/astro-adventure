@@ -10,7 +10,7 @@ Astro Adventure will pivot fully to Unreal Engine `5.7.4`. The active public gam
 
 ## Rationale
 
-Xbox is the primary long-term target. Unreal offers a stronger console-oriented path than the prior Unity Personal setup and avoids relying on Unity hosted CI license activation. The project will use GitHub-hosted public checks for safe PR guardrails and a trusted self-hosted Windows runner for full Unreal validation.
+Xbox is the primary long-term target. Unreal offers a stronger console-oriented path than the prior Unity Personal setup and avoids relying on Unity hosted CI license activation. The project will use GitHub-hosted public checks for safe PR guardrails and local maintainer machines for expensive Unreal build/package validation.
 
 ## Consequences
 

@@ -8,7 +8,7 @@ Use concurrent agent work while keeping public CI safe and Unreal validation tru
 
 | Thread | Owns |
 | --- | --- |
-| Platform and CI | UE 5.7.4 install path, self-hosted runner, workflows, Xbox Dev Mode research |
+| Platform and validation | UE 5.7.4 local validation, GitHub DevSecOps workflows, Xbox Dev Mode research |
 | Unreal prototype | C++ shell, Blueprint map, input, focus/scan loop, validation contracts |
 | Curriculum and gameplay | Mercury/Mars/Europa facts, discovery cards, quiz copy, kid-safe feedback |
 | Asset and boundary QA | Manifest rows, licenses, public/private boundary, private release guardrails |
@@ -16,7 +16,7 @@ Use concurrent agent work while keeping public CI safe and Unreal validation tru
 ## Wave Order
 
 1. Pivot guardrails: Unreal docs, ignore/LFS rules, public/private boundaries, CI split.
-2. Unreal M0 shell: project compiles and validates on the self-hosted runner.
+2. Unreal M0 shell: project compiles and validates locally with sanitized release evidence.
 3. M0 parity: map, ship, destinations, scan, quiz, completion.
 4. Xbox proof prep: private release records, package/evidence workflow, Dev Mode verification.
 5. M1 gameplay: polished first mission loop after M0 is stable.

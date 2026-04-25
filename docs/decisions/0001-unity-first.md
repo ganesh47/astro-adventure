@@ -10,4 +10,4 @@ Astro Adventure started with a Unity-first prototype while keeping research note
 
 ## Supersession
 
-The project no longer maintains an active Unity implementation. Unity proved useful for early exploration, but the active platform path is now Unreal Engine `5.7.4` because Xbox is the primary target and full validation will run on a trusted self-hosted Windows runner.
+The project no longer maintains an active Unity implementation. Unity proved useful for early exploration, but the active platform path is now Unreal Engine `5.7.4` because Xbox is the primary target and full validation will run locally before release.

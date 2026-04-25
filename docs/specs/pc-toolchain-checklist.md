@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This checklist prepares a Windows development PC for Unreal-first Astro Adventure work and later Xbox Dev Mode proof runs. It uses public tooling and public documentation only.
+This checklist prepares a Windows development PC for Unreal-first Astro Adventure work and later Xbox Dev Mode proof runs. It uses public tooling and public documentation only, and it avoids publishing machine-specific paths or runner identities.
 
 ## Chosen Baseline
 
@@ -18,14 +18,13 @@ This checklist prepares a Windows development PC for Unreal-first Astro Adventur
 | --- | --- | --- |
 | Windows | Windows 10 or Windows 11 with current updates. | Run `winver` and record edition/version/build. |
 | Unreal Engine | Unreal Engine `5.7.4` installed through Epic Launcher. | `UnrealEditor-Cmd.exe -version` reports 5.7.4. |
-| Engine Path | Self-hosted runner can find UE 5.7.4. | `UNREAL_ENGINE_ROOT` points to the installed engine root, such as `G:\Unreal\UE_5.7`. |
+| Engine Path | Local shell can find UE 5.7.4. | Set `UNREAL_ENGINE_ROOT` to the local engine root before running build commands. Do not commit or publish personal filesystem paths. |
 | Visual Studio | Visual Studio 2022 installed. | Help > About shows exact version. |
 | C++ Tooling | C++ game development workload installed. | Visual Studio Installer lists C++ tools, MSVC, and Windows SDK. |
 | C++ Standard Library | MSVC standard headers installed. | `Test-Path "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\<version>\include\type_traits"` returns true. |
 | Git LFS | Git LFS installed before binary assets are added. | `git lfs version` succeeds. |
 | Project | `AstroAdventureUE.uproject` opens in UE 5.7.4. | Editor opens without converting to another engine version. |
-| Build | Editor target compiles locally. | Self-hosted workflow or local build completes. |
-| Runner | GitHub self-hosted runner registered. | Runner labels include `self-hosted`, `Windows`, `Unreal`, `AstroAdventure`. |
+| Build | Editor and game targets compile locally. | Local build commands complete and produce a sanitized pass/fail summary. |
 | Xbox Dev Mode | Xbox is activated for Developer Mode when M3 begins. | Private evidence only; do not commit screenshots or identifiers. |
 
 ## Version Record Template
@@ -34,11 +33,10 @@ This checklist prepares a Windows development PC for Unreal-first Astro Adventur
 PC:
 Windows:
 Unreal Engine:
-Unreal path:
+Unreal path: local-only; do not publish personal path
 Visual Studio:
 Installed Windows SDKs:
 Git LFS:
-Runner labels:
 Xbox model/family:
 Deployment route:
 ```
