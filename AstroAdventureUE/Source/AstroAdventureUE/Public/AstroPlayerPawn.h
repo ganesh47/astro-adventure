@@ -37,8 +37,11 @@ public:
     void MoveForward(float Value);
     void MoveRight(float Value);
     void SetTravelTarget(const FVector& TargetLocation);
+    void SetCameraFocusTarget(const FVector& TargetLocation);
 
 private:
     FVector TravelTarget = FVector::ZeroVector;
+    FVector CameraFocusTarget = FVector::ZeroVector;
     bool bHasTravelTarget = false;
+    bool bHasCameraFocusTarget = false;
 };

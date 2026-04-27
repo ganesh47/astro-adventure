@@ -36,7 +36,8 @@ void AAstroAdventureGameModeBase::BeginPlay()
     BuildLessons();
     LoadProgress();
     SpawnRuntimeScene();
-    CurrentScreen = EAstroMissionScreen::AgeSelect;
+    CurrentScreen = EAstroMissionScreen::Home;
+    HomeMenuIndex = HasAnyProgress() ? 1 : 0;
     UpdateDestinationFocus();
 }
 
@@ -132,7 +133,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
 
     if (!UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass()))
     {
-        GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), FVector(-980.0f, 0.0f, 115.0f), FRotator::ZeroRotator);
+        GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), FVector(-1320.0f, -170.0f, 135.0f), FRotator::ZeroRotator);
     }
 
     ADirectionalLight* KeyLight = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-900.0f, -900.0f, 900.0f), FRotator(-45.0f, -28.0f, 0.0f));
@@ -142,7 +143,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         KeyLight->GetLightComponent()->SetIntensity(4.0f);
     }
 
-    APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-980.0f, 0.0f, 170.0f), FRotator::ZeroRotator);
+    APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-1400.0f, 0.0f, 190.0f), FRotator::ZeroRotator);
     if (SunLight && SunLight->GetLightComponent())
     {
         SunLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
@@ -153,19 +154,19 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     SpawnBackdrop();
 
     const FVector Positions[] = {
-        FVector(-980.0f, 0.0f, 160.0f),
-        FVector(-690.0f, -360.0f, 115.0f),
-        FVector(-510.0f, 300.0f, 125.0f),
-        FVector(-285.0f, -235.0f, 120.0f),
-        FVector(-185.0f, -115.0f, 105.0f),
-        FVector(0.0f, 245.0f, 120.0f),
-        FVector(175.0f, -40.0f, 110.0f),
-        FVector(380.0f, 210.0f, 145.0f),
-        FVector(500.0f, 350.0f, 118.0f),
-        FVector(690.0f, -210.0f, 142.0f),
-        FVector(900.0f, 230.0f, 138.0f),
-        FVector(1100.0f, -130.0f, 136.0f),
-        FVector(1285.0f, 310.0f, 108.0f)
+        FVector(-1400.0f, 0.0f, 180.0f),
+        FVector(-1060.0f, -275.0f, 118.0f),
+        FVector(-760.0f, 265.0f, 128.0f),
+        FVector(-455.0f, -245.0f, 124.0f),
+        FVector(-335.0f, -105.0f, 106.0f),
+        FVector(-110.0f, 260.0f, 122.0f),
+        FVector(235.0f, -10.0f, 110.0f),
+        FVector(595.0f, 275.0f, 150.0f),
+        FVector(735.0f, 410.0f, 120.0f),
+        FVector(1055.0f, -260.0f, 145.0f),
+        FVector(1375.0f, 235.0f, 140.0f),
+        FVector(1685.0f, -155.0f, 138.0f),
+        FVector(1980.0f, 310.0f, 110.0f)
     };
 
     DestinationActors.Reset();
@@ -182,7 +183,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         }
     }
 
-    SpawnAsteroidBelt(FVector(175.0f, -40.0f, 108.0f));
+    SpawnAsteroidBelt(Positions[6]);
 
     PlayerPawn = Cast<AAstroPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex))
@@ -300,9 +301,19 @@ void AAstroAdventureGameModeBase::SaveProgress() const
 
 void AAstroAdventureGameModeBase::FocusNextDestination()
 {
+    if (CurrentScreen == EAstroMissionScreen::Home)
+    {
+        HomeMenuIndex = (HomeMenuIndex + 1) % 4;
+        return;
+    }
     if (CurrentScreen == EAstroMissionScreen::AgeSelect)
     {
         AgeSelectIndex = (AgeSelectIndex + 1) % 3;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        MissionCompleteMenuIndex = (MissionCompleteMenuIndex + 1) % 4;
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
@@ -316,7 +327,7 @@ void AAstroAdventureGameModeBase::FocusNextDestination()
         return;
     }
 
-    if (!Lessons.IsEmpty())
+    if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
         FocusedDestinationIndex = (FocusedDestinationIndex + 1) % Lessons.Num();
         UpdateDestinationFocus();
@@ -325,9 +336,19 @@ void AAstroAdventureGameModeBase::FocusNextDestination()
 
 void AAstroAdventureGameModeBase::FocusPreviousDestination()
 {
+    if (CurrentScreen == EAstroMissionScreen::Home)
+    {
+        HomeMenuIndex = (HomeMenuIndex + 3) % 4;
+        return;
+    }
     if (CurrentScreen == EAstroMissionScreen::AgeSelect)
     {
         AgeSelectIndex = (AgeSelectIndex + 2) % 3;
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        MissionCompleteMenuIndex = (MissionCompleteMenuIndex + 3) % 4;
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
@@ -341,7 +362,7 @@ void AAstroAdventureGameModeBase::FocusPreviousDestination()
         return;
     }
 
-    if (!Lessons.IsEmpty())
+    if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
         FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
         UpdateDestinationFocus();
@@ -351,6 +372,11 @@ void AAstroAdventureGameModeBase::FocusPreviousDestination()
 void AAstroAdventureGameModeBase::Confirm()
 {
     const FAstroDestinationLesson* Lesson = GetFocusedLesson();
+    if (CurrentScreen == EAstroMissionScreen::Home)
+    {
+        ExecuteHomeSelection();
+        return;
+    }
     if (CurrentScreen == EAstroMissionScreen::AgeSelect)
     {
         SelectAgeBand(AgeSelectIndex);
@@ -360,6 +386,11 @@ void AAstroAdventureGameModeBase::Confirm()
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
     {
         ExecutePauseSelection();
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        ExecuteMissionCompleteSelection();
         return;
     }
     if (!Lesson)
@@ -384,6 +415,7 @@ void AAstroAdventureGameModeBase::Confirm()
         CurrentScreen = EAstroMissionScreen::Quiz;
         break;
     case EAstroMissionScreen::Passport:
+    case EAstroMissionScreen::AtlasView:
         CurrentScreen = EAstroMissionScreen::Navigation;
         break;
     case EAstroMissionScreen::Quiz:
@@ -393,15 +425,19 @@ void AAstroAdventureGameModeBase::Confirm()
         if (bLastAnswerCorrect)
         {
             CompleteQuiz(Lesson->DestinationId, true);
-            CurrentScreen = IsMissionComplete() ? EAstroMissionScreen::MissionComplete : EAstroMissionScreen::Navigation;
+            LastStampTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+            CurrentScreen = EAstroMissionScreen::StampAward;
         }
         else
         {
             CurrentScreen = EAstroMissionScreen::Quiz;
         }
         break;
+    case EAstroMissionScreen::StampAward:
+        CurrentScreen = IsMissionComplete() ? EAstroMissionScreen::MissionComplete : EAstroMissionScreen::Navigation;
+        break;
     case EAstroMissionScreen::MissionComplete:
-        CurrentScreen = EAstroMissionScreen::Passport;
+        CurrentScreen = EAstroMissionScreen::AtlasView;
         break;
     default:
         break;
@@ -413,8 +449,14 @@ void AAstroAdventureGameModeBase::Confirm()
 void AAstroAdventureGameModeBase::Back()
 {
     bShowingHint = false;
-    if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+    if (CurrentScreen == EAstroMissionScreen::Home)
     {
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::MissionPrompt)
+    {
+        CurrentScreen = EAstroMissionScreen::Home;
+        HomeMenuIndex = HasAnyProgress() ? 1 : 0;
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
@@ -425,9 +467,13 @@ void AAstroAdventureGameModeBase::Back()
     {
         CurrentScreen = EAstroMissionScreen::DiscoveryCard;
     }
-    else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::Passport)
+    else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
     {
         CurrentScreen = EAstroMissionScreen::Navigation;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        CurrentScreen = EAstroMissionScreen::AtlasView;
     }
 }
 
@@ -450,13 +496,14 @@ void AAstroAdventureGameModeBase::ToggleDeepDive()
 
 void AAstroAdventureGameModeBase::TogglePassport()
 {
-    if (CurrentScreen == EAstroMissionScreen::Passport)
+    if (CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport)
     {
-        CurrentScreen = EAstroMissionScreen::Navigation;
+        CurrentScreen = PreviousScreen == EAstroMissionScreen::AtlasView || PreviousScreen == EAstroMissionScreen::Passport ? EAstroMissionScreen::Navigation : PreviousScreen;
     }
-    else if (CurrentScreen != EAstroMissionScreen::AgeSelect && CurrentScreen != EAstroMissionScreen::PauseMenu)
+    else if (CurrentScreen != EAstroMissionScreen::Home && CurrentScreen != EAstroMissionScreen::AgeSelect && CurrentScreen != EAstroMissionScreen::PauseMenu)
     {
-        CurrentScreen = EAstroMissionScreen::Passport;
+        PreviousScreen = CurrentScreen;
+        CurrentScreen = EAstroMissionScreen::AtlasView;
     }
 }
 
@@ -465,6 +512,10 @@ void AAstroAdventureGameModeBase::TogglePause()
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
     {
         CurrentScreen = PreviousScreen;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::Home)
+    {
+        return;
     }
     else
     {
@@ -519,6 +570,8 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
 
     switch (CurrentScreen)
     {
+    case EAstroMissionScreen::Home:
+        return TEXT("Solar Passport");
     case EAstroMissionScreen::AgeSelect:
         return TEXT("Choose your explorer mode");
     case EAstroMissionScreen::MissionPrompt:
@@ -530,11 +583,14 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     case EAstroMissionScreen::DeepDive:
         return FString::Printf(TEXT("Look closer: %s"), *Name);
     case EAstroMissionScreen::Passport:
+    case EAstroMissionScreen::AtlasView:
         return TEXT("Solar Passport discovery log");
     case EAstroMissionScreen::Quiz:
         return Lesson ? Lesson->QuizPrompt.ToString() : TEXT("Quiz");
     case EAstroMissionScreen::QuizFeedback:
         return LastFeedback;
+    case EAstroMissionScreen::StampAward:
+        return Lesson ? FString::Printf(TEXT("%s stamp unlocked!"), *Name) : TEXT("Stamp unlocked!");
     case EAstroMissionScreen::MissionComplete:
         return TEXT("Mission complete! Your Solar Passport has a full first-expedition route.");
     case EAstroMissionScreen::PauseMenu:
@@ -548,6 +604,26 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 {
     TArray<FString> Lines;
     const FAstroDestinationLesson* Lesson = GetFocusedLesson();
+
+    if (CurrentScreen == EAstroMissionScreen::Home)
+    {
+        const TCHAR* Options[] = {TEXT("New Expedition"), TEXT("Continue"), TEXT("Reset Passport"), TEXT("Quit")};
+        for (int32 Index = 0; Index < 4; ++Index)
+        {
+            FString Label = Options[Index];
+            if (Index == 1 && !HasAnyProgress())
+            {
+                Label += TEXT(" - no saved route yet");
+            }
+            Lines.Add(FString::Printf(TEXT("%s %s"), Index == HomeMenuIndex ? TEXT(">") : TEXT(" "), *Label));
+        }
+        if (!LastFeedback.IsEmpty())
+        {
+            Lines.Add(LastFeedback);
+        }
+        Lines.Add(TEXT("Start fresh for a clean local playtest."));
+        return Lines;
+    }
 
     if (CurrentScreen == EAstroMissionScreen::AgeSelect)
     {
@@ -570,6 +646,17 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         return Lines;
     }
 
+    if (CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        const TCHAR* Options[] = {TEXT("Explore again"), TEXT("Open Passport"), TEXT("Change age"), TEXT("Quit")};
+        Lines.Add(TEXT("Route complete! You scanned the Solar System and earned the required stamps."));
+        for (int32 Index = 0; Index < 4; ++Index)
+        {
+            Lines.Add(FString::Printf(TEXT("%s %s"), Index == MissionCompleteMenuIndex ? TEXT(">") : TEXT(" "), Options[Index]));
+        }
+        return Lines;
+    }
+
     if (!Lesson)
     {
         return Lines;
@@ -583,8 +670,11 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
     {
         Lines.Add(FString::Printf(TEXT("Quick fact: %s"), *Lesson->DiscoveryFact.ToString()));
-        Lines.Add(FString::Printf(TEXT("Wow fact: %s"), *Lesson->WowFact.ToString()));
-        Lines.Add(FString::Printf(TEXT("Visual clue: %s"), *Lesson->VisualClue.ToString()));
+        if (ActiveAgeBand != EAstroAgeBand::Ages4To6)
+        {
+            Lines.Add(FString::Printf(TEXT("Wow fact: %s"), *Lesson->WowFact.ToString()));
+        }
+        Lines.Add(FString::Printf(TEXT("Look for: %s"), *Lesson->VisualClue.ToString()));
         Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
         Lines.Add(TEXT("Press M / LT for More Info, or Confirm for the quiz."));
     }
@@ -607,29 +697,31 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         Lines.Add(bLastAnswerCorrect ? TEXT("Stamp saved! Confirm to continue the route.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
     }
+    else if (CurrentScreen == EAstroMissionScreen::StampAward)
+    {
+        const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
+        Lines.Add(TEXT("Passport stamp added. Nice exploring!"));
+        Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm for the next stop."));
+        Lines.Add(FString::Printf(TEXT("Review box %d | mastery %d"), Progress ? Progress->ReviewBox : 0, Progress ? Progress->MasteryScore : 0));
+    }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
     {
-        Lines.Add(TEXT("Atlas route: Sun -> Mercury -> Venus -> Earth/Moon -> Mars -> asteroid belt -> Jupiter/Europa -> Saturn -> Uranus -> Neptune -> Pluto preview."));
+        Lines.Add(FString::Printf(TEXT("Next stop: %s"), *Lesson->DisplayName.ToString()));
+        Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
+        const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
+        Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamped already. Pick another stop or open Passport.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to open its card again.") : TEXT("Confirm to scan for a discovery card."));
+        Lines.Add(TEXT("Open Passport / RT for the full Atlas route."));
+    }
+    else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
+    {
+        Lines.Add(TEXT("Atlas View: full route, stamps, mastery, and future review boxes."));
         for (int32 Index = 0; Index < Lessons.Num(); ++Index)
         {
             const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[Index].DestinationId) : nullptr;
-            Lines.Add(FString::Printf(TEXT("%s %s - %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("passport stamped") : Progress && Progress->bScanned ? TEXT("quiz ready") : TEXT("ready to scan")));
-            if (Lines.Num() >= 8)
+            Lines.Add(FString::Printf(TEXT("%s %s | %s | mastery %d | box %d"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("stamped") : Progress && Progress->bScanned ? TEXT("quiz ready") : TEXT("not scanned"), Progress ? Progress->MasteryScore : 0, Progress ? Progress->ReviewBox : 0));
+            if (Lines.Num() >= 9)
             {
-                Lines.Add(TEXT("Open Passport for the full log."));
-                break;
-            }
-        }
-    }
-    else if (CurrentScreen == EAstroMissionScreen::Passport)
-    {
-        for (const FAstroDestinationLesson& Entry : Lessons)
-        {
-            const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Entry.DestinationId) : nullptr;
-            Lines.Add(FString::Printf(TEXT("%s %s | mastery %d | review box %d"), Progress && Progress->bQuizCompleted ? TEXT("*") : TEXT("-"), *Entry.DisplayName.ToString(), Progress ? Progress->MasteryScore : 0, Progress ? Progress->ReviewBox : 0));
-            if (Lines.Num() >= 10)
-            {
-                Lines.Add(TEXT("More stamps continue across the route."));
+                Lines.Add(TEXT("Move focus to inspect more stops. Back returns to the mission."));
                 break;
             }
         }
@@ -662,7 +754,9 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
 
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex) && DestinationActors[FocusedDestinationIndex])
     {
-        PlayerPawn->SetTravelTarget(DestinationActors[FocusedDestinationIndex]->GetActorLocation() + FVector(-145.0f, 0.0f, 70.0f));
+        const FVector FocusLocation = DestinationActors[FocusedDestinationIndex]->GetActorLocation();
+        PlayerPawn->SetTravelTarget(FocusLocation + FVector(-145.0f, 0.0f, 70.0f));
+        PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(0.0f, 0.0f, 45.0f));
     }
 }
 
@@ -702,15 +796,8 @@ void AAstroAdventureGameModeBase::ExecutePauseSelection()
     }
     else if (PauseMenuIndex == 1)
     {
-        if (ProgressSave)
-        {
-            ProgressSave->DestinationProgress.Reset();
-            for (const FAstroDestinationLesson& Lesson : Lessons)
-            {
-                GetMutableProgress(Lesson.DestinationId);
-            }
-        }
-        SaveProgress();
+        ClearPassportProgress();
+        FocusedDestinationIndex = 0;
         CurrentScreen = EAstroMissionScreen::MissionPrompt;
         UpdateDestinationFocus();
     }
@@ -722,6 +809,122 @@ void AAstroAdventureGameModeBase::ExecutePauseSelection()
     {
         UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
     }
+}
+
+void AAstroAdventureGameModeBase::ExecuteHomeSelection()
+{
+    if (HomeMenuIndex == 0)
+    {
+        ClearPassportProgress();
+        FocusedDestinationIndex = 0;
+        LastFeedback.Empty();
+        CurrentScreen = EAstroMissionScreen::AgeSelect;
+        UpdateDestinationFocus();
+    }
+    else if (HomeMenuIndex == 1)
+    {
+        if (HasAnyProgress())
+        {
+            if (IsMissionComplete())
+            {
+                MissionCompleteMenuIndex = 0;
+                CurrentScreen = EAstroMissionScreen::MissionComplete;
+                return;
+            }
+
+            for (int32 Index = 0; Index < Lessons.Num(); ++Index)
+            {
+                const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[Index].DestinationId) : nullptr;
+                if (!Progress || !Progress->bQuizCompleted)
+                {
+                    FocusedDestinationIndex = Index;
+                    break;
+                }
+            }
+            LastFeedback.Empty();
+            CurrentScreen = EAstroMissionScreen::MissionPrompt;
+            UpdateDestinationFocus();
+        }
+        else
+        {
+            LastFeedback = TEXT("Start a new expedition first.");
+        }
+    }
+    else if (HomeMenuIndex == 2)
+    {
+        ClearPassportProgress();
+        FocusedDestinationIndex = 0;
+        LastFeedback = TEXT("Passport reset. Ready for a fresh launch.");
+        UpdateDestinationFocus();
+    }
+    else
+    {
+        UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
+    }
+}
+
+void AAstroAdventureGameModeBase::ExecuteMissionCompleteSelection()
+{
+    if (MissionCompleteMenuIndex == 0)
+    {
+        ClearPassportProgress();
+        FocusedDestinationIndex = 0;
+        CurrentScreen = EAstroMissionScreen::MissionPrompt;
+        UpdateDestinationFocus();
+    }
+    else if (MissionCompleteMenuIndex == 1)
+    {
+        PreviousScreen = EAstroMissionScreen::MissionComplete;
+        CurrentScreen = EAstroMissionScreen::AtlasView;
+    }
+    else if (MissionCompleteMenuIndex == 2)
+    {
+        CurrentScreen = EAstroMissionScreen::AgeSelect;
+    }
+    else
+    {
+        UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
+    }
+}
+
+void AAstroAdventureGameModeBase::ClearPassportProgress()
+{
+    if (ProgressSave)
+    {
+        ProgressSave->DestinationProgress.Reset();
+        for (const FAstroDestinationLesson& Lesson : Lessons)
+        {
+            GetMutableProgress(Lesson.DestinationId);
+        }
+    }
+    bShowingHint = false;
+    bLastAnswerCorrect = false;
+    LastScanTime = -100.0f;
+    LastStampTime = -100.0f;
+    SaveProgress();
+}
+
+bool AAstroAdventureGameModeBase::HasAnyProgress() const
+{
+    if (!ProgressSave)
+    {
+        return false;
+    }
+
+    for (const TPair<FName, FAstroDestinationProgress>& Entry : ProgressSave->DestinationProgress)
+    {
+        if (Entry.Value.bScanned || Entry.Value.bQuizCompleted || Entry.Value.Attempts > 0)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool AAstroAdventureGameModeBase::IsMissionPlayScreen() const
+{
+    return CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward;
 }
 
 int32 AAstroAdventureGameModeBase::CountCompletedStops() const
@@ -736,6 +939,11 @@ int32 AAstroAdventureGameModeBase::CountCompletedStops() const
 bool AAstroAdventureGameModeBase::IsScanEffectActive() const
 {
     return GetWorld() && GetWorld()->GetTimeSeconds() - LastScanTime < 1.35f;
+}
+
+bool AAstroAdventureGameModeBase::IsStampEffectActive() const
+{
+    return GetWorld() && GetWorld()->GetTimeSeconds() - LastStampTime < 1.8f;
 }
 
 bool AAstroAdventureGameModeBase::IsMissionComplete() const

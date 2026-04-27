@@ -27,4 +27,9 @@ private:
     void AnswerTwo();
     void AnswerThree();
     void QuitGame();
+    void NavigateHorizontal(float Value);
+    void NavigateVertical(float Value);
+
+    bool bHorizontalAxisReady = true;
+    bool bVerticalAxisReady = true;
 };

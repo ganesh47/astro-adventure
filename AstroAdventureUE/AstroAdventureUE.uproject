@@ -18,6 +18,10 @@
     {
       "Name": "CommonUI",
       "Enabled": true
+    },
+    {
+      "Name": "AndroidFileServer",
+      "Enabled": false
     }
   ]
 }

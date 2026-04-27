@@ -59,6 +59,8 @@ public:
     FString GetHudPrimaryLine() const;
     TArray<FString> GetHudDetailLines() const;
     bool IsScanEffectActive() const;
+    bool IsStampEffectActive() const;
+    EAstroMissionScreen GetCurrentScreen() const { return CurrentScreen; }
 
 private:
     static constexpr int32 SaveUserIndex = 0;
@@ -79,13 +81,16 @@ private:
     UPROPERTY()
     UAstroProgressSaveGame* ProgressSave = nullptr;
 
-    EAstroMissionScreen CurrentScreen = EAstroMissionScreen::MissionPrompt;
+    EAstroMissionScreen CurrentScreen = EAstroMissionScreen::Home;
     EAstroMissionScreen PreviousScreen = EAstroMissionScreen::Navigation;
+    int32 HomeMenuIndex = 0;
     int32 FocusedDestinationIndex = 0;
     int32 FocusedQuizChoiceIndex = 0;
     int32 PauseMenuIndex = 0;
+    int32 MissionCompleteMenuIndex = 0;
     int32 AgeSelectIndex = 1;
     float LastScanTime = -100.0f;
+    float LastStampTime = -100.0f;
     bool bShowingHint = false;
     bool bLastAnswerCorrect = false;
     FString LastFeedback;
@@ -103,6 +108,11 @@ private:
     void CompleteQuiz(const FName DestinationId, bool bAnsweredCorrectly);
     void SelectAgeBand(int32 Index);
     void ExecutePauseSelection();
+    void ExecuteHomeSelection();
+    void ExecuteMissionCompleteSelection();
+    void ClearPassportProgress();
+    bool HasAnyProgress() const;
+    bool IsMissionPlayScreen() const;
     int32 CountCompletedStops() const;
     bool IsMissionComplete() const;
     const FAstroDestinationLesson* GetFocusedLesson() const;

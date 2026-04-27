@@ -5,6 +5,17 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "UObject/ConstructorHelpers.h"
 
+namespace
+{
+    const FVector TravelTargetToFocusOffset(145.0f, 0.0f, -70.0f);
+    const FVector CameraAnchorOffset(-260.0f, 0.0f, 620.0f);
+    const FRotator CameraAnchorRotation(-34.0f, 0.0f, 0.0f);
+    constexpr float TravelInterpSpeed = 2.6f;
+    constexpr float RotationInterpSpeed = 5.0f;
+    constexpr float CameraInterpSpeed = 4.5f;
+    constexpr float TravelSnapDistance = 2.0f;
+}
+
 AAstroPlayerPawn::AAstroPlayerPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -49,22 +60,30 @@ void AAstroPlayerPawn::Tick(const float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    Camera->SetWorldLocation(FVector(-1150.0f, 0.0f, 760.0f));
-    Camera->SetWorldRotation(FRotator(-34.0f, 0.0f, 0.0f));
-
-    const float Bob = FMath::Sin(GetWorld() ? GetWorld()->GetTimeSeconds() * 1.8f : 0.0f) * 3.0f;
-
     if (bHasTravelTarget)
     {
         const FVector Current = GetActorLocation();
-        const FVector NewLocation = FMath::VInterpTo(Current, TravelTarget + FVector(0.0f, 0.0f, Bob), DeltaSeconds, 1.8f);
+        const FVector NewLocation = FMath::VInterpTo(Current, TravelTarget, DeltaSeconds, TravelInterpSpeed);
         SetActorLocation(NewLocation);
 
-        const FVector ToTarget = TravelTarget - Current;
+        if (FVector::DistSquared(NewLocation, TravelTarget) <= FMath::Square(TravelSnapDistance))
+        {
+            SetActorLocation(TravelTarget);
+        }
+
+        const FVector ToTarget = TravelTarget - NewLocation;
         if (!ToTarget.IsNearlyZero())
         {
-            SetActorRotation(FMath::RInterpTo(GetActorRotation(), ToTarget.Rotation(), DeltaSeconds, 4.0f));
+            SetActorRotation(FMath::RInterpTo(GetActorRotation(), ToTarget.Rotation(), DeltaSeconds, RotationInterpSpeed));
         }
+    }
+
+    if (bHasTravelTarget || bHasCameraFocusTarget)
+    {
+        const FVector FocusTarget = bHasCameraFocusTarget ? CameraFocusTarget : TravelTarget + TravelTargetToFocusOffset;
+        const FVector DesiredCameraLocation = FocusTarget + CameraAnchorOffset;
+        Camera->SetWorldLocation(FMath::VInterpTo(Camera->GetComponentLocation(), DesiredCameraLocation, DeltaSeconds, CameraInterpSpeed));
+        Camera->SetWorldRotation(CameraAnchorRotation);
     }
 }
 
@@ -85,4 +104,15 @@ void AAstroPlayerPawn::SetTravelTarget(const FVector& TargetLocation)
 {
     TravelTarget = TargetLocation;
     bHasTravelTarget = true;
+
+    if (!bHasCameraFocusTarget)
+    {
+        CameraFocusTarget = TargetLocation + TravelTargetToFocusOffset;
+    }
+}
+
+void AAstroPlayerPawn::SetCameraFocusTarget(const FVector& TargetLocation)
+{
+    CameraFocusTarget = TargetLocation;
+    bHasCameraFocusTarget = true;
 }

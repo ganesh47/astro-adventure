@@ -50,10 +50,21 @@ Optional explicit form:
 | Area | Expected Result | Reviewer Notes |
 | --- | --- | --- |
 | Launch | Packaged executable starts on the review PC. | Record pass/fail. |
-| Input | Keyboard and Xbox-style controller input can navigate the first loop. | Record device class only. |
-| Focus cycle | Mercury, Mars, and Europa can each receive focus. | Record pass/fail. |
-| Scan action | Focused destination opens the discovery card and quiz panel. | Record pass/fail. |
+| Home menu | Home shows New Expedition, Continue, Reset, and Quit with clear default focus. | Record pass/fail. |
+| New Expedition | New starts the first expedition from an empty passport state. | Record pass/fail. |
+| Continue | Continue resumes current in-session destination and stamp progress when progress exists. | Record pass/fail, or note not available before progress. |
+| Reset | Reset clears the current in-session expedition and keeps the selected age band. | Record pass/fail. |
+| Quit | Quit exits or requests exit confirmation without trapping focus. | Record pass/fail. |
+| Input | Keyboard and Xbox-style controller input can navigate Home, Mission View, Atlas View, discovery, and review. | Record device class only. |
+| Mission View | Mission View presents the current objective, stamp progress, and next action without dense text. | Record pass/fail. |
+| Atlas View | Atlas View lets Mercury, Mars, and Europa each receive focus and shows completed/incomplete status. | Record pass/fail. |
+| View switching | Switching between Mission View and Atlas View preserves focus, camera framing, and earned stamp state. | Record pass/fail. |
+| Camera stability | Camera framing stays stable while navigating, scanning, opening cards, awarding stamps, pausing, and switching views. | Record any jitter, drift, snap, clipping, or motion issue. |
+| Kid-friendly HUD | HUD uses short labels, large readable targets, non-color-only status, and no grades, streaks, currency, or pressure timers. | Record pass/fail. |
+| Scan action | Focused destination opens scan feedback, then the discovery card and quiz panel. | Record pass/fail. |
+| Scan feedback | Scan communicates progress and success with readable text plus icon, shape, animation, or sound fallback. | Record pass/fail. |
 | Quiz loop | Correct and retry feedback are visible. | Record pass/fail. |
+| Stamp feedback | Completing a destination awards exactly one obvious stamp and confirms which destination was stamped. | Record pass/fail. |
 | Completion | Completing all three destinations reaches the mission completion state. | Record pass/fail. |
 | Stability | No crash, hang, or blocking error occurs during the review pass. | Record any public-safe error summary. |
 
@@ -69,9 +80,15 @@ Package result:
 Executable filename:
 Keyboard input:
 Controller input:
+Home New/Continue/Reset/Quit:
+Mission View:
+Atlas View:
+Camera stability:
+Kid-friendly HUD:
 Mercury scan/quiz:
 Mars scan/quiz:
 Europa scan/quiz:
+Scan/stamp feedback:
 Completion state:
 Git status after package:
 Notes:

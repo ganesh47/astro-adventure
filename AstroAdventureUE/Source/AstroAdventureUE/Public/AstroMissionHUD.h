@@ -14,5 +14,9 @@ public:
 
 private:
     void DrawLine(const FString& Text, float X, float& Y, const FLinearColor& Color, float Scale = 1.0f);
-    void DrawBadge(const FString& Text, float X, float Y, float W, const FLinearColor& Fill, const FLinearColor& TextColor);
+    void DrawBadge(const FString& Text, float X, float Y, float W, const FLinearColor& Fill, const FLinearColor& TextColor, float Scale = 0.82f);
+    void DrawQuizRow(const FString& Text, float X, float Y, float W, bool bFocused);
+    void DrawFeedbackBanner(const FString& Text, const FLinearColor& Fill, float Y);
+    bool IsQuizChoiceLine(const FString& Text) const;
+    FString FriendlyDetailLine(const FString& Text) const;
 };

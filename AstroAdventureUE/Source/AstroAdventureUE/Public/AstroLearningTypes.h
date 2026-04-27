@@ -14,14 +14,17 @@ enum class EAstroAgeBand : uint8
 UENUM(BlueprintType)
 enum class EAstroMissionScreen : uint8
 {
+    Home,
     AgeSelect,
     MissionPrompt,
     Navigation,
     DiscoveryCard,
     DeepDive,
     Passport,
+    AtlasView,
     Quiz,
     QuizFeedback,
+    StampAward,
     MissionComplete,
     PauseMenu
 };

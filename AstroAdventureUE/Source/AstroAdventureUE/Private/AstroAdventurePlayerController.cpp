@@ -10,10 +10,12 @@ void AAstroAdventurePlayerController::SetupInputComponent()
     Super::SetupInputComponent();
 
     InputComponent->BindKey(EKeys::Right, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
+    InputComponent->BindKey(EKeys::D, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
     InputComponent->BindKey(EKeys::Gamepad_RightShoulder, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
     InputComponent->BindKey(EKeys::Gamepad_DPad_Right, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
 
     InputComponent->BindKey(EKeys::Left, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
+    InputComponent->BindKey(EKeys::A, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
     InputComponent->BindKey(EKeys::Gamepad_LeftShoulder, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
     InputComponent->BindKey(EKeys::Gamepad_DPad_Left, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
 
@@ -37,9 +39,13 @@ void AAstroAdventurePlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::Gamepad_Special_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
 
     InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
+    InputComponent->BindKey(EKeys::W, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
     InputComponent->BindKey(EKeys::Gamepad_DPad_Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
     InputComponent->BindKey(EKeys::Down, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerDown);
+    InputComponent->BindKey(EKeys::S, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerDown);
     InputComponent->BindKey(EKeys::Gamepad_DPad_Down, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerDown);
+    InputComponent->BindAxis(TEXT("MoveForward"), this, &AAstroAdventurePlayerController::NavigateVertical);
+    InputComponent->BindAxis(TEXT("MoveRight"), this, &AAstroAdventurePlayerController::NavigateHorizontal);
 
     InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerOne);
     InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerTwo);
@@ -156,4 +162,70 @@ void AAstroAdventurePlayerController::AnswerThree()
 void AAstroAdventurePlayerController::QuitGame()
 {
     UKismetSystemLibrary::QuitGame(this, this, EQuitPreference::Quit, false);
+}
+
+void AAstroAdventurePlayerController::NavigateHorizontal(const float Value)
+{
+    if (IsInputKeyDown(EKeys::A) || IsInputKeyDown(EKeys::D) || IsInputKeyDown(EKeys::Left) || IsInputKeyDown(EKeys::Right))
+    {
+        return;
+    }
+
+    constexpr float PressThreshold = 0.65f;
+    constexpr float ReleaseThreshold = 0.25f;
+
+    if (FMath::Abs(Value) < ReleaseThreshold)
+    {
+        bHorizontalAxisReady = true;
+        return;
+    }
+
+    if (!bHorizontalAxisReady)
+    {
+        return;
+    }
+
+    if (Value > PressThreshold)
+    {
+        FocusNext();
+        bHorizontalAxisReady = false;
+    }
+    else if (Value < -PressThreshold)
+    {
+        FocusPrevious();
+        bHorizontalAxisReady = false;
+    }
+}
+
+void AAstroAdventurePlayerController::NavigateVertical(const float Value)
+{
+    if (IsInputKeyDown(EKeys::W) || IsInputKeyDown(EKeys::S) || IsInputKeyDown(EKeys::Up) || IsInputKeyDown(EKeys::Down))
+    {
+        return;
+    }
+
+    constexpr float PressThreshold = 0.65f;
+    constexpr float ReleaseThreshold = 0.25f;
+
+    if (FMath::Abs(Value) < ReleaseThreshold)
+    {
+        bVerticalAxisReady = true;
+        return;
+    }
+
+    if (!bVerticalAxisReady)
+    {
+        return;
+    }
+
+    if (Value > PressThreshold)
+    {
+        AnswerUp();
+        bVerticalAxisReady = false;
+    }
+    else if (Value < -PressThreshold)
+    {
+        AnswerDown();
+        bVerticalAxisReady = false;
+    }
 }

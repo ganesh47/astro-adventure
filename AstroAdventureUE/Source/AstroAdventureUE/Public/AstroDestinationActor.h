@@ -27,6 +27,12 @@ public:
     UStaticMeshComponent* FocusHalo;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
+    UStaticMeshComponent* FocusBeacon;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
+    UStaticMeshComponent* Nameplate;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
     UTextRenderComponent* Label;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
@@ -42,7 +48,11 @@ public:
 private:
     FLinearColor BaseColor = FLinearColor::White;
     bool bIsDiscovered = false;
+    bool bIsFocused = false;
     float BaseVisualScale = 1.0f;
+    FVector BodyIdleScale = FVector::OneVector;
+    FVector BodyFocusedScale = FVector::OneVector;
 
     void ApplyColor(UStaticMeshComponent* Mesh, const FLinearColor& Color, float EmissiveStrength);
+    void ApplyFocusVisuals();
 };
