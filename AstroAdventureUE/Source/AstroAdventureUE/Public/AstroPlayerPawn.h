@@ -79,13 +79,16 @@ private:
 
     FVector TravelTarget = FVector::ZeroVector;
     FVector CameraFocusTarget = FVector::ZeroVector;
+    FVector SmoothedCameraFocusTarget = FVector::ZeroVector;
     bool bHasTravelTarget = false;
     bool bHasCameraFocusTarget = false;
+    bool bHasSmoothedCameraFocusTarget = false;
 
     EAstroCameraPresentationProfile CameraPresentationProfile = EAstroCameraPresentationProfile::Mission;
     FLinearColor ShipAccentColor = FLinearColor(0.18f, 0.84f, 1.0f);
     float ShipBobTime = 0.0f;
     float ScannerPulse = 0.0f;
+    float ScannerActiveTimeRemaining = 0.0f;
     float SmoothedSpeedAlpha = 0.0f;
     FVector LastActorLocation = FVector::ZeroVector;
     bool bScannerActive = false;

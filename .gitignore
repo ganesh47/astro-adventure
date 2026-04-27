@@ -55,6 +55,8 @@ $RECYCLE.BIN/
 artifacts/
 
 # Private or restricted artifacts must not be committed here.
+private-packages/
+certificates/
 *.pfx
 *.p12
 *.cer

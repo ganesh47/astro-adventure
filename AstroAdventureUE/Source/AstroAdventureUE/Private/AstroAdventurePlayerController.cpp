@@ -5,6 +5,12 @@
 #include "InputCoreTypes.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+namespace
+{
+    constexpr float NavigationPressThreshold = 0.65f;
+    constexpr float NavigationReleaseThreshold = 0.25f;
+}
+
 void AAstroAdventurePlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
@@ -32,11 +38,11 @@ void AAstroAdventurePlayerController::SetupInputComponent()
 
     InputComponent->BindKey(EKeys::M, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
     InputComponent->BindKey(EKeys::Gamepad_LeftTrigger, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
+    InputComponent->BindKey(EKeys::Gamepad_LeftThumbstick, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
 
     InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
     InputComponent->BindKey(EKeys::Gamepad_RightTrigger, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
-
-    InputComponent->BindKey(EKeys::Gamepad_Special_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
+    InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
 
     InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
     InputComponent->BindKey(EKeys::W, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
@@ -52,13 +58,20 @@ void AAstroAdventurePlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerThree);
 
     InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
+    InputComponent->BindKey(EKeys::Gamepad_Special_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
     InputComponent->BindKey(EKeys::Gamepad_Special_Right, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
+    InputComponent->BindKey(EKeys::Gamepad_RightThumbstick, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
 }
 
 void AAstroAdventurePlayerController::FocusNext()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
+        if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
+        {
+            return;
+        }
+
         GameMode->FocusNextDestination();
     }
 }
@@ -67,6 +80,11 @@ void AAstroAdventurePlayerController::FocusPrevious()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
+        if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
+        {
+            return;
+        }
+
         GameMode->FocusPreviousDestination();
     }
 }
@@ -123,7 +141,14 @@ void AAstroAdventurePlayerController::AnswerUp()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
-        GameMode->FocusPreviousDestination();
+        if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
+        {
+            GameMode->MoveQuizFocus(-1);
+        }
+        else
+        {
+            GameMode->FocusPreviousDestination();
+        }
     }
 }
 
@@ -131,31 +156,40 @@ void AAstroAdventurePlayerController::AnswerDown()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
-        GameMode->FocusNextDestination();
+        if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
+        {
+            GameMode->MoveQuizFocus(1);
+        }
+        else
+        {
+            GameMode->FocusNextDestination();
+        }
     }
 }
 
 void AAstroAdventurePlayerController::AnswerOne()
 {
-    if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
-    {
-        GameMode->SubmitAnswer(0);
-    }
+    SubmitAnswerChoice(0);
 }
 
 void AAstroAdventurePlayerController::AnswerTwo()
 {
-    if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
-    {
-        GameMode->SubmitAnswer(1);
-    }
+    SubmitAnswerChoice(1);
 }
 
 void AAstroAdventurePlayerController::AnswerThree()
 {
+    SubmitAnswerChoice(2);
+}
+
+void AAstroAdventurePlayerController::SubmitAnswerChoice(const int32 ChoiceIndex)
+{
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
-        GameMode->SubmitAnswer(2);
+        if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
+        {
+            GameMode->SubmitAnswer(ChoiceIndex);
+        }
     }
 }
 
@@ -171,30 +205,7 @@ void AAstroAdventurePlayerController::NavigateHorizontal(const float Value)
         return;
     }
 
-    constexpr float PressThreshold = 0.65f;
-    constexpr float ReleaseThreshold = 0.25f;
-
-    if (FMath::Abs(Value) < ReleaseThreshold)
-    {
-        bHorizontalAxisReady = true;
-        return;
-    }
-
-    if (!bHorizontalAxisReady)
-    {
-        return;
-    }
-
-    if (Value > PressThreshold)
-    {
-        FocusNext();
-        bHorizontalAxisReady = false;
-    }
-    else if (Value < -PressThreshold)
-    {
-        FocusPrevious();
-        bHorizontalAxisReady = false;
-    }
+    HandleNavigationAxis(Value, bHorizontalAxisReady, true);
 }
 
 void AAstroAdventurePlayerController::NavigateVertical(const float Value)
@@ -204,28 +215,46 @@ void AAstroAdventurePlayerController::NavigateVertical(const float Value)
         return;
     }
 
-    constexpr float PressThreshold = 0.65f;
-    constexpr float ReleaseThreshold = 0.25f;
+    HandleNavigationAxis(Value, bVerticalAxisReady, false);
+}
 
-    if (FMath::Abs(Value) < ReleaseThreshold)
+void AAstroAdventurePlayerController::HandleNavigationAxis(const float Value, bool& bAxisReady, const bool bHorizontal)
+{
+    if (FMath::Abs(Value) < NavigationReleaseThreshold)
     {
-        bVerticalAxisReady = true;
+        bAxisReady = true;
         return;
     }
 
-    if (!bVerticalAxisReady)
+    if (!bAxisReady)
     {
         return;
     }
 
-    if (Value > PressThreshold)
+    if (bHorizontal)
     {
-        AnswerUp();
-        bVerticalAxisReady = false;
+        if (Value > NavigationPressThreshold)
+        {
+            FocusNext();
+            bAxisReady = false;
+        }
+        else if (Value < -NavigationPressThreshold)
+        {
+            FocusPrevious();
+            bAxisReady = false;
+        }
     }
-    else if (Value < -PressThreshold)
+    else
     {
-        AnswerDown();
-        bVerticalAxisReady = false;
+        if (Value > NavigationPressThreshold)
+        {
+            AnswerUp();
+            bAxisReady = false;
+        }
+        else if (Value < -NavigationPressThreshold)
+        {
+            AnswerDown();
+            bAxisReady = false;
+        }
     }
 }

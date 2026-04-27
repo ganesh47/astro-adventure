@@ -24,7 +24,10 @@ private:
     void DrawFeedbackBanner(const FString& Text, const FLinearColor& Fill, float Y);
     void AddActionIfMissing(TArray<FString>& Actions, const FString& Action) const;
     void GetStampProgress(const FString& StatusLine, int32& OutStamped, int32& OutTotal) const;
+    bool LooksLikeRawTechnicalLine(const FString& Text) const;
     bool IsQuizChoiceLine(const FString& Text) const;
     bool IsPassportRouteLine(const FString& Text) const;
+    FString FriendlyPrimaryLine(const FString& Text) const;
+    FString FriendlyStatusLine(const FString& Text) const;
     FString FriendlyDetailLine(const FString& Text) const;
 };

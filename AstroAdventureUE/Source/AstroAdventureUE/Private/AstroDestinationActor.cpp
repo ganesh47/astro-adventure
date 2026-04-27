@@ -80,10 +80,10 @@ AAstroDestinationActor::AAstroDestinationActor()
         Nameplate->SetStaticMesh(CubeMesh.Object);
     }
 
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (BasicShapeMaterial.Succeeded())
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMeshMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
+    if (EmissiveMeshMaterial.Succeeded())
     {
-        ColorMaterialTemplate = BasicShapeMaterial.Object;
+        ColorMaterialTemplate = EmissiveMeshMaterial.Object;
     }
 
     for (int32 Index = 0; Index < DestinationMotifCount; ++Index)
@@ -162,8 +162,19 @@ void AAstroDestinationActor::ApplyColor(UStaticMeshComponent* Mesh, const FLinea
         {
             Material->SetVectorParameterValue(TEXT("Color"), Color);
             Material->SetVectorParameterValue(TEXT("BaseColor"), Color);
+            Material->SetVectorParameterValue(TEXT("Base Color"), Color);
+            Material->SetVectorParameterValue(TEXT("ShapeColor"), Color);
+            Material->SetVectorParameterValue(TEXT("Tint"), Color);
+            Material->SetVectorParameterValue(TEXT("DiffuseColor"), Color);
             Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * EmissiveStrength);
+            Material->SetVectorParameterValue(TEXT("Emissive Color"), Color * EmissiveStrength);
+            Material->SetVectorParameterValue(TEXT("Emissive"), Color * EmissiveStrength);
             Material->SetScalarParameterValue(TEXT("EmissiveStrength"), EmissiveStrength);
+            Material->SetScalarParameterValue(TEXT("Emissive Strength"), EmissiveStrength);
+            Material->SetScalarParameterValue(TEXT("EmissiveIntensity"), EmissiveStrength);
+            Material->SetScalarParameterValue(TEXT("Glow"), EmissiveStrength);
+            Material->SetScalarParameterValue(TEXT("Opacity"), Color.A);
+            Material->SetScalarParameterValue(TEXT("Alpha"), Color.A);
             Material->SetScalarParameterValue(TEXT("Roughness"), 0.72f);
         }
     }

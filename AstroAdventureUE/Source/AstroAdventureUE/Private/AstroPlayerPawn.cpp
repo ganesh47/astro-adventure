@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 
 namespace
@@ -14,12 +15,17 @@ namespace
     constexpr float RotationInterpSpeed = 5.0f;
     constexpr float TravelSnapDistance = 2.0f;
     constexpr float ScannerPulseDecaySpeed = 2.8f;
+    constexpr float CameraFocusSnapDistance = 0.35f;
+    constexpr float CameraLocationSnapDistance = 0.5f;
+    constexpr float CameraRotationSnapDegrees = 0.08f;
+    constexpr float CameraFovSnapDegrees = 0.05f;
 
     struct FAstroCameraPresentationSettings
     {
         FVector Offset = FVector::ZeroVector;
-        FRotator Rotation = FRotator::ZeroRotator;
-        float InterpSpeed = 4.0f;
+        float AimZOffset = -110.0f;
+        float FocusInterpSpeed = 4.0f;
+        float CameraInterpSpeed = 4.0f;
         float FieldOfView = 58.0f;
     };
 
@@ -28,15 +34,23 @@ namespace
         switch (Profile)
         {
         case EAstroCameraPresentationProfile::Atlas:
-            return { FVector(-340.0f, 0.0f, 820.0f), FRotator(-48.0f, 0.0f, 0.0f), 3.2f, 64.0f };
+            return { FVector(-560.0f, 0.0f, 760.0f), -170.0f, 3.6f, 3.0f, 62.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-205.0f, 0.0f, 500.0f), FRotator(-30.0f, 0.0f, 0.0f), 5.8f, 52.0f };
+            return { FVector(-310.0f, 0.0f, 420.0f), -95.0f, 6.4f, 5.6f, 50.0f };
         case EAstroCameraPresentationProfile::Stable:
-            return { FVector(-300.0f, 0.0f, 660.0f), FRotator(-36.0f, 0.0f, 0.0f), 2.6f, 56.0f };
+            return { FVector(-470.0f, 0.0f, 600.0f), -145.0f, 3.2f, 2.8f, 55.0f };
         case EAstroCameraPresentationProfile::Mission:
         default:
-            return { FVector(-260.0f, 0.0f, 620.0f), FRotator(-34.0f, 0.0f, 0.0f), 4.5f, 58.0f };
+            return { FVector(-430.0f, 0.0f, 540.0f), -125.0f, 4.8f, 4.2f, 57.0f };
         }
+    }
+
+    float RotationDeltaDegrees(const FRotator& A, const FRotator& B)
+    {
+        return FMath::Max3(
+            FMath::Abs(FRotator::NormalizeAxis(A.Pitch - B.Pitch)),
+            FMath::Abs(FRotator::NormalizeAxis(A.Yaw - B.Yaw)),
+            FMath::Abs(FRotator::NormalizeAxis(A.Roll - B.Roll)));
     }
 
     void ApplyMaterialColor(UMaterialInstanceDynamic* Material, const FLinearColor& Color, const float EmissiveStrength)
@@ -48,8 +62,19 @@ namespace
 
         Material->SetVectorParameterValue(TEXT("Color"), Color);
         Material->SetVectorParameterValue(TEXT("BaseColor"), Color);
+        Material->SetVectorParameterValue(TEXT("Base Color"), Color);
+        Material->SetVectorParameterValue(TEXT("ShapeColor"), Color);
+        Material->SetVectorParameterValue(TEXT("Tint"), Color);
+        Material->SetVectorParameterValue(TEXT("DiffuseColor"), Color);
         Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * EmissiveStrength);
+        Material->SetVectorParameterValue(TEXT("Emissive Color"), Color * EmissiveStrength);
+        Material->SetVectorParameterValue(TEXT("Emissive"), Color * EmissiveStrength);
         Material->SetScalarParameterValue(TEXT("EmissiveStrength"), EmissiveStrength);
+        Material->SetScalarParameterValue(TEXT("Emissive Strength"), EmissiveStrength);
+        Material->SetScalarParameterValue(TEXT("EmissiveIntensity"), EmissiveStrength);
+        Material->SetScalarParameterValue(TEXT("Glow"), EmissiveStrength);
+        Material->SetScalarParameterValue(TEXT("Opacity"), Color.A);
+        Material->SetScalarParameterValue(TEXT("Alpha"), Color.A);
     }
 }
 
@@ -66,6 +91,8 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMeshMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
+    UMaterialInterface* ShipMaterialTemplate = EmissiveMeshMaterial.Succeeded() ? EmissiveMeshMaterial.Object : nullptr;
 
     ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
     ShipMesh->SetupAttachment(ShipVisualRoot);
@@ -156,15 +183,15 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     Movement->MaxSpeed = 650.0f;
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-    BodyMaterial = ShipMesh->CreateAndSetMaterialInstanceDynamic(0);
-    GlowMaterial = CockpitGlow->CreateAndSetMaterialInstanceDynamic(0);
-    AccentMaterial = PortWing->CreateAndSetMaterialInstanceDynamic(0);
+    BodyMaterial = ShipMesh->CreateDynamicMaterialInstance(0, ShipMaterialTemplate);
+    GlowMaterial = CockpitGlow->CreateDynamicMaterialInstance(0, ShipMaterialTemplate);
+    AccentMaterial = PortWing->CreateDynamicMaterialInstance(0, ShipMaterialTemplate);
     if (AccentMaterial)
     {
         StarboardWing->SetMaterial(0, AccentMaterial);
     }
-    TrailMaterial = TrailGlow->CreateAndSetMaterialInstanceDynamic(0);
-    ScannerMaterial = ScannerEmitter->CreateAndSetMaterialInstanceDynamic(0);
+    TrailMaterial = TrailGlow->CreateDynamicMaterialInstance(0, ShipMaterialTemplate);
+    ScannerMaterial = ScannerEmitter->CreateDynamicMaterialInstance(0, ShipMaterialTemplate);
     if (ScannerMaterial)
     {
         ScannerBeam->SetMaterial(0, ScannerMaterial);
@@ -239,7 +266,12 @@ void AAstroPlayerPawn::SetScannerActive(const bool bActive)
     bScannerActive = bActive;
     if (bScannerActive)
     {
+        ScannerActiveTimeRemaining = FMath::Max(ScannerActiveTimeRemaining, 1.45f);
         TriggerScannerPulse(0.65f);
+    }
+    else
+    {
+        ScannerActiveTimeRemaining = 0.0f;
     }
 }
 
@@ -267,11 +299,46 @@ void AAstroPlayerPawn::UpdateCameraPresentation(const float DeltaSeconds)
         : bHasTravelTarget
             ? TravelTarget + TravelTargetToFocusOffset
             : GetActorLocation() + TravelTargetToFocusOffset;
-    const FVector DesiredCameraLocation = FocusTarget + Settings.Offset;
 
-    Camera->SetWorldLocation(FMath::VInterpTo(Camera->GetComponentLocation(), DesiredCameraLocation, DeltaSeconds, Settings.InterpSpeed));
-    Camera->SetWorldRotation(FMath::RInterpTo(Camera->GetComponentRotation(), Settings.Rotation, DeltaSeconds, Settings.InterpSpeed));
-    Camera->SetFieldOfView(FMath::FInterpTo(Camera->FieldOfView, Settings.FieldOfView, DeltaSeconds, Settings.InterpSpeed));
+    if (!bHasSmoothedCameraFocusTarget || DeltaSeconds <= SMALL_NUMBER)
+    {
+        SmoothedCameraFocusTarget = FocusTarget;
+        bHasSmoothedCameraFocusTarget = true;
+    }
+    else
+    {
+        SmoothedCameraFocusTarget = FMath::VInterpTo(SmoothedCameraFocusTarget, FocusTarget, DeltaSeconds, Settings.FocusInterpSpeed);
+        if (FVector::DistSquared(SmoothedCameraFocusTarget, FocusTarget) <= FMath::Square(CameraFocusSnapDistance))
+        {
+            SmoothedCameraFocusTarget = FocusTarget;
+        }
+    }
+
+    const FVector DesiredCameraLocation = SmoothedCameraFocusTarget + Settings.Offset;
+    const FVector DesiredLookAtLocation = SmoothedCameraFocusTarget + FVector(0.0f, 0.0f, Settings.AimZOffset);
+    const FRotator DesiredCameraRotation = (DesiredLookAtLocation - DesiredCameraLocation).Rotation();
+
+    FVector NewCameraLocation = FMath::VInterpTo(Camera->GetComponentLocation(), DesiredCameraLocation, DeltaSeconds, Settings.CameraInterpSpeed);
+    if (FVector::DistSquared(NewCameraLocation, DesiredCameraLocation) <= FMath::Square(CameraLocationSnapDistance))
+    {
+        NewCameraLocation = DesiredCameraLocation;
+    }
+
+    FRotator NewCameraRotation = FMath::RInterpTo(Camera->GetComponentRotation(), DesiredCameraRotation, DeltaSeconds, Settings.CameraInterpSpeed);
+    if (RotationDeltaDegrees(NewCameraRotation, DesiredCameraRotation) <= CameraRotationSnapDegrees)
+    {
+        NewCameraRotation = DesiredCameraRotation;
+    }
+
+    float NewFieldOfView = FMath::FInterpTo(Camera->FieldOfView, Settings.FieldOfView, DeltaSeconds, Settings.CameraInterpSpeed);
+    if (FMath::Abs(NewFieldOfView - Settings.FieldOfView) <= CameraFovSnapDegrees)
+    {
+        NewFieldOfView = Settings.FieldOfView;
+    }
+
+    Camera->SetWorldLocation(NewCameraLocation);
+    Camera->SetWorldRotation(NewCameraRotation);
+    Camera->SetFieldOfView(NewFieldOfView);
 }
 
 void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
@@ -299,6 +366,16 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
     const float SoftBank = FMath::Sin(ShipBobTime * 0.73f) * 1.8f;
     ShipVisualRoot->SetRelativeLocation(FVector(0.0f, 0.0f, Bob));
     ShipVisualRoot->SetRelativeRotation(FRotator(FMath::Lerp(0.0f, -3.5f, SmoothedSpeedAlpha), 0.0f, SoftBank));
+
+    if (bScannerActive)
+    {
+        ScannerActiveTimeRemaining -= DeltaSeconds;
+        if (ScannerActiveTimeRemaining <= 0.0f)
+        {
+            ScannerActiveTimeRemaining = 0.0f;
+            bScannerActive = false;
+        }
+    }
 
     ScannerPulse = FMath::FInterpTo(ScannerPulse, 0.0f, DeltaSeconds, ScannerPulseDecaySpeed);
     const float ScannerAlpha = FMath::Clamp((bScannerActive ? 0.72f : 0.0f) + ScannerPulse, 0.0f, 1.0f);
