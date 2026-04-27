@@ -79,6 +79,14 @@ private:
     TArray<AStaticMeshActor*> ScanBeamActors;
 
     UPROPERTY()
+    TArray<AStaticMeshActor*> RouteMarkerActors;
+
+    TArray<int32> RouteMarkerOwnerIndices;
+
+    UPROPERTY()
+    TArray<AStaticMeshActor*> BackdropActors;
+
+    UPROPERTY()
     UAstroProgressSaveGame* ProgressSave = nullptr;
 
     EAstroMissionScreen CurrentScreen = EAstroMissionScreen::Home;
@@ -98,9 +106,12 @@ private:
     void BuildLessons();
     void AddLesson(const TCHAR* Id, const TCHAR* Name, const TCHAR* QuickFact, const TCHAR* WowFact, const TCHAR* VisualClue, const TCHAR* Ages4To6, const TCHAR* Ages7To9, const TCHAR* Ages10To12, const TCHAR* DeepDive, const TCHAR* Compare, const TCHAR* Glossary, const TCHAR* SourceUrl, const TCHAR* QuizPrompt, const TCHAR* CorrectId, const TCHAR* CorrectText, const TCHAR* WrongOneId, const TCHAR* WrongOneText, const TCHAR* WrongTwoId, const TCHAR* WrongTwoText, const TCHAR* CorrectFeedback, const TCHAR* RetryFeedback, const TCHAR* Hint, const FLinearColor& Color, float MapScale, bool bRequired);
     void SpawnRuntimeScene();
-    void SpawnOrbitMarker(const FVector& Center, float Radius, const FLinearColor& Color);
+    void SpawnOrbitMarker(int32 OwnerIndex, const FVector& Center, float Radius, const FLinearColor& Color);
     void SpawnAsteroidBelt(const FVector& Center);
     void SpawnBackdrop();
+    void RefreshScenePresentation();
+    void RefreshPlayerPresentation();
+    bool ShouldShowDestinationInCurrentView(int32 DestinationIndex) const;
     void LoadProgress();
     void SaveProgress() const;
     void UpdateDestinationFocus();

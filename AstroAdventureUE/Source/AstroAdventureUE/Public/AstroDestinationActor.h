@@ -8,6 +8,8 @@
 class UStaticMeshComponent;
 class UTextRenderComponent;
 class UMaterialInstanceDynamic;
+class UMaterialInterface;
+class UStaticMesh;
 
 UCLASS()
 class ASTROADVENTUREUE_API AAstroDestinationActor : public AActor
@@ -46,6 +48,21 @@ public:
     void SetDiscovered(bool bDiscovered);
 
 private:
+    UPROPERTY(VisibleAnywhere, Category = "Astro Adventure", meta = (AllowPrivateAccess = "true"))
+    TArray<UStaticMeshComponent*> MotifMeshes;
+
+    UPROPERTY(Transient)
+    UStaticMesh* SphereMeshAsset = nullptr;
+
+    UPROPERTY(Transient)
+    UStaticMesh* CylinderMeshAsset = nullptr;
+
+    UPROPERTY(Transient)
+    UStaticMesh* CubeMeshAsset = nullptr;
+
+    UPROPERTY(Transient)
+    UMaterialInterface* ColorMaterialTemplate = nullptr;
+
     FLinearColor BaseColor = FLinearColor::White;
     bool bIsDiscovered = false;
     bool bIsFocused = false;
@@ -53,6 +70,10 @@ private:
     FVector BodyIdleScale = FVector::OneVector;
     FVector BodyFocusedScale = FVector::OneVector;
 
+    UStaticMeshComponent* CreateMotifComponent(FName ComponentName, UStaticMesh* Mesh);
     void ApplyColor(UStaticMeshComponent* Mesh, const FLinearColor& Color, float EmissiveStrength);
+    void ConfigureMotifs();
+    void HideMotifs();
+    void SetMotif(int32 Index, UStaticMesh* Mesh, const FVector& Location, const FRotator& Rotation, const FVector& Scale, const FLinearColor& Color, float EmissiveStrength = 0.0f);
     void ApplyFocusVisuals();
 };

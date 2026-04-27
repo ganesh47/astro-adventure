@@ -151,6 +151,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         SunLight->GetLightComponent()->SetLightColor(FLinearColor(1.0f, 0.76f, 0.28f));
     }
 
+    BackdropActors.Reset();
     SpawnBackdrop();
 
     const FVector Positions[] = {
@@ -171,6 +172,8 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
 
     DestinationActors.Reset();
     ScanBeamActors.Reset();
+    RouteMarkerActors.Reset();
+    RouteMarkerOwnerIndices.Reset();
     for (int32 Index = 0; Index < Lessons.Num(); ++Index)
     {
         AAstroDestinationActor* Actor = GetWorld()->SpawnActor<AAstroDestinationActor>(AAstroDestinationActor::StaticClass(), Positions[Index], FRotator::ZeroRotator);
@@ -179,7 +182,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
             Actor->Configure(Lessons[Index], Lessons[Index].DisplayColor, Lessons[Index].MapScale);
             Actor->SetDiscovered(GetMutableProgress(Lessons[Index].DestinationId).bQuizCompleted);
             DestinationActors.Add(Actor);
-            SpawnOrbitMarker(Positions[Index], 80.0f + Lessons[Index].MapScale * 35.0f, Lessons[Index].DisplayColor);
+            SpawnOrbitMarker(Index, Positions[Index], 80.0f + Lessons[Index].MapScale * 35.0f, Lessons[Index].DisplayColor);
         }
     }
 
@@ -192,7 +195,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     }
 }
 
-void AAstroAdventureGameModeBase::SpawnOrbitMarker(const FVector& Center, const float Radius, const FLinearColor& Color)
+void AAstroAdventureGameModeBase::SpawnOrbitMarker(const int32 OwnerIndex, const FVector& Center, const float Radius, const FLinearColor& Color)
 {
     UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     if (!SphereMesh || !GetWorld())
@@ -208,14 +211,17 @@ void AAstroAdventureGameModeBase::SpawnOrbitMarker(const FVector& Center, const 
         if (Dot)
         {
             Dot->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Dot->SetActorScale3D(FVector(0.022f));
+            Dot->SetActorScale3D(FVector(Index % 3 == 0 ? 0.03f : 0.018f));
             Dot->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             if (UMaterialInstanceDynamic* Material = Dot->GetStaticMeshComponent()->CreateAndSetMaterialInstanceDynamic(0))
             {
-                Material->SetVectorParameterValue(TEXT("Color"), Color * 0.55f);
-                Material->SetVectorParameterValue(TEXT("BaseColor"), Color * 0.55f);
-                Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * 0.25f);
+                const FLinearColor RouteColor = Color.GetClamped(0.0f, 1.0f);
+                Material->SetVectorParameterValue(TEXT("Color"), RouteColor);
+                Material->SetVectorParameterValue(TEXT("BaseColor"), RouteColor);
+                Material->SetVectorParameterValue(TEXT("EmissiveColor"), RouteColor * 0.9f);
             }
+            RouteMarkerActors.Add(Dot);
+            RouteMarkerOwnerIndices.Add(OwnerIndex);
         }
     }
 }
@@ -263,8 +269,31 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
             {
                 Material->SetVectorParameterValue(TEXT("Color"), Color);
                 Material->SetVectorParameterValue(TEXT("BaseColor"), Color);
-                Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * 0.85f);
+                Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * 1.6f);
             }
+            BackdropActors.Add(Star);
+        }
+    }
+
+    for (int32 Index = 0; Index < 36; ++Index)
+    {
+        const FLinearColor Color = Index % 2 == 0 ? FLinearColor(0.12f, 0.34f, 0.65f, 0.35f) : FLinearColor(0.52f, 0.18f, 0.58f, 0.32f);
+        AStaticMeshActor* Cloud = GetWorld()->SpawnActor<AStaticMeshActor>(
+            AStaticMeshActor::StaticClass(),
+            FVector(FMath::FRandRange(-1500.0f, 2100.0f), FMath::FRandRange(-880.0f, 880.0f), FMath::FRandRange(360.0f, 760.0f)),
+            FRotator::ZeroRotator);
+        if (Cloud)
+        {
+            Cloud->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+            Cloud->SetActorScale3D(FVector(FMath::FRandRange(1.2f, 2.8f), FMath::FRandRange(0.25f, 0.55f), 0.035f));
+            Cloud->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            if (UMaterialInstanceDynamic* Material = Cloud->GetStaticMeshComponent()->CreateAndSetMaterialInstanceDynamic(0))
+            {
+                Material->SetVectorParameterValue(TEXT("Color"), Color);
+                Material->SetVectorParameterValue(TEXT("BaseColor"), Color);
+                Material->SetVectorParameterValue(TEXT("EmissiveColor"), Color * 0.45f);
+            }
+            BackdropActors.Add(Cloud);
         }
     }
 }
@@ -407,6 +436,10 @@ void AAstroAdventureGameModeBase::Confirm()
     case EAstroMissionScreen::Navigation:
         MarkScanned(Lesson->DestinationId);
         LastScanTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+        if (PlayerPawn)
+        {
+            PlayerPawn->TriggerScannerPulse(1.0f);
+        }
         CurrentScreen = EAstroMissionScreen::DiscoveryCard;
         break;
     case EAstroMissionScreen::DiscoveryCard:
@@ -475,6 +508,8 @@ void AAstroAdventureGameModeBase::Back()
     {
         CurrentScreen = EAstroMissionScreen::AtlasView;
     }
+
+    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::RequestHint()
@@ -492,6 +527,8 @@ void AAstroAdventureGameModeBase::ToggleDeepDive()
     {
         CurrentScreen = EAstroMissionScreen::DiscoveryCard;
     }
+
+    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::TogglePassport()
@@ -505,6 +542,8 @@ void AAstroAdventureGameModeBase::TogglePassport()
         PreviousScreen = CurrentScreen;
         CurrentScreen = EAstroMissionScreen::AtlasView;
     }
+
+    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::TogglePause()
@@ -523,6 +562,8 @@ void AAstroAdventureGameModeBase::TogglePause()
         PauseMenuIndex = 0;
         CurrentScreen = EAstroMissionScreen::PauseMenu;
     }
+
+    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::MoveQuizFocus(const int32 Direction)
@@ -758,6 +799,94 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
         PlayerPawn->SetTravelTarget(FocusLocation + FVector(-145.0f, 0.0f, 70.0f));
         PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(0.0f, 0.0f, 45.0f));
     }
+
+    RefreshScenePresentation();
+}
+
+void AAstroAdventureGameModeBase::RefreshScenePresentation()
+{
+    for (int32 Index = 0; Index < DestinationActors.Num(); ++Index)
+    {
+        if (DestinationActors[Index])
+        {
+            DestinationActors[Index]->SetActorHiddenInGame(!ShouldShowDestinationInCurrentView(Index));
+        }
+    }
+
+    for (int32 Index = 0; Index < RouteMarkerActors.Num(); ++Index)
+    {
+        if (RouteMarkerActors[Index])
+        {
+            const int32 OwnerIndex = RouteMarkerOwnerIndices.IsValidIndex(Index) ? RouteMarkerOwnerIndices[Index] : INDEX_NONE;
+            RouteMarkerActors[Index]->SetActorHiddenInGame(OwnerIndex != INDEX_NONE && !ShouldShowDestinationInCurrentView(OwnerIndex));
+        }
+    }
+
+    RefreshPlayerPresentation();
+}
+
+void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
+{
+    if (!PlayerPawn)
+    {
+        return;
+    }
+
+    EAstroCameraPresentationProfile Profile = EAstroCameraPresentationProfile::Mission;
+    if (CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        Profile = EAstroCameraPresentationProfile::Atlas;
+    }
+    else if (IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+    {
+        Profile = EAstroCameraPresentationProfile::Scan;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward || CurrentScreen == EAstroMissionScreen::PauseMenu)
+    {
+        Profile = EAstroCameraPresentationProfile::Stable;
+    }
+
+    PlayerPawn->SetCameraPresentationProfile(Profile);
+    PlayerPawn->SetScannerActive(IsScanEffectActive());
+
+    if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
+    {
+        PlayerPawn->SetShipAccentColor(Lesson->DisplayColor.GetClamped(0.0f, 1.0f));
+    }
+}
+
+bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32 DestinationIndex) const
+{
+    if (!DestinationActors.IsValidIndex(DestinationIndex))
+    {
+        return false;
+    }
+
+    if (CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        return true;
+    }
+
+    if (CurrentScreen == EAstroMissionScreen::Home || CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::MissionPrompt)
+    {
+        const int32 Count = FMath::Max(1, DestinationActors.Num());
+        return DestinationIndex == FocusedDestinationIndex || DestinationIndex == (FocusedDestinationIndex + 1) % Count;
+    }
+
+    if (!IsMissionPlayScreen())
+    {
+        return true;
+    }
+
+    const int32 Count = DestinationActors.Num();
+    if (Count <= 0)
+    {
+        return false;
+    }
+
+    const int32 ForwardDistance = (DestinationIndex - FocusedDestinationIndex + Count) % Count;
+    const int32 BackDistance = (FocusedDestinationIndex - DestinationIndex + Count) % Count;
+    return DestinationIndex == FocusedDestinationIndex || ForwardDistance <= 1 || BackDistance <= 1;
 }
 
 void AAstroAdventureGameModeBase::MarkScanned(const FName DestinationId)
