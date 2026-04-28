@@ -15,6 +15,7 @@ namespace
     constexpr float RotationInterpSpeed = 5.0f;
     constexpr float TravelSnapDistance = 2.0f;
     constexpr float ScannerPulseDecaySpeed = 2.8f;
+    constexpr float NavigationPulseDecaySpeed = 5.8f;
     constexpr float CameraFocusSnapDistance = 0.35f;
     constexpr float CameraLocationSnapDistance = 0.5f;
     constexpr float CameraRotationSnapDegrees = 0.08f;
@@ -24,6 +25,7 @@ namespace
     {
         FVector Offset = FVector::ZeroVector;
         float AimZOffset = -110.0f;
+        FVector AimOffset = FVector::ZeroVector;
         float FocusInterpSpeed = 4.0f;
         float CameraInterpSpeed = 4.0f;
         float FieldOfView = 58.0f;
@@ -34,14 +36,14 @@ namespace
         switch (Profile)
         {
         case EAstroCameraPresentationProfile::Atlas:
-            return { FVector(-560.0f, 0.0f, 760.0f), -170.0f, 3.6f, 3.0f, 62.0f };
+            return { FVector(-820.0f, -60.0f, 980.0f), -120.0f, FVector(40.0f, 0.0f, 40.0f), 3.4f, 2.8f, 62.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-310.0f, 0.0f, 420.0f), -95.0f, 6.4f, 5.6f, 50.0f };
+            return { FVector(-580.0f, -64.0f, 620.0f), -80.0f, FVector(42.0f, 0.0f, 48.0f), 7.2f, 6.4f, 58.0f };
         case EAstroCameraPresentationProfile::Stable:
-            return { FVector(-470.0f, 0.0f, 600.0f), -145.0f, 3.2f, 2.8f, 55.0f };
+            return { FVector(-760.0f, -60.0f, 820.0f), -100.0f, FVector(38.0f, 0.0f, 44.0f), 3.1f, 2.7f, 60.0f };
         case EAstroCameraPresentationProfile::Mission:
         default:
-            return { FVector(-430.0f, 0.0f, 540.0f), -125.0f, 4.8f, 4.2f, 57.0f };
+            return { FVector(-760.0f, -76.0f, 820.0f), -92.0f, FVector(40.0f, 0.0f, 48.0f), 5.0f, 4.4f, 64.0f };
         }
     }
 
@@ -91,8 +93,8 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMeshMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
-    UMaterialInterface* ShipMaterialTemplate = EmissiveMeshMaterial.Succeeded() ? EmissiveMeshMaterial.Object : nullptr;
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    UMaterialInterface* ShipMaterialTemplate = BasicShapeMaterial.Succeeded() ? BasicShapeMaterial.Object : nullptr;
 
     ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
     ShipMesh->SetupAttachment(ShipVisualRoot);
@@ -160,8 +162,8 @@ AAstroPlayerPawn::AAstroPlayerPawn()
 
     ScannerBeam = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ScannerBeam"));
     ScannerBeam->SetupAttachment(ShipVisualRoot);
-    ScannerBeam->SetRelativeLocation(FVector(104.0f, 0.0f, 2.0f));
-    ScannerBeam->SetRelativeScale3D(FVector(0.64f, 0.06f, 0.06f));
+    ScannerBeam->SetRelativeLocation(FVector(128.0f, 0.0f, 4.0f));
+    ScannerBeam->SetRelativeScale3D(FVector(0.88f, 0.075f, 0.075f));
     ScannerBeam->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
     ScannerBeam->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ScannerBeam->SetVisibility(false);
@@ -169,6 +171,19 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     if (ConeMesh.Succeeded())
     {
         ScannerBeam->SetStaticMesh(ConeMesh.Object);
+    }
+
+    ScannerBeamHalo = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ScannerBeamHalo"));
+    ScannerBeamHalo->SetupAttachment(ShipVisualRoot);
+    ScannerBeamHalo->SetRelativeLocation(FVector(138.0f, 0.0f, 4.0f));
+    ScannerBeamHalo->SetRelativeScale3D(FVector(1.05f, 0.16f, 0.16f));
+    ScannerBeamHalo->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+    ScannerBeamHalo->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    ScannerBeamHalo->SetVisibility(false);
+    ScannerBeamHalo->SetHiddenInGame(true);
+    if (ConeMesh.Succeeded())
+    {
+        ScannerBeamHalo->SetStaticMesh(ConeMesh.Object);
     }
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -195,6 +210,7 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     if (ScannerMaterial)
     {
         ScannerBeam->SetMaterial(0, ScannerMaterial);
+        ScannerBeamHalo->SetMaterial(0, ScannerMaterial);
     }
 
     ApplyShipMaterials();
@@ -280,6 +296,17 @@ void AAstroPlayerPawn::TriggerScannerPulse(const float PulseStrength)
     ScannerPulse = FMath::Clamp(FMath::Max(ScannerPulse, PulseStrength), 0.0f, 1.0f);
 }
 
+void AAstroPlayerPawn::TriggerNavigationFeedback(const float Direction)
+{
+    NavigationPulse = 1.0f;
+    NavigationPulseDirection = FMath::Clamp(Direction, -1.0f, 1.0f);
+
+    if (FMath::IsNearlyZero(NavigationPulseDirection))
+    {
+        NavigationPulseDirection = 1.0f;
+    }
+}
+
 void AAstroPlayerPawn::SetShipAccentColor(const FLinearColor& NewColor)
 {
     ShipAccentColor = NewColor;
@@ -315,7 +342,7 @@ void AAstroPlayerPawn::UpdateCameraPresentation(const float DeltaSeconds)
     }
 
     const FVector DesiredCameraLocation = SmoothedCameraFocusTarget + Settings.Offset;
-    const FVector DesiredLookAtLocation = SmoothedCameraFocusTarget + FVector(0.0f, 0.0f, Settings.AimZOffset);
+    const FVector DesiredLookAtLocation = SmoothedCameraFocusTarget + FVector(0.0f, 0.0f, Settings.AimZOffset) + Settings.AimOffset;
     const FRotator DesiredCameraRotation = (DesiredLookAtLocation - DesiredCameraLocation).Rotation();
 
     FVector NewCameraLocation = FMath::VInterpTo(Camera->GetComponentLocation(), DesiredCameraLocation, DeltaSeconds, Settings.CameraInterpSpeed);
@@ -361,11 +388,19 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
     SmoothedSpeedAlpha = FMath::FInterpTo(SmoothedSpeedAlpha, TargetSpeedAlpha, DeltaSeconds, 4.0f);
     LastActorLocation = ActorLocation;
 
+    NavigationPulse = FMath::FInterpTo(NavigationPulse, 0.0f, DeltaSeconds, NavigationPulseDecaySpeed);
+    if (NavigationPulse <= 0.01f)
+    {
+        NavigationPulse = 0.0f;
+    }
+
     ShipBobTime += DeltaSeconds * FMath::Lerp(1.15f, 1.75f, SmoothedSpeedAlpha);
     const float Bob = FMath::Sin(ShipBobTime) * 4.0f;
     const float SoftBank = FMath::Sin(ShipBobTime * 0.73f) * 1.8f;
-    ShipVisualRoot->SetRelativeLocation(FVector(0.0f, 0.0f, Bob));
-    ShipVisualRoot->SetRelativeRotation(FRotator(FMath::Lerp(0.0f, -3.5f, SmoothedSpeedAlpha), 0.0f, SoftBank));
+    const float FocusBank = NavigationPulseDirection * NavigationPulse * 7.5f;
+    const float FocusLift = NavigationPulse * 3.5f;
+    ShipVisualRoot->SetRelativeLocation(FVector(0.0f, 0.0f, Bob + FocusLift));
+    ShipVisualRoot->SetRelativeRotation(FRotator(FMath::Lerp(0.0f, -3.5f, SmoothedSpeedAlpha), 0.0f, SoftBank + FocusBank));
 
     if (bScannerActive)
     {
@@ -378,7 +413,8 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
     }
 
     ScannerPulse = FMath::FInterpTo(ScannerPulse, 0.0f, DeltaSeconds, ScannerPulseDecaySpeed);
-    const float ScannerAlpha = FMath::Clamp((bScannerActive ? 0.72f : 0.0f) + ScannerPulse, 0.0f, 1.0f);
+    const float ScannerAlpha = FMath::Clamp((bScannerActive ? 0.76f : 0.0f) + ScannerPulse, 0.0f, 1.0f);
+    const float FeedbackAlpha = FMath::Max(ScannerAlpha, NavigationPulse * 0.65f);
 
     if (TrailGlow)
     {
@@ -390,7 +426,7 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
 
     if (ScannerEmitter)
     {
-        const float EmitterScale = 0.09f + ScannerAlpha * 0.055f;
+        const float EmitterScale = 0.09f + FeedbackAlpha * 0.065f;
         ScannerEmitter->SetRelativeScale3D(FVector(EmitterScale));
     }
 
@@ -399,11 +435,23 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
         const bool bShowBeam = ScannerAlpha > 0.05f;
         ScannerBeam->SetVisibility(bShowBeam);
         ScannerBeam->SetHiddenInGame(!bShowBeam);
-        ScannerBeam->SetRelativeScale3D(FVector(0.58f + ScannerAlpha * 0.36f, 0.045f + ScannerAlpha * 0.055f, 0.045f + ScannerAlpha * 0.055f));
+        ScannerBeam->SetRelativeLocation(FVector(122.0f + ScannerAlpha * 32.0f, 0.0f, 4.0f));
+        ScannerBeam->SetRelativeScale3D(FVector(0.82f + ScannerAlpha * 0.54f, 0.065f + ScannerAlpha * 0.075f, 0.065f + ScannerAlpha * 0.075f));
     }
 
-    ApplyMaterialColor(TrailMaterial, FLinearColor(0.18f, 0.86f, 1.0f), 0.4f + SmoothedSpeedAlpha * 1.2f);
-    ApplyMaterialColor(ScannerMaterial, FLinearColor(0.36f, 1.0f, 0.72f), 0.8f + ScannerAlpha * 1.8f);
+    if (ScannerBeamHalo)
+    {
+        const bool bShowHalo = ScannerAlpha > 0.08f;
+        ScannerBeamHalo->SetVisibility(bShowHalo);
+        ScannerBeamHalo->SetHiddenInGame(!bShowHalo);
+        ScannerBeamHalo->SetRelativeLocation(FVector(132.0f + ScannerAlpha * 40.0f, 0.0f, 4.0f));
+        ScannerBeamHalo->SetRelativeScale3D(FVector(1.08f + ScannerAlpha * 0.72f, 0.16f + ScannerAlpha * 0.18f, 0.16f + ScannerAlpha * 0.18f));
+    }
+
+    ApplyMaterialColor(GlowMaterial, ShipAccentColor, 1.15f + NavigationPulse * 1.35f);
+    ApplyMaterialColor(AccentMaterial, ShipAccentColor, 0.65f + NavigationPulse * 1.0f);
+    ApplyMaterialColor(TrailMaterial, FLinearColor(0.18f, 0.86f, 1.0f), 0.4f + SmoothedSpeedAlpha * 1.2f + NavigationPulse * 0.45f);
+    ApplyMaterialColor(ScannerMaterial, FLinearColor(0.36f, 1.0f, 0.72f), 0.85f + ScannerAlpha * 2.4f + NavigationPulse * 0.65f);
 }
 
 void AAstroPlayerPawn::ApplyShipMaterials()

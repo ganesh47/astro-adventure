@@ -31,6 +31,7 @@ private:
     void NavigateHorizontal(float Value);
     void NavigateVertical(float Value);
     void HandleNavigationAxis(float Value, bool& bAxisReady, bool bHorizontal);
+    void TriggerFocusFeedback(float Direction);
 
     bool bHorizontalAxisReady = true;
     bool bVerticalAxisReady = true;

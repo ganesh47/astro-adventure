@@ -1,6 +1,7 @@
 #include "AstroAdventurePlayerController.h"
 
 #include "AstroAdventureGameModeBase.h"
+#include "AstroPlayerPawn.h"
 #include "Engine/World.h"
 #include "InputCoreTypes.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -73,6 +74,7 @@ void AAstroAdventurePlayerController::FocusNext()
         }
 
         GameMode->FocusNextDestination();
+        TriggerFocusFeedback(1.0f);
     }
 }
 
@@ -86,6 +88,7 @@ void AAstroAdventurePlayerController::FocusPrevious()
         }
 
         GameMode->FocusPreviousDestination();
+        TriggerFocusFeedback(-1.0f);
     }
 }
 
@@ -144,10 +147,12 @@ void AAstroAdventurePlayerController::AnswerUp()
         if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
         {
             GameMode->MoveQuizFocus(-1);
+            TriggerFocusFeedback(-1.0f);
         }
         else
         {
             GameMode->FocusPreviousDestination();
+            TriggerFocusFeedback(-1.0f);
         }
     }
 }
@@ -159,10 +164,12 @@ void AAstroAdventurePlayerController::AnswerDown()
         if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
         {
             GameMode->MoveQuizFocus(1);
+            TriggerFocusFeedback(1.0f);
         }
         else
         {
             GameMode->FocusNextDestination();
+            TriggerFocusFeedback(1.0f);
         }
     }
 }
@@ -196,6 +203,14 @@ void AAstroAdventurePlayerController::SubmitAnswerChoice(const int32 ChoiceIndex
 void AAstroAdventurePlayerController::QuitGame()
 {
     UKismetSystemLibrary::QuitGame(this, this, EQuitPreference::Quit, false);
+}
+
+void AAstroAdventurePlayerController::TriggerFocusFeedback(const float Direction)
+{
+    if (AAstroPlayerPawn* AstroPawn = Cast<AAstroPlayerPawn>(GetPawn()))
+    {
+        AstroPawn->TriggerNavigationFeedback(Direction);
+    }
 }
 
 void AAstroAdventurePlayerController::NavigateHorizontal(const float Value)

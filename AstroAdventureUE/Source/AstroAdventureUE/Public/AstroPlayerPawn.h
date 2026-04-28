@@ -55,6 +55,9 @@ public:
     UStaticMeshComponent* ScannerBeam;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
+    UStaticMeshComponent* ScannerBeamHalo;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
     UCameraComponent* Camera;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Astro Adventure")
@@ -70,6 +73,7 @@ public:
     void SetCameraPresentationProfile(EAstroCameraPresentationProfile NewProfile);
     void SetScannerActive(bool bActive);
     void TriggerScannerPulse(float PulseStrength = 1.0f);
+    void TriggerNavigationFeedback(float Direction);
     void SetShipAccentColor(const FLinearColor& NewColor);
 
 private:
@@ -90,6 +94,8 @@ private:
     float ScannerPulse = 0.0f;
     float ScannerActiveTimeRemaining = 0.0f;
     float SmoothedSpeedAlpha = 0.0f;
+    float NavigationPulse = 0.0f;
+    float NavigationPulseDirection = 0.0f;
     FVector LastActorLocation = FVector::ZeroVector;
     bool bScannerActive = false;
     bool bHasLastActorLocation = false;

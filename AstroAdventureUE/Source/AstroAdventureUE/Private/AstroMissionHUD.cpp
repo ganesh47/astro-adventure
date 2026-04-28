@@ -20,9 +20,11 @@ void AAstroMissionHUD::DrawHUD()
     const FString PrimaryLine = GameMode->GetHudPrimaryLine();
     const FString DisplayPrimaryLine = FriendlyPrimaryLine(PrimaryLine);
     const TArray<FString> DetailLines = GameMode->GetHudDetailLines();
+    const EAstroMissionScreen CurrentScreen = GameMode->GetCurrentScreen();
 
     bool bHasQuizRows = false;
     bool bHasPassportRows = false;
+    const bool bHasMenuRows = IsMenuScreen(CurrentScreen);
     bool bHasStampFeedback = GameMode->IsStampEffectActive() || PrimaryLine.Contains(TEXT("stamp unlocked"));
     for (const FString& Line : DetailLines)
     {
@@ -42,7 +44,7 @@ void AAstroMissionHUD::DrawHUD()
     DrawBadge(FriendlyStatusLine(StatusLine), Margin + 246.0f, 17.0f, StatusBadgeW, FLinearColor(0.08f, 0.24f, 0.32f, 0.90f), FLinearColor(0.90f, 0.99f, 1.0f), 0.76f);
 
     const float CardW = FMath::Min(Canvas->SizeX - Margin * 2.0f, bHasQuizRows ? 1000.0f : 960.0f);
-    const float CardH = bHasPassportRows ? 318.0f : bHasQuizRows ? 334.0f : 236.0f;
+    const float CardH = bHasPassportRows ? 318.0f : bHasQuizRows ? 334.0f : bHasMenuRows ? 326.0f : 236.0f;
     const float CardX = (Canvas->SizeX - CardW) * 0.5f;
     const float CardY = Canvas->SizeY - CardH - 24.0f;
 
@@ -55,7 +57,7 @@ void AAstroMissionHUD::DrawHUD()
     }
 
     DrawPassportFrame(CardX, CardY, CardW, CardH);
-    if (!bHasQuizRows && !bHasPassportRows)
+    if (!bHasQuizRows && !bHasPassportRows && !bHasMenuRows)
     {
         DrawStampStrip(StatusLine, CardX + 32.0f, CardY + CardH - 82.0f, CardW - 64.0f);
     }
@@ -78,6 +80,42 @@ void AAstroMissionHUD::DrawHUD()
                 const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
                 DrawQuizRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
                 Y += 72.0f;
+            }
+        }
+    }
+    else if (bHasMenuRows)
+    {
+        int32 DrawnRows = 0;
+        Y += 8.0f;
+        for (const FString& Line : DetailLines)
+        {
+            if (IsMenuChoiceLine(Line))
+            {
+                const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
+                DrawMenuRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
+                Y += 42.0f;
+                ++DrawnRows;
+            }
+        }
+
+        int32 DrawnNotes = 0;
+        for (const FString& Line : DetailLines)
+        {
+            if (IsMenuChoiceLine(Line))
+            {
+                continue;
+            }
+
+            const FString FriendlyLine = FriendlyDetailLine(Line);
+            if (!FriendlyLine.IsEmpty())
+            {
+                float NoteY = Y + 4.0f;
+                DrawLine(FriendlyLine, CardX + 42.0f, NoteY, FLinearColor(0.88f, 0.98f, 1.0f), 0.88f);
+                ++DrawnNotes;
+                if (DrawnNotes >= 2 || DrawnRows >= 4)
+                {
+                    break;
+                }
             }
         }
     }
@@ -119,7 +157,7 @@ void AAstroMissionHUD::DrawHUD()
         }
     }
 
-    DrawActionBar(PrimaryLine, DetailLines, CardX + 30.0f, CardY + CardH - 40.0f, CardW - 60.0f, bHasQuizRows);
+    DrawActionBar(CurrentScreen, CardX + 30.0f, CardY + CardH - 40.0f, CardW - 60.0f, bHasQuizRows);
 }
 
 void AAstroMissionHUD::DrawLine(const FString& Text, const float X, float& Y, const FLinearColor& Color, const float Scale)
@@ -180,33 +218,9 @@ void AAstroMissionHUD::DrawStampSlot(const float X, const float Y, const float S
     }
 }
 
-void AAstroMissionHUD::DrawActionBar(const FString& PrimaryLine, const TArray<FString>& DetailLines, const float X, const float Y, const float W, const bool bHasQuizRows)
+void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const float X, const float Y, const float W, const bool bHasQuizRows)
 {
     TArray<FString> Actions;
-    const FString PrimaryLower = PrimaryLine.ToLower();
-
-    bool bMentionsScan = PrimaryLower.Contains(TEXT("scan"));
-    bool bMentionsPassport = PrimaryLower.Contains(TEXT("passport"));
-    bool bMentionsPaused = PrimaryLower.Contains(TEXT("paused"));
-    bool bMentionsLaunch = PrimaryLower.Contains(TEXT("first expedition"));
-    bool bMentionsMenu = PrimaryLower == TEXT("solar passport")
-        || PrimaryLower.Contains(TEXT("choose your explorer")) || PrimaryLower.Contains(TEXT("mission complete"));
-    bool bMentionsMore = PrimaryLower.Contains(TEXT("discovery card")) || PrimaryLower.Contains(TEXT("look closer"));
-    bool bMentionsDeepDive = PrimaryLower.Contains(TEXT("look closer"));
-    bool bMentionsRouteRows = false;
-    bool bMentionsHint = false;
-    bool bMentionsStampAward = PrimaryLower.Contains(TEXT("stamp unlocked"));
-
-    for (const FString& Line : DetailLines)
-    {
-        const FString Lower = Line.ToLower();
-        bMentionsScan = bMentionsScan || Lower.Contains(TEXT("confirm to scan"));
-        bMentionsPassport = bMentionsPassport || Lower.Contains(TEXT("passport"));
-        bMentionsMore = bMentionsMore || Lower.Contains(TEXT("more info"));
-        bMentionsRouteRows = bMentionsRouteRows || IsPassportRouteLine(Line);
-        bMentionsHint = bMentionsHint || Lower.Contains(TEXT("hint"));
-        bMentionsStampAward = bMentionsStampAward || Lower.Contains(TEXT("stamp saved")) || Lower.Contains(TEXT("stamp added"));
-    }
 
     if (bHasQuizRows)
     {
@@ -214,56 +228,76 @@ void AAstroMissionHUD::DrawActionBar(const FString& PrimaryLine, const TArray<FS
         AddActionIfMissing(Actions, TEXT("Confirm"));
         AddActionIfMissing(Actions, TEXT("Hint"));
     }
-    else if (bMentionsPaused || bMentionsMenu)
+    else if (Screen == EAstroMissionScreen::Home)
     {
         AddActionIfMissing(Actions, TEXT("Move"));
         AddActionIfMissing(Actions, TEXT("Confirm"));
+        AddActionIfMissing(Actions, TEXT("Quit"));
     }
-    else if (bMentionsLaunch)
+    else if (Screen == EAstroMissionScreen::AgeSelect)
     {
+        AddActionIfMissing(Actions, TEXT("Pick age"));
         AddActionIfMissing(Actions, TEXT("Launch"));
         AddActionIfMissing(Actions, TEXT("Back"));
     }
-    else if (bMentionsRouteRows)
+    else if (Screen == EAstroMissionScreen::MissionPrompt)
+    {
+        AddActionIfMissing(Actions, TEXT("Launch"));
+        AddActionIfMissing(Actions, TEXT("Back"));
+        AddActionIfMissing(Actions, TEXT("Pause"));
+    }
+    else if (Screen == EAstroMissionScreen::PauseMenu)
+    {
+        AddActionIfMissing(Actions, TEXT("Move"));
+        AddActionIfMissing(Actions, TEXT("Confirm"));
+        AddActionIfMissing(Actions, TEXT("Quit"));
+    }
+    else if (Screen == EAstroMissionScreen::MissionComplete)
+    {
+        AddActionIfMissing(Actions, TEXT("Move"));
+        AddActionIfMissing(Actions, TEXT("Confirm"));
+        AddActionIfMissing(Actions, TEXT("Quit"));
+    }
+    else if (Screen == EAstroMissionScreen::Navigation)
+    {
+        AddActionIfMissing(Actions, TEXT("Scan"));
+        AddActionIfMissing(Actions, TEXT("Passport"));
+        AddActionIfMissing(Actions, TEXT("Pause"));
+    }
+    else if (Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::AtlasView)
     {
         AddActionIfMissing(Actions, TEXT("Pick stop"));
         AddActionIfMissing(Actions, TEXT("Open stop"));
         AddActionIfMissing(Actions, TEXT("Back"));
     }
-    else if (bMentionsStampAward)
+    else if (Screen == EAstroMissionScreen::DiscoveryCard)
+    {
+        AddActionIfMissing(Actions, TEXT("Quiz"));
+        AddActionIfMissing(Actions, TEXT("More Info"));
+        AddActionIfMissing(Actions, TEXT("Back"));
+    }
+    else if (Screen == EAstroMissionScreen::DeepDive)
+    {
+        AddActionIfMissing(Actions, TEXT("Close Info"));
+        AddActionIfMissing(Actions, TEXT("Quiz"));
+        AddActionIfMissing(Actions, TEXT("Back"));
+    }
+    else if (Screen == EAstroMissionScreen::QuizFeedback)
+    {
+        AddActionIfMissing(Actions, TEXT("Next"));
+        AddActionIfMissing(Actions, TEXT("Hint"));
+        AddActionIfMissing(Actions, TEXT("Retry"));
+    }
+    else if (Screen == EAstroMissionScreen::StampAward)
     {
         AddActionIfMissing(Actions, TEXT("Next"));
         AddActionIfMissing(Actions, TEXT("Passport"));
         AddActionIfMissing(Actions, TEXT("Pause"));
     }
-    else if (bMentionsMore)
-    {
-        AddActionIfMissing(Actions, bMentionsDeepDive ? TEXT("Close Info") : TEXT("More Info"));
-        AddActionIfMissing(Actions, TEXT("Quiz"));
-        AddActionIfMissing(Actions, TEXT("Back"));
-    }
     else
     {
-        if (bMentionsScan)
-        {
-            AddActionIfMissing(Actions, TEXT("Scan"));
-            AddActionIfMissing(Actions, TEXT("Pick stop"));
-        }
-        else
-        {
-            AddActionIfMissing(Actions, TEXT("Confirm"));
-        }
-
-        if (bMentionsHint)
-        {
-            AddActionIfMissing(Actions, TEXT("Hint"));
-        }
-
-        if (bMentionsPassport)
-        {
-            AddActionIfMissing(Actions, TEXT("Passport"));
-        }
-
+        AddActionIfMissing(Actions, TEXT("Confirm"));
+        AddActionIfMissing(Actions, TEXT("Back"));
         AddActionIfMissing(Actions, TEXT("Pause"));
     }
 
@@ -280,6 +314,22 @@ void AAstroMissionHUD::DrawActionBar(const FString& PrimaryLine, const TArray<FS
         DrawBadge(Actions[Index], BadgeX, Y, BadgeW, Fill, FLinearColor::White, 0.82f);
         BadgeX += BadgeW + 10.0f;
     }
+}
+
+void AAstroMissionHUD::DrawMenuRow(const FString& Text, const float X, const float Y, const float W, const bool bFocused)
+{
+    FString ChoiceText = FriendlyDetailLine(Text);
+    ChoiceText.RemoveFromStart(TEXT(">"));
+    ChoiceText.TrimStartAndEndInline();
+
+    const FLinearColor Fill = bFocused ? FLinearColor(0.96f, 0.66f, 0.18f, 0.96f) : FLinearColor(0.08f, 0.18f, 0.22f, 0.90f);
+    const FLinearColor Stripe = bFocused ? FLinearColor(1.0f, 0.95f, 0.62f, 1.0f) : FLinearColor(0.18f, 0.46f, 0.56f, 0.86f);
+    const FLinearColor TextColor = bFocused ? FLinearColor(0.05f, 0.06f, 0.07f, 1.0f) : FLinearColor(0.94f, 0.98f, 1.0f, 1.0f);
+
+    DrawRect(Fill, X, Y, W, 34.0f);
+    DrawRect(Stripe, X, Y, 10.0f, 34.0f);
+    DrawText(bFocused ? TEXT("READY") : TEXT(""), TextColor, X + 20.0f, Y + 8.0f, GEngine->GetSmallFont(), 0.62f, false);
+    DrawText(ChoiceText, TextColor, X + (bFocused ? 92.0f : 24.0f), Y + 7.0f, GEngine->GetSmallFont(), 0.96f, false);
 }
 
 void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const float Y, const float W, const bool bFocused)
@@ -385,6 +435,34 @@ bool AAstroMissionHUD::LooksLikeRawTechnicalLine(const FString& Text) const
         || Lower.Contains(TEXT("content/")) || Lower.Contains(TEXT("saved/")) || Lower.Contains(TEXT("config/"))
         || Lower.Contains(TEXT(".cpp")) || Lower.Contains(TEXT(".h")) || Lower.Contains(TEXT("\\"))
         || Lower.StartsWith(TEXT("log")) || Lower.StartsWith(TEXT("warning:")) || Lower.StartsWith(TEXT("error:"));
+}
+
+bool AAstroMissionHUD::IsMenuScreen(const EAstroMissionScreen Screen) const
+{
+    return Screen == EAstroMissionScreen::Home
+        || Screen == EAstroMissionScreen::AgeSelect
+        || Screen == EAstroMissionScreen::PauseMenu
+        || Screen == EAstroMissionScreen::MissionComplete;
+}
+
+bool AAstroMissionHUD::IsMenuChoiceLine(const FString& Text) const
+{
+    const FString Trimmed = Text.TrimStartAndEnd();
+    if (!(Trimmed.StartsWith(TEXT(">")) || Trimmed.StartsWith(TEXT("New Expedition")) || Trimmed.StartsWith(TEXT("Continue"))
+        || Trimmed.StartsWith(TEXT("Reset Passport")) || Trimmed.StartsWith(TEXT("Quit"))
+        || Trimmed.StartsWith(TEXT("Ages ")) || Trimmed.StartsWith(TEXT("Resume"))
+        || Trimmed.StartsWith(TEXT("Restart")) || Trimmed.StartsWith(TEXT("Change age"))
+        || Trimmed.StartsWith(TEXT("Explore again")) || Trimmed.StartsWith(TEXT("Open Passport"))))
+    {
+        return false;
+    }
+
+    return Trimmed.Contains(TEXT("New Expedition")) || Trimmed.Contains(TEXT("Continue"))
+        || Trimmed.Contains(TEXT("Reset Passport")) || Trimmed.Contains(TEXT("Quit"))
+        || Trimmed.Contains(TEXT("Ages 4-6")) || Trimmed.Contains(TEXT("Ages 7-9")) || Trimmed.Contains(TEXT("Ages 10-12"))
+        || Trimmed.Contains(TEXT("Resume")) || Trimmed.Contains(TEXT("Restart mission"))
+        || Trimmed.Contains(TEXT("Change age")) || Trimmed.Contains(TEXT("Explore again"))
+        || Trimmed.Contains(TEXT("Open Passport"));
 }
 
 bool AAstroMissionHUD::IsQuizChoiceLine(const FString& Text) const

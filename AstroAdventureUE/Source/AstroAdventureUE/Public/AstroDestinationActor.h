@@ -76,4 +76,5 @@ private:
     void HideMotifs();
     void SetMotif(int32 Index, UStaticMesh* Mesh, const FVector& Location, const FRotator& Rotation, const FVector& Scale, const FLinearColor& Color, float EmissiveStrength = 0.0f);
     void ApplyFocusVisuals();
+    void UpdateNameplateLayout();
 };

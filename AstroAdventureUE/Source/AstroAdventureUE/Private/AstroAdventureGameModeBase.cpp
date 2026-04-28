@@ -8,6 +8,7 @@
 #include "AstroProgressSaveGame.h"
 #include "Algo/Count.h"
 #include "Components/LightComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/DirectionalLight.h"
@@ -28,12 +29,12 @@ namespace
 {
 UMaterialInterface* GetRuntimeColorMaterial()
 {
-    if (UMaterialInterface* EmissiveMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial")))
+    if (UMaterialInterface* BasicShapeMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
     {
-        return EmissiveMaterial;
+        return BasicShapeMaterial;
     }
 
-    return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
 }
 
 void ApplyRuntimeColor(AStaticMeshActor* Actor, const FLinearColor& Color, const float EmissiveStrength)
@@ -162,7 +163,7 @@ void AAstroAdventureGameModeBase::BuildLessons()
 {
     Lessons.Reset();
 
-    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is our star and the center of this expedition."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look for the warm glowing giant with safe-distance rings."), TEXT("The Sun is a bright star."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("What is the Sun?"), TEXT("star"), TEXT("A star that lights the Solar System."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.8f, true);
+    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is our star and the center of this expedition."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look for the warm glowing giant with safe-distance rings."), TEXT("The Sun is a bright star."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("What is the Sun?"), TEXT("star"), TEXT("A star that lights the Solar System."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.35f, true);
     AddLesson(TEXT("mercury"), TEXT("Mercury"), TEXT("Mercury is the closest planet to the Sun."), TEXT("It has a very short year because it races around the Sun quickly."), TEXT("Small gray world with craters and a heat badge."), TEXT("Mercury is tiny and close to the Sun."), TEXT("Mercury is closest to the Sun. It zooms around fast!"), TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."), TEXT("Mercury has many craters because it has almost no thick atmosphere to burn up incoming space rocks."), TEXT("Mercury is much smaller than Earth and much closer to the Sun."), TEXT("Crater: a bowl-shaped mark made when a rock from space hits a surface."), TEXT("https://science.nasa.gov/mercury/"), TEXT("Which clue helps identify Mercury?"), TEXT("sun"), TEXT("It is the closest planet to the Sun."), TEXT("rust"), TEXT("It is famous for red rusty dust."), TEXT("rings"), TEXT("It has giant bright rings."), TEXT("Nice scan! Mercury is the Sun-neighbor clue."), TEXT("Almost. Look for the clue about the Sun."), TEXT("Look for the clue that mentions the Sun."), FLinearColor(0.62f, 0.62f, 0.58f), 0.72f, true);
     AddLesson(TEXT("venus"), TEXT("Venus"), TEXT("Venus is wrapped in thick clouds and is extremely hot."), TEXT("Venus is the hottest planet even though Mercury is closer to the Sun."), TEXT("Creamy gold cloud world with a heat shield icon."), TEXT("Venus is a hot cloudy planet."), TEXT("Venus has thick clouds that trap heat like a blanket."), TEXT("Venus has a thick atmosphere that creates an extreme greenhouse effect, making its surface hotter than Mercury."), TEXT("A greenhouse effect happens when an atmosphere lets sunlight in but traps heat. Venus is the Solar System's strongest example."), TEXT("Venus is close to Earth's size, but its atmosphere makes it very different from Earth."), TEXT("Atmosphere: the layer of gases around a planet or moon."), TEXT("https://science.nasa.gov/venus/"), TEXT("Why is Venus so hot?"), TEXT("clouds"), TEXT("Its thick atmosphere traps heat."), TEXT("ice"), TEXT("It is covered in blue ice."), TEXT("tiny"), TEXT("It is the smallest moon."), TEXT("Great! Venus is a cloudy heat-trapping world."), TEXT("Try again. Think about the thick clouds."), TEXT("A thick atmosphere can hold in heat."), FLinearColor(1.0f, 0.76f, 0.42f), 0.9f, true);
     AddLesson(TEXT("earth"), TEXT("Earth"), TEXT("Earth is our home world with liquid water on the surface."), TEXT("Earth has air, oceans, land, clouds, and life."), TEXT("Blue oceans, green-brown land, and white cloud clue."), TEXT("Earth is our home planet."), TEXT("Earth has water, air, land, clouds, and living things."), TEXT("Earth's liquid water, protective atmosphere, and distance from the Sun help make it habitable."), TEXT("Scientists compare other worlds to Earth to ask what conditions help life survive."), TEXT("Earth is bigger than Mercury and Mars, smaller than the gas giants, and has one large Moon."), TEXT("Planet: a large round world that orbits a star."), TEXT("https://science.nasa.gov/earth/"), TEXT("Which clue makes Earth special?"), TEXT("water"), TEXT("It has liquid water and life."), TEXT("rings"), TEXT("It has the largest rings."), TEXT("storm"), TEXT("It has the Great Red Spot."), TEXT("Home badge unlocked! Earth is the water-and-life clue."), TEXT("Try again. Look for water and life."), TEXT("Earth is the planet we live on."), FLinearColor(0.18f, 0.56f, 1.0f), 1.0f, true);
@@ -193,24 +194,36 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (KeyLight && KeyLight->GetLightComponent())
     {
         KeyLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        KeyLight->GetLightComponent()->SetIntensity(7.5f);
+        KeyLight->GetLightComponent()->SetIntensity(14.0f);
         KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.95f, 0.98f, 1.0f));
     }
 
     APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-1400.0f, 0.0f, 190.0f), FRotator::ZeroRotator);
-    if (SunLight && SunLight->GetLightComponent())
+    if (SunLight && SunLight->PointLightComponent)
     {
-        SunLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        SunLight->GetLightComponent()->SetIntensity(18000.0f);
-        SunLight->GetLightComponent()->SetLightColor(FLinearColor(1.0f, 0.76f, 0.28f));
+        SunLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
+        SunLight->PointLightComponent->SetIntensity(90000.0f);
+        SunLight->PointLightComponent->SetAttenuationRadius(4200.0f);
+        SunLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
+        SunLight->PointLightComponent->SetLightColor(FLinearColor(1.0f, 0.76f, 0.28f));
+    }
+
+    APointLight* PlayerFillLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-250.0f, -360.0f, 540.0f), FRotator::ZeroRotator);
+    if (PlayerFillLight && PlayerFillLight->PointLightComponent)
+    {
+        PlayerFillLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
+        PlayerFillLight->PointLightComponent->SetIntensity(52000.0f);
+        PlayerFillLight->PointLightComponent->SetAttenuationRadius(4400.0f);
+        PlayerFillLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
+        PlayerFillLight->PointLightComponent->SetLightColor(FLinearColor(0.36f, 0.74f, 1.0f));
     }
 
     ASkyLight* FillLight = GetWorld()->SpawnActor<ASkyLight>(ASkyLight::StaticClass(), FVector(0.0f, 0.0f, 460.0f), FRotator::ZeroRotator);
     if (FillLight && FillLight->GetLightComponent())
     {
         FillLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        FillLight->GetLightComponent()->SetIntensity(1.65f);
-        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.48f, 0.66f, 1.0f));
+        FillLight->GetLightComponent()->SetIntensity(5.5f);
+        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.58f, 0.74f, 1.0f));
     }
 
     APostProcessVolume* LookDevVolume = GetWorld()->SpawnActor<APostProcessVolume>(APostProcessVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
@@ -220,13 +233,13 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         LookDevVolume->Settings.bOverride_AutoExposureMethod = true;
         LookDevVolume->Settings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
         LookDevVolume->Settings.bOverride_AutoExposureBias = true;
-        LookDevVolume->Settings.AutoExposureBias = 1.15f;
+        LookDevVolume->Settings.AutoExposureBias = 1.35f;
         LookDevVolume->Settings.bOverride_AutoExposureMinBrightness = true;
         LookDevVolume->Settings.AutoExposureMinBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_AutoExposureMaxBrightness = true;
         LookDevVolume->Settings.AutoExposureMaxBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_BloomIntensity = true;
-        LookDevVolume->Settings.BloomIntensity = 1.25f;
+        LookDevVolume->Settings.BloomIntensity = 0.95f;
         LookDevVolume->Settings.bOverride_BloomThreshold = true;
         LookDevVolume->Settings.BloomThreshold = 0.42f;
         LookDevVolume->Settings.bOverride_ColorSaturation = true;
@@ -279,7 +292,9 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     PlayerPawn = Cast<AAstroPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex))
     {
-        PlayerPawn->SetTravelTarget(DestinationActors[FocusedDestinationIndex]->GetActorLocation() + FVector(-145.0f, 0.0f, 70.0f));
+        const FVector FocusLocation = DestinationActors[FocusedDestinationIndex]->GetActorLocation();
+        PlayerPawn->SetTravelTarget(FocusLocation + FVector(-145.0f, 0.0f, 70.0f));
+        PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(0.0f, 0.0f, 45.0f));
     }
 }
 
@@ -369,27 +384,27 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
 
     FRandomStream BackdropStream(250425);
 
-    for (int32 Index = 0; Index < 220; ++Index)
+    for (int32 Index = 0; Index < 360; ++Index)
     {
         const FLinearColor Color = Index % 11 == 0 ? FLinearColor(0.72f, 0.96f, 1.0f) : Index % 17 == 0 ? FLinearColor(1.0f, 0.78f, 0.48f) : FLinearColor(0.86f, 0.9f, 1.0f);
         AStaticMeshActor* Star = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
-            FVector(BackdropStream.FRandRange(-1720.0f, 2360.0f), BackdropStream.FRandRange(-980.0f, 980.0f), BackdropStream.FRandRange(220.0f, 860.0f)),
+            FVector(BackdropStream.FRandRange(-1840.0f, 2440.0f), BackdropStream.FRandRange(-1120.0f, 1120.0f), BackdropStream.FRandRange(120.0f, 920.0f)),
             FRotator::ZeroRotator);
         if (Star)
         {
             Star->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.012f, Index % 13 == 0 ? 0.07f : 0.042f)));
+            Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.026f, Index % 13 == 0 ? 0.13f : 0.072f)));
             Star->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            ApplyRuntimeColor(Star, Color, Index % 13 == 0 ? 2.4f : 1.45f);
+            ApplyRuntimeColor(Star, Color, Index % 13 == 0 ? 5.0f : 2.8f);
             BackdropActors.Add(Star);
         }
     }
 
-    for (int32 Index = 0; Index < 28; ++Index)
+    for (int32 Index = 0; Index < 44; ++Index)
     {
-        const FLinearColor Color = Index % 3 == 0 ? FLinearColor(0.10f, 0.28f, 0.52f, 0.28f) : Index % 3 == 1 ? FLinearColor(0.35f, 0.14f, 0.44f, 0.24f) : FLinearColor(0.42f, 0.30f, 0.12f, 0.18f);
-        const FVector Center(BackdropStream.FRandRange(-1600.0f, 2240.0f), BackdropStream.FRandRange(-880.0f, 880.0f), BackdropStream.FRandRange(330.0f, 820.0f));
+        const FLinearColor Color = Index % 4 == 0 ? FLinearColor(0.10f, 0.34f, 0.64f, 0.42f) : Index % 4 == 1 ? FLinearColor(0.46f, 0.16f, 0.62f, 0.34f) : Index % 4 == 2 ? FLinearColor(0.70f, 0.34f, 0.12f, 0.28f) : FLinearColor(0.12f, 0.50f, 0.46f, 0.28f);
+        const FVector Center(BackdropStream.FRandRange(-1680.0f, 2320.0f), BackdropStream.FRandRange(-960.0f, 960.0f), BackdropStream.FRandRange(180.0f, 760.0f));
         AStaticMeshActor* Cloud = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
             Center,
@@ -397,9 +412,9 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
         if (Cloud)
         {
             Cloud->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(0.22f, 0.82f), BackdropStream.FRandRange(0.08f, 0.22f), BackdropStream.FRandRange(0.025f, 0.085f)));
+            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(0.42f, 1.35f), BackdropStream.FRandRange(0.11f, 0.34f), BackdropStream.FRandRange(0.035f, 0.13f)));
             Cloud->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            ApplyRuntimeColor(Cloud, Color, 0.75f);
+            ApplyRuntimeColor(Cloud, Color, 1.4f);
             BackdropActors.Add(Cloud);
         }
     }
@@ -876,7 +891,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         Lines.Add(FString::Printf(TEXT("Next stop: %s"), *Lesson->DisplayName.ToString()));
         Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
-        Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to review its card.") : TEXT("Confirm to scan for a discovery card."));
+        Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to scan again and reopen its card.") : TEXT("Confirm to scan for a discovery card."));
         Lines.Add(TEXT("Open Passport / RT for the full Atlas route."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
@@ -895,7 +910,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     }
     else if (CurrentScreen == EAstroMissionScreen::MissionComplete)
     {
-        Lines.Add(TEXT("Review your Passport, replay the route, change age mode, or quit from Pause."));
+        Lines.Add(TEXT("Review your Passport, replay the route, change age mode, or quit."));
         Lines.Add(TEXT("You matched visual clues, facts, and quiz answers across the Solar System."));
     }
 
@@ -1010,9 +1025,7 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
         return false;
     }
 
-    const int32 ForwardDistance = (DestinationIndex - FocusedDestinationIndex + Count) % Count;
-    const int32 BackDistance = (FocusedDestinationIndex - DestinationIndex + Count) % Count;
-    return DestinationIndex == FocusedDestinationIndex || ForwardDistance <= 1 || BackDistance <= 1;
+    return DestinationIndex == FocusedDestinationIndex || DestinationIndex == FocusedDestinationIndex + 1;
 }
 
 void AAstroAdventureGameModeBase::MarkScanned(const FName DestinationId)

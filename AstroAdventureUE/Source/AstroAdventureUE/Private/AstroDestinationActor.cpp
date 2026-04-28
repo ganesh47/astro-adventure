@@ -24,6 +24,86 @@ FLinearColor WithAlpha(const FLinearColor& Color, const float Alpha)
 {
     return FLinearColor(Color.R, Color.G, Color.B, Alpha);
 }
+
+FLinearColor ReadableDestinationColor(const FString& Id, const FLinearColor& Color)
+{
+    if (Id == TEXT("sun"))
+    {
+        return FLinearColor(1.0f, 0.58f, 0.05f, 1.0f);
+    }
+    if (Id == TEXT("mercury"))
+    {
+        return FLinearColor(0.7f, 0.67f, 0.58f, 1.0f);
+    }
+    if (Id == TEXT("venus"))
+    {
+        return FLinearColor(0.98f, 0.68f, 0.28f, 1.0f);
+    }
+    if (Id == TEXT("earth"))
+    {
+        return FLinearColor(0.1f, 0.48f, 0.94f, 1.0f);
+    }
+    if (Id == TEXT("moon"))
+    {
+        return FLinearColor(0.66f, 0.72f, 0.78f, 1.0f);
+    }
+    if (Id == TEXT("mars"))
+    {
+        return FLinearColor(0.95f, 0.28f, 0.12f, 1.0f);
+    }
+    if (Id == TEXT("jupiter"))
+    {
+        return FLinearColor(0.93f, 0.62f, 0.34f, 1.0f);
+    }
+    if (Id == TEXT("saturn"))
+    {
+        return FLinearColor(0.94f, 0.74f, 0.36f, 1.0f);
+    }
+    if (Id == TEXT("uranus"))
+    {
+        return FLinearColor(0.42f, 0.92f, 0.98f, 1.0f);
+    }
+    if (Id == TEXT("neptune"))
+    {
+        return FLinearColor(0.15f, 0.36f, 1.0f, 1.0f);
+    }
+    if (Id == TEXT("pluto"))
+    {
+        return FLinearColor(0.8f, 0.68f, 0.56f, 1.0f);
+    }
+    if (Id == TEXT("europa"))
+    {
+        return FLinearColor(0.82f, 0.95f, 1.0f, 1.0f);
+    }
+    if (Id == TEXT("asteroid_belt"))
+    {
+        return FLinearColor(0.56f, 0.51f, 0.45f, 1.0f);
+    }
+
+    return WithAlpha(BlendColor(Color, FLinearColor::White, 0.18f), 1.0f);
+}
+
+float DestinationBodyEmissiveStrength(const FString& Id)
+{
+    if (Id == TEXT("sun"))
+    {
+        return 1.55f;
+    }
+    if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
+    {
+        return 0.62f;
+    }
+    if (Id == TEXT("venus") || Id == TEXT("mars") || Id == TEXT("jupiter") || Id == TEXT("saturn"))
+    {
+        return 0.5f;
+    }
+    if (Id == TEXT("mercury") || Id == TEXT("moon") || Id == TEXT("pluto") || Id == TEXT("asteroid_belt"))
+    {
+        return 0.42f;
+    }
+
+    return 0.38f;
+}
 }
 
 AAstroDestinationActor::AAstroDestinationActor()
@@ -49,6 +129,7 @@ AAstroDestinationActor::AAstroDestinationActor()
     FocusHalo->SetMobility(EComponentMobility::Movable);
     FocusHalo->SetVisibility(false);
     FocusHalo->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    FocusHalo->SetCastShadow(false);
     if (SphereMesh.Succeeded())
     {
         FocusHalo->SetStaticMesh(SphereMesh.Object);
@@ -59,6 +140,7 @@ AAstroDestinationActor::AAstroDestinationActor()
     FocusBeacon->SetMobility(EComponentMobility::Movable);
     FocusBeacon->SetVisibility(false);
     FocusBeacon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    FocusBeacon->SetCastShadow(false);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     if (CylinderMesh.Succeeded())
@@ -72,6 +154,7 @@ AAstroDestinationActor::AAstroDestinationActor()
     Nameplate->SetMobility(EComponentMobility::Movable);
     Nameplate->SetVisibility(false);
     Nameplate->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Nameplate->SetCastShadow(false);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     if (CubeMesh.Succeeded())
@@ -80,10 +163,10 @@ AAstroDestinationActor::AAstroDestinationActor()
         Nameplate->SetStaticMesh(CubeMesh.Object);
     }
 
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMeshMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
-    if (EmissiveMeshMaterial.Succeeded())
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    if (BasicShapeMaterial.Succeeded())
     {
-        ColorMaterialTemplate = EmissiveMeshMaterial.Object;
+        ColorMaterialTemplate = BasicShapeMaterial.Object;
     }
 
     for (int32 Index = 0; Index < DestinationMotifCount; ++Index)
@@ -95,10 +178,11 @@ AAstroDestinationActor::AAstroDestinationActor()
     Label = CreateDefaultSubobject<UTextRenderComponent>(TEXT("Label"));
     Label->SetupAttachment(Root);
     Label->SetHorizontalAlignment(EHTA_Center);
-    Label->SetTextRenderColor(FColor(118, 156, 198));
-    Label->SetWorldSize(46.0f);
+    Label->SetTextRenderColor(FColor(172, 213, 255));
+    Label->SetWorldSize(48.0f);
     Label->SetRelativeLocation(FVector(0.0f, 0.0f, 145.0f));
     Label->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+    Label->SetCastShadow(false);
 }
 
 UStaticMeshComponent* AAstroDestinationActor::CreateMotifComponent(const FName ComponentName, UStaticMesh* Mesh)
@@ -120,7 +204,8 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
 {
     DestinationId = Lesson.DestinationId;
     DisplayName = Lesson.DisplayName;
-    BaseColor = Color;
+    const FString DestinationKey = DestinationId.ToString().ToLower();
+    BaseColor = ReadableDestinationColor(DestinationKey, Color);
     BaseVisualScale = VisualScale;
     const uint32 ShapeHash = GetTypeHash(DestinationId);
     const float WidthCue = 0.94f + 0.04f * static_cast<float>(ShapeHash % 4);
@@ -135,15 +220,14 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
     Label->SetRelativeLocation(FVector(0.0f, 0.0f, 115.0f + 45.0f * BaseVisualScale));
     Nameplate->SetRelativeLocation(FVector(-5.0f, 0.0f, 108.0f + 45.0f * BaseVisualScale));
     Nameplate->SetRelativeRotation(Label->GetRelativeRotation());
-    Nameplate->SetRelativeScale3D(FVector(0.04f, 2.7f, 0.34f));
+    UpdateNameplateLayout();
     FocusBeacon->SetRelativeLocation(FVector(0.0f, 0.0f, 116.0f + 70.0f * BaseVisualScale));
     FocusBeacon->SetRelativeScale3D(FVector(0.08f, 0.08f, 1.55f + 0.35f * BaseVisualScale));
 
-    const FString DestinationKey = DestinationId.ToString().ToLower();
-    ApplyColor(BodyMesh, BaseColor, DestinationKey == TEXT("sun") ? 1.35f : 0.22f);
-    ApplyColor(FocusHalo, FLinearColor(1.0f, 0.88f, 0.18f, 0.55f), 1.85f);
-    ApplyColor(FocusBeacon, FLinearColor(0.35f, 0.82f, 1.0f, 0.7f), 2.4f);
-    ApplyColor(Nameplate, FLinearColor(0.02f, 0.05f, 0.11f, 0.82f), 0.05f);
+    ApplyColor(BodyMesh, BaseColor, DestinationBodyEmissiveStrength(DestinationKey));
+    ApplyColor(FocusHalo, WithAlpha(BlendColor(BaseColor, FLinearColor(1.0f, 0.92f, 0.28f, 1.0f), 0.4f), 0.64f), 1.7f);
+    ApplyColor(FocusBeacon, FLinearColor(0.42f, 0.9f, 1.0f, 0.78f), 2.05f);
+    ApplyColor(Nameplate, FLinearColor(0.01f, 0.025f, 0.06f, 0.92f), 0.16f);
     ConfigureMotifs();
     SetActorScale3D(FVector(BaseVisualScale));
     ApplyFocusVisuals();
@@ -210,6 +294,23 @@ void AAstroDestinationActor::SetMotif(const int32 Index, UStaticMesh* Mesh, cons
     ApplyColor(Motif, Color, EmissiveStrength);
 }
 
+void AAstroDestinationActor::UpdateNameplateLayout()
+{
+    const int32 DisplayLength = FMath::Max(DisplayName.ToString().Len(), 5);
+    const float PlateWidth = FMath::Clamp(1.12f + static_cast<float>(DisplayLength) * 0.07f, 1.48f, 2.7f);
+    const float FocusWidthBoost = bIsFocused ? 1.08f : 1.0f;
+    const float PlateHeight = bIsFocused ? 0.32f : 0.24f;
+    const float PlateDepth = bIsFocused ? 0.035f : 0.03f;
+    const float LabelScaleCompensation = 1.0f / FMath::Max(GetActorScale3D().GetAbsMax(), 0.1f);
+
+    Nameplate->SetVisibility(bIsFocused);
+    Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
+
+    Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
+    Label->SetWorldSize(bIsFocused ? 54.0f : (bIsDiscovered ? 42.0f : 36.0f));
+    Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : FColor(188, 224, 255));
+}
+
 void AAstroDestinationActor::ConfigureMotifs()
 {
     HideMotifs();
@@ -225,35 +326,35 @@ void AAstroDestinationActor::ConfigureMotifs()
 
     if (Id == TEXT("sun"))
     {
-        SetMotif(0, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, 0.0f), FVector(1.72f, 1.72f, 0.012f), FLinearColor(1.0f, 0.42f, 0.02f, 0.55f), 2.0f);
+        SetMotif(0, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, 0.0f), FVector(1.7f, 1.7f, 0.014f), FLinearColor(1.0f, 0.42f, 0.02f, 0.68f), 1.45f);
         for (int32 RayIndex = 0; RayIndex < 8; ++RayIndex)
         {
             const float Angle = (2.0f * PI * static_cast<float>(RayIndex)) / 8.0f;
-            const float Y = FMath::Cos(Angle) * 76.0f;
-            const float Z = FMath::Sin(Angle) * 76.0f;
-            SetMotif(1 + RayIndex, CubeMeshAsset, FVector(-4.0f, Y, Z), FRotator(0.0f, 0.0f, FMath::RadiansToDegrees(Angle)), FVector(0.018f, 0.42f, 0.035f), FLinearColor(1.0f, 0.78f, 0.12f, 0.85f), 2.8f);
+            const float Y = FMath::Cos(Angle) * 82.0f;
+            const float Z = FMath::Sin(Angle) * 82.0f;
+            SetMotif(1 + RayIndex, CubeMeshAsset, FVector(-4.0f, Y, Z), FRotator(0.0f, 0.0f, FMath::RadiansToDegrees(Angle)), FVector(0.02f, 0.44f, 0.045f), FLinearColor(1.0f, 0.82f, 0.16f, 0.92f), 1.85f);
         }
-        SetMotif(15, CylinderMeshAsset, FVector(SurfaceX - 1.0f, -17.0f, 20.0f), FRotator(0.0f, 90.0f, 0.0f), FVector(0.22f, 0.22f, 0.01f), FLinearColor(1.0f, 0.92f, 0.36f, 0.9f), 2.5f);
+        SetMotif(15, CylinderMeshAsset, FVector(SurfaceX - 1.0f, -17.0f, 20.0f), FRotator(0.0f, 90.0f, 0.0f), FVector(0.28f, 0.28f, 0.012f), FLinearColor(1.0f, 0.92f, 0.36f, 0.95f), 1.7f);
         return;
     }
 
     if (Id == TEXT("saturn"))
     {
-        SetMotif(0, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, -11.0f), FVector(1.78f, 1.78f, 0.012f), FLinearColor(0.98f, 0.86f, 0.48f, 0.85f), 0.35f);
-        SetMotif(1, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, -11.0f), FVector(1.36f, 1.36f, 0.014f), FLinearColor(0.82f, 0.67f, 0.36f, 0.82f), 0.2f);
-        SetMotif(2, CubeMeshAsset, FVector(SurfaceX, 0.0f, 20.0f), FRotator::ZeroRotator, FVector(0.01f, 0.76f, 0.028f), Pale, 0.08f);
-        SetMotif(3, CubeMeshAsset, FVector(SurfaceX, 0.0f, -8.0f), FRotator::ZeroRotator, FVector(0.01f, 0.82f, 0.024f), Dark, 0.04f);
-        SetMotif(4, CubeMeshAsset, FVector(SurfaceX, 0.0f, -27.0f), FRotator::ZeroRotator, FVector(0.01f, 0.66f, 0.018f), Light, 0.06f);
+        SetMotif(0, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, -13.0f), FVector(1.96f, 1.96f, 0.014f), FLinearColor(1.0f, 0.88f, 0.46f, 0.92f), 0.62f);
+        SetMotif(1, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, -13.0f), FVector(1.48f, 1.48f, 0.016f), FLinearColor(0.7f, 0.52f, 0.28f, 0.86f), 0.32f);
+        SetMotif(2, CubeMeshAsset, FVector(SurfaceX, 0.0f, 22.0f), FRotator::ZeroRotator, FVector(0.012f, 0.84f, 0.034f), Pale, 0.12f);
+        SetMotif(3, CubeMeshAsset, FVector(SurfaceX, 0.0f, -7.0f), FRotator::ZeroRotator, FVector(0.012f, 0.9f, 0.03f), Dark, 0.06f);
+        SetMotif(4, CubeMeshAsset, FVector(SurfaceX, 0.0f, -29.0f), FRotator::ZeroRotator, FVector(0.012f, 0.74f, 0.022f), Light, 0.09f);
         return;
     }
 
     if (Id == TEXT("jupiter"))
     {
-        SetMotif(2, CubeMeshAsset, FVector(SurfaceX, 0.0f, 30.0f), FRotator::ZeroRotator, FVector(0.012f, 0.9f, 0.026f), Pale, 0.06f);
-        SetMotif(3, CubeMeshAsset, FVector(SurfaceX, 0.0f, 11.0f), FRotator::ZeroRotator, FVector(0.012f, 0.94f, 0.032f), Deep, 0.03f);
-        SetMotif(4, CubeMeshAsset, FVector(SurfaceX, 0.0f, -10.0f), FRotator::ZeroRotator, FVector(0.012f, 0.88f, 0.028f), Light, 0.04f);
-        SetMotif(5, CubeMeshAsset, FVector(SurfaceX, 0.0f, -31.0f), FRotator::ZeroRotator, FVector(0.012f, 0.72f, 0.024f), Dark, 0.03f);
-        SetMotif(15, SphereMeshAsset, FVector(SurfaceX - 2.0f, -22.0f, -11.0f), FRotator::ZeroRotator, FVector(0.026f, 0.2f, 0.12f), FLinearColor(0.86f, 0.18f, 0.1f, 1.0f), 0.15f);
+        SetMotif(2, CubeMeshAsset, FVector(SurfaceX, 0.0f, 32.0f), FRotator::ZeroRotator, FVector(0.014f, 1.0f, 0.032f), Pale, 0.11f);
+        SetMotif(3, CubeMeshAsset, FVector(SurfaceX, 0.0f, 12.0f), FRotator::ZeroRotator, FVector(0.014f, 1.02f, 0.038f), Deep, 0.06f);
+        SetMotif(4, CubeMeshAsset, FVector(SurfaceX, 0.0f, -10.0f), FRotator::ZeroRotator, FVector(0.014f, 0.98f, 0.034f), Light, 0.08f);
+        SetMotif(5, CubeMeshAsset, FVector(SurfaceX, 0.0f, -33.0f), FRotator::ZeroRotator, FVector(0.014f, 0.82f, 0.03f), Dark, 0.05f);
+        SetMotif(15, SphereMeshAsset, FVector(SurfaceX - 3.0f, -24.0f, -11.0f), FRotator::ZeroRotator, FVector(0.032f, 0.26f, 0.15f), FLinearColor(0.92f, 0.16f, 0.08f, 1.0f), 0.32f);
         return;
     }
 
@@ -276,28 +377,28 @@ void AAstroDestinationActor::ConfigureMotifs()
 
     if (Id == TEXT("earth"))
     {
-        SetMotif(2, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 14.0f), FRotator::ZeroRotator, FVector(0.018f, 0.22f, 0.18f), FLinearColor(0.1f, 0.62f, 0.24f, 1.0f), 0.04f);
-        SetMotif(3, SphereMeshAsset, FVector(SurfaceX - 1.0f, 18.0f, -14.0f), FRotator::ZeroRotator, FVector(0.018f, 0.2f, 0.16f), FLinearColor(0.25f, 0.54f, 0.22f, 1.0f), 0.04f);
-        SetMotif(4, CubeMeshAsset, FVector(SurfaceX - 2.0f, 0.0f, 24.0f), FRotator(0.0f, 0.0f, 9.0f), FVector(0.008f, 0.64f, 0.018f), FLinearColor(0.94f, 0.98f, 1.0f, 0.9f), 0.18f);
-        SetMotif(5, CubeMeshAsset, FVector(SurfaceX - 2.0f, -4.0f, -6.0f), FRotator(0.0f, 0.0f, -8.0f), FVector(0.008f, 0.78f, 0.014f), FLinearColor(0.94f, 0.98f, 1.0f, 0.9f), 0.15f);
+        SetMotif(2, SphereMeshAsset, FVector(SurfaceX - 2.0f, -19.0f, 15.0f), FRotator::ZeroRotator, FVector(0.022f, 0.28f, 0.22f), FLinearColor(0.08f, 0.68f, 0.26f, 1.0f), 0.12f);
+        SetMotif(3, SphereMeshAsset, FVector(SurfaceX - 2.0f, 20.0f, -15.0f), FRotator::ZeroRotator, FVector(0.022f, 0.24f, 0.2f), FLinearColor(0.22f, 0.62f, 0.2f, 1.0f), 0.1f);
+        SetMotif(4, CubeMeshAsset, FVector(SurfaceX - 3.0f, 0.0f, 25.0f), FRotator(0.0f, 0.0f, 9.0f), FVector(0.01f, 0.78f, 0.022f), FLinearColor(0.96f, 0.99f, 1.0f, 0.96f), 0.28f);
+        SetMotif(5, CubeMeshAsset, FVector(SurfaceX - 3.0f, -4.0f, -7.0f), FRotator(0.0f, 0.0f, -8.0f), FVector(0.01f, 0.9f, 0.018f), FLinearColor(0.96f, 0.99f, 1.0f, 0.96f), 0.24f);
         return;
     }
 
     if (Id == TEXT("venus"))
     {
-        SetMotif(2, CubeMeshAsset, FVector(SurfaceX, 0.0f, 25.0f), FRotator(0.0f, 0.0f, 11.0f), FVector(0.01f, 0.72f, 0.022f), Pale, 0.18f);
-        SetMotif(3, CubeMeshAsset, FVector(SurfaceX, 0.0f, 4.0f), FRotator(0.0f, 0.0f, -7.0f), FVector(0.01f, 0.86f, 0.02f), Light, 0.16f);
-        SetMotif(4, CubeMeshAsset, FVector(SurfaceX, 0.0f, -20.0f), FRotator(0.0f, 0.0f, 9.0f), FVector(0.01f, 0.7f, 0.02f), Dark, 0.08f);
-        SetMotif(15, CylinderMeshAsset, FVector(SurfaceX - 2.0f, 24.0f, 24.0f), FRotator(0.0f, 90.0f, 0.0f), FVector(0.13f, 0.13f, 0.012f), FLinearColor(1.0f, 0.34f, 0.08f, 1.0f), 0.35f);
+        SetMotif(2, CubeMeshAsset, FVector(SurfaceX, 0.0f, 26.0f), FRotator(0.0f, 0.0f, 11.0f), FVector(0.012f, 0.82f, 0.026f), Pale, 0.28f);
+        SetMotif(3, CubeMeshAsset, FVector(SurfaceX, 0.0f, 4.0f), FRotator(0.0f, 0.0f, -7.0f), FVector(0.012f, 0.96f, 0.024f), Light, 0.24f);
+        SetMotif(4, CubeMeshAsset, FVector(SurfaceX, 0.0f, -21.0f), FRotator(0.0f, 0.0f, 9.0f), FVector(0.012f, 0.8f, 0.024f), Dark, 0.12f);
+        SetMotif(15, CylinderMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, 25.0f), FRotator(0.0f, 90.0f, 0.0f), FVector(0.17f, 0.17f, 0.014f), FLinearColor(1.0f, 0.36f, 0.08f, 1.0f), 0.55f);
         return;
     }
 
     if (Id == TEXT("mars"))
     {
-        SetMotif(2, SphereMeshAsset, FVector(SurfaceX - 2.0f, 0.0f, 38.0f), FRotator::ZeroRotator, FVector(0.012f, 0.32f, 0.08f), FLinearColor(0.96f, 0.82f, 0.62f, 1.0f), 0.08f);
-        SetMotif(11, CubeMeshAsset, FVector(SurfaceX - 2.0f, -12.0f, -9.0f), FRotator(0.0f, 0.0f, 24.0f), FVector(0.008f, 0.52f, 0.018f), Deep, 0.02f);
-        SetMotif(12, CubeMeshAsset, FVector(SurfaceX - 2.0f, 16.0f, -18.0f), FRotator(0.0f, 0.0f, -18.0f), FVector(0.008f, 0.38f, 0.014f), Dark, 0.02f);
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, 20.0f, 12.0f), FRotator::ZeroRotator, FVector(0.014f, 0.1f, 0.1f), Dark, 0.02f);
+        SetMotif(2, SphereMeshAsset, FVector(SurfaceX - 2.0f, 0.0f, 39.0f), FRotator::ZeroRotator, FVector(0.016f, 0.38f, 0.1f), FLinearColor(0.98f, 0.86f, 0.66f, 1.0f), 0.16f);
+        SetMotif(11, CubeMeshAsset, FVector(SurfaceX - 3.0f, -13.0f, -9.0f), FRotator(0.0f, 0.0f, 24.0f), FVector(0.01f, 0.64f, 0.022f), Deep, 0.06f);
+        SetMotif(12, CubeMeshAsset, FVector(SurfaceX - 3.0f, 17.0f, -19.0f), FRotator(0.0f, 0.0f, -18.0f), FVector(0.01f, 0.48f, 0.018f), Dark, 0.05f);
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 2.0f, 21.0f, 12.0f), FRotator::ZeroRotator, FVector(0.018f, 0.13f, 0.13f), Dark, 0.05f);
         return;
     }
 
@@ -380,9 +481,5 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     FocusBeacon->SetVisibility(bIsFocused);
     FocusBeacon->SetRelativeScale3D(bIsFocused ? FVector(0.1f, 0.1f, 1.85f + 0.45f * BaseVisualScale) : FVector(0.06f, 0.06f, 1.25f));
 
-    Nameplate->SetVisibility(bIsFocused);
-    Nameplate->SetRelativeScale3D(bIsFocused ? FVector(0.045f, 3.2f, 0.42f) : FVector(0.035f, 2.35f, 0.28f));
-
-    Label->SetWorldSize(bIsFocused ? 72.0f : 42.0f);
-    Label->SetTextRenderColor(bIsFocused ? FColor(255, 241, 112) : FColor(105, 145, 186));
+    UpdateNameplateLayout();
 }
