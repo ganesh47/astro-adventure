@@ -260,9 +260,9 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::Navigation)
     {
+        AddActionIfMissing(Actions, TEXT("Fly"));
         AddActionIfMissing(Actions, TEXT("Scan"));
         AddActionIfMissing(Actions, TEXT("Passport"));
-        AddActionIfMissing(Actions, TEXT("Pause"));
     }
     else if (Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::AtlasView)
     {
@@ -284,13 +284,13 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::QuizFeedback)
     {
-        AddActionIfMissing(Actions, TEXT("Next"));
+        AddActionIfMissing(Actions, TEXT("Enter/Right"));
         AddActionIfMissing(Actions, TEXT("Hint"));
         AddActionIfMissing(Actions, TEXT("Retry"));
     }
     else if (Screen == EAstroMissionScreen::StampAward)
     {
-        AddActionIfMissing(Actions, TEXT("Next"));
+        AddActionIfMissing(Actions, TEXT("Enter/Right"));
         AddActionIfMissing(Actions, TEXT("Passport"));
         AddActionIfMissing(Actions, TEXT("Pause"));
     }

@@ -130,6 +130,7 @@ private:
     bool IsMissionPlayScreen() const;
     int32 CountCompletedStops() const;
     bool IsMissionComplete() const;
+    bool AdvanceToNextRouteStop();
     const FAstroDestinationLesson* GetFocusedLesson() const;
     FAstroDestinationProgress& GetMutableProgress(FName DestinationId);
 };

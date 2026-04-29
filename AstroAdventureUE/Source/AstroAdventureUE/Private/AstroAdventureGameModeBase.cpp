@@ -483,6 +483,22 @@ void AAstroAdventureGameModeBase::FocusNextDestination()
         FocusedDestinationIndex = (FocusedDestinationIndex + 1) % Lessons.Num();
         UpdateDestinationFocus();
     }
+    else if (CurrentScreen == EAstroMissionScreen::QuizFeedback && bLastAnswerCorrect)
+    {
+        Confirm();
+    }
+    else if (CurrentScreen == EAstroMissionScreen::StampAward)
+    {
+        if (!IsMissionComplete() && AdvanceToNextRouteStop())
+        {
+            CurrentScreen = EAstroMissionScreen::Navigation;
+        }
+        else
+        {
+            CurrentScreen = EAstroMissionScreen::MissionComplete;
+            UpdateDestinationFocus();
+        }
+    }
 }
 
 void AAstroAdventureGameModeBase::FocusPreviousDestination()
@@ -515,6 +531,12 @@ void AAstroAdventureGameModeBase::FocusPreviousDestination()
 
     if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
+        FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
+        UpdateDestinationFocus();
+    }
+    else if (CurrentScreen == EAstroMissionScreen::StampAward)
+    {
+        CurrentScreen = EAstroMissionScreen::Navigation;
         FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
         UpdateDestinationFocus();
     }
@@ -579,7 +601,10 @@ void AAstroAdventureGameModeBase::Confirm()
             CompleteQuiz(Lesson->DestinationId, true);
             if (bAlreadyStamped)
             {
-                CurrentScreen = EAstroMissionScreen::DiscoveryCard;
+                if (IsMissionComplete() || !AdvanceToNextRouteStop())
+                {
+                    CurrentScreen = EAstroMissionScreen::MissionComplete;
+                }
             }
             else
             {
@@ -593,7 +618,10 @@ void AAstroAdventureGameModeBase::Confirm()
         }
         break;
     case EAstroMissionScreen::StampAward:
-        CurrentScreen = IsMissionComplete() ? EAstroMissionScreen::MissionComplete : EAstroMissionScreen::Navigation;
+        if (IsMissionComplete() || !AdvanceToNextRouteStop())
+        {
+            CurrentScreen = EAstroMissionScreen::MissionComplete;
+        }
         break;
     case EAstroMissionScreen::MissionComplete:
         CurrentScreen = EAstroMissionScreen::AtlasView;
@@ -876,14 +904,14 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         const bool bReviewingStampedStop = Progress && Progress->bQuizCompleted;
-        Lines.Add(bLastAnswerCorrect ? bReviewingStampedStop ? TEXT("Review complete. Confirm to reopen the card.") : TEXT("Correct answer. Confirm to add the stamp.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
+        Lines.Add(bLastAnswerCorrect ? bReviewingStampedStop ? TEXT("Review complete. Confirm or Right/D to fly to the next stop.") : TEXT("Correct answer. Confirm to add the stamp.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
     }
     else if (CurrentScreen == EAstroMissionScreen::StampAward)
     {
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         Lines.Add(FString::Printf(TEXT("%s is now marked STAMPED in your Passport."), *Lesson->DisplayName.ToString()));
         Lines.Add(TEXT("Each stop saves one stamp; rescans reopen the review card."));
-        Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm for the next stop."));
+        Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm or press Right/D to fly to the next stop."));
         Lines.Add(FString::Printf(TEXT("Review box %d | mastery %d"), Progress ? Progress->ReviewBox : 0, Progress ? Progress->MasteryScore : 0));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
@@ -892,7 +920,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to scan again and reopen its card.") : TEXT("Confirm to scan for a discovery card."));
-        Lines.Add(TEXT("Open Passport / RT for the full Atlas route."));
+        Lines.Add(TEXT("Fly: Arrow keys / WASD / D-pad. Scan: Enter / Space / A."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
     {
@@ -1308,6 +1336,33 @@ bool AAstroAdventureGameModeBase::IsMissionComplete() const
     }
 
     return true;
+}
+
+bool AAstroAdventureGameModeBase::AdvanceToNextRouteStop()
+{
+    if (Lessons.IsEmpty())
+    {
+        return false;
+    }
+
+    const int32 StartIndex = FocusedDestinationIndex;
+    for (int32 Step = 1; Step <= Lessons.Num(); ++Step)
+    {
+        const int32 CandidateIndex = (StartIndex + Step) % Lessons.Num();
+        const FAstroDestinationLesson& Candidate = Lessons[CandidateIndex];
+        const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Candidate.DestinationId) : nullptr;
+        if (!Progress || !Progress->bQuizCompleted)
+        {
+            FocusedDestinationIndex = CandidateIndex;
+            LastFeedback = FString::Printf(TEXT("Next stop: %s. Use arrows or WASD to fly the route."), *Candidate.DisplayName.ToString());
+            CurrentScreen = EAstroMissionScreen::Navigation;
+            bShowingHint = false;
+            UpdateDestinationFocus();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const FAstroDestinationLesson* AAstroAdventureGameModeBase::GetFocusedLesson() const
