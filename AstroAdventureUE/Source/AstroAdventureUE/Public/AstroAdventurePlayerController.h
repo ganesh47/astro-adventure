@@ -32,7 +32,9 @@ private:
     void NavigateVertical(float Value);
     void HandleNavigationAxis(float Value, bool& bAxisReady, bool bHorizontal);
     void TriggerFocusFeedback(float Direction);
+    bool CanAcceptFocusStep();
 
     bool bHorizontalAxisReady = true;
     bool bVerticalAxisReady = true;
+    float LastFocusStepTime = -100.0f;
 };

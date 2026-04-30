@@ -29,12 +29,12 @@ namespace
 {
 UMaterialInterface* GetRuntimeColorMaterial()
 {
-    if (UMaterialInterface* BasicShapeMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
+    if (UMaterialInterface* EmissiveMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial")))
     {
-        return BasicShapeMaterial;
+        return EmissiveMaterial;
     }
 
-    return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
+    return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
 }
 
 void ApplyRuntimeColor(AStaticMeshActor* Actor, const FLinearColor& Color, const float EmissiveStrength)
@@ -71,6 +71,39 @@ void ApplyRuntimeColor(AStaticMeshActor* Actor, const FLinearColor& Color, const
     Material->SetScalarParameterValue(TEXT("Glow"), EmissiveStrength);
     Material->SetScalarParameterValue(TEXT("Opacity"), ClampedColor.A);
     Material->SetScalarParameterValue(TEXT("Alpha"), ClampedColor.A);
+}
+
+FVector DestinationTravelOffset(const float VisualScale)
+{
+    return FVector(-168.0f - VisualScale * 18.0f, -42.0f, 78.0f + VisualScale * 12.0f);
+}
+
+FVector DestinationCameraFocusOffset(const float VisualScale)
+{
+    return FVector(34.0f, 0.0f, 58.0f + VisualScale * 30.0f);
+}
+
+FVector RouteCameraFocusTarget(const TArray<AAstroDestinationActor*>& Actors)
+{
+    FVector Center = FVector::ZeroVector;
+    int32 Count = 0;
+    for (AAstroDestinationActor* Actor : Actors)
+    {
+        if (Actor)
+        {
+            Center += Actor->GetActorLocation();
+            ++Count;
+        }
+    }
+
+    if (Count > 0)
+    {
+        Center /= static_cast<float>(Count);
+        Center.Z += 140.0f;
+        return Center;
+    }
+
+    return FVector(260.0f, 0.0f, 240.0f);
 }
 }
 
@@ -194,16 +227,16 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (KeyLight && KeyLight->GetLightComponent())
     {
         KeyLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        KeyLight->GetLightComponent()->SetIntensity(14.0f);
-        KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.95f, 0.98f, 1.0f));
+        KeyLight->GetLightComponent()->SetIntensity(7.5f);
+        KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.90f, 0.96f, 1.0f));
     }
 
     APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-1400.0f, 0.0f, 190.0f), FRotator::ZeroRotator);
     if (SunLight && SunLight->PointLightComponent)
     {
         SunLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
-        SunLight->PointLightComponent->SetIntensity(90000.0f);
-        SunLight->PointLightComponent->SetAttenuationRadius(4200.0f);
+        SunLight->PointLightComponent->SetIntensity(150000.0f);
+        SunLight->PointLightComponent->SetAttenuationRadius(5200.0f);
         SunLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
         SunLight->PointLightComponent->SetLightColor(FLinearColor(1.0f, 0.76f, 0.28f));
     }
@@ -212,8 +245,8 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (PlayerFillLight && PlayerFillLight->PointLightComponent)
     {
         PlayerFillLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
-        PlayerFillLight->PointLightComponent->SetIntensity(52000.0f);
-        PlayerFillLight->PointLightComponent->SetAttenuationRadius(4400.0f);
+        PlayerFillLight->PointLightComponent->SetIntensity(76000.0f);
+        PlayerFillLight->PointLightComponent->SetAttenuationRadius(5200.0f);
         PlayerFillLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
         PlayerFillLight->PointLightComponent->SetLightColor(FLinearColor(0.36f, 0.74f, 1.0f));
     }
@@ -222,8 +255,8 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (FillLight && FillLight->GetLightComponent())
     {
         FillLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        FillLight->GetLightComponent()->SetIntensity(5.5f);
-        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.58f, 0.74f, 1.0f));
+        FillLight->GetLightComponent()->SetIntensity(8.5f);
+        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.62f, 0.80f, 1.0f));
     }
 
     APostProcessVolume* LookDevVolume = GetWorld()->SpawnActor<APostProcessVolume>(APostProcessVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
@@ -233,17 +266,17 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         LookDevVolume->Settings.bOverride_AutoExposureMethod = true;
         LookDevVolume->Settings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
         LookDevVolume->Settings.bOverride_AutoExposureBias = true;
-        LookDevVolume->Settings.AutoExposureBias = 1.35f;
+        LookDevVolume->Settings.AutoExposureBias = 0.42f;
         LookDevVolume->Settings.bOverride_AutoExposureMinBrightness = true;
         LookDevVolume->Settings.AutoExposureMinBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_AutoExposureMaxBrightness = true;
         LookDevVolume->Settings.AutoExposureMaxBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_BloomIntensity = true;
-        LookDevVolume->Settings.BloomIntensity = 0.95f;
+        LookDevVolume->Settings.BloomIntensity = 1.35f;
         LookDevVolume->Settings.bOverride_BloomThreshold = true;
-        LookDevVolume->Settings.BloomThreshold = 0.42f;
+        LookDevVolume->Settings.BloomThreshold = 0.18f;
         LookDevVolume->Settings.bOverride_ColorSaturation = true;
-        LookDevVolume->Settings.ColorSaturation = FVector4(1.16f, 1.14f, 1.2f, 1.0f);
+        LookDevVolume->Settings.ColorSaturation = FVector4(1.34f, 1.30f, 1.42f, 1.0f);
         LookDevVolume->Settings.bOverride_VignetteIntensity = true;
         LookDevVolume->Settings.VignetteIntensity = 0.0f;
     }
@@ -259,12 +292,12 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         FVector(-335.0f, -105.0f, 106.0f),
         FVector(-110.0f, 260.0f, 122.0f),
         FVector(235.0f, -10.0f, 110.0f),
-        FVector(595.0f, 275.0f, 150.0f),
-        FVector(735.0f, 410.0f, 120.0f),
-        FVector(1055.0f, -260.0f, 145.0f),
-        FVector(1375.0f, 235.0f, 140.0f),
-        FVector(1685.0f, -155.0f, 138.0f),
-        FVector(1980.0f, 310.0f, 110.0f)
+        FVector(610.0f, 205.0f, 155.0f),
+        FVector(900.0f, 455.0f, 126.0f),
+        FVector(1220.0f, -280.0f, 145.0f),
+        FVector(1575.0f, 250.0f, 140.0f),
+        FVector(1915.0f, -170.0f, 138.0f),
+        FVector(2260.0f, 330.0f, 110.0f)
     };
 
     DestinationActors.Reset();
@@ -293,8 +326,8 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex))
     {
         const FVector FocusLocation = DestinationActors[FocusedDestinationIndex]->GetActorLocation();
-        PlayerPawn->SetTravelTarget(FocusLocation + FVector(-145.0f, 0.0f, 70.0f));
-        PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(0.0f, 0.0f, 45.0f));
+        PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lessons[FocusedDestinationIndex].MapScale));
+        PlayerPawn->SetCameraFocusTarget(FocusLocation + DestinationCameraFocusOffset(Lessons[FocusedDestinationIndex].MapScale));
     }
 }
 
@@ -384,27 +417,27 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
 
     FRandomStream BackdropStream(250425);
 
-    for (int32 Index = 0; Index < 360; ++Index)
+    for (int32 Index = 0; Index < 520; ++Index)
     {
-        const FLinearColor Color = Index % 11 == 0 ? FLinearColor(0.72f, 0.96f, 1.0f) : Index % 17 == 0 ? FLinearColor(1.0f, 0.78f, 0.48f) : FLinearColor(0.86f, 0.9f, 1.0f);
+        const FLinearColor Color = Index % 19 == 0 ? FLinearColor(0.34f, 0.88f, 1.0f) : Index % 29 == 0 ? FLinearColor(1.0f, 0.62f, 0.32f) : Index % 41 == 0 ? FLinearColor(0.82f, 0.48f, 1.0f) : FLinearColor(0.66f, 0.76f, 0.98f);
         AStaticMeshActor* Star = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
-            FVector(BackdropStream.FRandRange(-1840.0f, 2440.0f), BackdropStream.FRandRange(-1120.0f, 1120.0f), BackdropStream.FRandRange(120.0f, 920.0f)),
+            FVector(BackdropStream.FRandRange(-1900.0f, 2700.0f), BackdropStream.FRandRange(-1240.0f, 1240.0f), BackdropStream.FRandRange(160.0f, 1080.0f)),
             FRotator::ZeroRotator);
         if (Star)
         {
             Star->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.026f, Index % 13 == 0 ? 0.13f : 0.072f)));
+            Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.018f, Index % 23 == 0 ? 0.16f : 0.064f)));
             Star->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            ApplyRuntimeColor(Star, Color, Index % 13 == 0 ? 5.0f : 2.8f);
+            ApplyRuntimeColor(Star, Color, Index % 23 == 0 ? 8.5f : 3.4f);
             BackdropActors.Add(Star);
         }
     }
 
-    for (int32 Index = 0; Index < 44; ++Index)
+    for (int32 Index = 0; Index < 58; ++Index)
     {
-        const FLinearColor Color = Index % 4 == 0 ? FLinearColor(0.10f, 0.34f, 0.64f, 0.42f) : Index % 4 == 1 ? FLinearColor(0.46f, 0.16f, 0.62f, 0.34f) : Index % 4 == 2 ? FLinearColor(0.70f, 0.34f, 0.12f, 0.28f) : FLinearColor(0.12f, 0.50f, 0.46f, 0.28f);
-        const FVector Center(BackdropStream.FRandRange(-1680.0f, 2320.0f), BackdropStream.FRandRange(-960.0f, 960.0f), BackdropStream.FRandRange(180.0f, 760.0f));
+        const FLinearColor Color = Index % 4 == 0 ? FLinearColor(0.04f, 0.18f, 0.48f, 0.42f) : Index % 4 == 1 ? FLinearColor(0.30f, 0.08f, 0.44f, 0.34f) : Index % 4 == 2 ? FLinearColor(0.58f, 0.20f, 0.08f, 0.28f) : FLinearColor(0.04f, 0.34f, 0.30f, 0.28f);
+        const FVector Center(BackdropStream.FRandRange(-1780.0f, 2620.0f), BackdropStream.FRandRange(-1080.0f, 1080.0f), BackdropStream.FRandRange(230.0f, 920.0f));
         AStaticMeshActor* Cloud = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
             Center,
@@ -412,9 +445,9 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
         if (Cloud)
         {
             Cloud->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(0.42f, 1.35f), BackdropStream.FRandRange(0.11f, 0.34f), BackdropStream.FRandRange(0.035f, 0.13f)));
+            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(0.62f, 1.9f), BackdropStream.FRandRange(0.075f, 0.24f), BackdropStream.FRandRange(0.026f, 0.09f)));
             Cloud->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            ApplyRuntimeColor(Cloud, Color, 1.4f);
+            ApplyRuntimeColor(Cloud, Color, 2.1f);
             BackdropActors.Add(Cloud);
         }
     }
@@ -912,7 +945,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         Lines.Add(FString::Printf(TEXT("%s is now marked STAMPED in your Passport."), *Lesson->DisplayName.ToString()));
         Lines.Add(TEXT("Each stop saves one stamp; rescans reopen the review card."));
         Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm or press Right/D for Next Stop."));
-        Lines.Add(FString::Printf(TEXT("Review box %d | mastery %d"), Progress ? Progress->ReviewBox : 0, Progress ? Progress->MasteryScore : 0));
+        Lines.Add(TEXT("Stamp saved. You can review this card from Atlas later."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
     {
@@ -920,7 +953,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to scan again and reopen its card.") : TEXT("Confirm to scan for a discovery card."));
-        Lines.Add(TEXT("Travel: Arrow keys / WASD / D-pad. Scan: Enter / Space / A."));
+        Lines.Add(TEXT("Tap Right/D or Up/W for next stop. Tap Left/A or Down/S to go back."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
     {
@@ -965,8 +998,10 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex) && DestinationActors[FocusedDestinationIndex])
     {
         const FVector FocusLocation = DestinationActors[FocusedDestinationIndex]->GetActorLocation();
-        PlayerPawn->SetTravelTarget(FocusLocation + FVector(-145.0f, 0.0f, 70.0f));
-        PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(0.0f, 0.0f, 45.0f));
+        const float VisualScale = Lessons.IsValidIndex(FocusedDestinationIndex) ? Lessons[FocusedDestinationIndex].MapScale : 1.0f;
+        PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(VisualScale));
+        const bool bAtlasLike = CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::MissionComplete;
+        PlayerPawn->SetCameraFocusTarget(bAtlasLike ? RouteCameraFocusTarget(DestinationActors) : FocusLocation + DestinationCameraFocusOffset(VisualScale));
     }
 
     RefreshScenePresentation();
@@ -1093,8 +1128,8 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
         if (FocusActor)
         {
             const FVector FocusLocation = FocusActor->GetActorLocation();
-            PlayerPawn->SetTravelTarget(FocusLocation + FVector(-145.0f, 0.0f, 70.0f));
-            PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(0.0f, 0.0f, 45.0f));
+            PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
+            PlayerPawn->SetCameraFocusTarget(FocusLocation + DestinationCameraFocusOffset(Lesson.MapScale));
         }
         PlayerPawn->SetCameraPresentationProfile(EAstroCameraPresentationProfile::Scan);
         PlayerPawn->SetScannerActive(true);
@@ -1127,7 +1162,7 @@ void AAstroAdventureGameModeBase::TriggerStampFeedback(const FAstroDestinationLe
     {
         if (FocusActor)
         {
-            PlayerPawn->SetCameraFocusTarget(FocusActor->GetActorLocation() + FVector(0.0f, 0.0f, 45.0f));
+            PlayerPawn->SetCameraFocusTarget(FocusActor->GetActorLocation() + DestinationCameraFocusOffset(Lesson.MapScale));
         }
         PlayerPawn->SetShipAccentColor(Lesson.DisplayColor.GetClamped(0.0f, 1.0f));
         PlayerPawn->TriggerScannerPulse(1.0f);

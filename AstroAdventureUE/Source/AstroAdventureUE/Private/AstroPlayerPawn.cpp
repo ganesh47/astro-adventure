@@ -36,14 +36,14 @@ namespace
         switch (Profile)
         {
         case EAstroCameraPresentationProfile::Atlas:
-            return { FVector(-820.0f, -60.0f, 980.0f), -120.0f, FVector(40.0f, 0.0f, 40.0f), 3.4f, 2.8f, 62.0f };
+            return { FVector(-1500.0f, -80.0f, 1720.0f), -150.0f, FVector(120.0f, 0.0f, 70.0f), 3.0f, 2.5f, 72.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-580.0f, -64.0f, 620.0f), -80.0f, FVector(42.0f, 0.0f, 48.0f), 7.2f, 6.4f, 58.0f };
+            return { FVector(-650.0f, -72.0f, 700.0f), -86.0f, FVector(58.0f, 0.0f, 58.0f), 6.4f, 5.8f, 60.0f };
         case EAstroCameraPresentationProfile::Stable:
-            return { FVector(-760.0f, -60.0f, 820.0f), -100.0f, FVector(38.0f, 0.0f, 44.0f), 3.1f, 2.7f, 60.0f };
+            return { FVector(-800.0f, -70.0f, 900.0f), -112.0f, FVector(54.0f, 0.0f, 56.0f), 3.0f, 2.6f, 62.0f };
         case EAstroCameraPresentationProfile::Mission:
         default:
-            return { FVector(-760.0f, -76.0f, 820.0f), -92.0f, FVector(40.0f, 0.0f, 48.0f), 5.0f, 4.4f, 64.0f };
+            return { FVector(-840.0f, -88.0f, 940.0f), -110.0f, FVector(62.0f, 0.0f, 66.0f), 4.6f, 4.0f, 66.0f };
         }
     }
 
@@ -93,8 +93,9 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ShipMaterialTemplate = BasicShapeMaterial.Succeeded() ? BasicShapeMaterial.Object : nullptr;
+    UMaterialInterface* ShipMaterialTemplate = EmissiveMaterial.Succeeded() ? EmissiveMaterial.Object : BasicShapeMaterial.Succeeded() ? BasicShapeMaterial.Object : nullptr;
 
     ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
     ShipMesh->SetupAttachment(ShipVisualRoot);

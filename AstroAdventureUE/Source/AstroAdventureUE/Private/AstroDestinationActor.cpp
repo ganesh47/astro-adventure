@@ -87,22 +87,22 @@ float DestinationBodyEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 1.55f;
+        return 3.6f;
     }
     if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
     {
-        return 0.62f;
+        return 1.55f;
     }
     if (Id == TEXT("venus") || Id == TEXT("mars") || Id == TEXT("jupiter") || Id == TEXT("saturn"))
     {
-        return 0.5f;
+        return 1.35f;
     }
     if (Id == TEXT("mercury") || Id == TEXT("moon") || Id == TEXT("pluto") || Id == TEXT("asteroid_belt"))
     {
-        return 0.42f;
+        return 0.95f;
     }
 
-    return 0.38f;
+    return 1.0f;
 }
 }
 
@@ -163,8 +163,13 @@ AAstroDestinationActor::AAstroDestinationActor()
         Nameplate->SetStaticMesh(CubeMesh.Object);
     }
 
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (BasicShapeMaterial.Succeeded())
+    if (EmissiveMaterial.Succeeded())
+    {
+        ColorMaterialTemplate = EmissiveMaterial.Object;
+    }
+    else if (BasicShapeMaterial.Succeeded())
     {
         ColorMaterialTemplate = BasicShapeMaterial.Object;
     }
