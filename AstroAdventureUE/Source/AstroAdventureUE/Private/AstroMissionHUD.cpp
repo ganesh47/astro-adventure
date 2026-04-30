@@ -33,27 +33,29 @@ void AAstroMissionHUD::DrawHUD()
         bHasStampFeedback = bHasStampFeedback || Line.Contains(TEXT("Stamp saved"));
     }
 
-    const float Margin = 28.0f;
-    const float HeaderH = 64.0f;
+    const float Margin = FMath::Clamp(Canvas->SizeX * 0.018f, 18.0f, 28.0f);
+    const float HeaderH = FMath::Clamp(Canvas->SizeY * 0.066f, 46.0f, 64.0f);
     DrawRect(FLinearColor(0.015f, 0.035f, 0.055f, 0.74f), 0.0f, 0.0f, Canvas->SizeX, HeaderH);
     DrawRect(FLinearColor(0.90f, 0.52f, 0.12f, 0.95f), 0.0f, HeaderH - 5.0f, Canvas->SizeX, 5.0f);
     DrawRect(FLinearColor(0.10f, 0.54f, 0.64f, 0.42f), 0.0f, HeaderH - 8.0f, Canvas->SizeX, 3.0f);
 
-    DrawText(TEXT("SOLAR PASSPORT"), FLinearColor(1.0f, 0.96f, 0.78f), Margin, 12.0f, GEngine->GetSmallFont(), 1.10f, false);
-    const float StatusBadgeW = FMath::Clamp(Canvas->SizeX - Margin * 2.0f - 270.0f, 190.0f, 430.0f);
-    DrawBadge(FriendlyStatusLine(StatusLine), Margin + 246.0f, 17.0f, StatusBadgeW, FLinearColor(0.08f, 0.24f, 0.32f, 0.90f), FLinearColor(0.90f, 0.99f, 1.0f), 0.76f);
+    const float TitleScale = Canvas->SizeX < 1600.0f ? 0.92f : 1.10f;
+    DrawText(TEXT("SOLAR PASSPORT"), FLinearColor(1.0f, 0.96f, 0.78f), Margin, 10.0f, GEngine->GetSmallFont(), TitleScale, false);
+    const float StatusX = Canvas->SizeX < 1600.0f ? Margin + 194.0f : Margin + 246.0f;
+    const float StatusBadgeW = FMath::Clamp(Canvas->SizeX - StatusX - Margin, 190.0f, 430.0f);
+    DrawBadge(FriendlyStatusLine(StatusLine), StatusX, 14.0f, StatusBadgeW, FLinearColor(0.08f, 0.24f, 0.32f, 0.90f), FLinearColor(0.90f, 0.99f, 1.0f), 0.72f);
 
-    const float CardW = FMath::Min(Canvas->SizeX - Margin * 2.0f, bHasQuizRows ? 1000.0f : 960.0f);
-    const float CardH = bHasPassportRows ? 318.0f : bHasQuizRows ? 334.0f : bHasMenuRows ? 326.0f : 236.0f;
+    const float CardW = FMath::Min(Canvas->SizeX - Margin * 2.0f, bHasQuizRows ? 980.0f : 930.0f);
+    const float CardH = bHasPassportRows ? 300.0f : bHasQuizRows ? 314.0f : bHasMenuRows ? 286.0f : 220.0f;
     const float CardX = (Canvas->SizeX - CardW) * 0.5f;
-    const float CardY = Canvas->SizeY - CardH - 24.0f;
+    const float CardY = FMath::Max(HeaderH + 12.0f, Canvas->SizeY - CardH - FMath::Clamp(Canvas->SizeY * 0.022f, 12.0f, 24.0f));
 
     if (GameMode->IsScanEffectActive())
     {
         const float ScanY = FMath::Fmod(World->GetTimeSeconds() * 420.0f, FMath::Max(1.0f, static_cast<float>(Canvas->SizeY)));
         DrawRect(FLinearColor(0.08f, 0.74f, 1.0f, 0.08f), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
         DrawRect(FLinearColor(0.78f, 0.98f, 1.0f, 0.62f), 0.0f, ScanY, Canvas->SizeX, 5.0f);
-        DrawFeedbackBanner(TEXT("DISCOVERY SCAN FOUND"), FLinearColor(0.04f, 0.42f, 0.58f, 0.94f), Canvas->SizeY * 0.22f);
+        DrawFeedbackToast(TEXT("SCAN LOCKED"), FLinearColor(0.04f, 0.42f, 0.58f, 0.94f), CardX + 28.0f, CardY - 46.0f, FMath::Min(CardW - 56.0f, 360.0f));
     }
 
     DrawPassportFrame(CardX, CardY, CardW, CardH);
@@ -79,7 +81,7 @@ void AAstroMissionHUD::DrawHUD()
             {
                 const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
                 DrawQuizRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
-                Y += 72.0f;
+                Y += 66.0f;
             }
         }
     }
@@ -93,7 +95,7 @@ void AAstroMissionHUD::DrawHUD()
             {
                 const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
                 DrawMenuRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
-                Y += 42.0f;
+                Y += 38.0f;
                 ++DrawnRows;
             }
         }
@@ -260,9 +262,9 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::Navigation)
     {
-        AddActionIfMissing(Actions, TEXT("Fly"));
+        AddActionIfMissing(Actions, TEXT("Travel"));
         AddActionIfMissing(Actions, TEXT("Scan"));
-        AddActionIfMissing(Actions, TEXT("Passport"));
+        AddActionIfMissing(Actions, TEXT("Atlas"));
     }
     else if (Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::AtlasView)
     {
@@ -284,14 +286,14 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::QuizFeedback)
     {
-        AddActionIfMissing(Actions, TEXT("Enter/Right"));
+        AddActionIfMissing(Actions, TEXT("Confirm"));
         AddActionIfMissing(Actions, TEXT("Hint"));
         AddActionIfMissing(Actions, TEXT("Retry"));
     }
     else if (Screen == EAstroMissionScreen::StampAward)
     {
-        AddActionIfMissing(Actions, TEXT("Enter/Right"));
-        AddActionIfMissing(Actions, TEXT("Passport"));
+        AddActionIfMissing(Actions, TEXT("Next Stop"));
+        AddActionIfMissing(Actions, TEXT("Atlas"));
         AddActionIfMissing(Actions, TEXT("Pause"));
     }
     else
@@ -386,6 +388,16 @@ void AAstroMissionHUD::DrawFeedbackBanner(const FString& Text, const FLinearColo
     DrawRect(FLinearColor(1.0f, 0.97f, 0.72f, 0.86f), BannerX + 34.0f, Y + 10.0f, 9.0f, 9.0f);
     DrawRect(FLinearColor(1.0f, 0.97f, 0.72f, 0.86f), BannerX + BannerW - 48.0f, Y + 35.0f, 9.0f, 9.0f);
     DrawText(Text, FLinearColor::White, BannerX + 58.0f, Y + 14.0f, GEngine->GetSmallFont(), 1.12f, false);
+}
+
+void AAstroMissionHUD::DrawFeedbackToast(const FString& Text, const FLinearColor& Fill, const float X, const float Y, const float W)
+{
+    const float ToastY = FMath::Max(74.0f, Y);
+    const float ToastW = FMath::Clamp(W, 220.0f, 380.0f);
+    DrawRect(FLinearColor(0.02f, 0.04f, 0.05f, 0.54f), X + 4.0f, ToastY + 4.0f, ToastW, 36.0f);
+    DrawRect(Fill, X, ToastY, ToastW, 36.0f);
+    DrawRect(FLinearColor(0.75f, 0.98f, 1.0f, 0.92f), X, ToastY, 8.0f, 36.0f);
+    DrawText(Text, FLinearColor::White, X + 18.0f, ToastY + 9.0f, GEngine->GetSmallFont(), 0.86f, false);
 }
 
 void AAstroMissionHUD::AddActionIfMissing(TArray<FString>& Actions, const FString& Action) const

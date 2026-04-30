@@ -784,7 +784,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
         {
             return FString::Printf(TEXT("Rescan %s to review the saved card"), *Name);
         }
-        return FString::Printf(TEXT("Glide to %s, then scan its discovery card!"), *Name);
+        return FString::Printf(TEXT("Travel to %s, then scan its discovery card!"), *Name);
     case EAstroMissionScreen::DiscoveryCard:
         return FString::Printf(TEXT("%s discovery card unlocked!"), *Name);
     case EAstroMissionScreen::DeepDive:
@@ -904,14 +904,14 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         const bool bReviewingStampedStop = Progress && Progress->bQuizCompleted;
-        Lines.Add(bLastAnswerCorrect ? bReviewingStampedStop ? TEXT("Review complete. Confirm or Right/D to fly to the next stop.") : TEXT("Correct answer. Confirm to add the stamp.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
+        Lines.Add(bLastAnswerCorrect ? bReviewingStampedStop ? TEXT("Review complete. Confirm or Right/D for the next stop.") : TEXT("Correct answer. Confirm to add the stamp.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
     }
     else if (CurrentScreen == EAstroMissionScreen::StampAward)
     {
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         Lines.Add(FString::Printf(TEXT("%s is now marked STAMPED in your Passport."), *Lesson->DisplayName.ToString()));
         Lines.Add(TEXT("Each stop saves one stamp; rescans reopen the review card."));
-        Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm or press Right/D to fly to the next stop."));
+        Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm or press Right/D for Next Stop."));
         Lines.Add(FString::Printf(TEXT("Review box %d | mastery %d"), Progress ? Progress->ReviewBox : 0, Progress ? Progress->MasteryScore : 0));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
@@ -920,7 +920,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to scan again and reopen its card.") : TEXT("Confirm to scan for a discovery card."));
-        Lines.Add(TEXT("Fly: Arrow keys / WASD / D-pad. Scan: Enter / Space / A."));
+        Lines.Add(TEXT("Travel: Arrow keys / WASD / D-pad. Scan: Enter / Space / A."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
     {
@@ -1354,7 +1354,7 @@ bool AAstroAdventureGameModeBase::AdvanceToNextRouteStop()
         if (!Progress || !Progress->bQuizCompleted)
         {
             FocusedDestinationIndex = CandidateIndex;
-            LastFeedback = FString::Printf(TEXT("Next stop: %s. Use arrows or WASD to fly the route."), *Candidate.DisplayName.ToString());
+            LastFeedback = FString::Printf(TEXT("Next stop: %s. Use Right/D or arrows to travel."), *Candidate.DisplayName.ToString());
             CurrentScreen = EAstroMissionScreen::Navigation;
             bShowingHint = false;
             UpdateDestinationFocus();

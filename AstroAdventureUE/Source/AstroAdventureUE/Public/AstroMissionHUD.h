@@ -24,6 +24,7 @@ private:
     void DrawMenuRow(const FString& Text, float X, float Y, float W, bool bFocused);
     void DrawPassportRow(const FString& Text, float X, float Y, float W);
     void DrawFeedbackBanner(const FString& Text, const FLinearColor& Fill, float Y);
+    void DrawFeedbackToast(const FString& Text, const FLinearColor& Fill, float X, float Y, float W);
     void AddActionIfMissing(TArray<FString>& Actions, const FString& Action) const;
     void GetStampProgress(const FString& StatusLine, int32& OutStamped, int32& OutTotal) const;
     bool IsMenuScreen(EAstroMissionScreen Screen) const;
