@@ -226,87 +226,87 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
 
     if (bHasQuizRows)
     {
-        AddActionIfMissing(Actions, TEXT("Pick answer"));
-        AddActionIfMissing(Actions, TEXT("Confirm"));
-        AddActionIfMissing(Actions, TEXT("Hint"));
+        AddActionIfMissing(Actions, TEXT("Up/Down pick"));
+        AddActionIfMissing(Actions, TEXT("Enter/A answer"));
+        AddActionIfMissing(Actions, TEXT("H/Y hint"));
     }
     else if (Screen == EAstroMissionScreen::Home)
     {
-        AddActionIfMissing(Actions, TEXT("Move"));
-        AddActionIfMissing(Actions, TEXT("Confirm"));
-        AddActionIfMissing(Actions, TEXT("Quit"));
+        AddActionIfMissing(Actions, TEXT("Arrows/WASD"));
+        AddActionIfMissing(Actions, TEXT("Enter/A choose"));
+        AddActionIfMissing(Actions, TEXT("Select Quit"));
     }
     else if (Screen == EAstroMissionScreen::AgeSelect)
     {
-        AddActionIfMissing(Actions, TEXT("Pick age"));
-        AddActionIfMissing(Actions, TEXT("Launch"));
-        AddActionIfMissing(Actions, TEXT("Back"));
+        AddActionIfMissing(Actions, TEXT("Arrows/WASD"));
+        AddActionIfMissing(Actions, TEXT("Enter/A launch"));
+        AddActionIfMissing(Actions, TEXT("Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::MissionPrompt)
     {
-        AddActionIfMissing(Actions, TEXT("Launch"));
-        AddActionIfMissing(Actions, TEXT("Back"));
-        AddActionIfMissing(Actions, TEXT("Pause"));
+        AddActionIfMissing(Actions, TEXT("Enter/A launch"));
+        AddActionIfMissing(Actions, TEXT("Right/D launch"));
+        AddActionIfMissing(Actions, TEXT("Esc pause"));
     }
     else if (Screen == EAstroMissionScreen::PauseMenu)
     {
-        AddActionIfMissing(Actions, TEXT("Move"));
-        AddActionIfMissing(Actions, TEXT("Confirm"));
-        AddActionIfMissing(Actions, TEXT("Quit"));
+        AddActionIfMissing(Actions, TEXT("Arrows/WASD"));
+        AddActionIfMissing(Actions, TEXT("Enter/A choose"));
+        AddActionIfMissing(Actions, TEXT("Quit option"));
     }
     else if (Screen == EAstroMissionScreen::MissionComplete)
     {
-        AddActionIfMissing(Actions, TEXT("Move"));
-        AddActionIfMissing(Actions, TEXT("Confirm"));
-        AddActionIfMissing(Actions, TEXT("Quit"));
+        AddActionIfMissing(Actions, TEXT("Arrows/WASD"));
+        AddActionIfMissing(Actions, TEXT("Enter/A choose"));
+        AddActionIfMissing(Actions, TEXT("Quit option"));
     }
     else if (Screen == EAstroMissionScreen::Navigation)
     {
-        AddActionIfMissing(Actions, TEXT("Travel"));
-        AddActionIfMissing(Actions, TEXT("Scan"));
-        AddActionIfMissing(Actions, TEXT("Atlas"));
+        AddActionIfMissing(Actions, TEXT("Arrows/WASD travel"));
+        AddActionIfMissing(Actions, TEXT("Enter/A scan"));
+        AddActionIfMissing(Actions, TEXT("P/RT atlas"));
     }
     else if (Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::AtlasView)
     {
-        AddActionIfMissing(Actions, TEXT("Pick stop"));
-        AddActionIfMissing(Actions, TEXT("Open stop"));
-        AddActionIfMissing(Actions, TEXT("Back"));
+        AddActionIfMissing(Actions, TEXT("Arrows/WASD"));
+        AddActionIfMissing(Actions, TEXT("Enter/A open"));
+        AddActionIfMissing(Actions, TEXT("Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::DiscoveryCard)
     {
-        AddActionIfMissing(Actions, TEXT("Quiz"));
-        AddActionIfMissing(Actions, TEXT("More Info"));
-        AddActionIfMissing(Actions, TEXT("Back"));
+        AddActionIfMissing(Actions, TEXT("Enter/A quiz"));
+        AddActionIfMissing(Actions, TEXT("M/LT info"));
+        AddActionIfMissing(Actions, TEXT("Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::DeepDive)
     {
-        AddActionIfMissing(Actions, TEXT("Close Info"));
-        AddActionIfMissing(Actions, TEXT("Quiz"));
-        AddActionIfMissing(Actions, TEXT("Back"));
+        AddActionIfMissing(Actions, TEXT("M/LT close"));
+        AddActionIfMissing(Actions, TEXT("Enter/A quiz"));
+        AddActionIfMissing(Actions, TEXT("Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::QuizFeedback)
     {
-        AddActionIfMissing(Actions, TEXT("Confirm"));
-        AddActionIfMissing(Actions, TEXT("Hint"));
-        AddActionIfMissing(Actions, TEXT("Retry"));
+        AddActionIfMissing(Actions, TEXT("Enter/A continue"));
+        AddActionIfMissing(Actions, TEXT("H/Y hint"));
+        AddActionIfMissing(Actions, TEXT("Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::StampAward)
     {
-        AddActionIfMissing(Actions, TEXT("Next Stop"));
-        AddActionIfMissing(Actions, TEXT("Atlas"));
-        AddActionIfMissing(Actions, TEXT("Pause"));
+        AddActionIfMissing(Actions, TEXT("Enter/A next"));
+        AddActionIfMissing(Actions, TEXT("P/RT atlas"));
+        AddActionIfMissing(Actions, TEXT("Esc pause"));
     }
     else
     {
-        AddActionIfMissing(Actions, TEXT("Confirm"));
-        AddActionIfMissing(Actions, TEXT("Back"));
-        AddActionIfMissing(Actions, TEXT("Pause"));
+        AddActionIfMissing(Actions, TEXT("Enter/A"));
+        AddActionIfMissing(Actions, TEXT("Backspace/B"));
+        AddActionIfMissing(Actions, TEXT("Esc pause"));
     }
 
     float BadgeX = X;
     for (int32 Index = 0; Index < Actions.Num() && Index < 3; ++Index)
     {
-        const float BadgeW = FMath::Clamp(38.0f + Actions[Index].Len() * 10.0f, 82.0f, 142.0f);
+        const float BadgeW = FMath::Clamp(38.0f + Actions[Index].Len() * 8.4f, 92.0f, 184.0f);
         if (BadgeX + BadgeW > X + W)
         {
             break;
@@ -322,6 +322,7 @@ void AAstroMissionHUD::DrawMenuRow(const FString& Text, const float X, const flo
 {
     FString ChoiceText = FriendlyDetailLine(Text);
     ChoiceText.RemoveFromStart(TEXT(">"));
+    ChoiceText.RemoveFromStart(TEXT("READY:"));
     ChoiceText.TrimStartAndEndInline();
 
     const FLinearColor Fill = bFocused ? FLinearColor(0.96f, 0.66f, 0.18f, 0.96f) : FLinearColor(0.08f, 0.18f, 0.22f, 0.90f);
@@ -330,8 +331,8 @@ void AAstroMissionHUD::DrawMenuRow(const FString& Text, const float X, const flo
 
     DrawRect(Fill, X, Y, W, 34.0f);
     DrawRect(Stripe, X, Y, 10.0f, 34.0f);
-    DrawText(bFocused ? TEXT("READY") : TEXT(""), TextColor, X + 20.0f, Y + 8.0f, GEngine->GetSmallFont(), 0.62f, false);
-    DrawText(ChoiceText, TextColor, X + (bFocused ? 92.0f : 24.0f), Y + 7.0f, GEngine->GetSmallFont(), 0.96f, false);
+    DrawText(bFocused ? TEXT("GO") : TEXT(""), TextColor, X + 20.0f, Y + 8.0f, GEngine->GetSmallFont(), 0.62f, false);
+    DrawText(ChoiceText, TextColor, X + (bFocused ? 72.0f : 24.0f), Y + 7.0f, GEngine->GetSmallFont(), 0.96f, false);
 }
 
 void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const float Y, const float W, const bool bFocused)

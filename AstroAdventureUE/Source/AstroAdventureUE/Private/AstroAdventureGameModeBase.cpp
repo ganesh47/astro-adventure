@@ -29,12 +29,12 @@ namespace
 {
 UMaterialInterface* GetRuntimeColorMaterial()
 {
-    if (UMaterialInterface* EmissiveMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial")))
+    if (UMaterialInterface* BasicShapeMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
     {
-        return EmissiveMaterial;
+        return BasicShapeMaterial;
     }
 
-    return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
 }
 
 void ApplyRuntimeColor(AStaticMeshActor* Actor, const FLinearColor& Color, const float EmissiveStrength)
@@ -80,7 +80,7 @@ FVector DestinationTravelOffset(const float VisualScale)
 
 FVector DestinationCameraFocusOffset(const float VisualScale)
 {
-    return FVector(34.0f, 0.0f, 58.0f + VisualScale * 30.0f);
+    return FVector(8.0f, 0.0f, 24.0f + VisualScale * 12.0f);
 }
 
 FVector RouteCameraFocusTarget(const TArray<AAstroDestinationActor*>& Actors)
@@ -124,7 +124,7 @@ void AAstroAdventureGameModeBase::BeginPlay()
     LoadProgress();
     SpawnRuntimeScene();
     CurrentScreen = EAstroMissionScreen::Home;
-    HomeMenuIndex = HasAnyProgress() ? 1 : 0;
+    HomeMenuIndex = CountCompletedStops() > 0 ? 1 : 0;
     UpdateDestinationFocus();
 }
 
@@ -227,7 +227,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (KeyLight && KeyLight->GetLightComponent())
     {
         KeyLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        KeyLight->GetLightComponent()->SetIntensity(7.5f);
+        KeyLight->GetLightComponent()->SetIntensity(18.0f);
         KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.90f, 0.96f, 1.0f));
     }
 
@@ -255,7 +255,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     if (FillLight && FillLight->GetLightComponent())
     {
         FillLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        FillLight->GetLightComponent()->SetIntensity(8.5f);
+        FillLight->GetLightComponent()->SetIntensity(16.0f);
         FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.62f, 0.80f, 1.0f));
     }
 
@@ -266,15 +266,15 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         LookDevVolume->Settings.bOverride_AutoExposureMethod = true;
         LookDevVolume->Settings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
         LookDevVolume->Settings.bOverride_AutoExposureBias = true;
-        LookDevVolume->Settings.AutoExposureBias = 0.42f;
+        LookDevVolume->Settings.AutoExposureBias = 1.0f;
         LookDevVolume->Settings.bOverride_AutoExposureMinBrightness = true;
         LookDevVolume->Settings.AutoExposureMinBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_AutoExposureMaxBrightness = true;
         LookDevVolume->Settings.AutoExposureMaxBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_BloomIntensity = true;
-        LookDevVolume->Settings.BloomIntensity = 1.35f;
+        LookDevVolume->Settings.BloomIntensity = 0.34f;
         LookDevVolume->Settings.bOverride_BloomThreshold = true;
-        LookDevVolume->Settings.BloomThreshold = 0.18f;
+        LookDevVolume->Settings.BloomThreshold = 0.96f;
         LookDevVolume->Settings.bOverride_ColorSaturation = true;
         LookDevVolume->Settings.ColorSaturation = FVector4(1.34f, 1.30f, 1.42f, 1.0f);
         LookDevVolume->Settings.bOverride_VignetteIntensity = true;
@@ -510,6 +510,12 @@ void AAstroAdventureGameModeBase::FocusNextDestination()
         MoveQuizFocus(1);
         return;
     }
+    if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
+    {
+        CurrentScreen = EAstroMissionScreen::Navigation;
+        UpdateDestinationFocus();
+        return;
+    }
 
     if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
@@ -676,7 +682,7 @@ void AAstroAdventureGameModeBase::Back()
     if (CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
         CurrentScreen = EAstroMissionScreen::Home;
-        HomeMenuIndex = HasAnyProgress() ? 1 : 0;
+        HomeMenuIndex = CountCompletedStops() > 0 ? 1 : 0;
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
@@ -851,7 +857,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         for (int32 Index = 0; Index < 4; ++Index)
         {
             FString Label = Options[Index];
-            if (Index == 1 && !HasAnyProgress())
+            if (Index == 1 && CountCompletedStops() <= 0)
             {
                 Label += TEXT(" - no saved route yet");
             }
@@ -1226,7 +1232,7 @@ void AAstroAdventureGameModeBase::ExecuteHomeSelection()
     }
     else if (HomeMenuIndex == 1)
     {
-        if (HasAnyProgress())
+        if (CountCompletedStops() > 0)
         {
             if (IsMissionComplete())
             {

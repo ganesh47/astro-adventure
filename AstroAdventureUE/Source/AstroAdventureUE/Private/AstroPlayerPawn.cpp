@@ -29,6 +29,7 @@ namespace
         float FocusInterpSpeed = 4.0f;
         float CameraInterpSpeed = 4.0f;
         float FieldOfView = 58.0f;
+        float OrthoWidth = 980.0f;
     };
 
     FAstroCameraPresentationSettings GetCameraPresentationSettings(const EAstroCameraPresentationProfile Profile)
@@ -36,14 +37,14 @@ namespace
         switch (Profile)
         {
         case EAstroCameraPresentationProfile::Atlas:
-            return { FVector(-1500.0f, -80.0f, 1720.0f), -150.0f, FVector(120.0f, 0.0f, 70.0f), 3.0f, 2.5f, 72.0f };
+            return { FVector(-760.0f, -1580.0f, 1760.0f), -80.0f, FVector(60.0f, 0.0f, 50.0f), 3.0f, 2.5f, 72.0f, 4200.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-650.0f, -72.0f, 700.0f), -86.0f, FVector(58.0f, 0.0f, 58.0f), 6.4f, 5.8f, 60.0f };
+            return { FVector(-430.0f, -760.0f, 620.0f), -42.0f, FVector(24.0f, 0.0f, 24.0f), 6.4f, 5.8f, 60.0f, 760.0f };
         case EAstroCameraPresentationProfile::Stable:
-            return { FVector(-800.0f, -70.0f, 900.0f), -112.0f, FVector(54.0f, 0.0f, 56.0f), 3.0f, 2.6f, 62.0f };
+            return { FVector(-520.0f, -900.0f, 760.0f), -52.0f, FVector(28.0f, 0.0f, 30.0f), 3.0f, 2.6f, 62.0f, 940.0f };
         case EAstroCameraPresentationProfile::Mission:
         default:
-            return { FVector(-840.0f, -88.0f, 940.0f), -110.0f, FVector(62.0f, 0.0f, 66.0f), 4.6f, 4.0f, 66.0f };
+            return { FVector(-520.0f, -900.0f, 760.0f), -48.0f, FVector(30.0f, 0.0f, 34.0f), 4.6f, 4.0f, 66.0f, 980.0f };
         }
     }
 
@@ -93,9 +94,8 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ShipMaterialTemplate = EmissiveMaterial.Succeeded() ? EmissiveMaterial.Object : BasicShapeMaterial.Succeeded() ? BasicShapeMaterial.Object : nullptr;
+    UMaterialInterface* ShipMaterialTemplate = BasicShapeMaterial.Succeeded() ? BasicShapeMaterial.Object : nullptr;
 
     ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
     ShipMesh->SetupAttachment(ShipVisualRoot);
@@ -194,6 +194,8 @@ AAstroPlayerPawn::AAstroPlayerPawn()
     Camera->SetUsingAbsoluteLocation(true);
     Camera->SetUsingAbsoluteRotation(true);
     Camera->SetFieldOfView(58.0f);
+    Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
+    Camera->SetOrthoWidth(980.0f);
 
     Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
     Movement->MaxSpeed = 650.0f;
@@ -364,9 +366,13 @@ void AAstroPlayerPawn::UpdateCameraPresentation(const float DeltaSeconds)
         NewFieldOfView = Settings.FieldOfView;
     }
 
+    const float NewOrthoWidth = FMath::FInterpTo(Camera->OrthoWidth, Settings.OrthoWidth, DeltaSeconds, Settings.CameraInterpSpeed);
+
     Camera->SetWorldLocation(NewCameraLocation);
     Camera->SetWorldRotation(NewCameraRotation);
+    Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
     Camera->SetFieldOfView(NewFieldOfView);
+    Camera->SetOrthoWidth(NewOrthoWidth);
 }
 
 void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)

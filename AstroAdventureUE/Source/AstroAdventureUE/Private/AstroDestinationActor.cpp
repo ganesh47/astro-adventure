@@ -87,22 +87,22 @@ float DestinationBodyEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 3.6f;
+        return 1.8f;
     }
     if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
     {
-        return 1.55f;
+        return 0.72f;
     }
     if (Id == TEXT("venus") || Id == TEXT("mars") || Id == TEXT("jupiter") || Id == TEXT("saturn"))
     {
-        return 1.35f;
+        return 0.64f;
     }
     if (Id == TEXT("mercury") || Id == TEXT("moon") || Id == TEXT("pluto") || Id == TEXT("asteroid_belt"))
     {
-        return 0.95f;
+        return 0.42f;
     }
 
-    return 1.0f;
+    return 0.55f;
 }
 }
 
@@ -163,13 +163,8 @@ AAstroDestinationActor::AAstroDestinationActor()
         Nameplate->SetStaticMesh(CubeMesh.Object);
     }
 
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (EmissiveMaterial.Succeeded())
-    {
-        ColorMaterialTemplate = EmissiveMaterial.Object;
-    }
-    else if (BasicShapeMaterial.Succeeded())
+    if (BasicShapeMaterial.Succeeded())
     {
         ColorMaterialTemplate = BasicShapeMaterial.Object;
     }
@@ -184,8 +179,8 @@ AAstroDestinationActor::AAstroDestinationActor()
     Label->SetupAttachment(Root);
     Label->SetHorizontalAlignment(EHTA_Center);
     Label->SetTextRenderColor(FColor(172, 213, 255));
-    Label->SetWorldSize(48.0f);
-    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 145.0f));
+    Label->SetWorldSize(30.0f);
+    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 108.0f));
     Label->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
     Label->SetCastShadow(false);
 }
@@ -222,8 +217,8 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
     SetActorLabel(DisplayName.ToString());
 #endif
     Label->SetText(DisplayName);
-    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 115.0f + 45.0f * BaseVisualScale));
-    Nameplate->SetRelativeLocation(FVector(-5.0f, 0.0f, 108.0f + 45.0f * BaseVisualScale));
+    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 82.0f + 28.0f * BaseVisualScale));
+    Nameplate->SetRelativeLocation(FVector(-5.0f, 0.0f, 76.0f + 28.0f * BaseVisualScale));
     Nameplate->SetRelativeRotation(Label->GetRelativeRotation());
     UpdateNameplateLayout();
     FocusBeacon->SetRelativeLocation(FVector(0.0f, 0.0f, 116.0f + 70.0f * BaseVisualScale));
@@ -312,7 +307,7 @@ void AAstroDestinationActor::UpdateNameplateLayout()
     Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
 
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
-    Label->SetWorldSize(bIsFocused ? 54.0f : (bIsDiscovered ? 42.0f : 36.0f));
+    Label->SetWorldSize(bIsFocused ? 38.0f : (bIsDiscovered ? 28.0f : 24.0f));
     Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : FColor(188, 224, 255));
 }
 
