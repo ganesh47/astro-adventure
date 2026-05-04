@@ -11,6 +11,13 @@ class UMaterialInstanceDynamic;
 class UMaterialInterface;
 class UStaticMesh;
 
+UENUM(BlueprintType)
+enum class EAstroDestinationPresentationMode : uint8
+{
+    Mission UMETA(DisplayName = "Mission"),
+    Atlas UMETA(DisplayName = "Atlas")
+};
+
 UCLASS()
 class ASTROADVENTUREUE_API AAstroDestinationActor : public AActor
 {
@@ -47,6 +54,9 @@ public:
     void SetFocused(bool bFocused);
     void SetDiscovered(bool bDiscovered);
 
+    UFUNCTION(BlueprintCallable, Category = "Astro Adventure")
+    void SetPresentationMode(EAstroDestinationPresentationMode NewPresentationMode);
+
 private:
     UPROPERTY(VisibleAnywhere, Category = "Astro Adventure", meta = (AllowPrivateAccess = "true"))
     TArray<UStaticMeshComponent*> MotifMeshes;
@@ -66,6 +76,7 @@ private:
     FLinearColor BaseColor = FLinearColor::White;
     bool bIsDiscovered = false;
     bool bIsFocused = false;
+    EAstroDestinationPresentationMode PresentationMode = EAstroDestinationPresentationMode::Mission;
     float BaseVisualScale = 1.0f;
     FVector BodyIdleScale = FVector::OneVector;
     FVector BodyFocusedScale = FVector::OneVector;

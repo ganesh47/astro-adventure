@@ -10,6 +10,11 @@
 namespace
 {
 constexpr int32 DestinationMotifCount = 18;
+constexpr float DestinationPresentationScaleFloor = 0.58f;
+constexpr float DestinationFocusedScaleMultiplier = 1.18f;
+constexpr float FocusedLabelWorldSize = 42.0f;
+constexpr float DiscoveredLabelWorldSize = 30.0f;
+constexpr float IdleLabelWorldSize = 24.0f;
 
 FLinearColor BlendColor(const FLinearColor& From, const FLinearColor& To, const float Alpha)
 {
@@ -87,22 +92,22 @@ float DestinationBodyEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 1.8f;
+        return 1.55f;
     }
     if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
     {
-        return 0.72f;
+        return 0.58f;
     }
     if (Id == TEXT("venus") || Id == TEXT("mars") || Id == TEXT("jupiter") || Id == TEXT("saturn"))
     {
-        return 0.64f;
+        return 0.5f;
     }
     if (Id == TEXT("mercury") || Id == TEXT("moon") || Id == TEXT("pluto") || Id == TEXT("asteroid_belt"))
     {
-        return 0.42f;
+        return 0.38f;
     }
 
-    return 0.55f;
+    return 0.45f;
 }
 }
 
@@ -206,7 +211,7 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
     DisplayName = Lesson.DisplayName;
     const FString DestinationKey = DestinationId.ToString().ToLower();
     BaseColor = ReadableDestinationColor(DestinationKey, Color);
-    BaseVisualScale = VisualScale;
+    BaseVisualScale = FMath::Max(VisualScale, DestinationPresentationScaleFloor);
     const uint32 ShapeHash = GetTypeHash(DestinationId);
     const float WidthCue = 0.94f + 0.04f * static_cast<float>(ShapeHash % 4);
     const float DepthCue = 0.94f + 0.035f * static_cast<float>((ShapeHash / 4) % 4);
@@ -303,12 +308,16 @@ void AAstroDestinationActor::UpdateNameplateLayout()
     const float PlateDepth = bIsFocused ? 0.035f : 0.03f;
     const float LabelScaleCompensation = 1.0f / FMath::Max(GetActorScale3D().GetAbsMax(), 0.1f);
 
-    Nameplate->SetVisibility(bIsFocused);
+    const bool bAtlasMode = PresentationMode == EAstroDestinationPresentationMode::Atlas;
+    Nameplate->SetVisibility(bIsFocused && !bAtlasMode);
     Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
 
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
-    Label->SetWorldSize(bIsFocused ? 38.0f : (bIsDiscovered ? 28.0f : 24.0f));
-    Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : FColor(188, 224, 255));
+    const float LabelSize = bIsFocused
+        ? (bAtlasMode ? DiscoveredLabelWorldSize : FocusedLabelWorldSize)
+        : (bAtlasMode ? IdleLabelWorldSize : (bIsDiscovered ? DiscoveredLabelWorldSize : IdleLabelWorldSize));
+    Label->SetWorldSize(LabelSize);
+    Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : (bAtlasMode ? FColor(142, 178, 215) : FColor(188, 224, 255)));
 }
 
 void AAstroDestinationActor::ConfigureMotifs()
@@ -467,9 +476,15 @@ void AAstroDestinationActor::SetDiscovered(const bool bDiscovered)
     ApplyFocusVisuals();
 }
 
+void AAstroDestinationActor::SetPresentationMode(const EAstroDestinationPresentationMode NewPresentationMode)
+{
+    PresentationMode = NewPresentationMode;
+    ApplyFocusVisuals();
+}
+
 void AAstroDestinationActor::ApplyFocusVisuals()
 {
-    const float Scale = bIsFocused ? BaseVisualScale * 1.22f : BaseVisualScale;
+    const float Scale = bIsFocused ? BaseVisualScale * DestinationFocusedScaleMultiplier : BaseVisualScale;
     SetActorScale3D(FVector(Scale));
 
     BodyMesh->SetRenderCustomDepth(bIsFocused);

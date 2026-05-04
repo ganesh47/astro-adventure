@@ -75,12 +75,12 @@ void ApplyRuntimeColor(AStaticMeshActor* Actor, const FLinearColor& Color, const
 
 FVector DestinationTravelOffset(const float VisualScale)
 {
-    return FVector(-168.0f - VisualScale * 18.0f, -42.0f, 78.0f + VisualScale * 12.0f);
+    return FVector(-190.0f - VisualScale * 20.0f, -54.0f, 90.0f + VisualScale * 14.0f);
 }
 
 FVector DestinationCameraFocusOffset(const float VisualScale)
 {
-    return FVector(8.0f, 0.0f, 24.0f + VisualScale * 12.0f);
+    return FVector(18.0f, 0.0f, 46.0f + VisualScale * 10.0f);
 }
 
 FVector RouteCameraFocusTarget(const TArray<AAstroDestinationActor*>& Actors)
@@ -99,7 +99,7 @@ FVector RouteCameraFocusTarget(const TArray<AAstroDestinationActor*>& Actors)
     if (Count > 0)
     {
         Center /= static_cast<float>(Count);
-        Center.Z += 140.0f;
+        Center.Z += 210.0f;
         return Center;
     }
 
@@ -124,7 +124,7 @@ void AAstroAdventureGameModeBase::BeginPlay()
     LoadProgress();
     SpawnRuntimeScene();
     CurrentScreen = EAstroMissionScreen::Home;
-    HomeMenuIndex = CountCompletedStops() > 0 ? 1 : 0;
+    HomeMenuIndex = 0;
     UpdateDestinationFocus();
 }
 
@@ -223,40 +223,40 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), FVector(-1320.0f, -170.0f, 135.0f), FRotator::ZeroRotator);
     }
 
-    ADirectionalLight* KeyLight = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-900.0f, -900.0f, 900.0f), FRotator(-45.0f, -28.0f, 0.0f));
+    ADirectionalLight* KeyLight = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-900.0f, -900.0f, 900.0f), FRotator(-42.0f, -32.0f, 0.0f));
     if (KeyLight && KeyLight->GetLightComponent())
     {
         KeyLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        KeyLight->GetLightComponent()->SetIntensity(18.0f);
-        KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.90f, 0.96f, 1.0f));
+        KeyLight->GetLightComponent()->SetIntensity(14.0f);
+        KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.92f, 0.97f, 1.0f));
     }
 
     APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-1400.0f, 0.0f, 190.0f), FRotator::ZeroRotator);
     if (SunLight && SunLight->PointLightComponent)
     {
         SunLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
-        SunLight->PointLightComponent->SetIntensity(150000.0f);
-        SunLight->PointLightComponent->SetAttenuationRadius(5200.0f);
+        SunLight->PointLightComponent->SetIntensity(125000.0f);
+        SunLight->PointLightComponent->SetAttenuationRadius(5800.0f);
         SunLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
-        SunLight->PointLightComponent->SetLightColor(FLinearColor(1.0f, 0.76f, 0.28f));
+        SunLight->PointLightComponent->SetLightColor(FLinearColor(1.0f, 0.70f, 0.25f));
     }
 
     APointLight* PlayerFillLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-250.0f, -360.0f, 540.0f), FRotator::ZeroRotator);
     if (PlayerFillLight && PlayerFillLight->PointLightComponent)
     {
         PlayerFillLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
-        PlayerFillLight->PointLightComponent->SetIntensity(76000.0f);
-        PlayerFillLight->PointLightComponent->SetAttenuationRadius(5200.0f);
+        PlayerFillLight->PointLightComponent->SetIntensity(62000.0f);
+        PlayerFillLight->PointLightComponent->SetAttenuationRadius(5000.0f);
         PlayerFillLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
-        PlayerFillLight->PointLightComponent->SetLightColor(FLinearColor(0.36f, 0.74f, 1.0f));
+        PlayerFillLight->PointLightComponent->SetLightColor(FLinearColor(0.42f, 0.70f, 1.0f));
     }
 
     ASkyLight* FillLight = GetWorld()->SpawnActor<ASkyLight>(ASkyLight::StaticClass(), FVector(0.0f, 0.0f, 460.0f), FRotator::ZeroRotator);
     if (FillLight && FillLight->GetLightComponent())
     {
         FillLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        FillLight->GetLightComponent()->SetIntensity(16.0f);
-        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.62f, 0.80f, 1.0f));
+        FillLight->GetLightComponent()->SetIntensity(10.0f);
+        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.58f, 0.72f, 1.0f));
     }
 
     APostProcessVolume* LookDevVolume = GetWorld()->SpawnActor<APostProcessVolume>(APostProcessVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
@@ -266,17 +266,17 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         LookDevVolume->Settings.bOverride_AutoExposureMethod = true;
         LookDevVolume->Settings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
         LookDevVolume->Settings.bOverride_AutoExposureBias = true;
-        LookDevVolume->Settings.AutoExposureBias = 1.0f;
+        LookDevVolume->Settings.AutoExposureBias = 0.65f;
         LookDevVolume->Settings.bOverride_AutoExposureMinBrightness = true;
         LookDevVolume->Settings.AutoExposureMinBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_AutoExposureMaxBrightness = true;
         LookDevVolume->Settings.AutoExposureMaxBrightness = 1.0f;
         LookDevVolume->Settings.bOverride_BloomIntensity = true;
-        LookDevVolume->Settings.BloomIntensity = 0.34f;
+        LookDevVolume->Settings.BloomIntensity = 0.24f;
         LookDevVolume->Settings.bOverride_BloomThreshold = true;
-        LookDevVolume->Settings.BloomThreshold = 0.96f;
+        LookDevVolume->Settings.BloomThreshold = 1.05f;
         LookDevVolume->Settings.bOverride_ColorSaturation = true;
-        LookDevVolume->Settings.ColorSaturation = FVector4(1.34f, 1.30f, 1.42f, 1.0f);
+        LookDevVolume->Settings.ColorSaturation = FVector4(1.18f, 1.15f, 1.24f, 1.0f);
         LookDevVolume->Settings.bOverride_VignetteIntensity = true;
         LookDevVolume->Settings.VignetteIntensity = 0.0f;
     }
@@ -416,6 +416,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
     }
 
     FRandomStream BackdropStream(250425);
+    NebulaBackdropStartIndex = INDEX_NONE;
 
     for (int32 Index = 0; Index < 520; ++Index)
     {
@@ -434,6 +435,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
         }
     }
 
+    NebulaBackdropStartIndex = BackdropActors.Num();
     for (int32 Index = 0; Index < 58; ++Index)
     {
         const FLinearColor Color = Index % 4 == 0 ? FLinearColor(0.04f, 0.18f, 0.48f, 0.42f) : Index % 4 == 1 ? FLinearColor(0.30f, 0.08f, 0.44f, 0.34f) : Index % 4 == 2 ? FLinearColor(0.58f, 0.20f, 0.08f, 0.28f) : FLinearColor(0.04f, 0.34f, 0.30f, 0.28f);
@@ -510,33 +512,11 @@ void AAstroAdventureGameModeBase::FocusNextDestination()
         MoveQuizFocus(1);
         return;
     }
-    if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
-    {
-        CurrentScreen = EAstroMissionScreen::Navigation;
-        UpdateDestinationFocus();
-        return;
-    }
 
     if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
         FocusedDestinationIndex = (FocusedDestinationIndex + 1) % Lessons.Num();
         UpdateDestinationFocus();
-    }
-    else if (CurrentScreen == EAstroMissionScreen::QuizFeedback && bLastAnswerCorrect)
-    {
-        Confirm();
-    }
-    else if (CurrentScreen == EAstroMissionScreen::StampAward)
-    {
-        if (!IsMissionComplete() && AdvanceToNextRouteStop())
-        {
-            CurrentScreen = EAstroMissionScreen::Navigation;
-        }
-        else
-        {
-            CurrentScreen = EAstroMissionScreen::MissionComplete;
-            UpdateDestinationFocus();
-        }
     }
 }
 
@@ -570,12 +550,6 @@ void AAstroAdventureGameModeBase::FocusPreviousDestination()
 
     if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
-        FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
-        UpdateDestinationFocus();
-    }
-    else if (CurrentScreen == EAstroMissionScreen::StampAward)
-    {
-        CurrentScreen = EAstroMissionScreen::Navigation;
         FocusedDestinationIndex = (FocusedDestinationIndex - 1 + Lessons.Num()) % Lessons.Num();
         UpdateDestinationFocus();
     }
@@ -682,7 +656,7 @@ void AAstroAdventureGameModeBase::Back()
     if (CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
         CurrentScreen = EAstroMissionScreen::Home;
-        HomeMenuIndex = CountCompletedStops() > 0 ? 1 : 0;
+        HomeMenuIndex = 0;
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
@@ -854,12 +828,13 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
         const TCHAR* Options[] = {TEXT("New Expedition"), TEXT("Continue"), TEXT("Reset Passport"), TEXT("Quit")};
+        const int32 StampCount = CountCompletedStops();
         for (int32 Index = 0; Index < 4; ++Index)
         {
             FString Label = Options[Index];
-            if (Index == 1 && CountCompletedStops() <= 0)
+            if (Index == 1)
             {
-                Label += TEXT(" - no saved route yet");
+                Label = StampCount > 0 ? FString::Printf(TEXT("Continue saved route: %d stamps"), StampCount) : TEXT("Continue - no saved route yet");
             }
             Lines.Add(FString::Printf(TEXT("%s %s"), Index == HomeMenuIndex ? TEXT(">") : TEXT(" "), *Label));
         }
@@ -867,7 +842,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         {
             Lines.Add(LastFeedback);
         }
-        Lines.Add(TEXT("Start fresh for a clean local playtest."));
+        Lines.Add(TEXT("Start a new route or continue your passport."));
         return Lines;
     }
 
@@ -963,11 +938,11 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     }
     else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
     {
-        Lines.Add(TEXT("Atlas View: full route, stamps, mastery, and future review boxes."));
+        Lines.Add(TEXT("Atlas View: full route, stamps, and future review boxes."));
         for (int32 Index = 0; Index < Lessons.Num(); ++Index)
         {
             const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[Index].DestinationId) : nullptr;
-            Lines.Add(FString::Printf(TEXT("%s %s | %s | mastery %d | box %d"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("stamped") : Progress && Progress->bScanned ? TEXT("quiz ready") : TEXT("not scanned"), Progress ? Progress->MasteryScore : 0, Progress ? Progress->ReviewBox : 0));
+            Lines.Add(FString::Printf(TEXT("%s %s | %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("Stamped") : Progress && Progress->bScanned ? TEXT("Ready") : TEXT("Visit")));
             if (Lines.Num() >= 9)
             {
                 Lines.Add(TEXT("Move focus to inspect more stops. Back returns to the mission."));
@@ -1015,10 +990,15 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
 
 void AAstroAdventureGameModeBase::RefreshScenePresentation()
 {
+    const bool bAtlasLike = CurrentScreen == EAstroMissionScreen::AtlasView
+        || CurrentScreen == EAstroMissionScreen::Passport
+        || CurrentScreen == EAstroMissionScreen::MissionComplete;
+
     for (int32 Index = 0; Index < DestinationActors.Num(); ++Index)
     {
         if (DestinationActors[Index])
         {
+            DestinationActors[Index]->SetPresentationMode(bAtlasLike ? EAstroDestinationPresentationMode::Atlas : EAstroDestinationPresentationMode::Mission);
             DestinationActors[Index]->SetActorHiddenInGame(!ShouldShowDestinationInCurrentView(Index));
         }
     }
@@ -1029,6 +1009,21 @@ void AAstroAdventureGameModeBase::RefreshScenePresentation()
         {
             const int32 OwnerIndex = RouteMarkerOwnerIndices.IsValidIndex(Index) ? RouteMarkerOwnerIndices[Index] : INDEX_NONE;
             RouteMarkerActors[Index]->SetActorHiddenInGame(OwnerIndex != INDEX_NONE && !ShouldShowDestinationInCurrentView(OwnerIndex));
+        }
+    }
+
+    const bool bShowNebula = CurrentScreen == EAstroMissionScreen::Home
+        || CurrentScreen == EAstroMissionScreen::AgeSelect
+        || CurrentScreen == EAstroMissionScreen::MissionPrompt
+        || CurrentScreen == EAstroMissionScreen::AtlasView
+        || CurrentScreen == EAstroMissionScreen::Passport
+        || CurrentScreen == EAstroMissionScreen::MissionComplete
+        || CurrentScreen == EAstroMissionScreen::PauseMenu;
+    for (int32 Index = 0; Index < BackdropActors.Num(); ++Index)
+    {
+        if (BackdropActors[Index] && NebulaBackdropStartIndex != INDEX_NONE && Index >= NebulaBackdropStartIndex)
+        {
+            BackdropActors[Index]->SetActorHiddenInGame(!bShowNebula);
         }
     }
 
@@ -1264,6 +1259,7 @@ void AAstroAdventureGameModeBase::ExecuteHomeSelection()
         ClearPassportProgress();
         FocusedDestinationIndex = 0;
         LastFeedback = TEXT("Passport reset. Ready for a fresh launch.");
+        HomeMenuIndex = 0;
         UpdateDestinationFocus();
     }
     else

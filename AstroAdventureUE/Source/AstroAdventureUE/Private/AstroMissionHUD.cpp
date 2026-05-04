@@ -22,16 +22,128 @@ void AAstroMissionHUD::DrawHUD()
     const TArray<FString> DetailLines = GameMode->GetHudDetailLines();
     const EAstroMissionScreen CurrentScreen = GameMode->GetCurrentScreen();
 
-    bool bHasQuizRows = false;
-    bool bHasPassportRows = false;
-    const bool bHasMenuRows = IsMenuScreen(CurrentScreen);
+    struct FHudBuckets
+    {
+        TArray<FString> MenuRows;
+        TArray<FString> QuizRows;
+        TArray<FString> PassportRows;
+        TArray<FString> BodyLines;
+        TArray<FString> HintLines;
+    };
+
+    FHudBuckets Buckets;
     bool bHasStampFeedback = GameMode->IsStampEffectActive() || PrimaryLine.Contains(TEXT("stamp unlocked"));
     for (const FString& Line : DetailLines)
     {
-        bHasQuizRows = bHasQuizRows || IsQuizChoiceLine(Line);
-        bHasPassportRows = bHasPassportRows || IsPassportRouteLine(Line);
         bHasStampFeedback = bHasStampFeedback || Line.Contains(TEXT("Stamp saved"));
+
+        const FString FriendlyLine = FriendlyDetailLine(Line);
+        if (FriendlyLine.IsEmpty())
+        {
+            continue;
+        }
+
+        if (CurrentScreen == EAstroMissionScreen::Home)
+        {
+            if (IsHomeChoiceLine(Line))
+            {
+                Buckets.MenuRows.Add(FriendlyLine);
+            }
+            else
+            {
+                Buckets.HintLines.Add(FriendlyLine);
+            }
+        }
+        else if (CurrentScreen == EAstroMissionScreen::Quiz)
+        {
+            if (IsQuizChoiceLine(Line))
+            {
+                Buckets.QuizRows.Add(FriendlyLine);
+            }
+        }
+        else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
+        {
+            if (IsPassportRouteLine(Line))
+            {
+                Buckets.PassportRows.Add(FriendlyLine);
+            }
+            else
+            {
+                Buckets.HintLines.Add(FriendlyLine);
+            }
+        }
+        else if (IsMenuScreen(CurrentScreen))
+        {
+            if (IsMenuChoiceLine(Line))
+            {
+                Buckets.MenuRows.Add(FriendlyLine);
+            }
+            else
+            {
+                Buckets.BodyLines.Add(FriendlyLine);
+            }
+        }
+        else if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
+        {
+            Buckets.BodyLines.Add(FriendlyLine);
+        }
+        else if (CurrentScreen == EAstroMissionScreen::Navigation)
+        {
+            if (FriendlyLine.StartsWith(TEXT("Next stop:")) || FriendlyLine.StartsWith(TEXT("Clue:"))
+                || FriendlyLine.Contains(TEXT("scan")) || FriendlyLine.Contains(TEXT("Card found")) || FriendlyLine.Contains(TEXT("Stamped already")))
+            {
+                Buckets.BodyLines.Add(FriendlyLine);
+            }
+            else
+            {
+                Buckets.HintLines.Add(FriendlyLine);
+            }
+        }
+        else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+        {
+            if (FriendlyLine.Contains(TEXT("quiz")) || FriendlyLine.Contains(TEXT("More Info")) || FriendlyLine.Contains(TEXT("Passport")))
+            {
+                Buckets.HintLines.Add(FriendlyLine);
+            }
+            else if (Buckets.BodyLines.Num() < 3)
+            {
+                Buckets.BodyLines.Add(FriendlyLine);
+            }
+        }
+        else if (CurrentScreen == EAstroMissionScreen::DeepDive)
+        {
+            if (Buckets.BodyLines.Num() < 3)
+            {
+                if (Buckets.BodyLines.Num() == 0 && !FriendlyLine.Contains(TEXT(":")))
+                {
+                    Buckets.BodyLines.Add(FString::Printf(TEXT("Closer Look: %s"), *FriendlyLine));
+                }
+                else
+                {
+                    Buckets.BodyLines.Add(FriendlyLine);
+                }
+            }
+        }
+        else if (CurrentScreen == EAstroMissionScreen::StampAward)
+        {
+            if (FriendlyLine.Contains(TEXT("Confirm")) || FriendlyLine.Contains(TEXT("review")))
+            {
+                Buckets.HintLines.Add(FriendlyLine);
+            }
+            else
+            {
+                Buckets.BodyLines.Add(FriendlyLine);
+            }
+        }
+        else
+        {
+            Buckets.BodyLines.Add(FriendlyLine);
+        }
     }
+
+    const bool bHasQuizRows = Buckets.QuizRows.Num() > 0;
+    const bool bHasPassportRows = Buckets.PassportRows.Num() > 0;
+    const bool bHasMenuRows = Buckets.MenuRows.Num() > 0;
 
     const float Margin = FMath::Clamp(Canvas->SizeX * 0.018f, 18.0f, 28.0f);
     const float HeaderH = FMath::Clamp(Canvas->SizeY * 0.066f, 46.0f, 64.0f);
@@ -46,7 +158,7 @@ void AAstroMissionHUD::DrawHUD()
     DrawBadge(FriendlyStatusLine(StatusLine), StatusX, 14.0f, StatusBadgeW, FLinearColor(0.08f, 0.24f, 0.32f, 0.90f), FLinearColor(0.90f, 0.99f, 1.0f), 0.72f);
 
     const float CardW = FMath::Min(Canvas->SizeX - Margin * 2.0f, bHasQuizRows ? 980.0f : 930.0f);
-    const float CardH = bHasPassportRows ? 300.0f : bHasQuizRows ? 314.0f : bHasMenuRows ? 286.0f : 220.0f;
+    const float CardH = bHasPassportRows ? 300.0f : bHasQuizRows ? 314.0f : bHasMenuRows ? 286.0f : Buckets.BodyLines.Num() >= 3 ? 246.0f : 220.0f;
     const float CardX = (Canvas->SizeX - CardW) * 0.5f;
     const float CardY = FMath::Max(HeaderH + 12.0f, Canvas->SizeY - CardH - FMath::Clamp(Canvas->SizeY * 0.022f, 12.0f, 24.0f));
 
@@ -66,7 +178,7 @@ void AAstroMissionHUD::DrawHUD()
 
     if (bHasStampFeedback)
     {
-        DrawFeedbackBanner(TEXT("NEW STAMP IN YOUR PASSPORT"), FLinearColor(0.11f, 0.48f, 0.25f, 0.95f), CardY - 68.0f);
+        DrawFeedbackBanner(TEXT("Stamp added to your passport"), FLinearColor(0.11f, 0.48f, 0.25f, 0.95f), CardY - 68.0f);
     }
 
     float Y = CardY + 24.0f;
@@ -75,49 +187,33 @@ void AAstroMissionHUD::DrawHUD()
     if (bHasQuizRows)
     {
         Y += 8.0f;
-        for (const FString& Line : DetailLines)
+        for (const FString& Line : Buckets.QuizRows)
         {
-            if (IsQuizChoiceLine(Line))
-            {
-                const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
-                DrawQuizRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
-                Y += 66.0f;
-            }
+            const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
+            DrawQuizRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
+            Y += 66.0f;
         }
     }
     else if (bHasMenuRows)
     {
-        int32 DrawnRows = 0;
         Y += 8.0f;
-        for (const FString& Line : DetailLines)
+        for (const FString& Line : Buckets.MenuRows)
         {
-            if (IsMenuChoiceLine(Line))
-            {
-                const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
-                DrawMenuRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
-                Y += 38.0f;
-                ++DrawnRows;
-            }
+            const bool bFocused = Line.TrimStart().StartsWith(TEXT(">")) || Line.StartsWith(TEXT("READY:"));
+            DrawMenuRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
+            Y += 38.0f;
         }
 
         int32 DrawnNotes = 0;
-        for (const FString& Line : DetailLines)
+        const TArray<FString>& NoteLines = Buckets.BodyLines.Num() > 0 ? Buckets.BodyLines : Buckets.HintLines;
+        for (const FString& Line : NoteLines)
         {
-            if (IsMenuChoiceLine(Line))
+            float NoteY = Y + 4.0f;
+            DrawLine(Line, CardX + 42.0f, NoteY, FLinearColor(0.78f, 0.91f, 0.94f), 0.84f);
+            ++DrawnNotes;
+            if (DrawnNotes >= (Buckets.MenuRows.Num() >= 4 ? 1 : 2))
             {
-                continue;
-            }
-
-            const FString FriendlyLine = FriendlyDetailLine(Line);
-            if (!FriendlyLine.IsEmpty())
-            {
-                float NoteY = Y + 4.0f;
-                DrawLine(FriendlyLine, CardX + 42.0f, NoteY, FLinearColor(0.88f, 0.98f, 1.0f), 0.88f);
-                ++DrawnNotes;
-                if (DrawnNotes >= 2 || DrawnRows >= 4)
-                {
-                    break;
-                }
+                break;
             }
         }
     }
@@ -125,37 +221,40 @@ void AAstroMissionHUD::DrawHUD()
     {
         int32 DrawnRows = 0;
         Y += 8.0f;
-        for (const FString& Line : DetailLines)
+        for (const FString& Line : Buckets.PassportRows)
         {
-            if (IsPassportRouteLine(Line))
+            DrawPassportRow(Line, CardX + 42.0f, Y, CardW - 84.0f);
+            Y += 38.0f;
+            ++DrawnRows;
+            if (DrawnRows >= 5)
             {
-                DrawPassportRow(Line, CardX + 42.0f, Y, CardW - 84.0f);
-                Y += 38.0f;
-                ++DrawnRows;
-                if (DrawnRows >= 5)
-                {
-                    break;
-                }
+                break;
             }
         }
     }
     else
     {
         int32 DrawnLines = 0;
-        for (const FString& Line : DetailLines)
+        for (const FString& Line : Buckets.BodyLines)
         {
-            const FString FriendlyLine = FriendlyDetailLine(Line);
-            if (FriendlyLine.IsEmpty())
-            {
-                continue;
-            }
-
-            DrawLine(FriendlyLine, CardX + 42.0f, Y, FLinearColor(0.91f, 0.98f, 1.0f), 1.02f);
+            DrawLine(Line, CardX + 42.0f, Y, FLinearColor(0.91f, 0.98f, 1.0f), 1.02f);
             ++DrawnLines;
             if (DrawnLines >= 3)
             {
                 break;
             }
+        }
+
+        for (const FString& Line : Buckets.HintLines)
+        {
+            if (DrawnLines >= 4)
+            {
+                break;
+            }
+
+            Y += 2.0f;
+            DrawLine(Line, CardX + 42.0f, Y, FLinearColor(0.76f, 0.90f, 0.92f), 0.84f);
+            ++DrawnLines;
         }
     }
 
@@ -365,9 +464,10 @@ void AAstroMissionHUD::DrawPassportRow(const FString& Text, const float X, const
     StopName.TrimStartAndEndInline();
     Rest.TrimStartAndEndInline();
 
-    const bool bStamped = Rest.StartsWith(TEXT("stamped"));
-    const bool bQuizReady = Rest.StartsWith(TEXT("quiz ready"));
-    const FString StampLabel = bStamped ? TEXT("STAMPED") : bQuizReady ? TEXT("QUIZ") : TEXT("VISIT");
+    const FString LowerRest = Rest.ToLower();
+    const bool bStamped = LowerRest.StartsWith(TEXT("stamped"));
+    const bool bQuizReady = LowerRest.StartsWith(TEXT("ready")) || LowerRest.StartsWith(TEXT("quiz ready"));
+    const FString StampLabel = bStamped ? TEXT("Stamped") : bQuizReady ? TEXT("Ready") : TEXT("Visit");
     const FLinearColor Fill = bFocused ? FLinearColor(0.91f, 0.58f, 0.18f, 0.94f) : FLinearColor(0.08f, 0.18f, 0.20f, 0.88f);
     const FLinearColor TextColor = bFocused ? FLinearColor(0.05f, 0.06f, 0.06f, 1.0f) : FLinearColor(0.92f, 0.98f, 1.0f, 1.0f);
     const FLinearColor StampColor = bStamped ? FLinearColor(0.96f, 0.45f, 0.16f, 0.98f) : bQuizReady ? FLinearColor(0.12f, 0.56f, 0.64f, 0.98f) : FLinearColor(0.55f, 0.62f, 0.66f, 0.78f);
@@ -458,6 +558,15 @@ bool AAstroMissionHUD::IsMenuScreen(const EAstroMissionScreen Screen) const
         || Screen == EAstroMissionScreen::MissionComplete;
 }
 
+bool AAstroMissionHUD::IsHomeChoiceLine(const FString& Text) const
+{
+    const FString Trimmed = Text.TrimStartAndEnd();
+    return (Trimmed.StartsWith(TEXT(">")) || Trimmed.StartsWith(TEXT("New Expedition")) || Trimmed.StartsWith(TEXT("Continue"))
+            || Trimmed.StartsWith(TEXT("Reset Passport")) || Trimmed.StartsWith(TEXT("Quit")))
+        && (Trimmed.Contains(TEXT("New Expedition")) || Trimmed.Contains(TEXT("Continue"))
+            || Trimmed.Contains(TEXT("Reset Passport")) || Trimmed.Contains(TEXT("Quit")));
+}
+
 bool AAstroMissionHUD::IsMenuChoiceLine(const FString& Text) const
 {
     const FString Trimmed = Text.TrimStartAndEnd();
@@ -488,7 +597,8 @@ bool AAstroMissionHUD::IsQuizChoiceLine(const FString& Text) const
 bool AAstroMissionHUD::IsPassportRouteLine(const FString& Text) const
 {
     const FString Lower = Text.ToLower();
-    return Lower.Contains(TEXT("|")) && (Lower.Contains(TEXT("stamped")) || Lower.Contains(TEXT("quiz ready")) || Lower.Contains(TEXT("not scanned")));
+    return Lower.Contains(TEXT("|")) && (Lower.Contains(TEXT("stamped")) || Lower.Contains(TEXT("ready"))
+        || Lower.Contains(TEXT("visit")) || Lower.Contains(TEXT("quiz ready")) || Lower.Contains(TEXT("not scanned")));
 }
 
 FString AAstroMissionHUD::FriendlyPrimaryLine(const FString& Text) const
@@ -506,7 +616,9 @@ FString AAstroMissionHUD::FriendlyPrimaryLine(const FString& Text) const
         return TEXT("Follow the Solar Passport clue.");
     }
 
-    Result.ReplaceInline(TEXT("stamp unlocked"), TEXT("stamp unlocked!"), ESearchCase::IgnoreCase);
+    Result.ReplaceInline(TEXT("New stamp unlocked:"), TEXT("Stamp added:"), ESearchCase::IgnoreCase);
+    Result.ReplaceInline(TEXT("New stamp unlocked!"), TEXT("Stamp added!"), ESearchCase::IgnoreCase);
+    Result.ReplaceInline(TEXT("stamp unlocked"), TEXT("stamp added"), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT("mission complete"), TEXT("mission complete!"), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT("discovery card"), TEXT("discovery card"), ESearchCase::IgnoreCase);
     return Result;
@@ -544,20 +656,53 @@ FString AAstroMissionHUD::FriendlyDetailLine(const FString& Text) const
         return TEXT("");
     }
 
-    Result.ReplaceInline(TEXT("Press M / LT for More Info, or Confirm for the quiz."), TEXT("More Info opens a closer look. Confirm starts the quiz."));
+    Result.ReplaceInline(TEXT("Continue - no saved route yet"), TEXT("Continue saved route - none yet"));
+    if (Result.Equals(TEXT("Continue"), ESearchCase::IgnoreCase) || Result.Equals(TEXT("> Continue"), ESearchCase::IgnoreCase))
+    {
+        Result.ReplaceInline(TEXT("Continue"), TEXT("Continue saved route"));
+    }
+
+    Result.ReplaceInline(TEXT("Press M / LT for More Info, or Confirm for the quiz."), TEXT("More Info opens Closer Look. Confirm starts the quiz."));
     Result.ReplaceInline(TEXT("Open Passport / RT for the full Atlas route."), TEXT("Passport shows the full route."));
     Result.ReplaceInline(TEXT("Confirm to scan for a discovery card."), TEXT("Confirm to scan this stop."));
-    Result.ReplaceInline(TEXT("Scan found. Confirm to open its card again."), TEXT("Scan found. Confirm to reopen the card."));
-    Result.ReplaceInline(TEXT("Stamped already. Pick another stop or open Passport."), TEXT("Stamp saved already. Pick another stop."));
+    Result.ReplaceInline(TEXT("Scan found. Confirm to scan again and reopen its card."), TEXT("Card found. Confirm to reopen it."));
+    Result.ReplaceInline(TEXT("Scan found. Confirm to open its card again."), TEXT("Card found. Confirm to reopen it."));
+    Result.ReplaceInline(TEXT("Stamp saved already. Confirm to rescan and review."), TEXT("Stamped already. Confirm to review."));
+    Result.ReplaceInline(TEXT("Stamped already. Pick another stop or open Passport."), TEXT("Stamped already. Pick another stop."));
     Result.ReplaceInline(TEXT("Review box "), TEXT("Review round "));
     Result.ReplaceInline(TEXT(" | mastery "), TEXT(" - recall "));
     Result.ReplaceInline(TEXT(" | review box "), TEXT(" - review "));
     Result.ReplaceInline(TEXT(" | box "), TEXT(" - review "));
     Result.ReplaceInline(TEXT("passport stamped"), TEXT("stamp saved"));
     Result.ReplaceInline(TEXT("quiz ready"), TEXT("quiz ready"));
-    Result.ReplaceInline(TEXT("not scanned"), TEXT("ready to visit"));
     Result.ReplaceInline(TEXT("ready to scan"), TEXT("ready to scan"));
     Result.ReplaceInline(TEXT("mastery"), TEXT("recall"));
+
+    if (Result.StartsWith(TEXT("Quick fact:")))
+    {
+        Result.ReplaceInline(TEXT("Quick fact:"), TEXT("Fact:"));
+    }
+    else if (Result.StartsWith(TEXT("Wow fact:")))
+    {
+        Result.ReplaceInline(TEXT("Wow fact:"), TEXT("Also:"));
+    }
+
+    if (Result.StartsWith(TEXT("Compare:")))
+    {
+        Result.ReplaceInline(TEXT("Compare:"), TEXT("Compare:"));
+    }
+    else if (Result.StartsWith(TEXT("Word explorer:")))
+    {
+        Result.ReplaceInline(TEXT("Word explorer:"), TEXT("Word Explorer:"));
+    }
+
+    if (Result.Contains(TEXT(" is now marked STAMPED in your Passport.")))
+    {
+        Result.ReplaceInline(TEXT(" is now marked STAMPED in your Passport."), TEXT(" is stamped in your passport."));
+    }
+    Result.ReplaceInline(TEXT("Each stop saves one stamp; rescans reopen the review card."), TEXT("Your passport keeps this card for later."));
+    Result.ReplaceInline(TEXT("Confirm or press Right/D for Next Stop."), TEXT("Confirm for the next stop."));
+    Result.ReplaceInline(TEXT("Stamp saved. You can review this card from Atlas later."), TEXT("Saved in Atlas for later."));
 
     if (Result.StartsWith(TEXT("Atlas View:")))
     {

@@ -28,6 +28,7 @@ private:
     void AddActionIfMissing(TArray<FString>& Actions, const FString& Action) const;
     void GetStampProgress(const FString& StatusLine, int32& OutStamped, int32& OutTotal) const;
     bool IsMenuScreen(EAstroMissionScreen Screen) const;
+    bool IsHomeChoiceLine(const FString& Text) const;
     bool IsMenuChoiceLine(const FString& Text) const;
     bool LooksLikeRawTechnicalLine(const FString& Text) const;
     bool IsQuizChoiceLine(const FString& Text) const;

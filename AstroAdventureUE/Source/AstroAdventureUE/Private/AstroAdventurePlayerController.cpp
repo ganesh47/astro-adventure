@@ -161,6 +161,11 @@ void AAstroAdventurePlayerController::AnswerUp()
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
         const EAstroMissionScreen Screen = GameMode->GetCurrentScreen();
+        if (!CanAcceptFocusStep())
+        {
+            return;
+        }
+
         if (Screen == EAstroMissionScreen::Quiz)
         {
             GameMode->MoveQuizFocus(-1);
@@ -168,10 +173,6 @@ void AAstroAdventurePlayerController::AnswerUp()
         }
         else if (Screen == EAstroMissionScreen::Navigation || Screen == EAstroMissionScreen::AtlasView || Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::StampAward)
         {
-            if (!CanAcceptFocusStep())
-            {
-                return;
-            }
             GameMode->FocusNextDestination();
             TriggerFocusFeedback(1.0f);
         }
@@ -188,6 +189,11 @@ void AAstroAdventurePlayerController::AnswerDown()
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
         const EAstroMissionScreen Screen = GameMode->GetCurrentScreen();
+        if (!CanAcceptFocusStep())
+        {
+            return;
+        }
+
         if (Screen == EAstroMissionScreen::Quiz)
         {
             GameMode->MoveQuizFocus(1);
@@ -195,10 +201,6 @@ void AAstroAdventurePlayerController::AnswerDown()
         }
         else if (Screen == EAstroMissionScreen::Navigation || Screen == EAstroMissionScreen::AtlasView || Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::StampAward)
         {
-            if (!CanAcceptFocusStep())
-            {
-                return;
-            }
             GameMode->FocusPreviousDestination();
             TriggerFocusFeedback(-1.0f);
         }

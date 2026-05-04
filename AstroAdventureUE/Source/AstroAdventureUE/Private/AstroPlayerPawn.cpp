@@ -37,14 +37,14 @@ namespace
         switch (Profile)
         {
         case EAstroCameraPresentationProfile::Atlas:
-            return { FVector(-760.0f, -1580.0f, 1760.0f), -80.0f, FVector(60.0f, 0.0f, 50.0f), 3.0f, 2.5f, 72.0f, 4200.0f };
+            return { FVector(-820.0f, -1640.0f, 1840.0f), -92.0f, FVector(80.0f, 0.0f, 70.0f), 3.0f, 2.6f, 72.0f, 4500.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-430.0f, -760.0f, 620.0f), -42.0f, FVector(24.0f, 0.0f, 24.0f), 6.4f, 5.8f, 60.0f, 760.0f };
+            return { FVector(-420.0f, -720.0f, 620.0f), -38.0f, FVector(20.0f, 0.0f, 34.0f), 6.8f, 6.0f, 60.0f, 720.0f };
         case EAstroCameraPresentationProfile::Stable:
-            return { FVector(-520.0f, -900.0f, 760.0f), -52.0f, FVector(28.0f, 0.0f, 30.0f), 3.0f, 2.6f, 62.0f, 940.0f };
+            return { FVector(-560.0f, -940.0f, 800.0f), -56.0f, FVector(36.0f, 0.0f, 42.0f), 3.2f, 2.8f, 62.0f, 960.0f };
         case EAstroCameraPresentationProfile::Mission:
         default:
-            return { FVector(-520.0f, -900.0f, 760.0f), -48.0f, FVector(30.0f, 0.0f, 34.0f), 4.6f, 4.0f, 66.0f, 980.0f };
+            return { FVector(-560.0f, -940.0f, 800.0f), -56.0f, FVector(40.0f, 0.0f, 42.0f), 4.8f, 4.2f, 62.0f, 960.0f };
         }
     }
 
@@ -189,13 +189,13 @@ AAstroPlayerPawn::AAstroPlayerPawn()
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(Root);
-    Camera->SetRelativeLocation(FVector(-920.0f, 0.0f, 640.0f));
+    Camera->SetRelativeLocation(FVector(-560.0f, -940.0f, 800.0f));
     Camera->SetRelativeRotation(FRotator(-38.0f, 0.0f, 0.0f));
     Camera->SetUsingAbsoluteLocation(true);
     Camera->SetUsingAbsoluteRotation(true);
-    Camera->SetFieldOfView(58.0f);
+    Camera->SetFieldOfView(62.0f);
     Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
-    Camera->SetOrthoWidth(980.0f);
+    Camera->SetOrthoWidth(960.0f);
 
     Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
     Movement->MaxSpeed = 650.0f;

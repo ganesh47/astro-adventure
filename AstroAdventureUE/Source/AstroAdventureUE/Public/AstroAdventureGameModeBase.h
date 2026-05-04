@@ -86,6 +86,8 @@ private:
     UPROPERTY()
     TArray<AStaticMeshActor*> BackdropActors;
 
+    int32 NebulaBackdropStartIndex = INDEX_NONE;
+
     UPROPERTY()
     UAstroProgressSaveGame* ProgressSave = nullptr;
 
