@@ -14,12 +14,19 @@ enum class EAstroAgeBand : uint8
 UENUM(BlueprintType)
 enum class EAstroMissionScreen : uint8
 {
+    Home,
+    AgeSelect,
     MissionPrompt,
     Navigation,
     DiscoveryCard,
+    DeepDive,
+    Passport,
+    AtlasView,
     Quiz,
     QuizFeedback,
-    MissionComplete
+    StampAward,
+    MissionComplete,
+    PauseMenu
 };
 
 USTRUCT(BlueprintType)
@@ -47,6 +54,21 @@ struct FAstroDestinationLesson
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
     FText DiscoveryFact;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    FText WowFact;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    FText VisualClue;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    FText DeepDiveText;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    FText CompareFact;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    FText GlossaryText;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
     FText Ages4To6Text;
@@ -77,6 +99,15 @@ struct FAstroDestinationLesson
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
     FText HintText;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    FLinearColor DisplayColor = FLinearColor::White;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    float MapScale = 1.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Astro Adventure")
+    bool bRequiredForMission = true;
 };
 
 USTRUCT(BlueprintType)
