@@ -587,17 +587,20 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
             const float VisibleBeamLength = BeamLength * FMath::Lerp(0.12f, 1.0f, ScannerTravelAlpha);
             BeamLocation = BeamDirection * (46.0f + VisibleBeamLength * 0.5f) + FVector(0.0f, 0.0f, 4.0f);
             BeamRotation = BeamDirection.Rotation();
-            BeamScale = FVector((VisibleBeamLength / 100.0f) * FMath::Lerp(0.75f, 1.0f, ScannerAlpha), 0.009f + ScannerAlpha * 0.01f, 0.009f + ScannerAlpha * 0.01f);
+            BeamScale = FVector((VisibleBeamLength / 100.0f) * FMath::Lerp(0.75f, 1.0f, ScannerAlpha), 0.018f + ScannerAlpha * 0.018f, 0.018f + ScannerAlpha * 0.018f);
         }
         ScannerBeam->SetRelativeLocation(BeamLocation);
         ScannerBeam->SetRelativeRotation(BeamRotation);
         ScannerBeam->SetRelativeScale3D(BeamScale);
-    }
 
-    if (ScannerBeamHalo)
-    {
-        ScannerBeamHalo->SetVisibility(false);
-        ScannerBeamHalo->SetHiddenInGame(true);
+        if (ScannerBeamHalo)
+        {
+            ScannerBeamHalo->SetVisibility(bShowBeam);
+            ScannerBeamHalo->SetHiddenInGame(!bShowBeam);
+            ScannerBeamHalo->SetRelativeLocation(BeamLocation);
+            ScannerBeamHalo->SetRelativeRotation(BeamRotation);
+            ScannerBeamHalo->SetRelativeScale3D(FVector(BeamScale.X, BeamScale.Y * 3.4f, BeamScale.Z * 3.4f));
+        }
     }
 
     ApplyMaterialColor(BodyMaterial, FLinearColor(0.84f, 0.94f, 1.0f), 0.50f + NavigationPulse * 0.35f);
@@ -608,8 +611,8 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
     ApplyMaterialColor(EngineGlowMaterial, FLinearColor(0.18f, 0.86f, 1.0f), 1.15f + SmoothedSpeedAlpha * 1.2f + ScannerAlpha * 0.55f);
     ApplyMaterialColor(ScannerDishMaterial, FLinearColor(0.64f, 0.92f, 1.0f), 0.72f + ScannerAlpha * 0.65f);
     ApplyMaterialColor(ScannerMaterial, FLinearColor(0.36f, 1.0f, 0.72f), 0.75f + ScannerAlpha * 1.05f + NavigationPulse * 0.3f);
-    ApplyMaterialColor(ScannerBeamMaterial, FLinearColor(0.22f, 1.0f, 0.76f, 0.36f + ScannerAlpha * 0.18f), 0.06f + ScannerAlpha * 0.16f);
-    ApplyMaterialColor(ScannerBeamHaloMaterial, FLinearColor(0.36f, 1.0f, 0.82f, 0.0f), 0.0f);
+    ApplyMaterialColor(ScannerBeamMaterial, FLinearColor(0.22f, 1.0f, 0.76f, 0.42f + ScannerAlpha * 0.22f), 0.10f + ScannerAlpha * 0.22f);
+    ApplyMaterialColor(ScannerBeamHaloMaterial, FLinearColor(0.36f, 1.0f, 0.82f, 0.16f + ScannerAlpha * 0.10f), 0.035f + ScannerAlpha * 0.075f);
 }
 
 void AAstroPlayerPawn::ApplyShipMaterials()

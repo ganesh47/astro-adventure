@@ -53,10 +53,10 @@ FAstroLightingSettings GetLightingSettings(const EAstroLightingLook Look)
     case EAstroLightingLook::AtlasLook:
         return { 8.4f, 42000.0f, 150000.0f, 28.0f, 0.12f, 0.055f, 1.48f, FVector4(1.13f, 1.10f, 1.14f, 1.0f) };
     case EAstroLightingLook::MissionLook:
-        return { 8.0f, 38000.0f, 162000.0f, 30.0f, 0.12f, 0.055f, 1.50f, FVector4(1.14f, 1.10f, 1.13f, 1.0f) };
+        return { 8.6f, 52000.0f, 178000.0f, 42.0f, 0.20f, 0.065f, 1.44f, FVector4(1.18f, 1.15f, 1.17f, 1.0f) };
     case EAstroLightingLook::HomeLook:
     default:
-        return { 7.8f, 42000.0f, 182000.0f, 38.0f, 0.18f, 0.06f, 1.50f, FVector4(1.17f, 1.13f, 1.15f, 1.0f) };
+        return { 8.8f, 56000.0f, 192000.0f, 48.0f, 0.22f, 0.07f, 1.42f, FVector4(1.20f, 1.16f, 1.18f, 1.0f) };
     }
 }
 
@@ -540,23 +540,16 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
     const bool bUseSkyBackdropPanel = false;
     AStaticMeshActor* SkyPlane = bUseSkyBackdropPanel ? GetWorld()->SpawnActor<AStaticMeshActor>(
         AStaticMeshActor::StaticClass(),
-        FVector(300.0f, 1480.0f, 520.0f),
+        FVector(300.0f, 1660.0f, 520.0f),
         FRotator::ZeroRotator) : nullptr;
     if (SkyPlane)
     {
-        SkyPlane->GetStaticMeshComponent()->SetStaticMesh(PlaneMesh ? PlaneMesh : CubeMesh);
-        SkyPlane->SetActorRotation(PlaneMesh ? FRotator(90.0f, 0.0f, 0.0f) : FRotator::ZeroRotator);
-        SkyPlane->SetActorScale3D(PlaneMesh ? FVector(58.0f, 22.0f, 1.0f) : FVector(58.0f, 0.045f, 22.0f));
+        SkyPlane->GetStaticMeshComponent()->SetStaticMesh(CubeMesh);
+        SkyPlane->SetActorRotation(FRotator::ZeroRotator);
+        SkyPlane->SetActorScale3D(FVector(64.0f, 0.055f, 26.0f));
         SkyPlane->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         SkyPlane->GetStaticMeshComponent()->SetCastShadow(false);
-        if (SkyBackdropMaterial)
-        {
-            SkyPlane->GetStaticMeshComponent()->SetMaterial(0, SkyBackdropMaterial);
-        }
-        else
-        {
-            ApplyRuntimeColor(SkyPlane, FLinearColor(0.055f, 0.082f, 0.16f, 1.0f), 0.055f);
-        }
+        ApplyRuntimeColor(SkyPlane, FLinearColor(0.085f, 0.125f, 0.205f, 1.0f), 0.11f);
         BackdropActors.Add(SkyPlane);
     }
 
@@ -581,7 +574,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
     NebulaBackdropStartIndex = BackdropActors.Num();
     for (int32 Index = 0; Index < 10; ++Index)
     {
-        const FLinearColor Color = Index % 3 == 0 ? FLinearColor(0.08f, 0.16f, 0.34f, 0.11f) : Index % 3 == 1 ? FLinearColor(0.18f, 0.10f, 0.28f, 0.10f) : FLinearColor(0.28f, 0.12f, 0.06f, 0.09f);
+        const FLinearColor Color = Index % 3 == 0 ? FLinearColor(0.12f, 0.21f, 0.40f, 0.12f) : Index % 3 == 1 ? FLinearColor(0.24f, 0.16f, 0.34f, 0.11f) : FLinearColor(0.34f, 0.18f, 0.08f, 0.10f);
         const FVector Center(BackdropStream.FRandRange(-1680.0f, 2440.0f), BackdropStream.FRandRange(1080.0f, 1620.0f), BackdropStream.FRandRange(250.0f, 940.0f));
         AStaticMeshActor* Cloud = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
@@ -590,10 +583,10 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
         if (Cloud)
         {
             Cloud->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(1.2f, 2.7f), BackdropStream.FRandRange(0.86f, 1.65f), BackdropStream.FRandRange(0.06f, 0.13f)));
+            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(0.82f, 1.9f), BackdropStream.FRandRange(0.74f, 1.28f), BackdropStream.FRandRange(0.045f, 0.10f)));
             Cloud->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             Cloud->GetStaticMeshComponent()->SetCastShadow(false);
-            ApplyRuntimeColor(Cloud, Color, 0.065f);
+            ApplyRuntimeColor(Cloud, Color, 0.105f);
             BackdropActors.Add(Cloud);
         }
     }
@@ -706,10 +699,10 @@ void AAstroAdventureGameModeBase::UpdateFirstLoopTeachingTrail()
         const FVector ArcLift(0.0f, 0.0f, FMath::Sin(Alpha * PI) * (bUnlockMoment ? 78.0f : 54.0f));
         Marker->SetActorLocation(FMath::Lerp(SunLocation, MercuryLocation, Alpha) + ArcLift + FVector(0.0f, 0.0f, bUnlockMoment ? 18.0f : 8.0f));
         const float Scale = ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex)
-            ? FMath::Lerp(0.082f, 0.142f, Alpha)
-            : FMath::Lerp(0.052f, 0.090f, Alpha);
+            ? FMath::Lerp(0.096f, 0.154f, Alpha)
+            : FMath::Lerp(0.062f, 0.104f, Alpha);
         Marker->SetActorScale3D(FVector(Scale));
-        ApplyRuntimeColor(Marker, bUnlockMoment ? FLinearColor(1.0f, 0.88f, 0.32f, 0.96f) : FLinearColor(1.0f, 0.76f, 0.24f, 0.76f), bUnlockMoment ? 1.75f : 0.92f);
+        ApplyRuntimeColor(Marker, bUnlockMoment ? FLinearColor(1.0f, 0.9f, 0.36f, 0.98f) : FLinearColor(1.0f, 0.80f, 0.28f, 0.84f), bUnlockMoment ? 1.9f : 1.18f);
         Marker->SetActorHiddenInGame(false);
     }
 }
@@ -1586,7 +1579,10 @@ void AAstroAdventureGameModeBase::RefreshScenePresentation()
         }
     }
 
-    const bool bShowNebula = ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
+    const bool bShowNebula = (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
+            && CurrentScreen != EAstroMissionScreen::Home
+            && CurrentScreen != EAstroMissionScreen::AgeSelect
+            && CurrentScreen != EAstroMissionScreen::MissionPrompt)
         || CurrentScreen == EAstroMissionScreen::AtlasView
         || CurrentScreen == EAstroMissionScreen::Passport
         || CurrentScreen == EAstroMissionScreen::MissionComplete;
@@ -1772,7 +1768,7 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
                           BeamCore->GetStaticMeshComponent()->SetStaticMesh(CubeMesh);
                           BeamCore->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
                           BeamCore->GetStaticMeshComponent()->SetCastShadow(false);
-                          BeamCore->SetActorScale3D(FVector(BeamLength / 100.0f, 0.005f, 0.005f));
+                          BeamCore->SetActorScale3D(FVector(BeamLength / 100.0f, 0.018f, 0.018f));
                           if (ScannerBeamMaterial)
                           {
                               BeamCore->GetStaticMeshComponent()->SetMaterial(0, ScannerBeamMaterial);
@@ -1792,9 +1788,9 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
                               ContactPulse->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
                               ContactPulse->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
                               ContactPulse->GetStaticMeshComponent()->SetCastShadow(false);
-                              const float PulseScale = FMath::Clamp(0.32f + Lesson.MapScale * 0.24f, 0.36f, 0.72f);
+                              const float PulseScale = FMath::Clamp(0.42f + Lesson.MapScale * 0.30f, 0.46f, 0.88f);
                               ContactPulse->SetActorScale3D(FVector(PulseScale));
-                              ApplyRuntimeColor(ContactPulse, FLinearColor(0.30f, 1.0f, 0.76f, 0.62f), 0.58f);
+                              ApplyRuntimeColor(ContactPulse, FLinearColor(0.30f, 1.0f, 0.76f, 0.68f), 0.74f);
                               ScanBeamActors.Add(ContactPulse);
                           }
 
@@ -1804,9 +1800,9 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
                               ContactGlow->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
                               ContactGlow->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
                               ContactGlow->GetStaticMeshComponent()->SetCastShadow(false);
-                              const float GlowScale = FMath::Clamp(0.52f + Lesson.MapScale * 0.34f, 0.56f, 1.02f);
+                              const float GlowScale = FMath::Clamp(0.68f + Lesson.MapScale * 0.42f, 0.74f, 1.22f);
                               ContactGlow->SetActorScale3D(FVector(GlowScale));
-                              ApplyRuntimeColor(ContactGlow, FLinearColor(0.18f, 0.86f, 1.0f, 0.26f), 0.18f);
+                              ApplyRuntimeColor(ContactGlow, FLinearColor(0.18f, 0.86f, 1.0f, 0.32f), 0.26f);
                               ScanBeamActors.Add(ContactGlow);
                           }
                       }

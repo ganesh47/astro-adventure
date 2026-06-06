@@ -37,7 +37,7 @@ FLinearColor ReadableDestinationColor(const FString& Id, const FLinearColor& Col
 {
     if (Id == TEXT("sun"))
     {
-        return FLinearColor(1.0f, 0.66f, 0.16f, 1.0f);
+        return FLinearColor(1.0f, 0.74f, 0.22f, 1.0f);
     }
     if (Id == TEXT("mercury"))
     {
@@ -95,7 +95,7 @@ float DestinationBodyEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 0.22f;
+        return 0.32f;
     }
     if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
     {
@@ -117,7 +117,7 @@ FLinearColor DestinationFocusHaloColor(const FString& Id, const FLinearColor& Ba
 {
     if (Id == TEXT("sun"))
     {
-        return FLinearColor(1.0f, 0.62f, 0.16f, 0.14f);
+        return FLinearColor(1.0f, 0.72f, 0.22f, 0.20f);
     }
     if (Id == TEXT("mercury"))
     {
@@ -131,7 +131,7 @@ float DestinationFocusHaloEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 0.16f;
+        return 0.24f;
     }
     if (Id == TEXT("mercury"))
     {
@@ -441,9 +441,10 @@ void AAstroDestinationActor::ApplyProfileArt()
     SurfaceArt->SetRelativeScale3D(FVector(1.34f, 1.34f, 0.006f));
 
     AtmosphereArt->SetVisibility(AtmosphereMaterialAsset != nullptr);
+    AtmosphereArt->SetHiddenInGame(AtmosphereMaterialAsset == nullptr);
     AtmosphereArt->SetRelativeLocation(FVector(-63.0f, 0.0f, 0.0f));
     AtmosphereArt->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
-    AtmosphereArt->SetRelativeScale3D(FVector(bIsSun ? 1.46f : 1.24f, bIsSun ? 1.46f : 1.24f, 0.004f));
+    AtmosphereArt->SetRelativeScale3D(FVector(bIsSun ? 1.72f : 1.24f, bIsSun ? 1.72f : 1.24f, 0.004f));
     if (AtmosphereMaterialAsset)
     {
         AtmosphereArt->SetMaterial(0, AtmosphereMaterialAsset);
@@ -465,12 +466,13 @@ void AAstroDestinationActor::ApplyProfileArt()
         {
             BillboardArt->SetSprite(SunSprite);
             BillboardArt->SetRelativeLocation(FVector::ZeroVector);
-            BillboardArt->SetRelativeScale3D(FVector(0.86f));
+            BillboardArt->SetRelativeScale3D(FVector(0.94f));
             BillboardArt->SetVisibility(true);
             BillboardArt->SetHiddenInGame(false);
         }
         SurfaceArt->SetVisibility(false);
-        AtmosphereArt->SetVisibility(false);
+        AtmosphereArt->SetVisibility(AtmosphereMaterialAsset != nullptr);
+        AtmosphereArt->SetHiddenInGame(AtmosphereMaterialAsset == nullptr);
         return;
     }
 
@@ -621,17 +623,17 @@ void AAstroDestinationActor::ConfigureMotifs()
     if (Id == TEXT("mercury") || Id == TEXT("moon"))
     {
         const bool bMercury = Id == TEXT("mercury");
-        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.68f : 0.5f);
-        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.54f : 0.42f);
-        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.82f, 0.42f, 1.0f) : White, bMercury ? 0.56f : 0.34f);
-        const float CraterDepth = bMercury ? 0.016f : 0.012f;
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.46f : 0.42f, bMercury ? 0.46f : 0.42f), Crater, bMercury ? 0.018f : 0.0f);
-        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.38f : 0.34f, bMercury ? 0.38f : 0.34f), CraterSoft, bMercury ? 0.012f : 0.0f);
-        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.40f : 0.38f, bMercury ? 0.40f : 0.38f), Crater, bMercury ? 0.012f : 0.0f);
-        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.012f, bMercury ? 0.30f : 0.18f, bMercury ? 0.30f : 0.18f), CraterRim, bMercury ? 0.10f : 0.02f);
+        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.76f : 0.5f);
+        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.62f : 0.42f);
+        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.84f, 0.46f, 1.0f) : White, bMercury ? 0.64f : 0.34f);
+        const float CraterDepth = bMercury ? 0.019f : 0.012f;
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.58f : 0.42f, bMercury ? 0.58f : 0.42f), Crater, bMercury ? 0.032f : 0.0f);
+        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.48f : 0.34f, bMercury ? 0.48f : 0.34f), CraterSoft, bMercury ? 0.022f : 0.0f);
+        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.50f : 0.38f, bMercury ? 0.50f : 0.38f), Crater, bMercury ? 0.022f : 0.0f);
+        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.014f, bMercury ? 0.38f : 0.18f, bMercury ? 0.38f : 0.18f), CraterRim, bMercury ? 0.14f : 0.02f);
         if (bMercury)
         {
-            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.012f, 0.28f, 0.22f), CraterSoft, 0.014f);
+            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.014f, 0.36f, 0.28f), CraterSoft, 0.024f);
         }
         if (Id == TEXT("moon"))
         {

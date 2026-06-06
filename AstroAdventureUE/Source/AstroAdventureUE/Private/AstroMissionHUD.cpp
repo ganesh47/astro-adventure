@@ -131,8 +131,9 @@ void AAstroMissionHUD::DrawHUD()
 
     if (StarfieldTexture)
     {
-        DrawOwnedTexture(StarfieldTexture, 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY, FLinearColor(0.86f, 0.94f, 1.0f, 0.62f));
-        DrawRect(FLinearColor(0.0f, 0.018f, 0.045f, 0.20f), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
+        DrawRect(FLinearColor(0.035f, 0.08f, 0.13f, 0.40f), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
+        DrawOwnedTexture(StarfieldTexture, 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY, FLinearColor(0.94f, 0.98f, 1.0f, 0.62f));
+        DrawRect(FLinearColor(0.08f, 0.14f, 0.21f, 0.18f), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
     }
 
     const FString StatusLine = GameMode->GetHudStatusLine();
@@ -459,10 +460,8 @@ void AAstroMissionHUD::DrawHUD()
             const FString LowerFeedback = DisplayPrimaryLine.ToLower();
             const bool bTryAgain = LowerFeedback.Contains(TEXT("try")) || LowerFeedback.Contains(TEXT("no worries")) || LowerFeedback.Contains(TEXT("again"));
             DrawBadge(bTryAgain ? TEXT("TRY AGAIN") : TEXT("GREAT PICK"), CardX + 42.0f, Y + 4.0f, bTryAgain ? 128.0f : 132.0f, bTryAgain ? FLinearColor(0.14f, 0.46f, 0.66f, 0.96f) : FLinearColor(0.86f, 0.38f, 0.12f, 0.96f), FLinearColor::White, 0.74f);
-            DrawText(bTryAgain ? TEXT("Use the world clue, then choose again.") : TEXT("Your passport is ready for its stamp."), FLinearColor(0.91f, 0.98f, 1.0f), CardX + 184.0f, Y + 11.0f, GEngine->GetSmallFont(), 0.88f, false);
-            Y += 46.0f;
-            DrawLearningBadgeRow(CurrentScreen, CardX + 42.0f, Y, CardW - 84.0f);
-            Y += 50.0f;
+            DrawText(bTryAgain ? TEXT("Use the Sun clue, then pick again.") : TEXT("You found the Sun clue. Stamp time!"), FLinearColor(0.91f, 0.98f, 1.0f), CardX + 184.0f, Y + 11.0f, GEngine->GetSmallFont(), 0.88f, false);
+            Y += 52.0f;
         }
         else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::StampAward)
         {
@@ -1184,7 +1183,7 @@ void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const flo
     DrawRect(Stripe, X, Y, 12.0f, 64.0f);
     DrawSoftEllipse(X + 48.0f, Y + 32.0f, 24.0f, 22.0f, bFocused ? FLinearColor(1.0f, 0.94f, 0.62f, 0.92f) : FLinearColor(0.22f, 0.42f, 0.50f, 0.90f), 18);
     DrawText(ChoiceNumber.IsEmpty() ? TEXT("?") : ChoiceNumber, TextColor, X + 42.0f, Y + 22.0f, GEngine->GetSmallFont(), 0.94f, false);
-    DrawText(bFocused ? TEXT("SELECTED") : TEXT("choice"), TextColor, X + 82.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.58f, false);
+    DrawText(bFocused ? TEXT("YOUR PICK") : TEXT("pick"), TextColor, X + 82.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.58f, false);
     DrawText(AstroClipTextToWidth(ChoiceBody, W - 116.0f, 1.14f), TextColor, X + 82.0f, Y + 31.0f, GEngine->GetSmallFont(), 1.14f, false);
 }
 
