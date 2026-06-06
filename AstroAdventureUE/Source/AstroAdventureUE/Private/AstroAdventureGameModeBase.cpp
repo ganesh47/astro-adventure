@@ -143,11 +143,11 @@ FVector FirstLoopStagedPosition(const int32 DestinationIndex, const FVector& Rou
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-250.0f, 38.0f, 770.0f);
+        return FVector(-260.0f, 405.0f, 1140.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(-46.0f, 24.0f, 888.0f);
+        return FVector(214.0f, 218.0f, 1228.0f);
     }
 
     return RoutePosition;
