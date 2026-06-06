@@ -200,8 +200,9 @@ bool ShouldShowSunToMercuryUnlock(const EAstroMissionScreen Screen, const int32 
 
 bool ShouldShowSunToMercuryTeachingTrail(const EAstroMissionScreen Screen, const int32 FocusedDestinationIndex)
 {
-    return FocusedDestinationIndex == 0
-        && (Screen == EAstroMissionScreen::Home
+    if (FocusedDestinationIndex == 0)
+    {
+        return Screen == EAstroMissionScreen::Home
             || Screen == EAstroMissionScreen::AgeSelect
             || Screen == EAstroMissionScreen::MissionPrompt
             || Screen == EAstroMissionScreen::Navigation
@@ -209,7 +210,11 @@ bool ShouldShowSunToMercuryTeachingTrail(const EAstroMissionScreen Screen, const
             || Screen == EAstroMissionScreen::DiscoveryCard
             || Screen == EAstroMissionScreen::Quiz
             || Screen == EAstroMissionScreen::QuizFeedback
-            || ShouldShowSunToMercuryUnlock(Screen, FocusedDestinationIndex));
+            || ShouldShowSunToMercuryUnlock(Screen, FocusedDestinationIndex);
+    }
+
+    return FocusedDestinationIndex == 1
+        && Screen == EAstroMissionScreen::Navigation;
 }
 
 FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FVector& FocusLocation, const FVector* NextStopLocation)
@@ -716,13 +721,18 @@ void AAstroAdventureGameModeBase::UpdateFirstLoopTeachingTrail()
 
         const float Alpha = static_cast<float>(Index + 1) / static_cast<float>(FirstLoopTeachingTrailActors.Num() + 1);
         const bool bUnlockMoment = ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex);
-        const FVector ArcLift(0.0f, 0.0f, FMath::Sin(Alpha * PI) * (bUnlockMoment ? 78.0f : 54.0f));
+        const bool bMercuryRelationshipCue = FocusedDestinationIndex == 1 && !bUnlockMoment;
+        const FVector ArcLift(0.0f, 0.0f, FMath::Sin(Alpha * PI) * (bUnlockMoment ? 78.0f : bMercuryRelationshipCue ? 44.0f : 54.0f));
         Marker->SetActorLocation(FMath::Lerp(SunLocation, MercuryLocation, Alpha) + ArcLift + FVector(0.0f, 0.0f, bUnlockMoment ? 18.0f : 8.0f));
         const float Scale = ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex)
             ? FMath::Lerp(0.096f, 0.154f, Alpha)
-            : FMath::Lerp(0.062f, 0.104f, Alpha);
+            : bMercuryRelationshipCue
+                ? FMath::Lerp(0.046f, 0.082f, Alpha)
+                : FMath::Lerp(0.062f, 0.104f, Alpha);
         Marker->SetActorScale3D(FVector(Scale));
-        ApplyRuntimeColor(Marker, bUnlockMoment ? FLinearColor(1.0f, 0.9f, 0.36f, 0.98f) : FLinearColor(1.0f, 0.80f, 0.28f, 0.84f), bUnlockMoment ? 1.9f : 1.18f);
+        ApplyRuntimeColor(Marker,
+            bUnlockMoment ? FLinearColor(1.0f, 0.9f, 0.36f, 0.98f) : bMercuryRelationshipCue ? FLinearColor(0.96f, 0.82f, 0.42f, 0.56f) : FLinearColor(1.0f, 0.80f, 0.28f, 0.84f),
+            bUnlockMoment ? 1.9f : bMercuryRelationshipCue ? 0.72f : 1.18f);
         Marker->SetActorHiddenInGame(false);
     }
 }
