@@ -465,7 +465,7 @@ void AAstroDestinationActor::ApplyProfileArt()
         }
         else
         {
-            ApplyColor(BodyMesh, FLinearColor(1.0f, 0.72f, 0.16f, 1.0f), 1.25f);
+            ApplyColor(BodyMesh, FLinearColor(1.0f, 0.62f, 0.10f, 1.0f), 1.58f);
         }
         SurfaceArt->SetVisibility(false);
         BillboardArt->SetVisibility(false);

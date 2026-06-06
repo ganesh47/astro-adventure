@@ -150,9 +150,12 @@ void AAstroMissionHUD::DrawHUD()
     if (StarfieldTexture)
     {
         const float BaseTintAlpha = bWorldLearningScreen ? 0.26f : 0.30f;
-        const float StarAlpha = bWorldLearningScreen ? 0.44f : 0.54f;
-        const float TopTintAlpha = bWorldLearningScreen ? 0.08f : 0.16f;
+        const float StarAlpha = bWorldLearningScreen ? 0.48f : 0.56f;
+        const float TopTintAlpha = bWorldLearningScreen ? 0.055f : 0.14f;
         DrawRect(FLinearColor(0.035f, 0.08f, 0.13f, BaseTintAlpha), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
+        DrawSoftEllipse(Canvas->SizeX * 0.68f, Canvas->SizeY * 0.28f, Canvas->SizeX * 0.42f, Canvas->SizeY * 0.22f, FLinearColor(0.16f, 0.38f, 0.62f, bWorldLearningScreen ? 0.075f : 0.05f), 34);
+        DrawSoftEllipse(Canvas->SizeX * 0.76f, Canvas->SizeY * 0.64f, Canvas->SizeX * 0.34f, Canvas->SizeY * 0.18f, FLinearColor(0.46f, 0.20f, 0.58f, bWorldLearningScreen ? 0.055f : 0.04f), 30);
+        DrawSoftEllipse(Canvas->SizeX * 0.42f, Canvas->SizeY * 0.74f, Canvas->SizeX * 0.30f, Canvas->SizeY * 0.16f, FLinearColor(0.96f, 0.54f, 0.18f, bWorldLearningScreen ? 0.035f : 0.025f), 28);
         DrawOwnedTexture(StarfieldTexture, 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY, FLinearColor(0.96f, 0.99f, 1.0f, StarAlpha));
         DrawRect(FLinearColor(0.08f, 0.14f, 0.21f, TopTintAlpha), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
     }
