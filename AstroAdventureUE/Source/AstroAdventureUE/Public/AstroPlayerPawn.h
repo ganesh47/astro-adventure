@@ -15,6 +15,7 @@ enum class EAstroCameraPresentationProfile : uint8
 {
     Home UMETA(DisplayName = "Home"),
     Mission UMETA(DisplayName = "Mission"),
+    FirstLoopTeach UMETA(DisplayName = "First Loop Teach"),
     Atlas UMETA(DisplayName = "Atlas"),
     Scan UMETA(DisplayName = "Scan"),
     Stable UMETA(DisplayName = "Stable")

@@ -1600,6 +1600,12 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     {
         Profile = EAstroCameraPresentationProfile::Atlas;
     }
+    else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
+        && !IsHomeCompositionScreen(CurrentScreen)
+        && CurrentScreen != EAstroMissionScreen::MissionPrompt)
+    {
+        Profile = EAstroCameraPresentationProfile::FirstLoopTeach;
+    }
     else if (CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward || CurrentScreen == EAstroMissionScreen::PauseMenu)
     {
         Profile = EAstroCameraPresentationProfile::Stable;
@@ -1632,6 +1638,10 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     }
 
     PlayerPawn->SetCameraCompositionProfile(Composition);
+    if (Profile == EAstroCameraPresentationProfile::FirstLoopTeach)
+    {
+        PlayerPawn->SetCameraPresentationProfile(Profile);
+    }
     PlayerPawn->SetScannerActive(IsScanEffectActive());
 
     if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
