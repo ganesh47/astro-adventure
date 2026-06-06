@@ -273,7 +273,7 @@ void AAstroMissionHUD::DrawHUD()
         const float PanelY = FMath::Clamp(Canvas->SizeY * 0.235f, 116.0f, 220.0f);
 
         DrawText(TEXT("My Solar Passport"), FLinearColor(1.0f, 0.88f, 0.42f), PanelX, FMath::Clamp(Canvas->SizeY * 0.070f, 30.0f, 72.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 1.92f : 2.18f, false);
-        DrawText(TEXT("Meet the Sun. Find a clue. Collect a stamp."), FLinearColor(0.92f, 0.99f, 1.0f), PanelX + 3.0f, FMath::Clamp(Canvas->SizeY * 0.145f, 70.0f, 120.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.88f : 0.98f, false);
+        DrawText(TEXT("Meet the Sun, our star. Find a clue. Collect a stamp."), FLinearColor(0.92f, 0.99f, 1.0f), PanelX + 3.0f, FMath::Clamp(Canvas->SizeY * 0.145f, 70.0f, 120.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.88f : 0.98f, false);
 
         DrawRect(FLinearColor(0.02f, 0.025f, 0.035f, 0.54f), PanelX + 7.0f, PanelY + 8.0f, PanelW, PanelH);
         DrawRect(FLinearColor(0.72f, 0.51f, 0.28f, 0.88f), PanelX, PanelY, PanelW, PanelH);
@@ -281,7 +281,7 @@ void AAstroMissionHUD::DrawHUD()
         DrawRect(FLinearColor(1.0f, 0.78f, 0.28f, 0.95f), PanelX, PanelY, 12.0f, PanelH);
         DrawRect(FLinearColor(1.0f, 0.86f, 0.48f, 0.28f), PanelX + 22.0f, PanelY + 38.0f, PanelW - 44.0f, 2.0f);
 
-        DrawText(TEXT("Let's visit the Sun"), FLinearColor(1.0f, 0.96f, 0.74f), PanelX + 24.0f, PanelY + 12.0f, GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.98f : 1.10f, false);
+        DrawText(TEXT("Let's visit the Sun, a star"), FLinearColor(1.0f, 0.96f, 0.74f), PanelX + 24.0f, PanelY + 12.0f, GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.98f : 1.10f, false);
         DrawBadge(TEXT("Meet"), PanelX + 24.0f, PanelY + 42.0f, 76.0f, FLinearColor(0.86f, 0.36f, 0.10f, 0.94f), FLinearColor::White, 0.68f);
         DrawBadge(TEXT("Find"), PanelX + 112.0f, PanelY + 42.0f, 84.0f, FLinearColor(0.12f, 0.50f, 0.60f, 0.94f), FLinearColor::White, 0.68f);
         DrawBadge(TEXT("Collect"), PanelX + 208.0f, PanelY + 42.0f, 96.0f, FLinearColor(0.60f, 0.28f, 0.72f, 0.94f), FLinearColor::White, 0.68f);
@@ -803,7 +803,7 @@ void AAstroMissionHUD::DrawStampAwardHero(const float X, const float Y, const fl
     DrawRect(FLinearColor(0.80f, 0.96f, 1.0f, 0.28f), X + 48.0f, BadgeY + 5.0f, BadgeW - 16.0f, 2.0f);
     DrawRect(FLinearColor(0.94f, 0.64f, 0.18f, 0.96f), X + 40.0f, BadgeY, 12.0f, 38.0f);
     DrawText(TEXT("NEXT STOP: MERCURY"), FLinearColor(0.86f, 1.0f, 1.0f), X + 62.0f, BadgeY + 7.0f, GEngine->GetSmallFont(), 0.88f, false);
-    DrawText(TEXT("Look for craters on the closest planet."), FLinearColor(1.0f, 0.92f, 0.66f), X + 264.0f, BadgeY + 12.0f, GEngine->GetSmallFont(), 0.64f, false);
+    DrawText(TEXT("Look for craters on the small rocky closest planet."), FLinearColor(1.0f, 0.92f, 0.66f), X + 264.0f, BadgeY + 12.0f, GEngine->GetSmallFont(), 0.64f, false);
 }
 
 void AAstroMissionHUD::DrawStampStrip(const FString& StatusLine, const float X, const float Y, const float W)

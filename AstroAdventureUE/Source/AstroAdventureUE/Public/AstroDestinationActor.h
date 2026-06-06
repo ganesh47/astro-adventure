@@ -16,6 +16,7 @@ UENUM(BlueprintType)
 enum class EAstroDestinationPresentationMode : uint8
 {
     Home UMETA(DisplayName = "Home"),
+    FirstLoopTeach UMETA(DisplayName = "First Loop Teach"),
     Mission UMETA(DisplayName = "Mission"),
     Atlas UMETA(DisplayName = "Atlas")
 };

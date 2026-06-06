@@ -521,8 +521,9 @@ void AAstroDestinationActor::UpdateNameplateLayout()
 
     const bool bAtlasMode = PresentationMode == EAstroDestinationPresentationMode::Atlas;
     const bool bHomeMode = PresentationMode == EAstroDestinationPresentationMode::Home;
+    const bool bFirstLoopTeachMode = PresentationMode == EAstroDestinationPresentationMode::FirstLoopTeach;
     Nameplate->SetVisibility(bIsFocused && !bAtlasMode && !bHomeMode);
-    Label->SetVisibility(!bHomeMode);
+    Label->SetVisibility(!bHomeMode || bFirstLoopTeachMode);
     Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
 
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
@@ -700,13 +701,15 @@ void AAstroDestinationActor::ApplyFocusVisuals()
 {
     float Scale = bIsFocused ? BaseVisualScale * DestinationFocusedScaleMultiplier : BaseVisualScale;
     const bool bHomeMode = PresentationMode == EAstroDestinationPresentationMode::Home;
-    if (bHomeMode && DestinationId == FName(TEXT("sun")))
+    const bool bFirstLoopTeachMode = PresentationMode == EAstroDestinationPresentationMode::FirstLoopTeach;
+    const bool bTeachingMode = bHomeMode || bFirstLoopTeachMode;
+    if (bTeachingMode && DestinationId == FName(TEXT("sun")))
     {
-        Scale = FMath::Max(BaseVisualScale * 1.22f, 1.38f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.62f : 1.34f), bFirstLoopTeachMode ? 2.08f : 1.58f);
     }
-    if (bHomeMode && DestinationId == FName(TEXT("mercury")))
+    if (bTeachingMode && DestinationId == FName(TEXT("mercury")))
     {
-        Scale = FMath::Max(BaseVisualScale * 1.02f, 0.78f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.44f : 1.12f), bFirstLoopTeachMode ? 1.08f : 0.88f);
     }
     SetActorScale3D(FVector(Scale));
 
@@ -714,7 +717,7 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     BodyMesh->SetRelativeScale3D(bIsFocused ? BodyFocusedScale : BodyIdleScale);
 
     const bool bSun = DestinationId == FName(TEXT("sun"));
-    const bool bSuppressSunHalo = bSun && PresentationMode != EAstroDestinationPresentationMode::Atlas;
+    const bool bSuppressSunHalo = bSun && PresentationMode != EAstroDestinationPresentationMode::Atlas && !bFirstLoopTeachMode;
     FocusHalo->SetVisibility(bIsFocused && !bSuppressSunHalo);
     FocusHalo->SetRelativeScale3D(bIsFocused
         ? (bSun ? FVector(1.16f, 1.16f, 0.006f) : bHomeMode ? FVector(1.22f, 1.22f, 0.008f) : FVector(1.28f, 1.28f, 0.01f))
