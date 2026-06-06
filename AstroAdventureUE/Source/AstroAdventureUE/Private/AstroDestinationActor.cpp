@@ -444,7 +444,7 @@ void AAstroDestinationActor::ApplyProfileArt()
     AtmosphereArt->SetHiddenInGame(AtmosphereMaterialAsset == nullptr);
     AtmosphereArt->SetRelativeLocation(FVector(-63.0f, 0.0f, 0.0f));
     AtmosphereArt->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
-    AtmosphereArt->SetRelativeScale3D(FVector(bIsSun ? 1.72f : 1.24f, bIsSun ? 1.72f : 1.24f, 0.004f));
+    AtmosphereArt->SetRelativeScale3D(FVector(bIsSun ? 1.18f : 1.24f, bIsSun ? 1.18f : 1.24f, 0.004f));
     if (AtmosphereMaterialAsset)
     {
         AtmosphereArt->SetMaterial(0, AtmosphereMaterialAsset);
@@ -471,8 +471,10 @@ void AAstroDestinationActor::ApplyProfileArt()
             BillboardArt->SetHiddenInGame(false);
         }
         SurfaceArt->SetVisibility(false);
-        AtmosphereArt->SetVisibility(AtmosphereMaterialAsset != nullptr);
-        AtmosphereArt->SetHiddenInGame(AtmosphereMaterialAsset == nullptr);
+        // A visible Sun body is better for first-play learning than the current
+        // flat corona card, which reads as a second yellow planet in packaged play.
+        AtmosphereArt->SetVisibility(false);
+        AtmosphereArt->SetHiddenInGame(true);
         return;
     }
 

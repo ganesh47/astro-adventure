@@ -202,24 +202,33 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
 {
     if (Screen == EAstroMissionScreen::StampAward && NextStopLocation)
     {
-        const FVector SunWeightedRoute = FocusLocation * 0.72f + (*NextStopLocation) * 0.28f;
-        return SunWeightedRoute + FVector(-720.0f, 65.0f, -85.0f);
+        const FVector SunWeightedRoute = FocusLocation * 0.58f + (*NextStopLocation) * 0.42f;
+        return SunWeightedRoute + FVector(-660.0f, 88.0f, -56.0f);
     }
 
     if (Screen == EAstroMissionScreen::Scanning)
     {
-        return FocusLocation + FVector(-720.0f, 65.0f, -85.0f);
+        return FocusLocation + FVector(-610.0f, 108.0f, -38.0f);
     }
 
     if (Screen == EAstroMissionScreen::DiscoveryCard
-        || Screen == EAstroMissionScreen::DeepDive
-        || Screen == EAstroMissionScreen::Quiz
-        || Screen == EAstroMissionScreen::QuizFeedback)
+        || Screen == EAstroMissionScreen::DeepDive)
     {
-        return FocusLocation + FVector(-720.0f, 65.0f, -85.0f);
+        return FocusLocation + FVector(-610.0f, 128.0f, 12.0f);
     }
 
-    return FocusLocation + FVector(-720.0f, 65.0f, -85.0f);
+    if (Screen == EAstroMissionScreen::Quiz
+        || Screen == EAstroMissionScreen::QuizFeedback)
+    {
+        return FocusLocation + FVector(-640.0f, 138.0f, 4.0f);
+    }
+
+    if (Screen == EAstroMissionScreen::Navigation)
+    {
+        return FocusLocation + FVector(-680.0f, 86.0f, -52.0f);
+    }
+
+    return FocusLocation + FVector(-660.0f, 86.0f, -54.0f);
 }
 }
 
@@ -1648,10 +1657,7 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     }
 
     PlayerPawn->SetCameraCompositionProfile(Composition);
-    if (Profile == EAstroCameraPresentationProfile::FirstLoopTeach)
-    {
-        PlayerPawn->SetCameraPresentationProfile(Profile);
-    }
+    PlayerPawn->SetCameraPresentationProfile(Profile);
     PlayerPawn->SetScannerActive(IsScanEffectActive());
 
     if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
@@ -1685,6 +1691,11 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
         }
         const int32 Count = FMath::Max(1, DestinationActors.Num());
         return DestinationIndex == FocusedDestinationIndex || DestinationIndex == (FocusedDestinationIndex + 1) % Count;
+    }
+
+    if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
+    {
+        return DestinationIndex == 0 || DestinationIndex == 1;
     }
 
     if (!IsMissionPlayScreen() && CurrentScreen != EAstroMissionScreen::PauseMenu)

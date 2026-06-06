@@ -106,13 +106,13 @@ INSTANCES = {
     # Use a fresh unlit star parent so the Sun keeps its warm surface detail
     # without the harsh black shadow cap seen on lit planet fallbacks.
     "MI_Sun_Surface": ("M_Star_Textured_Unlit", "BodyTexture", "T_Sun_Surface_Stylized", (1.0, 0.58, 0.12, 1.0), 0.82),
-    "MI_Sun_Disk": ("M_Alpha_Texture_FX", "AlphaTexture", "T_Sun_Disk_ChildReadable", (1.0, 0.78, 0.36, 1.0), 0.22),
+    "MI_Sun_Disk": ("M_Alpha_Texture_FX", "AlphaTexture", "T_Sun_Disk_ChildReadable", (1.0, 0.86, 0.42, 1.0), 0.32),
     "MI_SunTeaching_Body": ("M_SunTeaching_Unlit", "SunSurfaceTexture", "T_Sun_Surface_Stylized", (1.0, 0.66, 0.18, 1.0), 1.45),
-    "MI_Sun_Corona": ("M_Alpha_Texture_FX", "AlphaTexture", "T_Sun_Corona_Soft", (1.0, 0.58, 0.18, 0.34), 0.11),
+    "MI_Sun_Corona": ("M_Soft_Corona", "CoronaTexture", "T_Sun_Corona_Soft", (1.0, 0.64, 0.20, 0.30), 0.10),
     "MI_Focus_Ring": ("M_Alpha_Texture_FX", "AlphaTexture", "T_Focus_Ring_Gold", (1.0, 0.66, 0.18, 0.24), 0.025),
     "MI_Scanner_Beam": ("M_Alpha_Texture_FX", "AlphaTexture", "T_Scanner_Beam_Core", (0.22, 1.0, 0.82, 0.48), 0.08),
     "MI_Sky_Backdrop": ("M_Sky_Backdrop", "SkyTexture", "T_Starfield_SoftDepth", (0.72, 0.78, 1.0, 1.0), 0.42),
-    "MI_Mercury_Surface": ("M_Planet_Textured", "BodyTexture", "T_Mercury_Craters_Stylized", (0.82, 0.78, 0.68, 1.0), 0.02),
+    "MI_Mercury_Surface": ("M_Planet_Textured", "BodyTexture", "T_Mercury_Craters_Stylized", (0.94, 0.88, 0.76, 1.0), 0.045),
     "MI_Venus_Surface": ("M_Planet_Textured", "BodyTexture", "T_Venus_CloudBands_Stylized", (1.0, 0.72, 0.34, 1.0), 0.03),
     "MI_Europa_Surface": ("M_Planet_Textured", "BodyTexture", "T_Europa_IceCracks_Stylized", (0.72, 0.92, 1.0, 1.0), 0.03),
     "MI_Saturn_Surface": ("M_Planet_Textured", "BodyTexture", "T_Saturn_RingBands_Stylized", (1.0, 0.86, 0.48, 1.0), 0.03),
@@ -145,21 +145,20 @@ def import_textures():
     for name, (relative_file, subdir) in TEXTURES.items():
         destination = f"{TEXTURE_ROOT}/{subdir}"
         ensure_directory(destination)
-        existing = unreal.EditorAssetLibrary.load_asset(asset_path(destination, name))
-        if existing:
-            imported[name] = existing
-            continue
         import_data = unreal.AutomatedAssetImportData()
         import_data.destination_path = destination
         import_data.filenames = [unreal.Paths.convert_relative_path_to_full(f"{project_content}Art/AstroAdventureOwned/Textures/{relative_file}")]
         import_data.replace_existing = True
         results = asset_tools.import_assets_automated(import_data)
-        if results:
-            imported[name] = results[0]
-            imported[name].set_editor_property("sRGB", True)
-            imported[name].set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_DEFAULT)
-            imported[name].set_editor_property("mip_gen_settings", unreal.TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP)
-            unreal.EditorAssetLibrary.save_loaded_asset(imported[name])
+        texture = results[0] if results else unreal.EditorAssetLibrary.load_asset(asset_path(destination, name))
+        if texture:
+            imported[name] = texture
+            texture.set_editor_property("sRGB", True)
+            texture.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_DEFAULT)
+            texture.set_editor_property("mip_gen_settings", unreal.TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP)
+            unreal.EditorAssetLibrary.save_loaded_asset(texture)
+        else:
+            unreal.log_warning(f"Could not import Astro Adventure texture {name} from {relative_file}")
     return imported
 
 

@@ -127,21 +127,35 @@ void AAstroMissionHUD::DrawHUD()
         return;
     }
 
-    EnsureOwnedTexturesLoaded();
-
-    if (StarfieldTexture)
-    {
-        DrawRect(FLinearColor(0.035f, 0.08f, 0.13f, 0.40f), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
-        DrawOwnedTexture(StarfieldTexture, 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY, FLinearColor(0.94f, 0.98f, 1.0f, 0.62f));
-        DrawRect(FLinearColor(0.08f, 0.14f, 0.21f, 0.18f), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
-    }
-
     const FString StatusLine = GameMode->GetHudStatusLine();
     const FString PrimaryLine = GameMode->GetHudPrimaryLine();
     const FString DisplayPrimaryLine = FriendlyPrimaryLine(PrimaryLine);
     const TArray<FString> DetailLines = GameMode->GetHudDetailLines();
     const EAstroMissionScreen CurrentScreen = GameMode->GetCurrentScreen();
     const bool bYoungExplorer = GameMode->ActiveAgeBand == EAstroAgeBand::Ages4To6;
+
+    EnsureOwnedTexturesLoaded();
+
+    const bool bWorldLearningScreen = CurrentScreen == EAstroMissionScreen::Home
+        || CurrentScreen == EAstroMissionScreen::AgeSelect
+        || CurrentScreen == EAstroMissionScreen::MissionPrompt
+        || CurrentScreen == EAstroMissionScreen::Navigation
+        || CurrentScreen == EAstroMissionScreen::Scanning
+        || CurrentScreen == EAstroMissionScreen::DiscoveryCard
+        || CurrentScreen == EAstroMissionScreen::DeepDive
+        || CurrentScreen == EAstroMissionScreen::Quiz
+        || CurrentScreen == EAstroMissionScreen::QuizFeedback
+        || CurrentScreen == EAstroMissionScreen::StampAward;
+
+    if (StarfieldTexture)
+    {
+        const float BaseTintAlpha = bWorldLearningScreen ? 0.26f : 0.30f;
+        const float StarAlpha = bWorldLearningScreen ? 0.44f : 0.54f;
+        const float TopTintAlpha = bWorldLearningScreen ? 0.08f : 0.16f;
+        DrawRect(FLinearColor(0.035f, 0.08f, 0.13f, BaseTintAlpha), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
+        DrawOwnedTexture(StarfieldTexture, 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY, FLinearColor(0.96f, 0.99f, 1.0f, StarAlpha));
+        DrawRect(FLinearColor(0.08f, 0.14f, 0.21f, TopTintAlpha), 0.0f, 0.0f, Canvas->SizeX, Canvas->SizeY);
+    }
 
     struct FHudBuckets
     {
@@ -318,6 +332,7 @@ void AAstroMissionHUD::DrawHUD()
         || CurrentScreen == EAstroMissionScreen::Scanning
         || CurrentScreen == EAstroMissionScreen::DiscoveryCard
         || CurrentScreen == EAstroMissionScreen::DeepDive
+        || CurrentScreen == EAstroMissionScreen::Quiz
         || CurrentScreen == EAstroMissionScreen::QuizFeedback
         || CurrentScreen == EAstroMissionScreen::StampAward;
     const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 620.0f
