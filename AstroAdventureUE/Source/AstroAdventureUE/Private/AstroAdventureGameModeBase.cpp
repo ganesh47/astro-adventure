@@ -206,10 +206,6 @@ bool ShouldShowSunToMercuryTeachingTrail(const EAstroMissionScreen Screen, const
             || Screen == EAstroMissionScreen::AgeSelect
             || Screen == EAstroMissionScreen::MissionPrompt
             || Screen == EAstroMissionScreen::Navigation
-            || Screen == EAstroMissionScreen::Scanning
-            || Screen == EAstroMissionScreen::DiscoveryCard
-            || Screen == EAstroMissionScreen::Quiz
-            || Screen == EAstroMissionScreen::QuizFeedback
             || ShouldShowSunToMercuryUnlock(Screen, FocusedDestinationIndex);
     }
 
@@ -227,7 +223,7 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
 
     if (Screen == EAstroMissionScreen::Scanning)
     {
-        return FocusLocation + FVector(-610.0f, 108.0f, -38.0f);
+        return FocusLocation + FVector(-360.0f, 96.0f, 108.0f);
     }
 
     if (Screen == EAstroMissionScreen::DiscoveryCard
@@ -925,7 +921,15 @@ void AAstroAdventureGameModeBase::Confirm()
         return;
     case EAstroMissionScreen::DiscoveryCard:
     case EAstroMissionScreen::DeepDive:
-        FocusedQuizChoiceIndex = Lesson->Choices.Num() > 1 ? 1 : 0;
+        FocusedQuizChoiceIndex = 0;
+        for (int32 ChoiceIndex = 0; ChoiceIndex < Lesson->Choices.Num(); ++ChoiceIndex)
+        {
+            if (Lesson->Choices[ChoiceIndex].ChoiceId == Lesson->CorrectChoiceId)
+            {
+                FocusedQuizChoiceIndex = ChoiceIndex;
+                break;
+            }
+        }
         SetMissionScreen(EAstroMissionScreen::Quiz);
         return;
     case EAstroMissionScreen::Passport:
@@ -1609,11 +1613,7 @@ void AAstroAdventureGameModeBase::RefreshScenePresentation()
         }
     }
 
-    const bool bShowNebula = (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
-            && CurrentScreen != EAstroMissionScreen::Home
-            && CurrentScreen != EAstroMissionScreen::AgeSelect
-            && CurrentScreen != EAstroMissionScreen::MissionPrompt)
-        || CurrentScreen == EAstroMissionScreen::AtlasView
+    const bool bShowNebula = CurrentScreen == EAstroMissionScreen::AtlasView
         || CurrentScreen == EAstroMissionScreen::Passport
         || CurrentScreen == EAstroMissionScreen::MissionComplete;
     for (int32 Index = 0; Index < BackdropActors.Num(); ++Index)
@@ -1640,19 +1640,19 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     {
         Profile = EAstroCameraPresentationProfile::Atlas;
     }
-    else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
-        && !IsHomeCompositionScreen(CurrentScreen)
-        && CurrentScreen != EAstroMissionScreen::MissionPrompt)
+    else if (IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::Scanning || CurrentScreen == EAstroMissionScreen::DiscoveryCard)
     {
-        Profile = EAstroCameraPresentationProfile::FirstLoopTeach;
+        Profile = EAstroCameraPresentationProfile::Scan;
     }
     else if (CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward || CurrentScreen == EAstroMissionScreen::PauseMenu)
     {
         Profile = EAstroCameraPresentationProfile::Stable;
     }
-    else if (IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::Scanning || CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+    else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
+        && !IsHomeCompositionScreen(CurrentScreen)
+        && CurrentScreen != EAstroMissionScreen::MissionPrompt)
     {
-        Profile = EAstroCameraPresentationProfile::Scan;
+        Profile = EAstroCameraPresentationProfile::FirstLoopTeach;
     }
     else if (IsHomeCompositionScreen(CurrentScreen) || CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
@@ -1716,6 +1716,15 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
 
     if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
     {
+        if (CurrentScreen == EAstroMissionScreen::Scanning
+            || CurrentScreen == EAstroMissionScreen::DiscoveryCard
+            || CurrentScreen == EAstroMissionScreen::DeepDive
+            || CurrentScreen == EAstroMissionScreen::Quiz
+            || CurrentScreen == EAstroMissionScreen::QuizFeedback)
+        {
+            return DestinationIndex == FocusedDestinationIndex;
+        }
+
         return DestinationIndex == 0 || DestinationIndex == 1;
     }
 
