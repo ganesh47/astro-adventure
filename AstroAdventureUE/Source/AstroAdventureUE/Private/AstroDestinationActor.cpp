@@ -575,8 +575,18 @@ void AAstroDestinationActor::ConfigureMotifs()
 
     if (Id == TEXT("sun"))
     {
-        // The Sun's authored surface and corona carry the identity. Extra mesh rays read
-        // as black/white wedge artifacts in the first-play camera, so keep this layer calm.
+        // Keep the Sun's teaching marks round and surface-like. Long strips/rays
+        // read as broken wedges in the first-play camera.
+        const FLinearColor WarmCore(1.0f, 0.74f, 0.16f, 1.0f);
+        const FLinearColor OrangePlasma(1.0f, 0.42f, 0.07f, 1.0f);
+        const FLinearColor DeepGold(0.92f, 0.28f, 0.02f, 1.0f);
+        SetMotif(2, SphereMeshAsset, FVector(SurfaceX - 2.0f, -23.0f, 16.0f), FRotator::ZeroRotator, FVector(0.022f, 0.54f, 0.34f), OrangePlasma, 0.48f);
+        SetMotif(3, SphereMeshAsset, FVector(SurfaceX - 3.0f, 20.0f, -5.0f), FRotator::ZeroRotator, FVector(0.020f, 0.44f, 0.30f), DeepGold, 0.40f);
+        SetMotif(4, SphereMeshAsset, FVector(SurfaceX - 4.0f, -5.0f, -26.0f), FRotator::ZeroRotator, FVector(0.017f, 0.32f, 0.22f), WarmCore, 0.42f);
+        SetMotif(5, SphereMeshAsset, FVector(SurfaceX - 5.0f, 32.0f, 21.0f), FRotator::ZeroRotator, FVector(0.014f, 0.22f, 0.17f), WarmCore, 0.34f);
+        SetMotif(10, SphereMeshAsset, FVector(SurfaceX - 8.0f, -54.0f, -36.0f), FRotator::ZeroRotator, FVector(0.010f, 0.10f, 0.10f), WarmCore, 0.58f);
+        SetMotif(11, SphereMeshAsset, FVector(SurfaceX - 8.0f, 54.0f, 34.0f), FRotator::ZeroRotator, FVector(0.010f, 0.10f, 0.10f), WarmCore, 0.58f);
+        SetMotif(12, SphereMeshAsset, FVector(SurfaceX - 8.0f, -8.0f, 58.0f), FRotator::ZeroRotator, FVector(0.009f, 0.085f, 0.085f), WarmCore, 0.50f);
         return;
     }
 
@@ -650,14 +660,14 @@ void AAstroDestinationActor::ConfigureMotifs()
         const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.93f : 0.5f);
         const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.80f : 0.42f);
         const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.84f, 0.46f, 1.0f) : White, bMercury ? 0.92f : 0.34f);
-        const float CraterDepth = bMercury ? 0.034f : 0.012f;
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -20.0f, 18.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.86f : 0.42f, bMercury ? 0.86f : 0.42f), Crater, bMercury ? 0.09f : 0.0f);
-        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 16.0f, 2.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.72f : 0.34f, bMercury ? 0.72f : 0.34f), CraterSoft, bMercury ? 0.075f : 0.0f);
-        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -23.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.76f : 0.38f, bMercury ? 0.76f : 0.38f), Crater, bMercury ? 0.075f : 0.0f);
-        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 27.0f, -16.0f), FRotator::ZeroRotator, FVector(0.020f, bMercury ? 0.64f : 0.18f, bMercury ? 0.64f : 0.18f), CraterRim, bMercury ? 0.34f : 0.02f);
+        const float CraterDepth = bMercury ? 0.040f : 0.012f;
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -20.0f, 18.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 1.04f : 0.42f, bMercury ? 1.04f : 0.42f), Crater, bMercury ? 0.11f : 0.0f);
+        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 16.0f, 2.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.88f : 0.34f, bMercury ? 0.88f : 0.34f), CraterSoft, bMercury ? 0.09f : 0.0f);
+        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -23.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.92f : 0.38f, bMercury ? 0.92f : 0.38f), Crater, bMercury ? 0.09f : 0.0f);
+        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 27.0f, -16.0f), FRotator::ZeroRotator, FVector(0.024f, bMercury ? 0.78f : 0.18f, bMercury ? 0.78f : 0.18f), CraterRim, bMercury ? 0.38f : 0.02f);
         if (bMercury)
         {
-            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -34.0f, -7.0f), FRotator::ZeroRotator, FVector(0.020f, 0.58f, 0.44f), CraterSoft, 0.065f);
+            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -34.0f, -7.0f), FRotator::ZeroRotator, FVector(0.022f, 0.72f, 0.54f), CraterSoft, 0.08f);
         }
         if (Id == TEXT("moon"))
         {
@@ -731,11 +741,11 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     const bool bTeachingMode = bHomeMode || bFirstLoopTeachMode;
     if (bTeachingMode && DestinationId == FName(TEXT("sun")))
     {
-        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.12f : 1.42f), bFirstLoopTeachMode ? 1.58f : 1.68f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.30f : 1.50f), bFirstLoopTeachMode ? 1.84f : 1.78f);
     }
     if (bTeachingMode && DestinationId == FName(TEXT("mercury")))
     {
-        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.48f : 1.48f), bFirstLoopTeachMode ? 1.12f : 1.18f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.78f : 1.72f), bFirstLoopTeachMode ? 1.34f : 1.38f);
     }
     SetActorScale3D(FVector(Scale));
 

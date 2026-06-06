@@ -44,7 +44,7 @@ namespace
         case EAstroCameraPresentationProfile::Atlas:
             return { FVector(-820.0f, -1640.0f, 1840.0f), -92.0f, FVector(80.0f, 0.0f, 70.0f), 3.0f, 2.6f, 72.0f, 4500.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-540.0f, -900.0f, 780.0f), -48.0f, FVector(76.0f, 0.0f, 74.0f), 6.2f, 5.6f, 60.0f, 1180.0f };
+            return { FVector(-540.0f, -900.0f, 780.0f), -48.0f, FVector(76.0f, 0.0f, 74.0f), 6.2f, 5.6f, 60.0f, 1040.0f };
         case EAstroCameraPresentationProfile::Stable:
             return { FVector(-560.0f, -940.0f, 800.0f), -56.0f, FVector(36.0f, 0.0f, 42.0f), 3.2f, 2.8f, 62.0f, 1120.0f };
         case EAstroCameraPresentationProfile::Mission:
