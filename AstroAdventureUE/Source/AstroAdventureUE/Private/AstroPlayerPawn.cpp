@@ -1,6 +1,7 @@
 #include "AstroPlayerPawn.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/PrimitiveComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
@@ -456,6 +457,17 @@ void AAstroPlayerPawn::SetShipVisible(const bool bVisible)
     {
         ShipVisualRoot->SetVisibility(bVisible, true);
         ShipVisualRoot->SetHiddenInGame(!bVisible, true);
+    }
+
+    TArray<UPrimitiveComponent*> PrimitiveComponents;
+    GetComponents<UPrimitiveComponent>(PrimitiveComponents);
+    for (UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents)
+    {
+        if (PrimitiveComponent)
+        {
+            PrimitiveComponent->SetVisibility(bVisible, true);
+            PrimitiveComponent->SetHiddenInGame(!bVisible, true);
+        }
     }
 }
 
