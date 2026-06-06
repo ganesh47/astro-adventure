@@ -705,7 +705,7 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     }
     if (bHomeMode && DestinationId == FName(TEXT("mercury")))
     {
-        Scale = FMath::Max(BaseVisualScale * 0.82f, 0.62f);
+        Scale = FMath::Max(BaseVisualScale * 1.02f, 0.78f);
     }
     SetActorScale3D(FVector(Scale));
 

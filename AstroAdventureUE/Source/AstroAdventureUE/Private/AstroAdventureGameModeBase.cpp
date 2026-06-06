@@ -143,11 +143,11 @@ FVector FirstLoopStagedPosition(const int32 DestinationIndex, const FVector& Rou
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-520.0f, 40.0f, 390.0f);
+        return FVector(-470.0f, 38.0f, 460.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(-330.0f, 20.0f, 460.0f);
+        return FVector(-210.0f, 24.0f, 555.0f);
     }
 
     return RoutePosition;
@@ -157,11 +157,11 @@ FVector HomeDioramaPosition(const int32 DestinationIndex, const FVector& RoutePo
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-310.0f, 405.0f, 1110.0f);
+        return FVector(-300.0f, 405.0f, 1100.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(115.0f, 220.0f, 1215.0f);
+        return FVector(180.0f, 218.0f, 1218.0f);
     }
 
     return RoutePosition;
@@ -1101,7 +1101,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
         {
             return FString::Printf(TEXT("Rescan %s to review the saved card"), *Name);
         }
-        return FString::Printf(TEXT("Travel to %s, then scan its discovery card!"), *Name);
+        return FString::Printf(TEXT("Scan %s for a discovery card!"), *Name);
     case EAstroMissionScreen::Scanning:
         return FString::Printf(TEXT("Scanning %s..."), *Name);
     case EAstroMissionScreen::DiscoveryCard:
@@ -1191,8 +1191,8 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
     if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
-        Lines.Add(TEXT("First stop: the Sun. Watch the ship, then scan the glowing star."));
-        Lines.Add(TEXT("Your passport saves one stamp for each discovery."));
+        Lines.Add(TEXT("First stop: the Sun. It is our bright nearby star."));
+        Lines.Add(TEXT("Launch when you are ready to scan its light."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Scanning)
     {
@@ -1203,9 +1203,9 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         if (Lesson->DestinationId == FName(TEXT("sun")))
         {
-            Lines.Add(TEXT("Look: the warm star is making its own light."));
+            Lines.Add(TEXT("Look: the Sun glows because it makes its own light."));
             Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
-            Lines.Add(TEXT("More Info shows why we scan from a safe distance."));
+            Lines.Add(TEXT("More Info shows why stars shine from inside."));
             Lines.Add(TEXT("Press M / LT for More Info, or Confirm for the quiz."));
             return Lines;
         }
@@ -1244,8 +1244,8 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         if (Lesson->DestinationId == FName(TEXT("sun")))
         {
             Lines.Add(TEXT("Closer Look: Stars make energy deep inside."));
-            Lines.Add(TEXT("Compare: The Sun is enormous next to Earth."));
-            Lines.Add(TEXT("Word Explorer: A star is a glowing ball of hot gas."));
+            Lines.Add(TEXT("Compare: The Sun is so huge that many Earths could fit across it."));
+            Lines.Add(TEXT("Word Explorer: A star is a huge ball that makes light."));
         }
         else if (Lesson->DestinationId == FName(TEXT("mercury")))
         {
@@ -1278,10 +1278,10 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     else if (CurrentScreen == EAstroMissionScreen::StampAward)
     {
         Lines.Add(Lesson && Lesson->DestinationId == FName(TEXT("sun"))
-            ? TEXT("The Sun is a star. It makes its own light.")
+            ? TEXT("You learned: the Sun is a star that makes light.")
             : TEXT("You found a new space discovery."));
-        Lines.Add(IsMissionComplete() ? TEXT("First expedition complete.") : TEXT("Next Stop: Mercury, the crater world."));
-        Lines.Add(TEXT("Your passport keeps this discovery."));
+        Lines.Add(IsMissionComplete() ? TEXT("First expedition complete.") : TEXT("Next Stop: Mercury, the small crater world."));
+        Lines.Add(TEXT("Start flies toward your next stamp."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
     {
@@ -1290,8 +1290,8 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         if (Lesson->DestinationId == FName(TEXT("mercury")) && !IsFirstStopLocked())
         {
-            Lines.Add(TEXT("Mercury unlocked: look for big craters."));
-            Lines.Add(TEXT("Scan Mercury to discover why craters stay."));
+            Lines.Add(TEXT("Mercury unlocked: look for big crater clues."));
+            Lines.Add(TEXT("Scan Mercury to learn why its craters stay."));
         }
         else
         {
@@ -1353,8 +1353,8 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
         }
         else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
         {
-            PlayerPawn->SetTravelTarget(FocusLocation + FVector(360.0f, 240.0f, 86.0f));
-            const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-140.0f, -20.0f, 220.0f);
+            PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
+            const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, 86.0f);
             PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
         }
         else
@@ -1478,7 +1478,7 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     {
         Profile = EAstroCameraPresentationProfile::Scan;
     }
-    else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
+    else if (IsHomeCompositionScreen(CurrentScreen) || CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
         Profile = EAstroCameraPresentationProfile::Home;
     }
