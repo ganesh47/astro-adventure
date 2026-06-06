@@ -204,7 +204,6 @@ bool ShouldShowSunToMercuryTeachingTrail(const EAstroMissionScreen Screen, const
     {
         return Screen == EAstroMissionScreen::Home
             || Screen == EAstroMissionScreen::AgeSelect
-            || Screen == EAstroMissionScreen::MissionPrompt
             || Screen == EAstroMissionScreen::Navigation
             || ShouldShowSunToMercuryUnlock(Screen, FocusedDestinationIndex);
     }
@@ -1684,7 +1683,9 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     PlayerPawn->SetCameraCompositionProfile(Composition);
     PlayerPawn->SetCameraPresentationProfile(Profile);
     PlayerPawn->SetScannerActive(IsScanEffectActive());
-    PlayerPawn->SetShipVisible(!IsHomeCompositionScreen(CurrentScreen));
+    const bool bShowShip = !IsHomeCompositionScreen(CurrentScreen)
+        && CurrentScreen != EAstroMissionScreen::MissionPrompt;
+    PlayerPawn->SetShipVisible(bShowShip);
 
     if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
     {
@@ -1713,7 +1714,7 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
     {
         if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
         {
-            return DestinationIndex == 0 || DestinationIndex == 1;
+            return false;
         }
         const int32 Count = FMath::Max(1, DestinationActors.Num());
         return DestinationIndex == FocusedDestinationIndex || DestinationIndex == (FocusedDestinationIndex + 1) % Count;
