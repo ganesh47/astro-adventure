@@ -1426,6 +1426,8 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
         }
     }
 
+    ApplyFirstLoopStaging();
+
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex) && DestinationActors[FocusedDestinationIndex])
     {
         const FVector FocusLocation = DestinationActors[FocusedDestinationIndex]->GetActorLocation();
@@ -1442,12 +1444,12 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
                 const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
                 const FVector RouteMidpoint = (FocusLocation + MercuryLocation) * 0.5f;
                 PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
-                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(-34.0f, -10.0f, -92.0f));
+                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(-34.0f, -10.0f, 120.0f));
             }
             else
             {
                 PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
-                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, -130.0f);
+                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, 120.0f);
                 PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
             }
         }
@@ -1693,7 +1695,7 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
               const FVector FocusLocation = FocusActor->GetActorLocation();
               PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
               PlayerPawn->SetScannerTarget(FocusLocation + FVector(0.0f, 0.0f, 18.0f));
-              PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(-70.0f, -18.0f, -128.0f));
+              PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(-70.0f, -18.0f, 120.0f));
 
               if (UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")))
               {
