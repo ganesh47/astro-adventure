@@ -144,11 +144,11 @@ FVector FirstLoopStagedPosition(const EAstroMissionScreen Screen, const int32 De
     const bool bRewardHandoff = Screen == EAstroMissionScreen::StampAward;
     if (DestinationIndex == 0)
     {
-        return bRewardHandoff ? FVector(-180.0f, 425.0f, 1160.0f) : FVector(-220.0f, 405.0f, 1160.0f);
+        return bRewardHandoff ? FVector(-120.0f, 455.0f, 1176.0f) : FVector(-120.0f, 448.0f, 1172.0f);
     }
     if (DestinationIndex == 1)
     {
-        return bRewardHandoff ? FVector(318.0f, 252.0f, 1248.0f) : FVector(244.0f, 220.0f, 1234.0f);
+        return bRewardHandoff ? FVector(470.0f, 246.0f, 1248.0f) : FVector(430.0f, 242.0f, 1236.0f);
     }
 
     return RoutePosition;
@@ -158,11 +158,11 @@ FVector HomeDioramaPosition(const int32 DestinationIndex, const FVector& RoutePo
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-260.0f, 405.0f, 1140.0f);
+        return FVector(-130.0f, 450.0f, 1168.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(214.0f, 218.0f, 1228.0f);
+        return FVector(450.0f, 248.0f, 1238.0f);
     }
 
     return RoutePosition;
@@ -229,13 +229,13 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
     if (Screen == EAstroMissionScreen::DiscoveryCard
         || Screen == EAstroMissionScreen::DeepDive)
     {
-        return FocusLocation + FVector(-610.0f, 128.0f, 12.0f);
+        return FocusLocation + FVector(-610.0f, 128.0f, 116.0f);
     }
 
     if (Screen == EAstroMissionScreen::Quiz
         || Screen == EAstroMissionScreen::QuizFeedback)
     {
-        return FocusLocation + FVector(-640.0f, 138.0f, 4.0f);
+        return FocusLocation + FVector(-640.0f, 138.0f, 138.0f);
     }
 
     if (Screen == EAstroMissionScreen::Navigation)
@@ -335,8 +335,8 @@ void AAstroAdventureGameModeBase::BuildLessons()
 {
     Lessons.Reset();
 
-    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is a star. It makes its own light."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look for warm light from the star."), TEXT("The Sun is a star. It makes its own light."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("Which clue tells us the Sun is a star?"), TEXT("star"), TEXT("It makes its own light."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.35f, true);
-    AddLesson(TEXT("mercury"), TEXT("Mercury"), TEXT("Mercury is the closest planet to the Sun."), TEXT("It has a very short year because it races around the Sun quickly."), TEXT("Small gray world with craters and a heat badge."), TEXT("Mercury is tiny and close to the Sun."), TEXT("Mercury is closest to the Sun. It zooms around fast!"), TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."), TEXT("Mercury has many craters because it has almost no thick atmosphere to burn up incoming space rocks."), TEXT("Mercury is much smaller than Earth and much closer to the Sun."), TEXT("Crater: a bowl-shaped mark made when a rock from space hits a surface."), TEXT("https://science.nasa.gov/mercury/"), TEXT("Which clue tells us this is Mercury?"), TEXT("sun"), TEXT("It is small, rocky, cratered, and closest to the Sun."), TEXT("rust"), TEXT("It is famous for red rusty dust."), TEXT("rings"), TEXT("It has giant bright rings."), TEXT("Nice scan! Mercury is the Sun-neighbor clue."), TEXT("Almost. Look for the clue about the Sun."), TEXT("Look for the clue that mentions the Sun."), FLinearColor(0.62f, 0.62f, 0.58f), 0.72f, true);
+    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is a star. It makes its own light."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look: warm light comes from the star."), TEXT("The Sun is a star. It makes its own light."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("Which clue tells us the Sun is a star?"), TEXT("star"), TEXT("It makes its own light."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.35f, true);
+    AddLesson(TEXT("mercury"), TEXT("Mercury"), TEXT("Mercury is the closest planet to the Sun."), TEXT("It has a very short year because it races around the Sun quickly."), TEXT("Look: small gray world with big craters."), TEXT("Mercury is tiny and close to the Sun."), TEXT("Mercury is closest to the Sun. It zooms around fast!"), TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."), TEXT("Mercury has many craters because it has almost no thick atmosphere to burn up incoming space rocks."), TEXT("Mercury is much smaller than Earth and much closer to the Sun."), TEXT("Crater: a bowl-shaped mark made when a rock from space hits a surface."), TEXT("https://science.nasa.gov/mercury/"), TEXT("Which clue tells us this is Mercury?"), TEXT("sun"), TEXT("It is small, gray, cratered, and closest to the Sun."), TEXT("rust"), TEXT("It is famous for red rusty dust."), TEXT("rings"), TEXT("It has giant bright rings."), TEXT("Nice scan! Mercury is the Sun-neighbor clue."), TEXT("Almost. Look for the clue about the Sun."), TEXT("Look for the clue that mentions the Sun."), FLinearColor(0.62f, 0.62f, 0.58f), 0.72f, true);
     AddLesson(TEXT("venus"), TEXT("Venus"), TEXT("Venus is wrapped in thick clouds and is extremely hot."), TEXT("Venus is the hottest planet even though Mercury is closer to the Sun."), TEXT("Creamy gold cloud world with a heat shield icon."), TEXT("Venus is a hot cloudy planet."), TEXT("Venus has thick clouds that trap heat like a blanket."), TEXT("Venus has a thick atmosphere that creates an extreme greenhouse effect, making its surface hotter than Mercury."), TEXT("A greenhouse effect happens when an atmosphere lets sunlight in but traps heat. Venus is the Solar System's strongest example."), TEXT("Venus is close to Earth's size, but its atmosphere makes it very different from Earth."), TEXT("Atmosphere: the layer of gases around a planet or moon."), TEXT("https://science.nasa.gov/venus/"), TEXT("Why is Venus so hot?"), TEXT("clouds"), TEXT("Its thick atmosphere traps heat."), TEXT("ice"), TEXT("It is covered in blue ice."), TEXT("tiny"), TEXT("It is the smallest moon."), TEXT("Great! Venus is a cloudy heat-trapping world."), TEXT("Try again. Think about the thick clouds."), TEXT("A thick atmosphere can hold in heat."), FLinearColor(1.0f, 0.76f, 0.42f), 0.9f, true);
     AddLesson(TEXT("earth"), TEXT("Earth"), TEXT("Earth is our home world with liquid water on the surface."), TEXT("Earth has air, oceans, land, clouds, and life."), TEXT("Blue oceans, green-brown land, and white cloud clue."), TEXT("Earth is our home planet."), TEXT("Earth has water, air, land, clouds, and living things."), TEXT("Earth's liquid water, protective atmosphere, and distance from the Sun help make it habitable."), TEXT("Scientists compare other worlds to Earth to ask what conditions help life survive."), TEXT("Earth is bigger than Mercury and Mars, smaller than the gas giants, and has one large Moon."), TEXT("Planet: a large round world that orbits a star."), TEXT("https://science.nasa.gov/earth/"), TEXT("Which clue makes Earth special?"), TEXT("water"), TEXT("It has liquid water and life."), TEXT("rings"), TEXT("It has the largest rings."), TEXT("storm"), TEXT("It has the Great Red Spot."), TEXT("Home badge unlocked! Earth is the water-and-life clue."), TEXT("Try again. Look for water and life."), TEXT("Earth is the planet we live on."), FLinearColor(0.18f, 0.56f, 1.0f), 1.0f, true);
     AddLesson(TEXT("moon"), TEXT("Moon"), TEXT("The Moon orbits Earth."), TEXT("Its craters are clues from ancient impacts."), TEXT("Gray cratered companion linked to Earth."), TEXT("The Moon goes around Earth."), TEXT("The Moon is Earth's natural satellite. It has many craters."), TEXT("The Moon's phases come from how sunlight hits the Moon as it orbits Earth."), TEXT("A moon is a natural object that orbits a planet. Earth's Moon helps us study craters, phases, and gravity."), TEXT("The Moon is much smaller than Earth and much closer than the planets."), TEXT("Moon: a natural object that travels around a planet."), TEXT("https://science.nasa.gov/moon/"), TEXT("What does the Moon orbit?"), TEXT("earth"), TEXT("Earth."), TEXT("sun_star"), TEXT("It is the Sun's twin star."), TEXT("jupiter"), TEXT("Only Jupiter."), TEXT("Correct! The Moon is Earth's companion."), TEXT("Try again. The Moon is linked to our home planet."), TEXT("Look near Earth."), FLinearColor(0.78f, 0.78f, 0.74f), 0.42f, true);
@@ -1231,7 +1231,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     switch (CurrentScreen)
     {
     case EAstroMissionScreen::Home:
-        return TEXT("Start with the Sun");
+        return TEXT("Look at the Sun route");
     case EAstroMissionScreen::AgeSelect:
         return TEXT("Choose your explorer level");
     case EAstroMissionScreen::MissionPrompt:
@@ -1273,7 +1273,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
-        const TCHAR* Options[] = {TEXT("Visit the Sun"), TEXT("Continue saved route"), TEXT("Reset Passport"), TEXT("Quit")};
+        const TCHAR* Options[] = {TEXT("Start: Sun -> Mercury"), TEXT("Continue saved route"), TEXT("Reset Passport"), TEXT("Quit")};
         const int32 StampCount = CountCompletedStops();
         const bool bHasProgress = HasAnyProgress();
         for (int32 Index = 0; Index < 4; ++Index)
@@ -1343,17 +1343,17 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         if (Lesson->DestinationId == FName(TEXT("sun")))
         {
-            Lines.Add(TEXT("Scanner clue: The Sun is a star. It makes its own light."));
-            Lines.Add(TEXT("Look for warm light from the star."));
-            Lines.Add(TEXT("More Info: see Look, Compare, and Word."));
+            Lines.Add(TEXT("Look: the Sun makes its own light."));
+            Lines.Add(TEXT("That clue means it is a star."));
+            Lines.Add(TEXT("More Info: Look, Compare, Word."));
             return Lines;
         }
 
         if (Lesson->DestinationId == FName(TEXT("mercury")))
         {
-            Lines.Add(TEXT("Scanner clue: Mercury is a small rocky world covered in craters."));
-            Lines.Add(TEXT("Look for the gray crater world near the Sun."));
-            Lines.Add(TEXT("More Info explains why craters stay visible."));
+            Lines.Add(TEXT("Look: Mercury is small, gray, and cratered."));
+            Lines.Add(TEXT("It is the closest planet to the Sun."));
+            Lines.Add(TEXT("More Info explains the crater clue."));
             return Lines;
         }
 
@@ -1425,9 +1425,9 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         if (Lesson && Lesson->DestinationId == FName(TEXT("sun")))
         {
-            Lines.Add(TEXT("I learned: The Sun is a star."));
+            Lines.Add(TEXT("Stamp clue: The Sun is a star."));
             Lines.Add(TEXT("It makes its own light."));
-            Lines.Add(TEXT("Next: Mercury, the closest planet to the Sun."));
+            Lines.Add(TEXT("Next stop: Mercury has craters."));
         }
         else
         {
@@ -1442,7 +1442,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         if (Lesson->DestinationId == FName(TEXT("mercury")) && !IsFirstStopLocked())
         {
-            Lines.Add(TEXT("Mercury unlocked: closest to the Sun, small, rocky, and cratered."));
+            Lines.Add(TEXT("Next stop: Mercury is small, gray, and cratered."));
             Lines.Add(TEXT("Scan Mercury to learn why its craters stay."));
         }
         else
@@ -1502,8 +1502,8 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
         const float VisualScale = Lessons.IsValidIndex(FocusedDestinationIndex) ? Lessons[FocusedDestinationIndex].MapScale : 1.0f;
         if (IsHomeCompositionScreen(CurrentScreen))
         {
-            PlayerPawn->SetTravelTarget(FVector(-250.0f, 140.0f, 1020.0f));
-            PlayerPawn->SetCameraFocusTarget(FVector(-520.0f, 330.0f, 620.0f));
+            PlayerPawn->SetTravelTarget(FVector(-540.0f, 80.0f, 790.0f));
+            PlayerPawn->SetCameraFocusTarget(FVector(0.0f, 356.0f, 745.0f));
         }
         else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
         {
@@ -1515,12 +1515,12 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
             }
             else if (FocusedDestinationIndex == 0)
             {
-                PlayerPawn->SetTravelTarget(FocusLocation + FVector(300.0f, 205.0f, 118.0f));
+                PlayerPawn->SetTravelTarget(FocusLocation + FVector(250.0f, 180.0f, 98.0f));
                 PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, nullptr));
             }
             else
             {
-                PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
+                PlayerPawn->SetTravelTarget(FocusLocation + FVector(275.0f, 184.0f, 108.0f));
                 PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, nullptr));
             }
         }
@@ -1685,6 +1685,7 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     PlayerPawn->SetCameraCompositionProfile(Composition);
     PlayerPawn->SetCameraPresentationProfile(Profile);
     PlayerPawn->SetScannerActive(IsScanEffectActive());
+    PlayerPawn->SetShipVisible(!IsHomeCompositionScreen(CurrentScreen));
 
     if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
     {

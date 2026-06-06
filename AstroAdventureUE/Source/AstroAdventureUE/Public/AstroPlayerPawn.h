@@ -106,6 +106,7 @@ public:
     void TriggerScannerPulse(float PulseStrength = 1.0f);
     void TriggerNavigationFeedback(float Direction);
     void SetShipAccentColor(const FLinearColor& NewColor);
+    void SetShipVisible(bool bVisible);
 
 private:
     void UpdateCameraPresentation(float DeltaSeconds);

@@ -37,7 +37,7 @@ FLinearColor ReadableDestinationColor(const FString& Id, const FLinearColor& Col
 {
     if (Id == TEXT("sun"))
     {
-        return FLinearColor(1.0f, 0.74f, 0.22f, 1.0f);
+        return FLinearColor(1.0f, 0.68f, 0.16f, 1.0f);
     }
     if (Id == TEXT("mercury"))
     {
@@ -95,7 +95,7 @@ float DestinationBodyEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 0.38f;
+        return 0.44f;
     }
     if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
     {
@@ -107,7 +107,7 @@ float DestinationBodyEmissiveStrength(const FString& Id)
     }
     if (Id == TEXT("mercury") || Id == TEXT("moon") || Id == TEXT("pluto") || Id == TEXT("asteroid_belt"))
     {
-        return Id == TEXT("mercury") ? 0.16f : 0.12f;
+        return Id == TEXT("mercury") ? 0.20f : 0.12f;
     }
 
     return 0.18f;
@@ -532,7 +532,7 @@ void AAstroDestinationActor::UpdateNameplateLayout()
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
     const float LabelSize = bIsFocused
         ? (bAtlasMode ? DiscoveredLabelWorldSize : FocusedLabelWorldSize)
-        : (bAtlasMode ? IdleLabelWorldSize : (bIsDiscovered ? DiscoveredLabelWorldSize : IdleLabelWorldSize));
+        : (bAtlasMode ? IdleLabelWorldSize : bFirstLoopTeachMode ? DiscoveredLabelWorldSize : (bIsDiscovered ? DiscoveredLabelWorldSize : IdleLabelWorldSize));
     Label->SetWorldSize(LabelSize);
     Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : ((bAtlasMode || bHomeMode) ? FColor(142, 178, 215) : FColor(188, 224, 255)));
 }
@@ -624,17 +624,17 @@ void AAstroDestinationActor::ConfigureMotifs()
     if (Id == TEXT("mercury") || Id == TEXT("moon"))
     {
         const bool bMercury = Id == TEXT("mercury");
-        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.88f : 0.5f);
-        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.74f : 0.42f);
-        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.84f, 0.46f, 1.0f) : White, bMercury ? 0.88f : 0.34f);
-        const float CraterDepth = bMercury ? 0.026f : 0.012f;
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.72f : 0.42f, bMercury ? 0.72f : 0.42f), Crater, bMercury ? 0.070f : 0.0f);
-        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.62f : 0.34f, bMercury ? 0.62f : 0.34f), CraterSoft, bMercury ? 0.055f : 0.0f);
-        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.64f : 0.38f, bMercury ? 0.64f : 0.38f), Crater, bMercury ? 0.055f : 0.0f);
-        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.016f, bMercury ? 0.54f : 0.18f, bMercury ? 0.54f : 0.18f), CraterRim, bMercury ? 0.28f : 0.02f);
+        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.93f : 0.5f);
+        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.80f : 0.42f);
+        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.84f, 0.46f, 1.0f) : White, bMercury ? 0.92f : 0.34f);
+        const float CraterDepth = bMercury ? 0.034f : 0.012f;
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -20.0f, 18.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.86f : 0.42f, bMercury ? 0.86f : 0.42f), Crater, bMercury ? 0.09f : 0.0f);
+        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 16.0f, 2.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.72f : 0.34f, bMercury ? 0.72f : 0.34f), CraterSoft, bMercury ? 0.075f : 0.0f);
+        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -23.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.76f : 0.38f, bMercury ? 0.76f : 0.38f), Crater, bMercury ? 0.075f : 0.0f);
+        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 27.0f, -16.0f), FRotator::ZeroRotator, FVector(0.020f, bMercury ? 0.64f : 0.18f, bMercury ? 0.64f : 0.18f), CraterRim, bMercury ? 0.34f : 0.02f);
         if (bMercury)
         {
-            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.016f, 0.50f, 0.38f), CraterSoft, 0.040f);
+            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -34.0f, -7.0f), FRotator::ZeroRotator, FVector(0.020f, 0.58f, 0.44f), CraterSoft, 0.065f);
         }
         if (Id == TEXT("moon"))
         {
@@ -708,11 +708,11 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     const bool bTeachingMode = bHomeMode || bFirstLoopTeachMode;
     if (bTeachingMode && DestinationId == FName(TEXT("sun")))
     {
-        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.62f : 1.34f), bFirstLoopTeachMode ? 2.08f : 1.58f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.78f : 1.48f), bFirstLoopTeachMode ? 2.28f : 1.74f);
     }
     if (bTeachingMode && DestinationId == FName(TEXT("mercury")))
     {
-        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.58f : 1.24f), bFirstLoopTeachMode ? 1.22f : 1.02f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.86f : 1.48f), bFirstLoopTeachMode ? 1.42f : 1.18f);
     }
     SetActorScale3D(FVector(Scale));
 

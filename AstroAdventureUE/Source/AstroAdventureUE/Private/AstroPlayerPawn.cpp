@@ -37,13 +37,13 @@ namespace
         switch (Profile)
         {
         case EAstroCameraPresentationProfile::Home:
-            return { FVector(-500.0f, -820.0f, 720.0f), -58.0f, FVector(82.0f, -8.0f, 118.0f), 5.4f, 4.8f, 58.0f, 980.0f };
+            return { FVector(-540.0f, -880.0f, 760.0f), -52.0f, FVector(116.0f, -2.0f, 126.0f), 5.4f, 4.8f, 58.0f, 1040.0f };
         case EAstroCameraPresentationProfile::FirstLoopTeach:
-            return { FVector(-500.0f, -820.0f, 720.0f), -58.0f, FVector(82.0f, -8.0f, 118.0f), 6.0f, 5.2f, 58.0f, 1450.0f };
+            return { FVector(-540.0f, -900.0f, 780.0f), -52.0f, FVector(108.0f, 0.0f, 116.0f), 6.0f, 5.2f, 58.0f, 1320.0f };
         case EAstroCameraPresentationProfile::Atlas:
             return { FVector(-820.0f, -1640.0f, 1840.0f), -92.0f, FVector(80.0f, 0.0f, 70.0f), 3.0f, 2.6f, 72.0f, 4500.0f };
         case EAstroCameraPresentationProfile::Scan:
-            return { FVector(-500.0f, -860.0f, 760.0f), -48.0f, FVector(42.0f, 0.0f, 64.0f), 6.2f, 5.6f, 60.0f, 1240.0f };
+            return { FVector(-540.0f, -900.0f, 780.0f), -48.0f, FVector(76.0f, 0.0f, 74.0f), 6.2f, 5.6f, 60.0f, 1180.0f };
         case EAstroCameraPresentationProfile::Stable:
             return { FVector(-560.0f, -940.0f, 800.0f), -56.0f, FVector(36.0f, 0.0f, 42.0f), 3.2f, 2.8f, 62.0f, 1120.0f };
         case EAstroCameraPresentationProfile::Mission:
@@ -95,7 +95,7 @@ AAstroPlayerPawn::AAstroPlayerPawn()
 
     ShipVisualRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ShipVisualRoot"));
     ShipVisualRoot->SetupAttachment(Root);
-    ShipVisualRoot->SetRelativeScale3D(FVector(1.42f));
+    ShipVisualRoot->SetRelativeScale3D(FVector(1.08f));
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
@@ -347,8 +347,15 @@ void AAstroPlayerPawn::MoveRight(const float Value)
 
 void AAstroPlayerPawn::SetTravelTarget(const FVector& TargetLocation)
 {
+    const bool bFirstTravelTarget = !bHasTravelTarget;
     TravelTarget = TargetLocation;
     bHasTravelTarget = true;
+    if (bFirstTravelTarget)
+    {
+        SetActorLocation(TravelTarget);
+        LastActorLocation = TravelTarget;
+        bHasLastActorLocation = true;
+    }
 
     if (!bHasCameraFocusTarget)
     {
@@ -443,6 +450,15 @@ void AAstroPlayerPawn::SetShipAccentColor(const FLinearColor& NewColor)
     ApplyShipMaterials();
 }
 
+void AAstroPlayerPawn::SetShipVisible(const bool bVisible)
+{
+    if (ShipVisualRoot)
+    {
+        ShipVisualRoot->SetVisibility(bVisible, true);
+        ShipVisualRoot->SetHiddenInGame(!bVisible, true);
+    }
+}
+
 void AAstroPlayerPawn::UpdateCameraPresentation(const float DeltaSeconds)
 {
     if (!Camera)
@@ -529,10 +545,10 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
     }
 
     ShipBobTime += DeltaSeconds * FMath::Lerp(1.15f, 1.75f, SmoothedSpeedAlpha);
-    const float Bob = FMath::Sin(ShipBobTime) * 4.0f;
-    const float SoftBank = FMath::Sin(ShipBobTime * 0.73f) * 1.8f;
-    const float FocusBank = NavigationPulseDirection * NavigationPulse * 7.5f;
-    const float FocusLift = NavigationPulse * 3.5f;
+    const float Bob = FMath::Sin(ShipBobTime) * 2.4f;
+    const float SoftBank = FMath::Sin(ShipBobTime * 0.73f) * 1.0f;
+    const float FocusBank = NavigationPulseDirection * NavigationPulse * 5.0f;
+    const float FocusLift = NavigationPulse * 2.2f;
     ShipVisualRoot->SetRelativeLocation(FVector(0.0f, 0.0f, Bob + FocusLift));
     ShipVisualRoot->SetRelativeRotation(FRotator(FMath::Lerp(0.0f, -3.5f, SmoothedSpeedAlpha), 0.0f, SoftBank + FocusBank));
 
