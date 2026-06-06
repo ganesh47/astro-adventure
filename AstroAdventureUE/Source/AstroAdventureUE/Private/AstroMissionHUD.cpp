@@ -334,7 +334,7 @@ void AAstroMissionHUD::DrawHUD()
         : bHasPassportRows ? 310.0f
         : bHasQuizRows ? 372.0f
         : bHasMenuRows ? 204.0f
-        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 318.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 262.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 196.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 178.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
+        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 338.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
         : Buckets.BodyLines.Num() >= 3 ? 184.0f : 164.0f;
     const float CardX = CurrentScreen == EAstroMissionScreen::StampAward
         ? (Canvas->SizeX - CardW) * 0.5f
@@ -400,7 +400,8 @@ void AAstroMissionHUD::DrawHUD()
             : TEXT("World clue: match your answer to what you scanned.");
         DrawRect(FLinearColor(0.04f, 0.16f, 0.18f, 0.86f), CardX + 42.0f, Y, CardW - 84.0f, 38.0f);
         DrawRect(FLinearColor(0.35f, 0.90f, 0.86f, 0.94f), CardX + 42.0f, Y, 10.0f, 38.0f);
-        DrawText(AstroClipTextToWidth(QuizClue, CardW - 116.0f, 0.84f), FLinearColor(0.88f, 1.0f, 0.96f), CardX + 60.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.84f, false);
+        DrawMiniLearningIcon(LowerPrompt.Contains(TEXT("mercury")) ? TEXT("Mercury") : TEXT("Sun"), CardX + 70.0f, Y + 19.0f, 20.0f);
+        DrawText(AstroClipTextToWidth(QuizClue, CardW - 144.0f, 0.84f), FLinearColor(0.88f, 1.0f, 0.96f), CardX + 92.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.84f, false);
         Y += 46.0f;
         for (const FString& Line : Buckets.QuizRows)
         {
@@ -459,6 +460,13 @@ void AAstroMissionHUD::DrawHUD()
             DrawBadge(bTryAgain ? TEXT("TRY AGAIN") : TEXT("GREAT PICK"), CardX + 42.0f, Y + 4.0f, bTryAgain ? 128.0f : 132.0f, bTryAgain ? FLinearColor(0.14f, 0.46f, 0.66f, 0.96f) : FLinearColor(0.86f, 0.38f, 0.12f, 0.96f), FLinearColor::White, 0.74f);
             DrawText(bTryAgain ? TEXT("Use the world clue, then choose again.") : TEXT("Your passport is ready for its stamp."), FLinearColor(0.91f, 0.98f, 1.0f), CardX + 184.0f, Y + 11.0f, GEngine->GetSmallFont(), 0.88f, false);
             Y += 46.0f;
+            DrawLearningBadgeRow(CurrentScreen, CardX + 42.0f, Y, CardW - 84.0f);
+            Y += 50.0f;
+        }
+        else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::StampAward)
+        {
+            DrawLearningBadgeRow(CurrentScreen, CardX + 42.0f, Y, CurrentScreen == EAstroMissionScreen::StampAward ? FMath::Max(220.0f, CardW - 270.0f) : CardW - 84.0f);
+            Y += 50.0f;
         }
         for (const FString& Line : Buckets.BodyLines)
         {
@@ -593,6 +601,116 @@ void AAstroMissionHUD::DrawBadge(const FString& Text, const float X, const float
     DrawOwnedTexture(ActionChipTexture, X, Y, W, 30.0f, FLinearColor(1.0f, 1.0f, 1.0f, 0.30f));
     DrawRect(FLinearColor(1.0f, 0.96f, 0.76f, 0.18f), X, Y, W, 3.0f);
     DrawText(AstroClipTextToWidth(Text, W - 22.0f, Scale), TextColor, X + 11.0f, Y + 7.0f, GEngine->GetSmallFont(), Scale, false);
+}
+
+void AAstroMissionHUD::DrawMiniLearningIcon(const FString& Icon, const float CenterX, const float CenterY, const float Size)
+{
+    const FString Lower = Icon.ToLower();
+    const float S = FMath::Max(8.0f, Size);
+    if (Lower.Contains(TEXT("sun")))
+    {
+        DrawSoftEllipse(CenterX, CenterY, S * 0.55f, S * 0.50f, FLinearColor(1.0f, 0.48f, 0.08f, 0.22f), 14);
+        DrawSoftEllipse(CenterX, CenterY, S * 0.34f, S * 0.31f, FLinearColor(1.0f, 0.72f, 0.14f, 0.98f), 14);
+        DrawRect(FLinearColor(1.0f, 0.88f, 0.32f, 0.70f), CenterX - S * 0.05f, CenterY - S * 0.62f, S * 0.10f, S * 0.26f);
+        DrawRect(FLinearColor(1.0f, 0.88f, 0.32f, 0.70f), CenterX - S * 0.05f, CenterY + S * 0.36f, S * 0.10f, S * 0.26f);
+        DrawRect(FLinearColor(1.0f, 0.88f, 0.32f, 0.70f), CenterX - S * 0.62f, CenterY - S * 0.05f, S * 0.26f, S * 0.10f);
+        DrawRect(FLinearColor(1.0f, 0.88f, 0.32f, 0.70f), CenterX + S * 0.36f, CenterY - S * 0.05f, S * 0.26f, S * 0.10f);
+    }
+    else if (Lower.Contains(TEXT("mercury")) || Lower.Contains(TEXT("crater")))
+    {
+        DrawSoftEllipse(CenterX, CenterY, S * 0.42f, S * 0.38f, FLinearColor(0.62f, 0.65f, 0.62f, 0.98f), 14);
+        DrawSoftEllipse(CenterX - S * 0.14f, CenterY - S * 0.10f, S * 0.10f, S * 0.08f, FLinearColor(0.18f, 0.20f, 0.20f, 0.58f), 8);
+        DrawSoftEllipse(CenterX + S * 0.15f, CenterY + S * 0.08f, S * 0.13f, S * 0.10f, FLinearColor(0.22f, 0.24f, 0.23f, 0.52f), 8);
+    }
+    else if (Lower.Contains(TEXT("check")) || Lower.Contains(TEXT("stamp")))
+    {
+        DrawRect(FLinearColor(0.12f, 0.54f, 0.32f, 0.96f), CenterX - S * 0.42f, CenterY - S * 0.38f, S * 0.84f, S * 0.76f);
+        DrawRect(FLinearColor(1.0f, 0.96f, 0.68f, 0.96f), CenterX - S * 0.24f, CenterY + S * 0.04f, S * 0.17f, S * 0.30f);
+        DrawRect(FLinearColor(1.0f, 0.96f, 0.68f, 0.96f), CenterX - S * 0.07f, CenterY + S * 0.20f, S * 0.42f, S * 0.14f);
+    }
+    else
+    {
+        DrawSoftEllipse(CenterX, CenterY, S * 0.40f, S * 0.36f, FLinearColor(0.34f, 0.76f, 0.90f, 0.96f), 12);
+        DrawRect(FLinearColor(0.88f, 1.0f, 0.98f, 0.92f), CenterX - S * 0.05f, CenterY - S * 0.24f, S * 0.10f, S * 0.30f);
+        DrawRect(FLinearColor(0.88f, 1.0f, 0.98f, 0.92f), CenterX - S * 0.05f, CenterY + S * 0.18f, S * 0.10f, S * 0.10f);
+    }
+}
+
+void AAstroMissionHUD::DrawLearningBadge(const FString& Icon, const FString& Label, const FString& Detail, const float X, const float Y, const float W, const FLinearColor& Fill)
+{
+    DrawRect(FLinearColor(0.02f, 0.04f, 0.05f, 0.38f), X + 3.0f, Y + 4.0f, W, 42.0f);
+    DrawRect(Fill, X, Y, W, 42.0f);
+    DrawRect(FLinearColor(1.0f, 0.96f, 0.74f, 0.20f), X + 8.0f, Y + 5.0f, W - 16.0f, 2.0f);
+    DrawMiniLearningIcon(Icon, X + 24.0f, Y + 21.0f, 26.0f);
+    DrawText(AstroClipTextToWidth(Label, W - 54.0f, 0.62f), FLinearColor(1.0f, 0.96f, 0.74f), X + 46.0f, Y + 7.0f, GEngine->GetSmallFont(), 0.62f, false);
+    DrawText(AstroClipTextToWidth(Detail, W - 54.0f, 0.58f), FLinearColor(0.90f, 1.0f, 0.98f), X + 46.0f, Y + 23.0f, GEngine->GetSmallFont(), 0.58f, false);
+}
+
+void AAstroMissionHUD::DrawLearningBadgeRow(const EAstroMissionScreen Screen, const float X, const float Y, const float W)
+{
+    FString FirstIcon = TEXT("Sun");
+    FString FirstLabel = TEXT("NOTICE");
+    FString FirstDetail = TEXT("Sun makes light");
+    FString SecondIcon = TEXT("Info");
+    FString SecondLabel = TEXT("REMEMBER");
+    FString SecondDetail = TEXT("A star is a light maker");
+    FString ThirdIcon = TEXT("Mercury");
+    FString ThirdLabel = TEXT("NEXT");
+    FString ThirdDetail = TEXT("Mercury has craters");
+
+    FLinearColor FirstFill = FLinearColor(0.76f, 0.30f, 0.10f, 0.94f);
+    FLinearColor SecondFill = FLinearColor(0.12f, 0.42f, 0.56f, 0.94f);
+    FLinearColor ThirdFill = FLinearColor(0.40f, 0.36f, 0.42f, 0.94f);
+
+    if (Screen == EAstroMissionScreen::DeepDive)
+    {
+        FirstLabel = TEXT("LOOK");
+        FirstDetail = TEXT("light and heat");
+        SecondLabel = TEXT("COMPARE");
+        SecondDetail = TEXT("star, not planet");
+        ThirdIcon = TEXT("Info");
+        ThirdLabel = TEXT("WORD");
+        ThirdDetail = TEXT("star");
+        ThirdFill = FLinearColor(0.42f, 0.28f, 0.62f, 0.94f);
+    }
+    else if (Screen == EAstroMissionScreen::QuizFeedback)
+    {
+        FirstIcon = TEXT("Info");
+        FirstLabel = TEXT("CLUE");
+        FirstDetail = TEXT("match the card");
+        SecondIcon = TEXT("Check");
+        SecondLabel = TEXT("TRY");
+        SecondDetail = TEXT("one answer");
+        ThirdIcon = TEXT("Stamp");
+        ThirdLabel = TEXT("GOAL");
+        ThirdDetail = TEXT("earn Sun stamp");
+        SecondFill = FLinearColor(0.20f, 0.50f, 0.72f, 0.94f);
+        ThirdFill = FLinearColor(0.12f, 0.54f, 0.32f, 0.94f);
+    }
+    else if (Screen == EAstroMissionScreen::StampAward)
+    {
+        FirstIcon = TEXT("Stamp");
+        FirstLabel = TEXT("I LEARNED");
+        FirstDetail = TEXT("Sun is a star");
+        SecondIcon = TEXT("Sun");
+        SecondLabel = TEXT("STAR POWER");
+        SecondDetail = TEXT("makes light");
+        ThirdIcon = TEXT("Mercury");
+        ThirdLabel = TEXT("NEXT");
+        ThirdDetail = TEXT("closest planet");
+        SecondFill = FLinearColor(0.86f, 0.40f, 0.12f, 0.94f);
+        ThirdFill = FLinearColor(0.40f, 0.46f, 0.50f, 0.94f);
+    }
+
+    const int32 BadgeCount = W >= 500.0f ? 3 : 2;
+    const float Gap = 8.0f;
+    const float BadgeW = (W - Gap * (BadgeCount - 1)) / BadgeCount;
+    DrawLearningBadge(FirstIcon, FirstLabel, FirstDetail, X, Y, BadgeW, FirstFill);
+    DrawLearningBadge(SecondIcon, SecondLabel, SecondDetail, X + BadgeW + Gap, Y, BadgeW, SecondFill);
+    if (BadgeCount >= 3)
+    {
+        DrawLearningBadge(ThirdIcon, ThirdLabel, ThirdDetail, X + (BadgeW + Gap) * 2.0f, Y, BadgeW, ThirdFill);
+    }
 }
 
 void AAstroMissionHUD::DrawPassportFrame(const float X, const float Y, const float W, const float H)

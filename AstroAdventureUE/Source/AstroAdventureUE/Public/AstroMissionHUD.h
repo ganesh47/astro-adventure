@@ -45,6 +45,9 @@ private:
     void DrawOwnedTexture(UTexture2D* Texture, float X, float Y, float W, float H, const FLinearColor& Tint);
     void DrawLine(const FString& Text, float X, float& Y, const FLinearColor& Color, float Scale = 1.0f);
     void DrawBadge(const FString& Text, float X, float Y, float W, const FLinearColor& Fill, const FLinearColor& TextColor, float Scale = 0.82f);
+    void DrawMiniLearningIcon(const FString& Icon, float CenterX, float CenterY, float Size);
+    void DrawLearningBadge(const FString& Icon, const FString& Label, const FString& Detail, float X, float Y, float W, const FLinearColor& Fill);
+    void DrawLearningBadgeRow(EAstroMissionScreen Screen, float X, float Y, float W);
     void DrawPassportFrame(float X, float Y, float W, float H);
     void DrawStampAwardHero(float X, float Y, float W, float H);
     void DrawStampStrip(const FString& StatusLine, float X, float Y, float W);

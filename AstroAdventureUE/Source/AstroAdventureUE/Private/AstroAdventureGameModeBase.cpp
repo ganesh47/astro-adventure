@@ -391,6 +391,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     ScanBeamActors.Reset();
     RouteMarkerActors.Reset();
     RouteMarkerOwnerIndices.Reset();
+    FirstLoopTeachingTrailActors.Reset();
     for (int32 Index = 0; Index < Lessons.Num(); ++Index)
     {
         AAstroDestinationActor* Actor = GetWorld()->SpawnActor<AAstroDestinationActor>(AAstroDestinationActor::StaticClass(), Positions[Index], FRotator::ZeroRotator);
@@ -410,6 +411,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
 
     SpawnAsteroidBelt(6, Positions[6]);
     SpawnSunTeachingVisual();
+    SpawnFirstLoopTeachingTrail();
 
     PlayerPawn = Cast<AAstroPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex))
@@ -619,6 +621,74 @@ void AAstroAdventureGameModeBase::UpdateSunTeachingVisual()
     }
 }
 
+void AAstroAdventureGameModeBase::SpawnFirstLoopTeachingTrail()
+{
+    UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    if (!SphereMesh || !GetWorld())
+    {
+        return;
+    }
+
+    for (int32 Index = 0; Index < 9; ++Index)
+    {
+        AStaticMeshActor* Marker = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Marker)
+        {
+            Marker->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+            Marker->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            Marker->GetStaticMeshComponent()->SetCastShadow(false);
+            Marker->SetActorHiddenInGame(true);
+            Marker->SetActorScale3D(FVector(0.04f));
+            ApplyRuntimeColor(Marker, FLinearColor(1.0f, 0.78f, 0.24f, 0.76f), 0.85f);
+            FirstLoopTeachingTrailActors.Add(Marker);
+        }
+    }
+}
+
+void AAstroAdventureGameModeBase::UpdateFirstLoopTeachingTrail()
+{
+    const bool bHasFirstLoopWorlds = DestinationActors.IsValidIndex(0) && DestinationActors[0] && DestinationActors.IsValidIndex(1) && DestinationActors[1];
+    const bool bShowTrail = bHasFirstLoopWorlds
+        && (CurrentScreen == EAstroMissionScreen::Home
+            || CurrentScreen == EAstroMissionScreen::AgeSelect
+            || CurrentScreen == EAstroMissionScreen::MissionPrompt
+            || ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex));
+
+    if (!bShowTrail)
+    {
+        for (AStaticMeshActor* Marker : FirstLoopTeachingTrailActors)
+        {
+            if (Marker)
+            {
+                Marker->SetActorHiddenInGame(true);
+            }
+        }
+        return;
+    }
+
+    const FVector SunLocation = DestinationActors[0]->GetActorLocation();
+    const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
+    for (int32 Index = 0; Index < FirstLoopTeachingTrailActors.Num(); ++Index)
+    {
+        AStaticMeshActor* Marker = FirstLoopTeachingTrailActors[Index];
+        if (!Marker)
+        {
+            continue;
+        }
+
+        const float Alpha = static_cast<float>(Index + 1) / static_cast<float>(FirstLoopTeachingTrailActors.Num() + 1);
+        const bool bUnlockMoment = ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex);
+        const FVector ArcLift(0.0f, 0.0f, FMath::Sin(Alpha * PI) * (bUnlockMoment ? 78.0f : 54.0f));
+        Marker->SetActorLocation(FMath::Lerp(SunLocation, MercuryLocation, Alpha) + ArcLift + FVector(0.0f, 0.0f, bUnlockMoment ? 18.0f : 8.0f));
+        const float Scale = ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex)
+            ? FMath::Lerp(0.082f, 0.142f, Alpha)
+            : FMath::Lerp(0.052f, 0.090f, Alpha);
+        Marker->SetActorScale3D(FVector(Scale));
+        ApplyRuntimeColor(Marker, bUnlockMoment ? FLinearColor(1.0f, 0.88f, 0.32f, 0.96f) : FLinearColor(1.0f, 0.76f, 0.24f, 0.76f), bUnlockMoment ? 1.75f : 0.92f);
+        Marker->SetActorHiddenInGame(false);
+    }
+}
+
 void AAstroAdventureGameModeBase::ApplyFirstLoopStaging()
 {
     const bool bUseStaging = ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex);
@@ -639,6 +709,7 @@ void AAstroAdventureGameModeBase::ApplyFirstLoopStaging()
     }
 
     UpdateSunTeachingVisual();
+    UpdateFirstLoopTeachingTrail();
 }
 
 void AAstroAdventureGameModeBase::LoadProgress()

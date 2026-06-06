@@ -107,6 +107,9 @@ private:
     TArray<AStaticMeshActor*> SunTeachingRayActors;
 
     UPROPERTY()
+    TArray<AStaticMeshActor*> FirstLoopTeachingTrailActors;
+
+    UPROPERTY()
     ADirectionalLight* KeyLightActor = nullptr;
 
     UPROPERTY()
@@ -152,6 +155,8 @@ private:
     void SpawnBackdrop();
     void SpawnSunTeachingVisual();
     void UpdateSunTeachingVisual();
+    void SpawnFirstLoopTeachingTrail();
+    void UpdateFirstLoopTeachingTrail();
     void ApplyFirstLoopStaging();
     void ApplyLightingLook();
     void RefreshScenePresentation();
