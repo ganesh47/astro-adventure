@@ -144,11 +144,11 @@ FVector FirstLoopStagedPosition(const EAstroMissionScreen Screen, const int32 De
     const bool bRewardHandoff = Screen == EAstroMissionScreen::StampAward;
     if (DestinationIndex == 0)
     {
-        return bRewardHandoff ? FVector(-210.0f, 450.0f, 1840.0f) : FVector(-245.0f, 430.0f, 1780.0f);
+        return bRewardHandoff ? FVector(-180.0f, 425.0f, 1160.0f) : FVector(-220.0f, 405.0f, 1160.0f);
     }
     if (DestinationIndex == 1)
     {
-        return bRewardHandoff ? FVector(290.0f, 300.0f, 1885.0f) : FVector(230.0f, 250.0f, 1870.0f);
+        return bRewardHandoff ? FVector(318.0f, 252.0f, 1248.0f) : FVector(244.0f, 220.0f, 1234.0f);
     }
 
     return RoutePosition;
@@ -202,13 +202,13 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
 {
     if (Screen == EAstroMissionScreen::StampAward && NextStopLocation)
     {
-        const FVector SunWeightedRoute = FocusLocation * 0.72f + (*NextStopLocation) * 0.28f;
-        return SunWeightedRoute + FVector(430.0f, 350.0f, 230.0f);
+        const FVector SunWeightedRoute = FocusLocation * 0.84f + (*NextStopLocation) * 0.16f;
+        return SunWeightedRoute + FVector(-210.0f, -70.0f, -440.0f);
     }
 
     if (Screen == EAstroMissionScreen::Scanning)
     {
-        return FocusLocation + FVector(420.0f, 330.0f, 220.0f);
+        return FocusLocation + FVector(-220.0f, -80.0f, -500.0f);
     }
 
     if (Screen == EAstroMissionScreen::DiscoveryCard
@@ -216,10 +216,10 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
         || Screen == EAstroMissionScreen::Quiz
         || Screen == EAstroMissionScreen::QuizFeedback)
     {
-        return FocusLocation + FVector(390.0f, 310.0f, 220.0f);
+        return FocusLocation + FVector(-220.0f, -80.0f, -500.0f);
     }
 
-    return FocusLocation + FVector(380.0f, 330.0f, 220.0f);
+    return FocusLocation + FVector(-230.0f, -80.0f, -510.0f);
 }
 }
 
@@ -963,6 +963,8 @@ void AAstroAdventureGameModeBase::SetMissionScreen(const EAstroMissionScreen New
         GetWorld()->GetTimerManager().ClearTimer(ScanRevealTimerHandle);
     }
     UpdateDestinationFocus();
+    RefreshScenePresentation();
+    RefreshPlayerPresentation();
 }
 
 void AAstroAdventureGameModeBase::NotifyHomeInputReceived()
@@ -1478,7 +1480,12 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
             {
                 const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
                 PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
-                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, &MercuryLocation));
+                PlayerPawn->SetCameraFocusTarget(FVector(-520.0f, 330.0f, 620.0f));
+            }
+            else if (FocusedDestinationIndex == 0)
+            {
+                PlayerPawn->SetTravelTarget(FocusLocation + FVector(300.0f, 205.0f, 118.0f));
+                PlayerPawn->SetCameraFocusTarget(FVector(-520.0f, 330.0f, 620.0f));
             }
             else
             {

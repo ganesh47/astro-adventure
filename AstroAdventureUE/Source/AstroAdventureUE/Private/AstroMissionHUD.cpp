@@ -319,7 +319,7 @@ void AAstroMissionHUD::DrawHUD()
         || CurrentScreen == EAstroMissionScreen::DeepDive
         || CurrentScreen == EAstroMissionScreen::QuizFeedback
         || CurrentScreen == EAstroMissionScreen::StampAward;
-    const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 860.0f
+    const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 740.0f
         : CurrentScreen == EAstroMissionScreen::Scanning ? 460.0f
         : CurrentScreen == EAstroMissionScreen::DeepDive ? 800.0f
         : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 720.0f
@@ -334,17 +334,17 @@ void AAstroMissionHUD::DrawHUD()
         : bHasPassportRows ? 310.0f
         : bHasQuizRows ? 372.0f
         : bHasMenuRows ? 204.0f
-        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 338.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
+        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 300.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
         : Buckets.BodyLines.Num() >= 3 ? 184.0f : 164.0f;
     const float CardX = CurrentScreen == EAstroMissionScreen::StampAward
-        ? (Canvas->SizeX - CardW) * 0.5f
+        ? FMath::Clamp(Canvas->SizeX * 0.07f, 34.0f, 96.0f)
         : CurrentScreen == EAstroMissionScreen::Scanning
         ? FMath::Clamp(Canvas->SizeX * 0.035f, 26.0f, 42.0f)
         : bWorldTeachingScreen && !bHasQuizRows
         ? FMath::Clamp(Canvas->SizeX * 0.035f, 28.0f, 54.0f)
         : (Canvas->SizeX - CardW) * 0.5f;
     const float DesiredCardY = CurrentScreen == EAstroMissionScreen::StampAward
-        ? FMath::Clamp(Canvas->SizeY * 0.26f, HeaderH + 24.0f, 250.0f)
+        ? FMath::Clamp(Canvas->SizeY * 0.18f, HeaderH + 20.0f, 168.0f)
         : bHasQuizRows
         ? FMath::Max(HeaderH + 12.0f, FMath::Clamp(Canvas->SizeY * 0.28f, 176.0f, 236.0f))
         : CurrentScreen == EAstroMissionScreen::Scanning
