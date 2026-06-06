@@ -143,11 +143,11 @@ FVector FirstLoopStagedPosition(const int32 DestinationIndex, const FVector& Rou
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-470.0f, 38.0f, 460.0f);
+        return FVector(-250.0f, 38.0f, 720.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(-210.0f, 24.0f, 555.0f);
+        return FVector(-70.0f, 24.0f, 825.0f);
     }
 
     return RoutePosition;
@@ -1433,7 +1433,7 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
         if (IsHomeCompositionScreen(CurrentScreen))
         {
             PlayerPawn->SetTravelTarget(FVector(-250.0f, 140.0f, 1020.0f));
-            PlayerPawn->SetCameraFocusTarget(FVector(-560.0f, 355.0f, 460.0f));
+            PlayerPawn->SetCameraFocusTarget(FVector(-520.0f, 330.0f, 620.0f));
         }
         else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
         {
@@ -1442,12 +1442,12 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
                 const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
                 const FVector RouteMidpoint = (FocusLocation + MercuryLocation) * 0.5f;
                 PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
-                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(-34.0f, -10.0f, 112.0f));
+                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(-34.0f, -10.0f, -92.0f));
             }
             else
             {
                 PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
-                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, 86.0f);
+                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, -130.0f);
                 PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
             }
         }
@@ -1693,6 +1693,7 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
               const FVector FocusLocation = FocusActor->GetActorLocation();
               PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
               PlayerPawn->SetScannerTarget(FocusLocation + FVector(0.0f, 0.0f, 18.0f));
+              PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(-70.0f, -18.0f, -128.0f));
 
               if (UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")))
               {
