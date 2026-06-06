@@ -143,11 +143,11 @@ FVector FirstLoopStagedPosition(const int32 DestinationIndex, const FVector& Rou
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-250.0f, 38.0f, 720.0f);
+        return FVector(-250.0f, 38.0f, 770.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(-70.0f, 24.0f, 825.0f);
+        return FVector(-46.0f, 24.0f, 888.0f);
     }
 
     return RoutePosition;
@@ -157,11 +157,11 @@ FVector HomeDioramaPosition(const int32 DestinationIndex, const FVector& RoutePo
 {
     if (DestinationIndex == 0)
     {
-        return FVector(-300.0f, 405.0f, 1100.0f);
+        return FVector(-260.0f, 405.0f, 1140.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(180.0f, 218.0f, 1218.0f);
+        return FVector(214.0f, 218.0f, 1228.0f);
     }
 
     return RoutePosition;
@@ -1145,7 +1145,17 @@ void AAstroAdventureGameModeBase::SubmitAnswer(const int32 ChoiceIndex)
     {
         LastFeedback = (bLastAnswerCorrect ? Lesson->CorrectFeedback : Lesson->RetryFeedback).ToString();
     }
-    SetMissionScreen(EAstroMissionScreen::QuizFeedback);
+
+    if (bLastAnswerCorrect && !bAlreadyStamped)
+    {
+        CompleteQuiz(Lesson->DestinationId, true);
+        TriggerStampFeedback(*Lesson);
+        SetMissionScreen(EAstroMissionScreen::StampAward);
+    }
+    else
+    {
+        SetMissionScreen(EAstroMissionScreen::QuizFeedback);
+    }
 
     if (!bLastAnswerCorrect)
     {
@@ -1444,12 +1454,12 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
                 const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
                 const FVector RouteMidpoint = (FocusLocation + MercuryLocation) * 0.5f;
                 PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
-                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(-34.0f, -10.0f, 120.0f));
+                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(220.0f, 210.0f, 80.0f));
             }
             else
             {
                 PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
-                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, 120.0f);
+                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(220.0f, 210.0f, 80.0f);
                 PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
             }
         }
@@ -1695,7 +1705,7 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
               const FVector FocusLocation = FocusActor->GetActorLocation();
               PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
               PlayerPawn->SetScannerTarget(FocusLocation + FVector(0.0f, 0.0f, 18.0f));
-              PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(-70.0f, -18.0f, 120.0f));
+              PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(220.0f, 210.0f, 80.0f));
 
               if (UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")))
               {

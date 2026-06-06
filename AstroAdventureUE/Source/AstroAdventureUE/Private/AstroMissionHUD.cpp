@@ -296,10 +296,6 @@ void AAstroMissionHUD::DrawHUD()
             RowY += RowStep;
         }
 
-        const float RouteCueW = FMath::Clamp(Canvas->SizeX - (PanelX + PanelW + 58.0f), 250.0f, 390.0f);
-        const float RouteCueX = FMath::Clamp(PanelX + PanelW + 30.0f, PanelX, Canvas->SizeX - RouteCueW - 36.0f);
-        const float RouteCueY = FMath::Clamp(PanelY + PanelH + 32.0f, FMath::Clamp(Canvas->SizeY * 0.046f, 34.0f, 46.0f) + 84.0f, Canvas->SizeY - 132.0f);
-        DrawFirstRouteCue(RouteCueX, RouteCueY, RouteCueW, false);
         DrawActionBar(CurrentScreen, PanelX + 22.0f, PanelY + PanelH + 6.0f, FMath::Min(PanelW, Canvas->SizeX - PanelX - 44.0f), false);
         return;
     }

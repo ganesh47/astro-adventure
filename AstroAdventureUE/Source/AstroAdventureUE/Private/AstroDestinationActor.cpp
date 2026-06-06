@@ -522,6 +522,7 @@ void AAstroDestinationActor::UpdateNameplateLayout()
     const bool bAtlasMode = PresentationMode == EAstroDestinationPresentationMode::Atlas;
     const bool bHomeMode = PresentationMode == EAstroDestinationPresentationMode::Home;
     Nameplate->SetVisibility(bIsFocused && !bAtlasMode && !bHomeMode);
+    Label->SetVisibility(!bHomeMode);
     Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
 
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
