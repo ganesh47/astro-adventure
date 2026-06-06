@@ -132,6 +132,7 @@ private:
     FVector LastActorLocation = FVector::ZeroVector;
     bool bScannerActive = false;
     bool bHasLastActorLocation = false;
+    bool bShipVisible = true;
 
     UPROPERTY(Transient)
     UMaterialInstanceDynamic* BodyMaterial = nullptr;

@@ -453,6 +453,16 @@ void AAstroPlayerPawn::SetShipAccentColor(const FLinearColor& NewColor)
 
 void AAstroPlayerPawn::SetShipVisible(const bool bVisible)
 {
+    bShipVisible = bVisible;
+    if (!bShipVisible)
+    {
+        bScannerActive = false;
+        ScannerPulse = 0.0f;
+        ScannerSequenceTime = 0.0f;
+        ScannerActiveTimeRemaining = 0.0f;
+        NavigationPulse = 0.0f;
+    }
+
     if (ShipVisualRoot)
     {
         ShipVisualRoot->SetVisibility(bVisible, true);
@@ -534,6 +544,12 @@ void AAstroPlayerPawn::UpdateShipPresentation(const float DeltaSeconds)
 {
     if (!ShipVisualRoot)
     {
+        return;
+    }
+
+    if (!bShipVisible)
+    {
+        SetShipVisible(false);
         return;
     }
 

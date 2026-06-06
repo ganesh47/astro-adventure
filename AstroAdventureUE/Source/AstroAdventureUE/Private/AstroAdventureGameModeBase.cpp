@@ -1684,7 +1684,8 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     PlayerPawn->SetCameraPresentationProfile(Profile);
     PlayerPawn->SetScannerActive(IsScanEffectActive());
     const bool bShowShip = !IsHomeCompositionScreen(CurrentScreen)
-        && CurrentScreen != EAstroMissionScreen::MissionPrompt;
+        && CurrentScreen != EAstroMissionScreen::MissionPrompt
+        && CurrentScreen != EAstroMissionScreen::StampAward;
     PlayerPawn->SetShipVisible(bShowShip);
 
     if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
