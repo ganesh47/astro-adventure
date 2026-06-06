@@ -198,6 +198,20 @@ bool ShouldShowSunToMercuryUnlock(const EAstroMissionScreen Screen, const int32 
     return Screen == EAstroMissionScreen::StampAward && FocusedDestinationIndex == 0;
 }
 
+bool ShouldShowSunToMercuryTeachingTrail(const EAstroMissionScreen Screen, const int32 FocusedDestinationIndex)
+{
+    return FocusedDestinationIndex == 0
+        && (Screen == EAstroMissionScreen::Home
+            || Screen == EAstroMissionScreen::AgeSelect
+            || Screen == EAstroMissionScreen::MissionPrompt
+            || Screen == EAstroMissionScreen::Navigation
+            || Screen == EAstroMissionScreen::Scanning
+            || Screen == EAstroMissionScreen::DiscoveryCard
+            || Screen == EAstroMissionScreen::Quiz
+            || Screen == EAstroMissionScreen::QuizFeedback
+            || ShouldShowSunToMercuryUnlock(Screen, FocusedDestinationIndex));
+}
+
 FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FVector& FocusLocation, const FVector* NextStopLocation)
 {
     if (Screen == EAstroMissionScreen::StampAward && NextStopLocation)
@@ -676,10 +690,7 @@ void AAstroAdventureGameModeBase::UpdateFirstLoopTeachingTrail()
 {
     const bool bHasFirstLoopWorlds = DestinationActors.IsValidIndex(0) && DestinationActors[0] && DestinationActors.IsValidIndex(1) && DestinationActors[1];
     const bool bShowTrail = bHasFirstLoopWorlds
-        && (CurrentScreen == EAstroMissionScreen::Home
-            || CurrentScreen == EAstroMissionScreen::AgeSelect
-            || CurrentScreen == EAstroMissionScreen::MissionPrompt
-            || ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex));
+        && ShouldShowSunToMercuryTeachingTrail(CurrentScreen, FocusedDestinationIndex);
 
     if (!bShowTrail)
     {

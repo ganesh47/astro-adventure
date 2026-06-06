@@ -311,6 +311,17 @@ void AAstroMissionHUD::DrawHUD()
             RowY += RowStep;
         }
 
+        if (Canvas->SizeX >= 1280.0f)
+        {
+            const float VignetteX = FMath::Clamp(PanelX + PanelW + 58.0f, Canvas->SizeX * 0.44f, Canvas->SizeX - 620.0f);
+            const float VignetteY = FMath::Clamp(Canvas->SizeY * 0.095f, 58.0f, 112.0f);
+            const float VignetteW = FMath::Min(Canvas->SizeX - VignetteX - 56.0f, 540.0f);
+            if (VignetteW >= 390.0f)
+            {
+                DrawHomeRouteVignette(VignetteX, VignetteY, VignetteW, FMath::Clamp(Canvas->SizeY * 0.24f, 158.0f, 230.0f));
+            }
+        }
+
         DrawActionBar(CurrentScreen, PanelX + 22.0f, PanelY + PanelH + 6.0f, FMath::Min(PanelW, Canvas->SizeX - PanelX - 44.0f), false);
         return;
     }
