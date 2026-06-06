@@ -320,10 +320,10 @@ void AAstroMissionHUD::DrawHUD()
         || CurrentScreen == EAstroMissionScreen::QuizFeedback
         || CurrentScreen == EAstroMissionScreen::StampAward;
     const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 620.0f
-        : CurrentScreen == EAstroMissionScreen::Scanning ? 460.0f
+        : CurrentScreen == EAstroMissionScreen::Scanning ? 540.0f
         : CurrentScreen == EAstroMissionScreen::DeepDive ? 800.0f
         : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 720.0f
-        : CurrentScreen == EAstroMissionScreen::Navigation ? 480.0f
+        : CurrentScreen == EAstroMissionScreen::Navigation ? 560.0f
         : bHasQuizRows ? 820.0f
         : bHasMenuRows ? 760.0f
         : bWorldTeachingScreen ? 620.0f
@@ -334,14 +334,14 @@ void AAstroMissionHUD::DrawHUD()
         : bHasPassportRows ? 310.0f
         : bHasQuizRows ? 372.0f
         : bHasMenuRows ? 204.0f
-        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 250.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 118.0f)
+        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 286.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 132.0f : CurrentScreen == EAstroMissionScreen::Navigation ? 142.0f : 118.0f)
         : Buckets.BodyLines.Num() >= 3 ? 184.0f : 164.0f;
     const float CardX = CurrentScreen == EAstroMissionScreen::StampAward
         ? FMath::Clamp(Canvas->SizeX * 0.07f, 34.0f, 96.0f)
         : CurrentScreen == EAstroMissionScreen::Scanning
-        ? FMath::Clamp(Canvas->SizeX * 0.035f, 26.0f, 42.0f)
+        ? FMath::Clamp(Canvas->SizeX * 0.045f, 34.0f, 64.0f)
         : bWorldTeachingScreen && !bHasQuizRows
-        ? FMath::Clamp(Canvas->SizeX * 0.035f, 28.0f, 54.0f)
+        ? FMath::Clamp(Canvas->SizeX * 0.045f, 34.0f, 72.0f)
         : (Canvas->SizeX - CardW) * 0.5f;
     const float DesiredCardY = CurrentScreen == EAstroMissionScreen::StampAward
         ? FMath::Clamp(Canvas->SizeY * 0.18f, HeaderH + 20.0f, 168.0f)
@@ -1015,7 +1015,7 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     if (bHasQuizRows)
     {
         AddActionIfMissing(Actions, TEXT("Pick: Up/Down"));
-        AddActionIfMissing(Actions, TEXT("Start: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("Select: Enter/Space"));
         AddActionIfMissing(Actions, TEXT("Help: H/Y"));
     }
     else if (Screen == EAstroMissionScreen::Home)
@@ -1027,12 +1027,12 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     else if (Screen == EAstroMissionScreen::AgeSelect)
     {
         AddActionIfMissing(Actions, TEXT("Pick: Arrows"));
-        AddActionIfMissing(Actions, TEXT("Start: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Back: B"));
+        AddActionIfMissing(Actions, TEXT("Select: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::MissionPrompt)
     {
-        AddActionIfMissing(Actions, TEXT("Start: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("Launch: Enter/Space"));
         AddActionIfMissing(Actions, TEXT("Next: Arrows/WASD"));
         AddActionIfMissing(Actions, TEXT("Back: Esc"));
     }
@@ -1050,14 +1050,14 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::Navigation)
     {
-        AddActionIfMissing(Actions, TEXT("Choose: Arrows"));
-        AddActionIfMissing(Actions, TEXT("Scan clue"));
-        AddActionIfMissing(Actions, TEXT("Passport"));
+        AddActionIfMissing(Actions, TEXT("Travel: Arrows/WASD"));
+        AddActionIfMissing(Actions, TEXT("Scan: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("Passport: P/RT"));
     }
     else if (Screen == EAstroMissionScreen::Scanning)
     {
-        AddActionIfMissing(Actions, TEXT("Watch"));
-        AddActionIfMissing(Actions, TEXT("Back: B"));
+        AddActionIfMissing(Actions, TEXT("Watch scan"));
+        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
         AddActionIfMissing(Actions, TEXT("Pause: Esc"));
     }
     else if (Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::AtlasView)
@@ -1068,26 +1068,26 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::DiscoveryCard)
     {
-        AddActionIfMissing(Actions, TEXT("Start: Quiz"));
-        AddActionIfMissing(Actions, TEXT("Help: More"));
-        AddActionIfMissing(Actions, TEXT("Back: B"));
+        AddActionIfMissing(Actions, TEXT("Quiz: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("More: M/LT"));
+        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::DeepDive)
     {
-        AddActionIfMissing(Actions, TEXT("Back: Close"));
-        AddActionIfMissing(Actions, TEXT("Start: Quiz"));
-        AddActionIfMissing(Actions, TEXT("Back: B"));
+        AddActionIfMissing(Actions, TEXT("Close: Backspace/B"));
+        AddActionIfMissing(Actions, TEXT("Quiz: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::QuizFeedback)
     {
         AddActionIfMissing(Actions, TEXT("Next: Enter/Space"));
         AddActionIfMissing(Actions, TEXT("Help: H/Y"));
-        AddActionIfMissing(Actions, TEXT("Back: B"));
+        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
     }
     else if (Screen == EAstroMissionScreen::StampAward)
     {
-        AddActionIfMissing(Actions, TEXT("Next stop"));
-        AddActionIfMissing(Actions, TEXT("Passport: P"));
+        AddActionIfMissing(Actions, TEXT("Next: Enter/Space"));
+        AddActionIfMissing(Actions, TEXT("Passport: P/RT"));
         AddActionIfMissing(Actions, TEXT("Back: Esc"));
     }
     else
@@ -1100,7 +1100,7 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     float BadgeX = X;
     for (int32 Index = 0; Index < Actions.Num() && Index < 3; ++Index)
     {
-        const float BadgeW = FMath::Clamp(30.0f + Actions[Index].Len() * 6.4f, 84.0f, 168.0f);
+        const float BadgeW = FMath::Clamp(34.0f + Actions[Index].Len() * 6.2f, 96.0f, 188.0f);
         if (BadgeX + BadgeW > X + W)
         {
             break;
@@ -1184,7 +1184,7 @@ void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const flo
     DrawRect(Stripe, X, Y, 12.0f, 64.0f);
     DrawSoftEllipse(X + 48.0f, Y + 32.0f, 24.0f, 22.0f, bFocused ? FLinearColor(1.0f, 0.94f, 0.62f, 0.92f) : FLinearColor(0.22f, 0.42f, 0.50f, 0.90f), 18);
     DrawText(ChoiceNumber.IsEmpty() ? TEXT("?") : ChoiceNumber, TextColor, X + 42.0f, Y + 22.0f, GEngine->GetSmallFont(), 0.94f, false);
-    DrawText(bFocused ? TEXT("PICK THIS") : TEXT("choice"), TextColor, X + 82.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.58f, false);
+    DrawText(bFocused ? TEXT("SELECTED") : TEXT("choice"), TextColor, X + 82.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.58f, false);
     DrawText(AstroClipTextToWidth(ChoiceBody, W - 116.0f, 1.14f), TextColor, X + 82.0f, Y + 31.0f, GEngine->GetSmallFont(), 1.14f, false);
 }
 
@@ -1379,7 +1379,8 @@ FString AAstroMissionHUD::FriendlyPrimaryLine(const FString& Text) const
     Result.ReplaceInline(TEXT("discovery card"), TEXT("discovery card"), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT("Solar Passport: First Expedition"), TEXT("First Expedition"), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT("Solar Passport discovery log"), TEXT("Passport Stops"), ESearchCase::IgnoreCase);
-    Result.ReplaceInline(TEXT("Choose your explorer mode"), TEXT("Choose an age mode"), ESearchCase::IgnoreCase);
+    Result.ReplaceInline(TEXT("Choose your explorer level"), TEXT("Choose explorer level"), ESearchCase::IgnoreCase);
+    Result.ReplaceInline(TEXT("Choose your explorer mode"), TEXT("Choose explorer level"), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT(", then scan its discovery card!"), TEXT(". Scan its card."), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT("Travel to "), TEXT("Next: "), ESearchCase::IgnoreCase);
     Result.ReplaceInline(TEXT("Rescan "), TEXT("Review "), ESearchCase::IgnoreCase);

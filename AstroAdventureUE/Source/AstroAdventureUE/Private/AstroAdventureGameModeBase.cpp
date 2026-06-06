@@ -56,7 +56,7 @@ FAstroLightingSettings GetLightingSettings(const EAstroLightingLook Look)
         return { 8.0f, 38000.0f, 162000.0f, 30.0f, 0.12f, 0.055f, 1.50f, FVector4(1.14f, 1.10f, 1.13f, 1.0f) };
     case EAstroLightingLook::HomeLook:
     default:
-        return { 7.4f, 36000.0f, 168000.0f, 32.0f, 0.14f, 0.055f, 1.52f, FVector4(1.14f, 1.11f, 1.13f, 1.0f) };
+        return { 7.8f, 42000.0f, 182000.0f, 38.0f, 0.18f, 0.06f, 1.50f, FVector4(1.17f, 1.13f, 1.15f, 1.0f) };
     }
 }
 
@@ -546,7 +546,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
     {
         SkyPlane->GetStaticMeshComponent()->SetStaticMesh(PlaneMesh ? PlaneMesh : CubeMesh);
         SkyPlane->SetActorRotation(PlaneMesh ? FRotator(90.0f, 0.0f, 0.0f) : FRotator::ZeroRotator);
-        SkyPlane->SetActorScale3D(PlaneMesh ? FVector(48.0f, 18.0f, 1.0f) : FVector(48.0f, 0.045f, 18.0f));
+        SkyPlane->SetActorScale3D(PlaneMesh ? FVector(58.0f, 22.0f, 1.0f) : FVector(58.0f, 0.045f, 22.0f));
         SkyPlane->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         SkyPlane->GetStaticMeshComponent()->SetCastShadow(false);
         if (SkyBackdropMaterial)
@@ -555,7 +555,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
         }
         else
         {
-            ApplyRuntimeColor(SkyPlane, FLinearColor(0.025f, 0.035f, 0.085f, 1.0f), 0.02f);
+            ApplyRuntimeColor(SkyPlane, FLinearColor(0.055f, 0.082f, 0.16f, 1.0f), 0.055f);
         }
         BackdropActors.Add(SkyPlane);
     }
@@ -573,7 +573,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
             Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.01f, Index % 53 == 0 ? 0.024f : 0.018f)));
             Star->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             Star->GetStaticMeshComponent()->SetCastShadow(false);
-            ApplyRuntimeColor(Star, Color, Index % 53 == 0 ? 0.12f : 0.055f);
+            ApplyRuntimeColor(Star, Color, Index % 53 == 0 ? 0.20f : 0.085f);
             BackdropActors.Add(Star);
         }
     }
@@ -581,7 +581,7 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
     NebulaBackdropStartIndex = BackdropActors.Num();
     for (int32 Index = 0; Index < 10; ++Index)
     {
-        const FLinearColor Color = Index % 3 == 0 ? FLinearColor(0.05f, 0.12f, 0.28f, 0.10f) : Index % 3 == 1 ? FLinearColor(0.16f, 0.06f, 0.25f, 0.08f) : FLinearColor(0.28f, 0.10f, 0.04f, 0.07f);
+        const FLinearColor Color = Index % 3 == 0 ? FLinearColor(0.08f, 0.16f, 0.34f, 0.11f) : Index % 3 == 1 ? FLinearColor(0.18f, 0.10f, 0.28f, 0.10f) : FLinearColor(0.28f, 0.12f, 0.06f, 0.09f);
         const FVector Center(BackdropStream.FRandRange(-1680.0f, 2440.0f), BackdropStream.FRandRange(1080.0f, 1620.0f), BackdropStream.FRandRange(250.0f, 940.0f));
         AStaticMeshActor* Cloud = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
@@ -590,10 +590,10 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
         if (Cloud)
         {
             Cloud->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(1.8f, 4.6f), BackdropStream.FRandRange(0.32f, 0.66f), BackdropStream.FRandRange(0.06f, 0.16f)));
+            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(1.2f, 2.7f), BackdropStream.FRandRange(0.86f, 1.65f), BackdropStream.FRandRange(0.06f, 0.13f)));
             Cloud->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             Cloud->GetStaticMeshComponent()->SetCastShadow(false);
-            ApplyRuntimeColor(Cloud, Color, 0.055f);
+            ApplyRuntimeColor(Cloud, Color, 0.065f);
             BackdropActors.Add(Cloud);
         }
     }
@@ -902,7 +902,7 @@ void AAstroAdventureGameModeBase::Confirm()
         return;
     case EAstroMissionScreen::DiscoveryCard:
     case EAstroMissionScreen::DeepDive:
-        FocusedQuizChoiceIndex = 0;
+        FocusedQuizChoiceIndex = Lesson->Choices.Num() > 1 ? 1 : 0;
         SetMissionScreen(EAstroMissionScreen::Quiz);
         return;
     case EAstroMissionScreen::Passport:
@@ -1206,7 +1206,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     case EAstroMissionScreen::Home:
         return TEXT("Start your Solar Passport");
     case EAstroMissionScreen::AgeSelect:
-        return TEXT("Choose your explorer mode");
+        return TEXT("Choose your explorer level");
     case EAstroMissionScreen::MissionPrompt:
         return TEXT("Solar Passport: First Expedition");
     case EAstroMissionScreen::Navigation:
@@ -1402,11 +1402,10 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
             ? TEXT("You learned: the Sun is a star that makes its own light.")
             : TEXT("You found a new space discovery."));
         Lines.Add(IsMissionComplete() ? TEXT("First expedition complete.") : TEXT("Next Stop: Mercury, a small rocky crater world."));
-        Lines.Add(TEXT("Start flies toward your next stamp."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
     {
-        Lines.Add(FString::Printf(TEXT("Next stop: %s"), *Lesson->DisplayName.ToString()));
+        Lines.Add(FString::Printf(TEXT("Current stop: %s"), *Lesson->DisplayName.ToString()));
         Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         if (Lesson->DestinationId == FName(TEXT("mercury")) && !IsFirstStopLocked())
@@ -1578,16 +1577,17 @@ void AAstroAdventureGameModeBase::RefreshScenePresentation()
           }
       }
 
-      const bool bShowScanBeam = IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::Scanning;
-      for (AStaticMeshActor* ScanBeamActor : ScanBeamActors)
-      {
-          if (ScanBeamActor)
-          {
-              ScanBeamActor->SetActorHiddenInGame(!bShowScanBeam);
-          }
-      }
+    const bool bShowScanBeam = IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::Scanning;
+    for (AStaticMeshActor* ScanBeamActor : ScanBeamActors)
+    {
+        if (ScanBeamActor)
+        {
+            ScanBeamActor->SetActorHiddenInGame(!bShowScanBeam);
+        }
+    }
 
-      const bool bShowNebula = CurrentScreen == EAstroMissionScreen::AtlasView
+    const bool bShowNebula = ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex)
+        || CurrentScreen == EAstroMissionScreen::AtlasView
         || CurrentScreen == EAstroMissionScreen::Passport
         || CurrentScreen == EAstroMissionScreen::MissionComplete;
     for (int32 Index = 0; Index < BackdropActors.Num(); ++Index)

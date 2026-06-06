@@ -37,7 +37,7 @@ FLinearColor ReadableDestinationColor(const FString& Id, const FLinearColor& Col
 {
     if (Id == TEXT("sun"))
     {
-        return FLinearColor(1.0f, 0.58f, 0.05f, 1.0f);
+        return FLinearColor(1.0f, 0.66f, 0.16f, 1.0f);
     }
     if (Id == TEXT("mercury"))
     {
@@ -131,7 +131,7 @@ float DestinationFocusHaloEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 0.10f;
+        return 0.16f;
     }
     if (Id == TEXT("mercury"))
     {
@@ -621,17 +621,17 @@ void AAstroDestinationActor::ConfigureMotifs()
     if (Id == TEXT("mercury") || Id == TEXT("moon"))
     {
         const bool bMercury = Id == TEXT("mercury");
-        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.60f : 0.5f);
-        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.46f : 0.42f);
-        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.78f, 0.38f, 1.0f) : White, bMercury ? 0.46f : 0.34f);
-        const float CraterDepth = bMercury ? 0.013f : 0.012f;
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.38f : 0.42f, bMercury ? 0.38f : 0.42f), Crater, bMercury ? 0.006f : 0.0f);
-        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.31f : 0.34f, bMercury ? 0.31f : 0.34f), CraterSoft, bMercury ? 0.004f : 0.0f);
-        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.33f : 0.38f, bMercury ? 0.33f : 0.38f), Crater, bMercury ? 0.004f : 0.0f);
-        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.010f, bMercury ? 0.23f : 0.18f, bMercury ? 0.23f : 0.18f), CraterRim, bMercury ? 0.05f : 0.02f);
+        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.68f : 0.5f);
+        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.54f : 0.42f);
+        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.82f, 0.42f, 1.0f) : White, bMercury ? 0.56f : 0.34f);
+        const float CraterDepth = bMercury ? 0.016f : 0.012f;
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.46f : 0.42f, bMercury ? 0.46f : 0.42f), Crater, bMercury ? 0.018f : 0.0f);
+        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.38f : 0.34f, bMercury ? 0.38f : 0.34f), CraterSoft, bMercury ? 0.012f : 0.0f);
+        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.40f : 0.38f, bMercury ? 0.40f : 0.38f), Crater, bMercury ? 0.012f : 0.0f);
+        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.012f, bMercury ? 0.30f : 0.18f, bMercury ? 0.30f : 0.18f), CraterRim, bMercury ? 0.10f : 0.02f);
         if (bMercury)
         {
-            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.010f, 0.20f, 0.17f), CraterSoft, 0.004f);
+            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.012f, 0.28f, 0.22f), CraterSoft, 0.014f);
         }
         if (Id == TEXT("moon"))
         {
@@ -720,7 +720,7 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     const bool bSuppressSunHalo = bSun && PresentationMode != EAstroDestinationPresentationMode::Atlas && !bFirstLoopTeachMode;
     FocusHalo->SetVisibility(bIsFocused && !bSuppressSunHalo);
     FocusHalo->SetRelativeScale3D(bIsFocused
-        ? (bSun ? FVector(1.16f, 1.16f, 0.006f) : bHomeMode ? FVector(1.22f, 1.22f, 0.008f) : FVector(1.28f, 1.28f, 0.01f))
+        ? (bSun ? FVector(1.08f, 1.08f, 0.005f) : bHomeMode ? FVector(1.22f, 1.22f, 0.008f) : FVector(1.28f, 1.28f, 0.01f))
         : FVector(1.0f, 1.0f, 0.006f));
 
     FocusBeacon->SetVisibility(false);
