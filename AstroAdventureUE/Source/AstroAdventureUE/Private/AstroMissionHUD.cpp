@@ -296,6 +296,9 @@ void AAstroMissionHUD::DrawHUD()
             RowY += RowStep;
         }
 
+        const float RouteCueW = FMath::Clamp(Canvas->SizeX - (PanelX + PanelW + 58.0f), 250.0f, 390.0f);
+        const float RouteCueX = FMath::Clamp(PanelX + PanelW + 30.0f, PanelX, Canvas->SizeX - RouteCueW - 36.0f);
+        DrawFirstRouteCue(RouteCueX, FMath::Clamp(Canvas->SizeY * 0.22f, 126.0f, 210.0f), RouteCueW, false);
         DrawActionBar(CurrentScreen, PanelX + 22.0f, PanelY + PanelH + 6.0f, FMath::Min(PanelW, Canvas->SizeX - PanelX - 44.0f), false);
         return;
     }
@@ -377,6 +380,7 @@ void AAstroMissionHUD::DrawHUD()
     if (CurrentScreen == EAstroMissionScreen::StampAward)
     {
         DrawStampAwardHero(CardX, CardY, CardW, CardH);
+        DrawFirstRouteCue(CardX + 36.0f, CardY + CardH - 142.0f, FMath::Min(430.0f, CardW - 72.0f), true);
     }
     if (bHasStampFeedback
         && CurrentScreen != EAstroMissionScreen::StampAward
@@ -711,6 +715,40 @@ void AAstroMissionHUD::DrawLearningBadgeRow(const EAstroMissionScreen Screen, co
     {
         DrawLearningBadge(ThirdIcon, ThirdLabel, ThirdDetail, X + (BadgeW + Gap) * 2.0f, Y, BadgeW, ThirdFill);
     }
+}
+
+void AAstroMissionHUD::DrawFirstRouteCue(const float X, const float Y, const float W, const bool bUnlocked)
+{
+    const float CueW = FMath::Max(230.0f, W);
+    const float CueH = bUnlocked ? 74.0f : 92.0f;
+    DrawRect(FLinearColor(0.02f, 0.035f, 0.055f, 0.48f), X + 5.0f, Y + 6.0f, CueW, CueH);
+    DrawRect(bUnlocked ? FLinearColor(0.20f, 0.13f, 0.08f, 0.82f) : FLinearColor(0.06f, 0.14f, 0.20f, 0.72f), X, Y, CueW, CueH);
+    DrawRect(FLinearColor(1.0f, 0.78f, 0.24f, bUnlocked ? 0.95f : 0.72f), X, Y, 8.0f, CueH);
+
+    const FString Title = bUnlocked ? TEXT("Route unlocked") : TEXT("First route");
+    const FString Detail = bUnlocked ? TEXT("Fly from the Sun stamp to Mercury") : TEXT("Sun -> Mercury");
+    DrawText(Title, FLinearColor(1.0f, 0.94f, 0.68f), X + 18.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.74f, false);
+    DrawText(AstroClipTextToWidth(Detail, CueW - 36.0f, 0.66f), FLinearColor(0.88f, 1.0f, 0.96f), X + 18.0f, Y + 29.0f, GEngine->GetSmallFont(), 0.66f, false);
+
+    const float IconY = Y + (bUnlocked ? 54.0f : 68.0f);
+    const float SunX = X + 34.0f;
+    const float MercuryX = X + CueW - 34.0f;
+    DrawMiniLearningIcon(TEXT("Sun"), SunX, IconY, 30.0f);
+    DrawMiniLearningIcon(TEXT("Mercury"), MercuryX, IconY, 28.0f);
+
+    const float LineX = SunX + 24.0f;
+    const float LineW = FMath::Max(32.0f, MercuryX - SunX - 52.0f);
+    DrawRect(FLinearColor(1.0f, 0.78f, 0.26f, bUnlocked ? 0.82f : 0.52f), LineX, IconY - 2.0f, LineW, 4.0f);
+    for (int32 Index = 0; Index < 5; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index + 1) / 6.0f;
+        DrawSoftEllipse(LineX + LineW * Alpha, IconY - FMath::Sin(Alpha * PI) * 11.0f, bUnlocked ? 6.0f : 4.0f, bUnlocked ? 6.0f : 4.0f, FLinearColor(1.0f, 0.92f, 0.36f, bUnlocked ? 0.95f : 0.64f), 8);
+    }
+
+    DrawRect(FLinearColor(1.0f, 0.78f, 0.26f, bUnlocked ? 0.92f : 0.62f), MercuryX - 50.0f, IconY - 10.0f, 18.0f, 4.0f);
+    DrawRect(FLinearColor(1.0f, 0.78f, 0.26f, bUnlocked ? 0.92f : 0.62f), MercuryX - 38.0f, IconY - 15.0f, 4.0f, 14.0f);
+    DrawText(TEXT("SUN"), FLinearColor(1.0f, 0.90f, 0.56f), SunX - 16.0f, IconY + 17.0f, GEngine->GetSmallFont(), 0.52f, false);
+    DrawText(TEXT("MERCURY"), FLinearColor(0.88f, 0.96f, 1.0f), MercuryX - 28.0f, IconY + 17.0f, GEngine->GetSmallFont(), 0.52f, false);
 }
 
 void AAstroMissionHUD::DrawPassportFrame(const float X, const float Y, const float W, const float H)

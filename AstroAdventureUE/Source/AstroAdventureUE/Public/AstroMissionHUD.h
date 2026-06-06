@@ -48,6 +48,7 @@ private:
     void DrawMiniLearningIcon(const FString& Icon, float CenterX, float CenterY, float Size);
     void DrawLearningBadge(const FString& Icon, const FString& Label, const FString& Detail, float X, float Y, float W, const FLinearColor& Fill);
     void DrawLearningBadgeRow(EAstroMissionScreen Screen, float X, float Y, float W);
+    void DrawFirstRouteCue(float X, float Y, float W, bool bUnlocked);
     void DrawPassportFrame(float X, float Y, float W, float H);
     void DrawStampAwardHero(float X, float Y, float W, float H);
     void DrawStampStrip(const FString& StatusLine, float X, float Y, float W);
