@@ -139,15 +139,16 @@ FVector RouteCameraFocusTarget(const TArray<AAstroDestinationActor*>& Actors)
     return FVector(260.0f, 0.0f, 240.0f);
 }
 
-FVector FirstLoopStagedPosition(const int32 DestinationIndex, const FVector& RoutePosition)
+FVector FirstLoopStagedPosition(const EAstroMissionScreen Screen, const int32 DestinationIndex, const FVector& RoutePosition)
 {
+    const bool bRewardHandoff = Screen == EAstroMissionScreen::StampAward;
     if (DestinationIndex == 0)
     {
-        return FVector(-260.0f, 405.0f, 1140.0f);
+        return bRewardHandoff ? FVector(-210.0f, 450.0f, 1840.0f) : FVector(-245.0f, 430.0f, 1780.0f);
     }
     if (DestinationIndex == 1)
     {
-        return FVector(214.0f, 218.0f, 1228.0f);
+        return bRewardHandoff ? FVector(290.0f, 300.0f, 1885.0f) : FVector(230.0f, 250.0f, 1870.0f);
     }
 
     return RoutePosition;
@@ -727,7 +728,7 @@ void AAstroAdventureGameModeBase::ApplyFirstLoopStaging()
         const FVector TargetLocation = bUseHomeDiorama
             ? HomeDioramaPosition(Index, DestinationRoutePositions[Index])
             : bUseStaging
-                ? FirstLoopStagedPosition(Index, DestinationRoutePositions[Index])
+                ? FirstLoopStagedPosition(CurrentScreen, Index, DestinationRoutePositions[Index])
                 : DestinationRoutePositions[Index];
         DestinationActors[Index]->SetActorLocation(TargetLocation);
     }
