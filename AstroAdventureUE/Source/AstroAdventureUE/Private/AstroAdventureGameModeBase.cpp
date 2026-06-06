@@ -202,13 +202,13 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
 {
     if (Screen == EAstroMissionScreen::StampAward && NextStopLocation)
     {
-        const FVector SunWeightedRoute = FocusLocation * 0.84f + (*NextStopLocation) * 0.16f;
-        return SunWeightedRoute + FVector(-210.0f, -70.0f, -440.0f);
+        const FVector SunWeightedRoute = FocusLocation * 0.72f + (*NextStopLocation) * 0.28f;
+        return SunWeightedRoute + FVector(-720.0f, 65.0f, -85.0f);
     }
 
     if (Screen == EAstroMissionScreen::Scanning)
     {
-        return FocusLocation + FVector(-220.0f, -80.0f, -500.0f);
+        return FocusLocation + FVector(-720.0f, 65.0f, -85.0f);
     }
 
     if (Screen == EAstroMissionScreen::DiscoveryCard
@@ -216,10 +216,10 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
         || Screen == EAstroMissionScreen::Quiz
         || Screen == EAstroMissionScreen::QuizFeedback)
     {
-        return FocusLocation + FVector(-220.0f, -80.0f, -500.0f);
+        return FocusLocation + FVector(-720.0f, 65.0f, -85.0f);
     }
 
-    return FocusLocation + FVector(-230.0f, -80.0f, -510.0f);
+    return FocusLocation + FVector(-720.0f, 65.0f, -85.0f);
 }
 }
 
@@ -1480,12 +1480,12 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
             {
                 const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
                 PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
-                PlayerPawn->SetCameraFocusTarget(FVector(-520.0f, 330.0f, 620.0f));
+                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, &MercuryLocation));
             }
             else if (FocusedDestinationIndex == 0)
             {
                 PlayerPawn->SetTravelTarget(FocusLocation + FVector(300.0f, 205.0f, 118.0f));
-                PlayerPawn->SetCameraFocusTarget(FVector(-520.0f, 330.0f, 620.0f));
+                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, nullptr));
             }
             else
             {

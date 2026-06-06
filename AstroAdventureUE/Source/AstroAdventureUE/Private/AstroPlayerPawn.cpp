@@ -39,7 +39,7 @@ namespace
         case EAstroCameraPresentationProfile::Home:
             return { FVector(-500.0f, -820.0f, 720.0f), -58.0f, FVector(82.0f, -8.0f, 118.0f), 5.4f, 4.8f, 58.0f, 980.0f };
         case EAstroCameraPresentationProfile::FirstLoopTeach:
-            return { FVector(-500.0f, -820.0f, 720.0f), -58.0f, FVector(82.0f, -8.0f, 118.0f), 6.0f, 5.2f, 58.0f, 980.0f };
+            return { FVector(-500.0f, -820.0f, 720.0f), -58.0f, FVector(82.0f, -8.0f, 118.0f), 6.0f, 5.2f, 58.0f, 1450.0f };
         case EAstroCameraPresentationProfile::Atlas:
             return { FVector(-820.0f, -1640.0f, 1840.0f), -92.0f, FVector(80.0f, 0.0f, 70.0f), 3.0f, 2.6f, 72.0f, 4500.0f };
         case EAstroCameraPresentationProfile::Scan:

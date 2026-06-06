@@ -268,12 +268,12 @@ void AAstroMissionHUD::DrawHUD()
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
         const float PanelX = FMath::Clamp(Canvas->SizeX * 0.055f, 28.0f, 86.0f);
-        const float PanelW = FMath::Clamp(Canvas->SizeX * 0.38f, 390.0f, 570.0f);
-        const float PanelH = FMath::Clamp(Canvas->SizeY * 0.285f, 202.0f, 246.0f);
+        const float PanelW = FMath::Clamp(Canvas->SizeX * 0.36f, 380.0f, 510.0f);
+        const float PanelH = FMath::Clamp(Canvas->SizeY * 0.265f, 194.0f, 224.0f);
         const float PanelY = FMath::Clamp(Canvas->SizeY * 0.235f, 116.0f, 220.0f);
 
-        DrawText(TEXT("Solar Passport"), FLinearColor(1.0f, 0.88f, 0.42f), PanelX, FMath::Clamp(Canvas->SizeY * 0.070f, 30.0f, 72.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 2.05f : 2.52f, false);
-        DrawText(TEXT("Meet the Sun. Scan a clue. Earn your first stamp."), FLinearColor(0.92f, 0.99f, 1.0f), PanelX + 3.0f, FMath::Clamp(Canvas->SizeY * 0.145f, 70.0f, 120.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.92f : 1.04f, false);
+        DrawText(TEXT("My Solar Passport"), FLinearColor(1.0f, 0.88f, 0.42f), PanelX, FMath::Clamp(Canvas->SizeY * 0.070f, 30.0f, 72.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 1.92f : 2.18f, false);
+        DrawText(TEXT("Meet the Sun. Find a clue. Collect a stamp."), FLinearColor(0.92f, 0.99f, 1.0f), PanelX + 3.0f, FMath::Clamp(Canvas->SizeY * 0.145f, 70.0f, 120.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.88f : 0.98f, false);
 
         DrawRect(FLinearColor(0.02f, 0.025f, 0.035f, 0.54f), PanelX + 7.0f, PanelY + 8.0f, PanelW, PanelH);
         DrawRect(FLinearColor(0.72f, 0.51f, 0.28f, 0.88f), PanelX, PanelY, PanelW, PanelH);
@@ -281,10 +281,10 @@ void AAstroMissionHUD::DrawHUD()
         DrawRect(FLinearColor(1.0f, 0.78f, 0.28f, 0.95f), PanelX, PanelY, 12.0f, PanelH);
         DrawRect(FLinearColor(1.0f, 0.86f, 0.48f, 0.28f), PanelX + 22.0f, PanelY + 38.0f, PanelW - 44.0f, 2.0f);
 
-        DrawText(TEXT("Your first space mission"), FLinearColor(1.0f, 0.96f, 0.74f), PanelX + 24.0f, PanelY + 12.0f, GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 1.02f : 1.18f, false);
-        DrawBadge(TEXT("Sun"), PanelX + 24.0f, PanelY + 42.0f, 76.0f, FLinearColor(0.86f, 0.36f, 0.10f, 0.94f), FLinearColor::White, 0.68f);
-        DrawBadge(TEXT("Scan"), PanelX + 112.0f, PanelY + 42.0f, 84.0f, FLinearColor(0.12f, 0.50f, 0.60f, 0.94f), FLinearColor::White, 0.68f);
-        DrawBadge(TEXT("Stamp"), PanelX + 208.0f, PanelY + 42.0f, 88.0f, FLinearColor(0.60f, 0.28f, 0.72f, 0.94f), FLinearColor::White, 0.68f);
+        DrawText(TEXT("Let's visit the Sun"), FLinearColor(1.0f, 0.96f, 0.74f), PanelX + 24.0f, PanelY + 12.0f, GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.98f : 1.10f, false);
+        DrawBadge(TEXT("Meet"), PanelX + 24.0f, PanelY + 42.0f, 76.0f, FLinearColor(0.86f, 0.36f, 0.10f, 0.94f), FLinearColor::White, 0.68f);
+        DrawBadge(TEXT("Find"), PanelX + 112.0f, PanelY + 42.0f, 84.0f, FLinearColor(0.12f, 0.50f, 0.60f, 0.94f), FLinearColor::White, 0.68f);
+        DrawBadge(TEXT("Collect"), PanelX + 208.0f, PanelY + 42.0f, 96.0f, FLinearColor(0.60f, 0.28f, 0.72f, 0.94f), FLinearColor::White, 0.68f);
         const float RowX = PanelX + 22.0f;
         const float RowW = PanelW - 44.0f;
         const float RowStep = FMath::Clamp(PanelH * 0.16f, 34.0f, 40.0f);
@@ -319,11 +319,11 @@ void AAstroMissionHUD::DrawHUD()
         || CurrentScreen == EAstroMissionScreen::DeepDive
         || CurrentScreen == EAstroMissionScreen::QuizFeedback
         || CurrentScreen == EAstroMissionScreen::StampAward;
-    const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 740.0f
+    const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 620.0f
         : CurrentScreen == EAstroMissionScreen::Scanning ? 460.0f
         : CurrentScreen == EAstroMissionScreen::DeepDive ? 800.0f
         : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 720.0f
-        : CurrentScreen == EAstroMissionScreen::Navigation ? 540.0f
+        : CurrentScreen == EAstroMissionScreen::Navigation ? 480.0f
         : bHasQuizRows ? 820.0f
         : bHasMenuRows ? 760.0f
         : bWorldTeachingScreen ? 620.0f
@@ -334,7 +334,7 @@ void AAstroMissionHUD::DrawHUD()
         : bHasPassportRows ? 310.0f
         : bHasQuizRows ? 372.0f
         : bHasMenuRows ? 204.0f
-        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 300.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
+        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 250.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 118.0f)
         : Buckets.BodyLines.Num() >= 3 ? 184.0f : 164.0f;
     const float CardX = CurrentScreen == EAstroMissionScreen::StampAward
         ? FMath::Clamp(Canvas->SizeX * 0.07f, 34.0f, 96.0f)
@@ -388,7 +388,7 @@ void AAstroMissionHUD::DrawHUD()
     }
 
     float Y = CardY + 24.0f;
-    DrawLine(DisplayPrimaryLine, CardX + 42.0f, Y, FLinearColor(1.0f, 0.95f, 0.68f), CurrentScreen == EAstroMissionScreen::Home ? 1.18f : CurrentScreen == EAstroMissionScreen::StampAward ? 1.58f : bHasQuizRows ? 1.42f : 1.36f);
+    DrawLine(DisplayPrimaryLine, CardX + 42.0f, Y, FLinearColor(1.0f, 0.95f, 0.68f), CurrentScreen == EAstroMissionScreen::Home ? 1.18f : CurrentScreen == EAstroMissionScreen::StampAward ? 1.28f : CurrentScreen == EAstroMissionScreen::Navigation ? 1.16f : bHasQuizRows ? 1.42f : 1.36f);
 
     if (bHasQuizRows)
     {
@@ -761,9 +761,9 @@ void AAstroMissionHUD::DrawPassportFrame(const float X, const float Y, const flo
 
 void AAstroMissionHUD::DrawStampAwardHero(const float X, const float Y, const float W, const float H)
 {
-    const float StampSize = FMath::Clamp(W * 0.25f, 126.0f, 164.0f);
-    const float StampX = X + W - StampSize - 48.0f;
-    const float StampY = Y + 44.0f;
+    const float StampSize = FMath::Clamp(W * 0.20f, 96.0f, 124.0f);
+    const float StampX = X + W - StampSize - 40.0f;
+    const float StampY = Y + 38.0f;
     const float CenterX = StampX + StampSize * 0.5f;
     const float CenterY = StampY + StampSize * 0.5f;
 
@@ -783,9 +783,9 @@ void AAstroMissionHUD::DrawStampAwardHero(const float X, const float Y, const fl
 
     DrawRect(FLinearColor(1.0f, 0.94f, 0.55f, 0.58f), StampX - 8.0f, StampY - 8.0f, StampSize + 16.0f, 4.0f);
     DrawRect(FLinearColor(1.0f, 0.94f, 0.55f, 0.58f), StampX - 8.0f, StampY + StampSize + 4.0f, StampSize + 16.0f, 4.0f);
-    DrawText(TEXT("SUN STAMP"), FLinearColor(1.0f, 0.90f, 0.48f), StampX + 6.0f, StampY + StampSize + 12.0f, GEngine->GetSmallFont(), 0.78f, false);
-    DrawText(TEXT("You discovered a star!"), FLinearColor(1.0f, 0.96f, 0.78f), X + 48.0f, Y + 158.0f, GEngine->GetSmallFont(), 0.92f, false);
-    DrawText(TEXT("Stars make their own light."), FLinearColor(0.88f, 0.98f, 1.0f), X + 48.0f, Y + 184.0f, GEngine->GetSmallFont(), 0.82f, false);
+    DrawText(TEXT("SUN STAMP!"), FLinearColor(1.0f, 0.90f, 0.48f), StampX + 4.0f, StampY + StampSize + 10.0f, GEngine->GetSmallFont(), 0.70f, false);
+    DrawText(TEXT("You found a star!"), FLinearColor(1.0f, 0.96f, 0.78f), X + 48.0f, Y + 132.0f, GEngine->GetSmallFont(), 0.86f, false);
+    DrawText(TEXT("The Sun makes its own light."), FLinearColor(0.88f, 0.98f, 1.0f), X + 48.0f, Y + 156.0f, GEngine->GetSmallFont(), 0.78f, false);
 
     const float MercuryX = FMath::Max(X + 318.0f, StampX - 118.0f);
     const float MercuryY = StampY + StampSize * 0.62f;
@@ -797,7 +797,7 @@ void AAstroMissionHUD::DrawStampAwardHero(const float X, const float Y, const fl
     DrawText(TEXT("Next: Mercury"), FLinearColor(0.78f, 0.96f, 1.0f), MercuryX - 46.0f, MercuryY + 36.0f, GEngine->GetSmallFont(), 0.70f, false);
     DrawText(TEXT("crater world"), FLinearColor(0.94f, 0.84f, 0.58f), MercuryX - 44.0f, MercuryY + 56.0f, GEngine->GetSmallFont(), 0.58f, false);
 
-    const float BadgeY = Y + H - 58.0f;
+    const float BadgeY = Y + H - 52.0f;
     const float BadgeW = FMath::Min(W - 80.0f, 540.0f);
     DrawRect(FLinearColor(0.04f, 0.20f, 0.28f, 0.94f), X + 40.0f, BadgeY, BadgeW, 38.0f);
     DrawRect(FLinearColor(0.80f, 0.96f, 1.0f, 0.28f), X + 48.0f, BadgeY + 5.0f, BadgeW - 16.0f, 2.0f);
@@ -1050,9 +1050,9 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::Navigation)
     {
-        AddActionIfMissing(Actions, TEXT("Pick: Arrows"));
-        AddActionIfMissing(Actions, TEXT("Scan: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Help: Passport"));
+        AddActionIfMissing(Actions, TEXT("Choose: Arrows"));
+        AddActionIfMissing(Actions, TEXT("Scan clue"));
+        AddActionIfMissing(Actions, TEXT("Passport"));
     }
     else if (Screen == EAstroMissionScreen::Scanning)
     {
@@ -1086,7 +1086,7 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::StampAward)
     {
-        AddActionIfMissing(Actions, TEXT("Next Stop: Enter"));
+        AddActionIfMissing(Actions, TEXT("Next stop"));
         AddActionIfMissing(Actions, TEXT("Passport: P"));
         AddActionIfMissing(Actions, TEXT("Back: Esc"));
     }
