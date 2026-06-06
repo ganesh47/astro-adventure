@@ -317,10 +317,12 @@ void AAstroMissionHUD::DrawHUD()
         || CurrentScreen == EAstroMissionScreen::Scanning
         || CurrentScreen == EAstroMissionScreen::DiscoveryCard
         || CurrentScreen == EAstroMissionScreen::DeepDive
+        || CurrentScreen == EAstroMissionScreen::QuizFeedback
         || CurrentScreen == EAstroMissionScreen::StampAward;
     const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 860.0f
         : CurrentScreen == EAstroMissionScreen::Scanning ? 460.0f
         : CurrentScreen == EAstroMissionScreen::DeepDive ? 800.0f
+        : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 720.0f
         : CurrentScreen == EAstroMissionScreen::Navigation ? 540.0f
         : bHasQuizRows ? 820.0f
         : bHasMenuRows ? 760.0f
@@ -330,9 +332,9 @@ void AAstroMissionHUD::DrawHUD()
     const float CardH = CurrentScreen == EAstroMissionScreen::Home
         ? FMath::Clamp(Canvas->SizeY * 0.42f, 226.0f, 246.0f)
         : bHasPassportRows ? 310.0f
-        : bHasQuizRows ? 316.0f
+        : bHasQuizRows ? 372.0f
         : bHasMenuRows ? 204.0f
-        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 318.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 262.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 178.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
+        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 318.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 262.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 196.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 178.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 112.0f : 132.0f)
         : Buckets.BodyLines.Num() >= 3 ? 184.0f : 164.0f;
     const float CardX = CurrentScreen == EAstroMissionScreen::StampAward
         ? (Canvas->SizeX - CardW) * 0.5f
@@ -367,7 +369,7 @@ void AAstroMissionHUD::DrawHUD()
         const float CueW = FMath::Clamp(Canvas->SizeX - (CardX + CardW + 58.0f), 0.0f, 292.0f);
         if (CueW >= 210.0f)
         {
-            DrawDeepDiveWorldCue(CardX + CardW + 24.0f, FMath::Max(HeaderH + 30.0f, CardY - 8.0f), CueW, 116.0f);
+            DrawDeepDiveWorldCue(CardX + CardW + 24.0f, FMath::Max(HeaderH + 24.0f, CardY - 16.0f), CueW, FMath::Min(194.0f, Canvas->SizeY - HeaderH - 92.0f));
         }
     }
 
@@ -390,6 +392,16 @@ void AAstroMissionHUD::DrawHUD()
     if (bHasQuizRows)
     {
         Y += 8.0f;
+        const FString LowerPrompt = DisplayPrimaryLine.ToLower();
+        const FString QuizClue = LowerPrompt.Contains(TEXT("sun"))
+            ? TEXT("World clue: the Sun is a star that makes its own light.")
+            : LowerPrompt.Contains(TEXT("mercury"))
+            ? TEXT("World clue: Mercury is small, rocky, and cratered.")
+            : TEXT("World clue: match your answer to what you scanned.");
+        DrawRect(FLinearColor(0.04f, 0.16f, 0.18f, 0.86f), CardX + 42.0f, Y, CardW - 84.0f, 38.0f);
+        DrawRect(FLinearColor(0.35f, 0.90f, 0.86f, 0.94f), CardX + 42.0f, Y, 10.0f, 38.0f);
+        DrawText(AstroClipTextToWidth(QuizClue, CardW - 116.0f, 0.84f), FLinearColor(0.88f, 1.0f, 0.96f), CardX + 60.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.84f, false);
+        Y += 46.0f;
         for (const FString& Line : Buckets.QuizRows)
         {
             const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
@@ -440,6 +452,14 @@ void AAstroMissionHUD::DrawHUD()
     {
         int32 DrawnLines = 0;
         const int32 MaxBodyLines = CurrentScreen == EAstroMissionScreen::DeepDive ? 3 : (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::Scanning || CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::StampAward) ? 2 : bYoungExplorer ? 2 : 3;
+        if (CurrentScreen == EAstroMissionScreen::QuizFeedback)
+        {
+            const FString LowerFeedback = DisplayPrimaryLine.ToLower();
+            const bool bTryAgain = LowerFeedback.Contains(TEXT("try")) || LowerFeedback.Contains(TEXT("no worries")) || LowerFeedback.Contains(TEXT("again"));
+            DrawBadge(bTryAgain ? TEXT("TRY AGAIN") : TEXT("GREAT PICK"), CardX + 42.0f, Y + 4.0f, bTryAgain ? 128.0f : 132.0f, bTryAgain ? FLinearColor(0.14f, 0.46f, 0.66f, 0.96f) : FLinearColor(0.86f, 0.38f, 0.12f, 0.96f), FLinearColor::White, 0.74f);
+            DrawText(bTryAgain ? TEXT("Use the world clue, then choose again.") : TEXT("Your passport is ready for its stamp."), FLinearColor(0.91f, 0.98f, 1.0f), CardX + 184.0f, Y + 11.0f, GEngine->GetSmallFont(), 0.88f, false);
+            Y += 46.0f;
+        }
         for (const FString& Line : Buckets.BodyLines)
         {
             const float BodyX = CardX + 42.0f;
@@ -712,21 +732,31 @@ bool AAstroMissionHUD::DrawDeepDiveSectionLine(const FString& Text, const float 
 void AAstroMissionHUD::DrawDeepDiveWorldCue(const float X, const float Y, const float W, const float H)
 {
     DrawRect(FLinearColor(0.02f, 0.04f, 0.06f, 0.44f), X + 5.0f, Y + 6.0f, W, H);
-    DrawRect(FLinearColor(0.10f, 0.20f, 0.28f, 0.78f), X, Y, W, H);
+    DrawRect(FLinearColor(0.08f, 0.16f, 0.22f, 0.82f), X, Y, W, H);
     DrawRect(FLinearColor(1.0f, 0.76f, 0.24f, 0.82f), X, Y, 8.0f, H);
-    DrawText(TEXT("See it in space"), FLinearColor(1.0f, 0.92f, 0.62f), X + 18.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.78f, false);
+    DrawText(TEXT("See it in space"), FLinearColor(1.0f, 0.92f, 0.62f), X + 18.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.82f, false);
 
     const float SunX = X + W - 60.0f;
-    const float SunY = Y + 58.0f;
+    const float SunY = Y + 68.0f;
     DrawSoftEllipse(SunX, SunY, 48.0f, 42.0f, FLinearColor(1.0f, 0.48f, 0.08f, 0.20f), 24);
     DrawSoftEllipse(SunX, SunY, 34.0f, 30.0f, FLinearColor(1.0f, 0.66f, 0.14f, 0.94f), 24);
     DrawSoftEllipse(SunX - 7.0f, SunY - 8.0f, 22.0f, 16.0f, FLinearColor(1.0f, 0.88f, 0.30f, 0.64f), 14);
     DrawSoftEllipse(SunX + 12.0f, SunY + 9.0f, 12.0f, 8.0f, FLinearColor(0.72f, 0.15f, 0.04f, 0.36f), 10);
 
-    DrawRect(FLinearColor(0.72f, 1.0f, 0.96f, 0.48f), X + 24.0f, Y + 64.0f, W - 106.0f, 3.0f);
-    DrawRect(FLinearColor(0.72f, 1.0f, 0.96f, 0.30f), X + W - 92.0f, Y + 58.0f, 18.0f, 12.0f);
-    DrawText(TEXT("LOOK connects to"), FLinearColor(0.82f, 0.96f, 1.0f), X + 20.0f, Y + 44.0f, GEngine->GetSmallFont(), 0.62f, false);
-    DrawText(TEXT("the scanned world"), FLinearColor(0.82f, 0.96f, 1.0f), X + 20.0f, Y + 64.0f, GEngine->GetSmallFont(), 0.62f, false);
+    const float LaneX = X + 20.0f;
+    const float LaneW = W - 116.0f;
+    DrawBadge(TEXT("LOOK"), LaneX, Y + 42.0f, 76.0f, FLinearColor(0.84f, 0.39f, 0.14f, 0.96f), FLinearColor::White, 0.58f);
+    DrawRect(FLinearColor(0.72f, 1.0f, 0.96f, 0.50f), LaneX + 82.0f, Y + 58.0f, FMath::Max(28.0f, LaneW - 84.0f), 3.0f);
+    DrawText(TEXT("spot the clue"), FLinearColor(0.82f, 0.96f, 1.0f), LaneX, Y + 72.0f, GEngine->GetSmallFont(), 0.58f, false);
+
+    DrawBadge(TEXT("COMPARE"), LaneX, Y + 98.0f, 112.0f, FLinearColor(0.12f, 0.46f, 0.60f, 0.96f), FLinearColor::White, 0.58f);
+    DrawRect(FLinearColor(1.0f, 0.82f, 0.38f, 0.58f), LaneX + 120.0f, Y + 113.0f, FMath::Max(20.0f, LaneW - 122.0f), 4.0f);
+    DrawSoftEllipse(LaneX + 126.0f, Y + 115.0f, 7.0f, 7.0f, FLinearColor(0.20f, 0.54f, 1.0f, 0.92f), 8);
+    DrawSoftEllipse(SunX - 2.0f, Y + 115.0f, 13.0f, 13.0f, FLinearColor(1.0f, 0.67f, 0.18f, 0.92f), 10);
+
+    DrawBadge(TEXT("WORD"), LaneX, Y + 148.0f, 78.0f, FLinearColor(0.42f, 0.28f, 0.62f, 0.96f), FLinearColor::White, 0.58f);
+    DrawRect(FLinearColor(0.72f, 0.92f, 1.0f, 0.18f), LaneX + 88.0f, Y + 148.0f, FMath::Max(36.0f, LaneW - 90.0f), 26.0f);
+    DrawText(TEXT("new space word"), FLinearColor(0.86f, 0.96f, 1.0f), LaneX + 98.0f, Y + 154.0f, GEngine->GetSmallFont(), 0.56f, false);
 }
 
 void AAstroMissionHUD::DrawAtlasRouteMap(const float X, const float Y, const float W)

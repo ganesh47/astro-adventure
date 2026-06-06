@@ -191,6 +191,11 @@ bool ShouldUseFirstLoopStaging(const EAstroMissionScreen Screen, const int32 Foc
 {
     return IsFirstLoopStagedScreen(Screen) && FocusedDestinationIndex <= 1;
 }
+
+bool ShouldShowSunToMercuryUnlock(const EAstroMissionScreen Screen, const int32 FocusedDestinationIndex)
+{
+    return Screen == EAstroMissionScreen::StampAward && FocusedDestinationIndex == 0;
+}
 }
 
 AAstroAdventureGameModeBase::AAstroAdventureGameModeBase()
@@ -1263,6 +1268,14 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     }
     else if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
+        if (Lesson->DestinationId == FName(TEXT("sun")))
+        {
+            Lines.Add(TEXT("Clue card: The Sun makes its own light."));
+        }
+        else if (Lesson->DestinationId == FName(TEXT("mercury")))
+        {
+            Lines.Add(TEXT("Clue card: Mercury is small, gray, and covered in craters."));
+        }
         for (int32 Index = 0; Index < Lesson->Choices.Num(); ++Index)
         {
             const FString Prefix = Index == FocusedQuizChoiceIndex ? TEXT("> ") : TEXT("  ");
@@ -1353,9 +1366,19 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
         }
         else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
         {
-            PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
-            const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, 86.0f);
-            PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
+            if (ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex) && DestinationActors.IsValidIndex(1) && DestinationActors[1])
+            {
+                const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
+                const FVector RouteMidpoint = (FocusLocation + MercuryLocation) * 0.5f;
+                PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
+                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(-34.0f, -10.0f, 112.0f));
+            }
+            else
+            {
+                PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
+                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-70.0f, -18.0f, 86.0f);
+                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
+            }
         }
         else
         {
@@ -1430,7 +1453,8 @@ void AAstroAdventureGameModeBase::RefreshScenePresentation()
         if (RouteMarkerActors[Index])
         {
             const int32 OwnerIndex = RouteMarkerOwnerIndices.IsValidIndex(Index) ? RouteMarkerOwnerIndices[Index] : INDEX_NONE;
-            RouteMarkerActors[Index]->SetActorHiddenInGame(IsFirstLoopStagedScreen(CurrentScreen) || CurrentScreen == EAstroMissionScreen::Scanning || (OwnerIndex != INDEX_NONE && !ShouldShowDestinationInCurrentView(OwnerIndex)));
+            const bool bShowFirstUnlockRoute = ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex) && OwnerIndex == 1;
+            RouteMarkerActors[Index]->SetActorHiddenInGame((IsFirstLoopStagedScreen(CurrentScreen) && !bShowFirstUnlockRoute) || CurrentScreen == EAstroMissionScreen::Scanning || (OwnerIndex != INDEX_NONE && !ShouldShowDestinationInCurrentView(OwnerIndex)));
           }
       }
 
