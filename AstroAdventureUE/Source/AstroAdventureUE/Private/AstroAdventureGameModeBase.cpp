@@ -196,6 +196,30 @@ bool ShouldShowSunToMercuryUnlock(const EAstroMissionScreen Screen, const int32 
 {
     return Screen == EAstroMissionScreen::StampAward && FocusedDestinationIndex == 0;
 }
+
+FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FVector& FocusLocation, const FVector* NextStopLocation)
+{
+    if (Screen == EAstroMissionScreen::StampAward && NextStopLocation)
+    {
+        const FVector SunWeightedRoute = FocusLocation * 0.72f + (*NextStopLocation) * 0.28f;
+        return SunWeightedRoute + FVector(430.0f, 350.0f, 230.0f);
+    }
+
+    if (Screen == EAstroMissionScreen::Scanning)
+    {
+        return FocusLocation + FVector(420.0f, 330.0f, 220.0f);
+    }
+
+    if (Screen == EAstroMissionScreen::DiscoveryCard
+        || Screen == EAstroMissionScreen::DeepDive
+        || Screen == EAstroMissionScreen::Quiz
+        || Screen == EAstroMissionScreen::QuizFeedback)
+    {
+        return FocusLocation + FVector(390.0f, 310.0f, 220.0f);
+    }
+
+    return FocusLocation + FVector(380.0f, 330.0f, 220.0f);
+}
 }
 
 AAstroAdventureGameModeBase::AAstroAdventureGameModeBase()
@@ -1177,7 +1201,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     switch (CurrentScreen)
     {
     case EAstroMissionScreen::Home:
-        return TEXT("Astro Adventure: Solar Passport");
+        return TEXT("Start your Solar Passport");
     case EAstroMissionScreen::AgeSelect:
         return TEXT("Choose your explorer mode");
     case EAstroMissionScreen::MissionPrompt:
@@ -1219,7 +1243,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
-        const TCHAR* Options[] = {TEXT("Start Sun Expedition"), TEXT("Continue"), TEXT("Reset Passport"), TEXT("Quit")};
+        const TCHAR* Options[] = {TEXT("Start Sun Expedition"), TEXT("Continue saved route"), TEXT("Reset Passport"), TEXT("Quit")};
         const int32 StampCount = CountCompletedStops();
         const bool bHasProgress = HasAnyProgress();
         for (int32 Index = 0; Index < 4; ++Index)
@@ -1227,7 +1251,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
             FString Label = Options[Index];
             if (Index == 1)
             {
-                Label = StampCount > 0 ? FString::Printf(TEXT("Continue route: %d stamps"), StampCount) : bHasProgress ? TEXT("Continue route in progress") : TEXT("Continue route - none yet");
+                Label = StampCount > 0 ? FString::Printf(TEXT("Continue saved route: %d stamps"), StampCount) : bHasProgress ? TEXT("Continue saved route") : TEXT("Continue saved route - no stamps yet");
             }
             Lines.Add(FString::Printf(TEXT("%s %s"), Index == HomeMenuIndex ? TEXT(">") : TEXT(" "), *Label));
         }
@@ -1452,15 +1476,13 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
             if (ShouldShowSunToMercuryUnlock(CurrentScreen, FocusedDestinationIndex) && DestinationActors.IsValidIndex(1) && DestinationActors[1])
             {
                 const FVector MercuryLocation = DestinationActors[1]->GetActorLocation();
-                const FVector RouteMidpoint = (FocusLocation + MercuryLocation) * 0.5f;
                 PlayerPawn->SetTravelTarget(MercuryLocation + FVector(205.0f, 170.0f, 142.0f));
-                PlayerPawn->SetCameraFocusTarget(RouteMidpoint + FVector(220.0f, 210.0f, 80.0f));
+                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, &MercuryLocation));
             }
             else
             {
                 PlayerPawn->SetTravelTarget(FocusLocation + FVector(330.0f, 215.0f, 132.0f));
-                const FVector FirstLoopTeachingTarget = FocusLocation + FVector(220.0f, 210.0f, 80.0f);
-                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
+                PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, nullptr));
             }
         }
         else
@@ -1703,9 +1725,9 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
           if (FocusActor)
           {
               const FVector FocusLocation = FocusActor->GetActorLocation();
-              PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
+              PlayerPawn->SetTravelTarget(FocusLocation + FVector(300.0f, 180.0f, 120.0f));
               PlayerPawn->SetScannerTarget(FocusLocation + FVector(0.0f, 0.0f, 18.0f));
-              PlayerPawn->SetCameraFocusTarget(FocusLocation + FVector(220.0f, 210.0f, 80.0f));
+              PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(CurrentScreen, FocusLocation, nullptr));
 
               if (UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")))
               {
@@ -1806,7 +1828,14 @@ void AAstroAdventureGameModeBase::FinishScanReveal()
     {
         if (FocusActor)
         {
-            PlayerPawn->SetCameraFocusTarget(FocusActor->GetActorLocation() + FVector(0.0f, 0.0f, 18.0f));
+            const FVector* NextStopLocation = nullptr;
+            FVector MercuryLocation = FVector::ZeroVector;
+            if (DestinationActors.IsValidIndex(1) && DestinationActors[1])
+            {
+                MercuryLocation = DestinationActors[1]->GetActorLocation();
+                NextStopLocation = &MercuryLocation;
+            }
+            PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingCameraTarget(EAstroMissionScreen::StampAward, FocusActor->GetActorLocation(), NextStopLocation));
         }
         PlayerPawn->SetShipAccentColor(Lesson.DisplayColor.GetClamped(0.0f, 1.0f));
         PlayerPawn->TriggerScannerPulse(1.0f);
