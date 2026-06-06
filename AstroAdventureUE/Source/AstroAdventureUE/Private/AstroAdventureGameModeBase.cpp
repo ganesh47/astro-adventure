@@ -27,11 +27,44 @@ const TCHAR* AAstroAdventureGameModeBase::SaveSlotName = TEXT("AstroAdventureM0P
 
 namespace
 {
+enum class EAstroLightingLook : uint8
+{
+    HomeLook,
+    MissionLook,
+    AtlasLook
+};
+
+struct FAstroLightingSettings
+{
+    float KeyIntensity = 9.0f;
+    float SunIntensity = 76000.0f;
+    float FillIntensity = 88000.0f;
+    float SkyIntensity = 15.0f;
+    float ExposureBias = 0.32f;
+    float BloomIntensity = 0.13f;
+    float BloomThreshold = 1.18f;
+    FVector4 Saturation = FVector4(1.08f, 1.06f, 1.10f, 1.0f);
+};
+
+FAstroLightingSettings GetLightingSettings(const EAstroLightingLook Look)
+{
+    switch (Look)
+    {
+    case EAstroLightingLook::AtlasLook:
+        return { 8.4f, 42000.0f, 150000.0f, 28.0f, 0.12f, 0.055f, 1.48f, FVector4(1.13f, 1.10f, 1.14f, 1.0f) };
+    case EAstroLightingLook::MissionLook:
+        return { 8.0f, 38000.0f, 162000.0f, 30.0f, 0.12f, 0.055f, 1.50f, FVector4(1.14f, 1.10f, 1.13f, 1.0f) };
+    case EAstroLightingLook::HomeLook:
+    default:
+        return { 7.4f, 36000.0f, 168000.0f, 32.0f, 0.14f, 0.055f, 1.52f, FVector4(1.14f, 1.11f, 1.13f, 1.0f) };
+    }
+}
+
 UMaterialInterface* GetRuntimeColorMaterial()
 {
-    if (UMaterialInterface* BasicShapeMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
+    if (UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
     {
-        return BasicShapeMaterial;
+        return BasicMaterial;
     }
 
     return LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
@@ -105,6 +138,59 @@ FVector RouteCameraFocusTarget(const TArray<AAstroDestinationActor*>& Actors)
 
     return FVector(260.0f, 0.0f, 240.0f);
 }
+
+FVector FirstLoopStagedPosition(const int32 DestinationIndex, const FVector& RoutePosition)
+{
+    if (DestinationIndex == 0)
+    {
+        return FVector(-520.0f, 40.0f, 390.0f);
+    }
+    if (DestinationIndex == 1)
+    {
+        return FVector(-330.0f, 20.0f, 460.0f);
+    }
+
+    return RoutePosition;
+}
+
+FVector HomeDioramaPosition(const int32 DestinationIndex, const FVector& RoutePosition)
+{
+    if (DestinationIndex == 0)
+    {
+        return FVector(-310.0f, 405.0f, 1110.0f);
+    }
+    if (DestinationIndex == 1)
+    {
+        return FVector(115.0f, 220.0f, 1215.0f);
+    }
+
+    return RoutePosition;
+}
+
+bool IsHomeCompositionScreen(const EAstroMissionScreen Screen)
+{
+    return Screen == EAstroMissionScreen::Home
+        || Screen == EAstroMissionScreen::AgeSelect;
+}
+
+bool IsFirstLoopStagedScreen(const EAstroMissionScreen Screen)
+{
+    return Screen == EAstroMissionScreen::Home
+        || Screen == EAstroMissionScreen::AgeSelect
+        || Screen == EAstroMissionScreen::MissionPrompt
+        || Screen == EAstroMissionScreen::Navigation
+        || Screen == EAstroMissionScreen::Scanning
+        || Screen == EAstroMissionScreen::DiscoveryCard
+        || Screen == EAstroMissionScreen::DeepDive
+        || Screen == EAstroMissionScreen::Quiz
+        || Screen == EAstroMissionScreen::QuizFeedback
+        || Screen == EAstroMissionScreen::StampAward;
+}
+
+bool ShouldUseFirstLoopStaging(const EAstroMissionScreen Screen, const int32 FocusedDestinationIndex)
+{
+    return IsFirstLoopStagedScreen(Screen) && FocusedDestinationIndex <= 1;
+}
 }
 
 AAstroAdventureGameModeBase::AAstroAdventureGameModeBase()
@@ -123,9 +209,8 @@ void AAstroAdventureGameModeBase::BeginPlay()
     BuildLessons();
     LoadProgress();
     SpawnRuntimeScene();
-    CurrentScreen = EAstroMissionScreen::Home;
     HomeMenuIndex = 0;
-    UpdateDestinationFocus();
+    SetMissionScreen(EAstroMissionScreen::Home);
 }
 
 void AAstroAdventureGameModeBase::AddLesson(
@@ -196,7 +281,7 @@ void AAstroAdventureGameModeBase::BuildLessons()
 {
     Lessons.Reset();
 
-    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is our star and the center of this expedition."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look for the warm glowing giant with safe-distance rings."), TEXT("The Sun is a bright star."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("What is the Sun?"), TEXT("star"), TEXT("A star that lights the Solar System."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.35f, true);
+    AddLesson(TEXT("sun"), TEXT("Sun"), TEXT("The Sun is a star. It makes its own light."), TEXT("The Sun holds the Solar System together with gravity and gives Earth light."), TEXT("Look for the warm glowing giant with a soft corona."), TEXT("The Sun is a star. It makes its own light."), TEXT("The Sun gives us light and heat, and all the planets travel around it."), TEXT("The Sun is a star. Its gravity keeps planets, dwarf planets, comets, and asteroids moving in orbits."), TEXT("Stars make energy in their centers. We keep the ship at a safe distance and scan light rays instead of touching the Sun."), TEXT("Compared with Earth, the Sun is enormous. Compared with other stars, it is a familiar nearby star."), TEXT("Star: a huge glowing ball of hot gas that makes light."), TEXT("https://science.nasa.gov/sun/"), TEXT("What is the Sun?"), TEXT("star"), TEXT("A star that lights the Solar System."), TEXT("moon"), TEXT("A moon of Earth."), TEXT("belt"), TEXT("A ring of rocks between planets."), TEXT("Brilliant! The Sun is our star."), TEXT("Try again. The Sun makes its own light."), TEXT("A star glows with its own light."), FLinearColor(1.0f, 0.64f, 0.08f), 1.35f, true);
     AddLesson(TEXT("mercury"), TEXT("Mercury"), TEXT("Mercury is the closest planet to the Sun."), TEXT("It has a very short year because it races around the Sun quickly."), TEXT("Small gray world with craters and a heat badge."), TEXT("Mercury is tiny and close to the Sun."), TEXT("Mercury is closest to the Sun. It zooms around fast!"), TEXT("Mercury is the innermost planet. Its short orbit helps scientists compare how distance from the Sun changes a world."), TEXT("Mercury has many craters because it has almost no thick atmosphere to burn up incoming space rocks."), TEXT("Mercury is much smaller than Earth and much closer to the Sun."), TEXT("Crater: a bowl-shaped mark made when a rock from space hits a surface."), TEXT("https://science.nasa.gov/mercury/"), TEXT("Which clue helps identify Mercury?"), TEXT("sun"), TEXT("It is the closest planet to the Sun."), TEXT("rust"), TEXT("It is famous for red rusty dust."), TEXT("rings"), TEXT("It has giant bright rings."), TEXT("Nice scan! Mercury is the Sun-neighbor clue."), TEXT("Almost. Look for the clue about the Sun."), TEXT("Look for the clue that mentions the Sun."), FLinearColor(0.62f, 0.62f, 0.58f), 0.72f, true);
     AddLesson(TEXT("venus"), TEXT("Venus"), TEXT("Venus is wrapped in thick clouds and is extremely hot."), TEXT("Venus is the hottest planet even though Mercury is closer to the Sun."), TEXT("Creamy gold cloud world with a heat shield icon."), TEXT("Venus is a hot cloudy planet."), TEXT("Venus has thick clouds that trap heat like a blanket."), TEXT("Venus has a thick atmosphere that creates an extreme greenhouse effect, making its surface hotter than Mercury."), TEXT("A greenhouse effect happens when an atmosphere lets sunlight in but traps heat. Venus is the Solar System's strongest example."), TEXT("Venus is close to Earth's size, but its atmosphere makes it very different from Earth."), TEXT("Atmosphere: the layer of gases around a planet or moon."), TEXT("https://science.nasa.gov/venus/"), TEXT("Why is Venus so hot?"), TEXT("clouds"), TEXT("Its thick atmosphere traps heat."), TEXT("ice"), TEXT("It is covered in blue ice."), TEXT("tiny"), TEXT("It is the smallest moon."), TEXT("Great! Venus is a cloudy heat-trapping world."), TEXT("Try again. Think about the thick clouds."), TEXT("A thick atmosphere can hold in heat."), FLinearColor(1.0f, 0.76f, 0.42f), 0.9f, true);
     AddLesson(TEXT("earth"), TEXT("Earth"), TEXT("Earth is our home world with liquid water on the surface."), TEXT("Earth has air, oceans, land, clouds, and life."), TEXT("Blue oceans, green-brown land, and white cloud clue."), TEXT("Earth is our home planet."), TEXT("Earth has water, air, land, clouds, and living things."), TEXT("Earth's liquid water, protective atmosphere, and distance from the Sun help make it habitable."), TEXT("Scientists compare other worlds to Earth to ask what conditions help life survive."), TEXT("Earth is bigger than Mercury and Mars, smaller than the gas giants, and has one large Moon."), TEXT("Planet: a large round world that orbits a star."), TEXT("https://science.nasa.gov/earth/"), TEXT("Which clue makes Earth special?"), TEXT("water"), TEXT("It has liquid water and life."), TEXT("rings"), TEXT("It has the largest rings."), TEXT("storm"), TEXT("It has the Great Red Spot."), TEXT("Home badge unlocked! Earth is the water-and-life clue."), TEXT("Try again. Look for water and life."), TEXT("Earth is the planet we live on."), FLinearColor(0.18f, 0.56f, 1.0f), 1.0f, true);
@@ -223,43 +308,39 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), FVector(-1320.0f, -170.0f, 135.0f), FRotator::ZeroRotator);
     }
 
-    ADirectionalLight* KeyLight = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-900.0f, -900.0f, 900.0f), FRotator(-42.0f, -32.0f, 0.0f));
-    if (KeyLight && KeyLight->GetLightComponent())
+    KeyLightActor = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(-900.0f, -900.0f, 900.0f), FRotator(-42.0f, -32.0f, 0.0f));
+    if (KeyLightActor && KeyLightActor->GetLightComponent())
     {
-        KeyLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        KeyLight->GetLightComponent()->SetIntensity(14.0f);
-        KeyLight->GetLightComponent()->SetLightColor(FLinearColor(0.92f, 0.97f, 1.0f));
+        KeyLightActor->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        KeyLightActor->GetLightComponent()->SetLightColor(FLinearColor(0.92f, 0.97f, 1.0f));
     }
 
-    APointLight* SunLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-1400.0f, 0.0f, 190.0f), FRotator::ZeroRotator);
-    if (SunLight && SunLight->PointLightComponent)
+    SunLightActor = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-1400.0f, 0.0f, 190.0f), FRotator::ZeroRotator);
+    if (SunLightActor && SunLightActor->PointLightComponent)
     {
-        SunLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
-        SunLight->PointLightComponent->SetIntensity(125000.0f);
-        SunLight->PointLightComponent->SetAttenuationRadius(5800.0f);
-        SunLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
-        SunLight->PointLightComponent->SetLightColor(FLinearColor(1.0f, 0.70f, 0.25f));
+        SunLightActor->PointLightComponent->SetMobility(EComponentMobility::Movable);
+        SunLightActor->PointLightComponent->SetAttenuationRadius(5800.0f);
+        SunLightActor->PointLightComponent->SetUseInverseSquaredFalloff(false);
+        SunLightActor->PointLightComponent->SetLightColor(FLinearColor(1.0f, 0.70f, 0.25f));
     }
 
-    APointLight* PlayerFillLight = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-250.0f, -360.0f, 540.0f), FRotator::ZeroRotator);
-    if (PlayerFillLight && PlayerFillLight->PointLightComponent)
+    PlayerFillLightActor = GetWorld()->SpawnActor<APointLight>(APointLight::StaticClass(), FVector(-250.0f, -360.0f, 540.0f), FRotator::ZeroRotator);
+    if (PlayerFillLightActor && PlayerFillLightActor->PointLightComponent)
     {
-        PlayerFillLight->PointLightComponent->SetMobility(EComponentMobility::Movable);
-        PlayerFillLight->PointLightComponent->SetIntensity(62000.0f);
-        PlayerFillLight->PointLightComponent->SetAttenuationRadius(5000.0f);
-        PlayerFillLight->PointLightComponent->SetUseInverseSquaredFalloff(false);
-        PlayerFillLight->PointLightComponent->SetLightColor(FLinearColor(0.42f, 0.70f, 1.0f));
+        PlayerFillLightActor->PointLightComponent->SetMobility(EComponentMobility::Movable);
+        PlayerFillLightActor->PointLightComponent->SetAttenuationRadius(5000.0f);
+        PlayerFillLightActor->PointLightComponent->SetUseInverseSquaredFalloff(false);
+        PlayerFillLightActor->PointLightComponent->SetLightColor(FLinearColor(0.42f, 0.70f, 1.0f));
     }
 
-    ASkyLight* FillLight = GetWorld()->SpawnActor<ASkyLight>(ASkyLight::StaticClass(), FVector(0.0f, 0.0f, 460.0f), FRotator::ZeroRotator);
-    if (FillLight && FillLight->GetLightComponent())
+    SkyLightActor = GetWorld()->SpawnActor<ASkyLight>(ASkyLight::StaticClass(), FVector(0.0f, 0.0f, 460.0f), FRotator::ZeroRotator);
+    if (SkyLightActor && SkyLightActor->GetLightComponent())
     {
-        FillLight->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-        FillLight->GetLightComponent()->SetIntensity(10.0f);
-        FillLight->GetLightComponent()->SetLightColor(FLinearColor(0.58f, 0.72f, 1.0f));
+        SkyLightActor->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        SkyLightActor->GetLightComponent()->SetLightColor(FLinearColor(0.58f, 0.72f, 1.0f));
     }
 
-    APostProcessVolume* LookDevVolume = GetWorld()->SpawnActor<APostProcessVolume>(APostProcessVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
+    LookDevVolume = GetWorld()->SpawnActor<APostProcessVolume>(APostProcessVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
     if (LookDevVolume)
     {
         LookDevVolume->bUnbound = true;
@@ -276,10 +357,10 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         LookDevVolume->Settings.bOverride_BloomThreshold = true;
         LookDevVolume->Settings.BloomThreshold = 1.05f;
         LookDevVolume->Settings.bOverride_ColorSaturation = true;
-        LookDevVolume->Settings.ColorSaturation = FVector4(1.18f, 1.15f, 1.24f, 1.0f);
         LookDevVolume->Settings.bOverride_VignetteIntensity = true;
         LookDevVolume->Settings.VignetteIntensity = 0.0f;
     }
+    ApplyLightingLook();
 
     BackdropActors.Reset();
     SpawnBackdrop();
@@ -301,6 +382,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     };
 
     DestinationActors.Reset();
+    DestinationRoutePositions.Reset();
     ScanBeamActors.Reset();
     RouteMarkerActors.Reset();
     RouteMarkerOwnerIndices.Reset();
@@ -309,6 +391,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
         AAstroDestinationActor* Actor = GetWorld()->SpawnActor<AAstroDestinationActor>(AAstroDestinationActor::StaticClass(), Positions[Index], FRotator::ZeroRotator);
         if (Actor)
         {
+            DestinationRoutePositions.Add(Positions[Index]);
             Actor->Configure(Lessons[Index], Lessons[Index].DisplayColor, Lessons[Index].MapScale);
             Actor->SetDiscovered(GetMutableProgress(Lessons[Index].DestinationId).bQuizCompleted);
             DestinationActors.Add(Actor);
@@ -321,6 +404,7 @@ void AAstroAdventureGameModeBase::SpawnRuntimeScene()
     }
 
     SpawnAsteroidBelt(6, Positions[6]);
+    SpawnSunTeachingVisual();
 
     PlayerPawn = Cast<AAstroPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
     if (PlayerPawn && DestinationActors.IsValidIndex(FocusedDestinationIndex))
@@ -410,7 +494,10 @@ void AAstroAdventureGameModeBase::SpawnAsteroidBelt(const int32 OwnerIndex, cons
 void AAstroAdventureGameModeBase::SpawnBackdrop()
 {
     UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-    if (!SphereMesh || !GetWorld())
+    UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));
+    UStaticMesh* PlaneMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Plane.Plane"));
+    UMaterialInterface* SkyBackdropMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Art/AstroAdventureOwned/MaterialInstances/MI_Sky_Backdrop.MI_Sky_Backdrop"));
+    if (!SphereMesh || !CubeMesh || !GetWorld())
     {
         return;
     }
@@ -418,41 +505,135 @@ void AAstroAdventureGameModeBase::SpawnBackdrop()
     FRandomStream BackdropStream(250425);
     NebulaBackdropStartIndex = INDEX_NONE;
 
-    for (int32 Index = 0; Index < 520; ++Index)
+    const bool bUseSkyBackdropPanel = false;
+    AStaticMeshActor* SkyPlane = bUseSkyBackdropPanel ? GetWorld()->SpawnActor<AStaticMeshActor>(
+        AStaticMeshActor::StaticClass(),
+        FVector(300.0f, 1480.0f, 520.0f),
+        FRotator::ZeroRotator) : nullptr;
+    if (SkyPlane)
     {
-        const FLinearColor Color = Index % 19 == 0 ? FLinearColor(0.34f, 0.88f, 1.0f) : Index % 29 == 0 ? FLinearColor(1.0f, 0.62f, 0.32f) : Index % 41 == 0 ? FLinearColor(0.82f, 0.48f, 1.0f) : FLinearColor(0.66f, 0.76f, 0.98f);
+        SkyPlane->GetStaticMeshComponent()->SetStaticMesh(PlaneMesh ? PlaneMesh : CubeMesh);
+        SkyPlane->SetActorRotation(PlaneMesh ? FRotator(90.0f, 0.0f, 0.0f) : FRotator::ZeroRotator);
+        SkyPlane->SetActorScale3D(PlaneMesh ? FVector(48.0f, 18.0f, 1.0f) : FVector(48.0f, 0.045f, 18.0f));
+        SkyPlane->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        SkyPlane->GetStaticMeshComponent()->SetCastShadow(false);
+        if (SkyBackdropMaterial)
+        {
+            SkyPlane->GetStaticMeshComponent()->SetMaterial(0, SkyBackdropMaterial);
+        }
+        else
+        {
+            ApplyRuntimeColor(SkyPlane, FLinearColor(0.025f, 0.035f, 0.085f, 1.0f), 0.02f);
+        }
+        BackdropActors.Add(SkyPlane);
+    }
+
+    for (int32 Index = 0; Index < 150; ++Index)
+    {
+        const FLinearColor Color = Index % 41 == 0 ? FLinearColor(0.22f, 0.36f, 0.58f) : Index % 67 == 0 ? FLinearColor(0.52f, 0.34f, 0.28f) : FLinearColor(0.34f, 0.42f, 0.62f);
         AStaticMeshActor* Star = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
-            FVector(BackdropStream.FRandRange(-1900.0f, 2700.0f), BackdropStream.FRandRange(-1240.0f, 1240.0f), BackdropStream.FRandRange(160.0f, 1080.0f)),
+            FVector(BackdropStream.FRandRange(-1900.0f, 2700.0f), BackdropStream.FRandRange(860.0f, 1540.0f), BackdropStream.FRandRange(160.0f, 1080.0f)),
             FRotator::ZeroRotator);
         if (Star)
         {
             Star->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.018f, Index % 23 == 0 ? 0.16f : 0.064f)));
+            Star->SetActorScale3D(FVector(BackdropStream.FRandRange(0.01f, Index % 53 == 0 ? 0.024f : 0.018f)));
             Star->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            ApplyRuntimeColor(Star, Color, Index % 23 == 0 ? 8.5f : 3.4f);
+            Star->GetStaticMeshComponent()->SetCastShadow(false);
+            ApplyRuntimeColor(Star, Color, Index % 53 == 0 ? 0.12f : 0.055f);
             BackdropActors.Add(Star);
         }
     }
 
     NebulaBackdropStartIndex = BackdropActors.Num();
-    for (int32 Index = 0; Index < 58; ++Index)
+    for (int32 Index = 0; Index < 10; ++Index)
     {
-        const FLinearColor Color = Index % 4 == 0 ? FLinearColor(0.04f, 0.18f, 0.48f, 0.42f) : Index % 4 == 1 ? FLinearColor(0.30f, 0.08f, 0.44f, 0.34f) : Index % 4 == 2 ? FLinearColor(0.58f, 0.20f, 0.08f, 0.28f) : FLinearColor(0.04f, 0.34f, 0.30f, 0.28f);
-        const FVector Center(BackdropStream.FRandRange(-1780.0f, 2620.0f), BackdropStream.FRandRange(-1080.0f, 1080.0f), BackdropStream.FRandRange(230.0f, 920.0f));
+        const FLinearColor Color = Index % 3 == 0 ? FLinearColor(0.05f, 0.12f, 0.28f, 0.10f) : Index % 3 == 1 ? FLinearColor(0.16f, 0.06f, 0.25f, 0.08f) : FLinearColor(0.28f, 0.10f, 0.04f, 0.07f);
+        const FVector Center(BackdropStream.FRandRange(-1680.0f, 2440.0f), BackdropStream.FRandRange(1080.0f, 1620.0f), BackdropStream.FRandRange(250.0f, 940.0f));
         AStaticMeshActor* Cloud = GetWorld()->SpawnActor<AStaticMeshActor>(
             AStaticMeshActor::StaticClass(),
             Center,
-            FRotator(BackdropStream.FRandRange(-18.0f, 18.0f), BackdropStream.FRandRange(0.0f, 360.0f), BackdropStream.FRandRange(-34.0f, 34.0f)));
+            FRotator(BackdropStream.FRandRange(-8.0f, 8.0f), BackdropStream.FRandRange(0.0f, 360.0f), BackdropStream.FRandRange(-18.0f, 18.0f)));
         if (Cloud)
         {
             Cloud->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
-            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(0.62f, 1.9f), BackdropStream.FRandRange(0.075f, 0.24f), BackdropStream.FRandRange(0.026f, 0.09f)));
+            Cloud->SetActorScale3D(FVector(BackdropStream.FRandRange(1.8f, 4.6f), BackdropStream.FRandRange(0.32f, 0.66f), BackdropStream.FRandRange(0.06f, 0.16f)));
             Cloud->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            ApplyRuntimeColor(Cloud, Color, 2.1f);
+            Cloud->GetStaticMeshComponent()->SetCastShadow(false);
+            ApplyRuntimeColor(Cloud, Color, 0.055f);
             BackdropActors.Add(Cloud);
         }
     }
+}
+
+void AAstroAdventureGameModeBase::SpawnSunTeachingVisual()
+{
+    // Suppressed for the child-ready slice: the extra sphere/ray layers read as
+    // dark clutter over the Sun in packaged review captures. The destination
+    // actor itself owns the visible star until the dedicated material is fixed.
+    SunTeachingGlowActor = nullptr;
+    SunTeachingBodyActor = nullptr;
+    SunTeachingCoreActor = nullptr;
+    SunTeachingRayActors.Reset();
+}
+
+void AAstroAdventureGameModeBase::UpdateSunTeachingVisual()
+{
+    const bool bHasSunActor = DestinationActors.IsValidIndex(0) && DestinationActors[0];
+    const bool bShowSunVisual = bHasSunActor
+        && ShouldShowDestinationInCurrentView(0)
+        && CurrentScreen != EAstroMissionScreen::AtlasView
+        && CurrentScreen != EAstroMissionScreen::Passport
+        && CurrentScreen != EAstroMissionScreen::MissionComplete;
+
+    const FVector SunLocation = bHasSunActor ? DestinationActors[0]->GetActorLocation() : FVector(-610.0f, 420.0f, 1030.0f);
+    const FVector LayerBase = SunLocation + FVector(-36.0f, -8.0f, 0.0f);
+    const FRotator LayerRotation(0.0f, 0.0f, 0.0f);
+
+    auto PlaceLayer = [bShowSunVisual, LayerRotation](AStaticMeshActor* Layer, const FVector& Location)
+    {
+        if (Layer)
+        {
+            Layer->SetActorHiddenInGame(!bShowSunVisual);
+            Layer->SetActorLocation(Location);
+            Layer->SetActorRotation(LayerRotation);
+        }
+    };
+
+    PlaceLayer(SunTeachingGlowActor, LayerBase + FVector(2.0f, -6.0f, 0.0f));
+    PlaceLayer(SunTeachingBodyActor, LayerBase + FVector(0.0f, 0.0f, 0.0f));
+    PlaceLayer(SunTeachingCoreActor, LayerBase + FVector(-4.0f, -58.0f, 26.0f));
+
+    for (int32 RayIndex = 0; RayIndex < SunTeachingRayActors.Num(); ++RayIndex)
+    {
+        const float Angle = (2.0f * PI * static_cast<float>(RayIndex)) / FMath::Max(1.0f, static_cast<float>(SunTeachingRayActors.Num()));
+        const float Radius = RayIndex % 2 == 0 ? 154.0f : 126.0f;
+        const FVector RayOffset(0.0f, FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius);
+        PlaceLayer(SunTeachingRayActors[RayIndex], LayerBase + RayOffset);
+    }
+}
+
+void AAstroAdventureGameModeBase::ApplyFirstLoopStaging()
+{
+    const bool bUseStaging = ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex);
+    const bool bUseHomeDiorama = IsHomeCompositionScreen(CurrentScreen);
+    for (int32 Index = 0; Index < DestinationActors.Num(); ++Index)
+    {
+        if (!DestinationActors[Index] || !DestinationRoutePositions.IsValidIndex(Index))
+        {
+            continue;
+        }
+
+        const FVector TargetLocation = bUseHomeDiorama
+            ? HomeDioramaPosition(Index, DestinationRoutePositions[Index])
+            : bUseStaging
+                ? FirstLoopStagedPosition(Index, DestinationRoutePositions[Index])
+                : DestinationRoutePositions[Index];
+        DestinationActors[Index]->SetActorLocation(TargetLocation);
+    }
+
+    UpdateSunTeachingVisual();
 }
 
 void AAstroAdventureGameModeBase::LoadProgress()
@@ -512,6 +693,16 @@ void AAstroAdventureGameModeBase::FocusNextDestination()
         MoveQuizFocus(1);
         return;
     }
+    if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
+    {
+        SetMissionScreen(EAstroMissionScreen::Navigation);
+        return;
+    }
+    if (CurrentScreen == EAstroMissionScreen::Navigation && IsFirstStopLocked())
+    {
+        LastFeedback = TEXT("Scan the Sun first. Then your route opens to Mercury.");
+        return;
+    }
 
     if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
@@ -547,6 +738,11 @@ void AAstroAdventureGameModeBase::FocusPreviousDestination()
         MoveQuizFocus(-1);
         return;
     }
+    if (CurrentScreen == EAstroMissionScreen::Navigation && IsFirstStopLocked())
+    {
+        LastFeedback = TEXT("Start with the Sun scan. Mercury unlocks next.");
+        return;
+    }
 
     if (!Lessons.IsEmpty() && (CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport))
     {
@@ -566,7 +762,7 @@ void AAstroAdventureGameModeBase::Confirm()
     if (CurrentScreen == EAstroMissionScreen::AgeSelect)
     {
         SelectAgeBand(AgeSelectIndex);
-        CurrentScreen = EAstroMissionScreen::MissionPrompt;
+        SetMissionScreen(EAstroMissionScreen::MissionPrompt);
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
@@ -588,25 +784,33 @@ void AAstroAdventureGameModeBase::Confirm()
     switch (CurrentScreen)
     {
     case EAstroMissionScreen::MissionPrompt:
-        CurrentScreen = EAstroMissionScreen::Navigation;
-        break;
+        SetMissionScreen(EAstroMissionScreen::Navigation);
+        return;
+    case EAstroMissionScreen::Scanning:
+        return;
     case EAstroMissionScreen::Navigation:
         MarkScanned(Lesson->DestinationId);
+        PendingScanDestinationId = Lesson->DestinationId;
         TriggerScanFeedback(*Lesson);
-        CurrentScreen = EAstroMissionScreen::DiscoveryCard;
-        break;
+        SetMissionScreen(EAstroMissionScreen::Scanning);
+        if (GetWorld())
+        {
+            GetWorld()->GetTimerManager().ClearTimer(ScanRevealTimerHandle);
+            GetWorld()->GetTimerManager().SetTimer(ScanRevealTimerHandle, this, &AAstroAdventureGameModeBase::FinishScanReveal, 2.15f, false);
+        }
+        return;
     case EAstroMissionScreen::DiscoveryCard:
     case EAstroMissionScreen::DeepDive:
         FocusedQuizChoiceIndex = 0;
-        CurrentScreen = EAstroMissionScreen::Quiz;
-        break;
+        SetMissionScreen(EAstroMissionScreen::Quiz);
+        return;
     case EAstroMissionScreen::Passport:
     case EAstroMissionScreen::AtlasView:
-        CurrentScreen = EAstroMissionScreen::Navigation;
-        break;
+        SetMissionScreen(EAstroMissionScreen::Navigation);
+        return;
     case EAstroMissionScreen::Quiz:
         SubmitAnswer(FocusedQuizChoiceIndex);
-        break;
+        return;
     case EAstroMissionScreen::QuizFeedback:
         if (bLastAnswerCorrect)
         {
@@ -616,34 +820,138 @@ void AAstroAdventureGameModeBase::Confirm()
             {
                 if (IsMissionComplete() || !AdvanceToNextRouteStop())
                 {
-                    CurrentScreen = EAstroMissionScreen::MissionComplete;
+                    SetMissionScreen(EAstroMissionScreen::MissionComplete);
                 }
             }
             else
             {
                 TriggerStampFeedback(*Lesson);
-                CurrentScreen = EAstroMissionScreen::StampAward;
+                SetMissionScreen(EAstroMissionScreen::StampAward);
             }
         }
         else
         {
-            CurrentScreen = EAstroMissionScreen::Quiz;
+            SetMissionScreen(EAstroMissionScreen::Quiz);
         }
-        break;
+        return;
     case EAstroMissionScreen::StampAward:
         if (IsMissionComplete() || !AdvanceToNextRouteStop())
         {
-            CurrentScreen = EAstroMissionScreen::MissionComplete;
+            SetMissionScreen(EAstroMissionScreen::MissionComplete);
         }
-        break;
+        return;
     case EAstroMissionScreen::MissionComplete:
-        CurrentScreen = EAstroMissionScreen::AtlasView;
-        break;
+        SetMissionScreen(EAstroMissionScreen::AtlasView);
+        return;
     default:
         break;
     }
 
     UpdateDestinationFocus();
+}
+
+void AAstroAdventureGameModeBase::SetMissionScreen(const EAstroMissionScreen NewScreen)
+{
+    CurrentScreen = NewScreen;
+    if (NewScreen == EAstroMissionScreen::Home)
+    {
+        FocusedDestinationIndex = 0;
+    }
+    if (NewScreen != EAstroMissionScreen::Scanning && GetWorld())
+    {
+        GetWorld()->GetTimerManager().ClearTimer(ScanRevealTimerHandle);
+    }
+    UpdateDestinationFocus();
+}
+
+void AAstroAdventureGameModeBase::NotifyHomeInputReceived()
+{
+    if (CurrentScreen != EAstroMissionScreen::Home)
+    {
+        return;
+    }
+
+    UE_LOG(LogTemp, Display, TEXT("Astro Adventure Home input received."));
+    if (LastFeedback.IsEmpty())
+    {
+        LastFeedback = TEXT("Controls ready. Choose New Expedition to launch.");
+    }
+}
+
+bool AAstroAdventureGameModeBase::HandlePointerConfirm(const float ScreenX, const float ScreenY, const float ViewportWidth, const float ViewportHeight)
+{
+    if (ViewportWidth <= 0.0f || ViewportHeight <= 0.0f)
+    {
+        return false;
+    }
+
+    auto SelectRow = [](const float MouseY, const float FirstRowY, const float RowH, const float Gap, const int32 RowCount) -> int32
+    {
+        for (int32 Index = 0; Index < RowCount; ++Index)
+        {
+            const float RowY = FirstRowY + Index * (RowH + Gap);
+            if (MouseY >= RowY && MouseY <= RowY + RowH)
+            {
+                return Index;
+            }
+        }
+        return INDEX_NONE;
+    };
+
+    if (CurrentScreen == EAstroMissionScreen::Home)
+    {
+        const float PanelX = FMath::Clamp(ViewportWidth * 0.052f, 32.0f, 74.0f);
+        const float PanelW = FMath::Clamp(ViewportWidth * 0.30f, 286.0f, 390.0f);
+        const float PanelY = FMath::Clamp(ViewportHeight * 0.28f, 198.0f, 254.0f);
+        const float RowX = PanelX + 22.0f;
+        const float RowW = PanelW - 44.0f;
+        const float RowH = 23.0f;
+        const float FirstRowY = PanelY + 37.0f;
+
+        if (ScreenX >= RowX && ScreenX <= RowX + RowW)
+        {
+            const int32 ClickedIndex = SelectRow(ScreenY, FirstRowY, RowH, 2.0f, 4);
+            if (ClickedIndex != INDEX_NONE)
+            {
+                HomeMenuIndex = ClickedIndex;
+                ExecuteHomeSelection();
+                return true;
+            }
+        }
+    }
+    else if (CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::PauseMenu || CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        const float Margin = FMath::Clamp(ViewportWidth * 0.018f, 18.0f, 28.0f);
+        const float HeaderH = FMath::Clamp(ViewportHeight * 0.056f, 38.0f, 52.0f);
+        const float CardW = FMath::Min(ViewportWidth - Margin * 2.0f, 930.0f);
+        const float CardH = 286.0f;
+        const float CardX = (ViewportWidth - CardW) * 0.5f;
+        const float CardY = FMath::Max(HeaderH + 12.0f, ViewportHeight - CardH - FMath::Clamp(ViewportHeight * 0.022f, 12.0f, 24.0f));
+        const int32 RowCount = CurrentScreen == EAstroMissionScreen::AgeSelect ? 3 : 4;
+        const int32 ClickedIndex = ScreenX >= CardX + 42.0f && ScreenX <= CardX + CardW - 42.0f
+            ? SelectRow(ScreenY, CardY + 58.0f, 34.0f, 4.0f, RowCount)
+            : INDEX_NONE;
+
+        if (ClickedIndex != INDEX_NONE)
+        {
+            if (CurrentScreen == EAstroMissionScreen::AgeSelect)
+            {
+                AgeSelectIndex = ClickedIndex;
+            }
+            else if (CurrentScreen == EAstroMissionScreen::PauseMenu)
+            {
+                PauseMenuIndex = ClickedIndex;
+            }
+            else
+            {
+                MissionCompleteMenuIndex = ClickedIndex;
+            }
+            Confirm();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void AAstroAdventureGameModeBase::Back()
@@ -655,28 +963,30 @@ void AAstroAdventureGameModeBase::Back()
     }
     if (CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
-        CurrentScreen = EAstroMissionScreen::Home;
         HomeMenuIndex = 0;
+        SetMissionScreen(EAstroMissionScreen::Home);
         return;
     }
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
     {
-        CurrentScreen = PreviousScreen;
+        SetMissionScreen(PreviousScreen);
     }
     else if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
-        CurrentScreen = EAstroMissionScreen::DiscoveryCard;
+        SetMissionScreen(EAstroMissionScreen::DiscoveryCard);
     }
-    else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
+    else if (CurrentScreen == EAstroMissionScreen::QuizFeedback && bLastAnswerCorrect)
     {
-        CurrentScreen = EAstroMissionScreen::Navigation;
+        Confirm();
+    }
+    else if (CurrentScreen == EAstroMissionScreen::Scanning || CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
+    {
+        SetMissionScreen(EAstroMissionScreen::Navigation);
     }
     else if (CurrentScreen == EAstroMissionScreen::MissionComplete)
     {
-        CurrentScreen = EAstroMissionScreen::AtlasView;
+        SetMissionScreen(EAstroMissionScreen::AtlasView);
     }
-
-    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::RequestHint()
@@ -688,36 +998,32 @@ void AAstroAdventureGameModeBase::ToggleDeepDive()
 {
     if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
     {
-        CurrentScreen = EAstroMissionScreen::DeepDive;
+        SetMissionScreen(EAstroMissionScreen::DeepDive);
     }
     else if (CurrentScreen == EAstroMissionScreen::DeepDive)
     {
-        CurrentScreen = EAstroMissionScreen::DiscoveryCard;
+        SetMissionScreen(EAstroMissionScreen::DiscoveryCard);
     }
-
-    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::TogglePassport()
 {
     if (CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport)
     {
-        CurrentScreen = PreviousScreen == EAstroMissionScreen::AtlasView || PreviousScreen == EAstroMissionScreen::Passport ? EAstroMissionScreen::Navigation : PreviousScreen;
+        SetMissionScreen(PreviousScreen == EAstroMissionScreen::AtlasView || PreviousScreen == EAstroMissionScreen::Passport ? EAstroMissionScreen::Navigation : PreviousScreen);
     }
-    else if (CurrentScreen != EAstroMissionScreen::Home && CurrentScreen != EAstroMissionScreen::AgeSelect && CurrentScreen != EAstroMissionScreen::PauseMenu)
+    else if (CurrentScreen != EAstroMissionScreen::Home && CurrentScreen != EAstroMissionScreen::AgeSelect && CurrentScreen != EAstroMissionScreen::PauseMenu && CurrentScreen != EAstroMissionScreen::Scanning)
     {
         PreviousScreen = CurrentScreen;
-        CurrentScreen = EAstroMissionScreen::AtlasView;
+        SetMissionScreen(EAstroMissionScreen::AtlasView);
     }
-
-    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::TogglePause()
 {
     if (CurrentScreen == EAstroMissionScreen::PauseMenu)
     {
-        CurrentScreen = PreviousScreen;
+        SetMissionScreen(PreviousScreen);
     }
     else if (CurrentScreen == EAstroMissionScreen::Home)
     {
@@ -727,10 +1033,8 @@ void AAstroAdventureGameModeBase::TogglePause()
     {
         PreviousScreen = CurrentScreen;
         PauseMenuIndex = 0;
-        CurrentScreen = EAstroMissionScreen::PauseMenu;
+        SetMissionScreen(EAstroMissionScreen::PauseMenu);
     }
-
-    RefreshScenePresentation();
 }
 
 void AAstroAdventureGameModeBase::MoveQuizFocus(const int32 Direction)
@@ -765,7 +1069,7 @@ void AAstroAdventureGameModeBase::SubmitAnswer(const int32 ChoiceIndex)
     {
         LastFeedback = (bLastAnswerCorrect ? Lesson->CorrectFeedback : Lesson->RetryFeedback).ToString();
     }
-    CurrentScreen = EAstroMissionScreen::QuizFeedback;
+    SetMissionScreen(EAstroMissionScreen::QuizFeedback);
 
     if (!bLastAnswerCorrect)
     {
@@ -787,7 +1091,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     switch (CurrentScreen)
     {
     case EAstroMissionScreen::Home:
-        return TEXT("Solar Passport");
+        return TEXT("Astro Adventure: Solar Passport");
     case EAstroMissionScreen::AgeSelect:
         return TEXT("Choose your explorer mode");
     case EAstroMissionScreen::MissionPrompt:
@@ -798,6 +1102,8 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
             return FString::Printf(TEXT("Rescan %s to review the saved card"), *Name);
         }
         return FString::Printf(TEXT("Travel to %s, then scan its discovery card!"), *Name);
+    case EAstroMissionScreen::Scanning:
+        return FString::Printf(TEXT("Scanning %s..."), *Name);
     case EAstroMissionScreen::DiscoveryCard:
         return FString::Printf(TEXT("%s discovery card unlocked!"), *Name);
     case EAstroMissionScreen::DeepDive:
@@ -810,7 +1116,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     case EAstroMissionScreen::QuizFeedback:
         return LastFeedback;
     case EAstroMissionScreen::StampAward:
-        return Lesson ? FString::Printf(TEXT("New stamp unlocked: %s"), *Name) : TEXT("New stamp unlocked!");
+        return Lesson ? FString::Printf(TEXT("You earned the %s stamp!"), *Name) : TEXT("You earned a stamp!");
     case EAstroMissionScreen::MissionComplete:
         return TEXT("Mission complete! Your Solar Passport has a full first-expedition route.");
     case EAstroMissionScreen::PauseMenu:
@@ -827,14 +1133,15 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
-        const TCHAR* Options[] = {TEXT("New Expedition"), TEXT("Continue"), TEXT("Reset Passport"), TEXT("Quit")};
+        const TCHAR* Options[] = {TEXT("Start Sun Expedition"), TEXT("Continue"), TEXT("Reset Passport"), TEXT("Quit")};
         const int32 StampCount = CountCompletedStops();
+        const bool bHasProgress = HasAnyProgress();
         for (int32 Index = 0; Index < 4; ++Index)
         {
             FString Label = Options[Index];
             if (Index == 1)
             {
-                Label = StampCount > 0 ? FString::Printf(TEXT("Continue saved route: %d stamps"), StampCount) : TEXT("Continue - no saved route yet");
+                Label = StampCount > 0 ? FString::Printf(TEXT("Continue route: %d stamps"), StampCount) : bHasProgress ? TEXT("Continue route in progress") : TEXT("Continue route - none yet");
             }
             Lines.Add(FString::Printf(TEXT("%s %s"), Index == HomeMenuIndex ? TEXT(">") : TEXT(" "), *Label));
         }
@@ -842,7 +1149,6 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
         {
             Lines.Add(LastFeedback);
         }
-        Lines.Add(TEXT("Start a new route or continue your passport."));
         return Lines;
     }
 
@@ -885,26 +1191,75 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
     if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
     {
-        Lines.Add(TEXT("Pilot the comet ship, scan the Solar System, answer tiny science challenges, and collect passport stamps."));
-        Lines.Add(TEXT("Main route: Sun, planets, Moon, asteroid belt, Europa, and Pluto preview."));
+        Lines.Add(TEXT("First stop: the Sun. Watch the ship, then scan the glowing star."));
+        Lines.Add(TEXT("Your passport saves one stamp for each discovery."));
+    }
+    else if (CurrentScreen == EAstroMissionScreen::Scanning)
+    {
+        Lines.Add(FString::Printf(TEXT("Scanner beam is travelling from your ship to %s."), *Lesson->DisplayName.ToString()));
+        Lines.Add(TEXT("Charge, beam, pulse, then discovery."));
     }
     else if (CurrentScreen == EAstroMissionScreen::DiscoveryCard)
     {
-        Lines.Add(FString::Printf(TEXT("Quick fact: %s"), *Lesson->DiscoveryFact.ToString()));
-        if (ActiveAgeBand != EAstroAgeBand::Ages4To6)
+        if (Lesson->DestinationId == FName(TEXT("sun")))
         {
-            Lines.Add(FString::Printf(TEXT("Wow fact: %s"), *Lesson->WowFact.ToString()));
+            Lines.Add(TEXT("Look: the warm star is making its own light."));
+            Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
+            Lines.Add(TEXT("More Info shows why we scan from a safe distance."));
+            Lines.Add(TEXT("Press M / LT for More Info, or Confirm for the quiz."));
+            return Lines;
         }
-        Lines.Add(FString::Printf(TEXT("Look for: %s"), *Lesson->VisualClue.ToString()));
-        Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
+
+        if (Lesson->DestinationId == FName(TEXT("mercury")))
+        {
+            Lines.Add(TEXT("Look: Mercury is small, gray, and covered in craters."));
+            Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
+            Lines.Add(TEXT("More Info explains why craters stay visible."));
+            Lines.Add(TEXT("Press M / LT for More Info, or Confirm for the quiz."));
+            return Lines;
+        }
+
+        if (ActiveAgeBand == EAstroAgeBand::Ages4To6)
+        {
+            Lines.Add(FString::Printf(TEXT("Look: %s"), *Lesson->VisualClue.ToString()));
+            Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
+        }
+        else
+        {
+            Lines.Add(FString::Printf(TEXT("Quick fact: %s"), *Lesson->DiscoveryFact.ToString()));
+            Lines.Add(FString::Printf(TEXT("Look for: %s"), *Lesson->VisualClue.ToString()));
+            if (ActiveAgeBand == EAstroAgeBand::Ages10To12)
+            {
+                Lines.Add(UAstroLearningLibrary::LessonTextForAgeBand(*Lesson, ActiveAgeBand).ToString());
+            }
+            else
+            {
+                Lines.Add(FString::Printf(TEXT("Wow fact: %s"), *Lesson->WowFact.ToString()));
+            }
+        }
         Lines.Add(TEXT("Press M / LT for More Info, or Confirm for the quiz."));
     }
     else if (CurrentScreen == EAstroMissionScreen::DeepDive)
     {
-        Lines.Add(Lesson->DeepDiveText.ToString());
-        Lines.Add(FString::Printf(TEXT("Compare: %s"), *Lesson->CompareFact.ToString()));
-        Lines.Add(FString::Printf(TEXT("Word explorer: %s"), *Lesson->GlossaryText.ToString()));
-        Lines.Add(TEXT("Source notes are kept outside the kid cards."));
+        if (Lesson->DestinationId == FName(TEXT("sun")))
+        {
+            Lines.Add(TEXT("Closer Look: Stars make energy deep inside."));
+            Lines.Add(TEXT("Compare: The Sun is enormous next to Earth."));
+            Lines.Add(TEXT("Word Explorer: A star is a glowing ball of hot gas."));
+        }
+        else if (Lesson->DestinationId == FName(TEXT("mercury")))
+        {
+            Lines.Add(TEXT("Closer Look: Mercury keeps craters because it has little air."));
+            Lines.Add(TEXT("Compare: Mercury is much smaller than Earth."));
+            Lines.Add(TEXT("Word Explorer: A crater is a bowl mark from a space rock."));
+        }
+        else
+        {
+            Lines.Add(FString::Printf(TEXT("Closer Look: %s"), *Lesson->DeepDiveText.ToString()));
+            Lines.Add(FString::Printf(TEXT("Compare: %s"), *Lesson->CompareFact.ToString()));
+            Lines.Add(FString::Printf(TEXT("Word Explorer: %s"), *Lesson->GlossaryText.ToString()));
+        }
+        Lines.Add(TEXT("Back closes this; Confirm opens the quiz."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Quiz)
     {
@@ -918,34 +1273,43 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
         const bool bReviewingStampedStop = Progress && Progress->bQuizCompleted;
-        Lines.Add(bLastAnswerCorrect ? bReviewingStampedStop ? TEXT("Review complete. Confirm or Right/D for the next stop.") : TEXT("Correct answer. Confirm to add the stamp.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
+        Lines.Add(bLastAnswerCorrect ? bReviewingStampedStop ? TEXT("Review complete. Confirm for the next stop.") : TEXT("Correct answer. Confirm to add the stamp.") : TEXT("No worries. Confirm to retry, or ask for a hint."));
     }
     else if (CurrentScreen == EAstroMissionScreen::StampAward)
     {
-        const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
-        Lines.Add(FString::Printf(TEXT("%s is now marked STAMPED in your Passport."), *Lesson->DisplayName.ToString()));
-        Lines.Add(TEXT("Each stop saves one stamp; rescans reopen the review card."));
-        Lines.Add(IsMissionComplete() ? TEXT("Confirm to celebrate the completed route.") : TEXT("Confirm or press Right/D for Next Stop."));
-        Lines.Add(TEXT("Stamp saved. You can review this card from Atlas later."));
+        Lines.Add(Lesson && Lesson->DestinationId == FName(TEXT("sun"))
+            ? TEXT("The Sun is a star. It makes its own light.")
+            : TEXT("You found a new space discovery."));
+        Lines.Add(IsMissionComplete() ? TEXT("First expedition complete.") : TEXT("Next Stop: Mercury, the crater world."));
+        Lines.Add(TEXT("Your passport keeps this discovery."));
     }
     else if (CurrentScreen == EAstroMissionScreen::Navigation)
     {
         Lines.Add(FString::Printf(TEXT("Next stop: %s"), *Lesson->DisplayName.ToString()));
         Lines.Add(FString::Printf(TEXT("Clue: %s"), *Lesson->VisualClue.ToString()));
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lesson->DestinationId) : nullptr;
-        Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to scan again and reopen its card.") : TEXT("Confirm to scan for a discovery card."));
-        Lines.Add(TEXT("Tap Right/D or Up/W for next stop. Tap Left/A or Down/S to go back."));
+        if (Lesson->DestinationId == FName(TEXT("mercury")) && !IsFirstStopLocked())
+        {
+            Lines.Add(TEXT("Mercury unlocked: look for big craters."));
+            Lines.Add(TEXT("Scan Mercury to discover why craters stay."));
+        }
+        else
+        {
+            Lines.Add(Progress && Progress->bQuizCompleted ? TEXT("Stamp saved already. Confirm to rescan and review.") : Progress && Progress->bScanned ? TEXT("Scan found. Confirm to scan again and reopen its card.") : TEXT("Confirm to scan for a discovery card."));
+            Lines.Add(IsFirstStopLocked() ? TEXT("The Sun is your first stop. Scan it to unlock Mercury.") : TEXT("Use arrows, WASD, or D-pad to choose another stop."));
+        }
     }
     else if (CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::AtlasView)
     {
-        Lines.Add(TEXT("Atlas View: full route, stamps, and future review boxes."));
+        Lines.Add(TEXT("Atlas: route groups and passport stamps."));
         for (int32 Index = 0; Index < Lessons.Num(); ++Index)
         {
             const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[Index].DestinationId) : nullptr;
-            Lines.Add(FString::Printf(TEXT("%s %s | %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Progress && Progress->bQuizCompleted ? TEXT("Stamped") : Progress && Progress->bScanned ? TEXT("Ready") : TEXT("Visit")));
+            const TCHAR* Region = Index <= 3 ? TEXT("Rocky Worlds") : Index <= 8 ? TEXT("Giant Worlds") : TEXT("Icy Edge");
+            Lines.Add(FString::Printf(TEXT("%s %s | %s | %s"), Index == FocusedDestinationIndex ? TEXT(">") : TEXT(" "), *Lessons[Index].DisplayName.ToString(), Region, Progress && Progress->bQuizCompleted ? TEXT("Stamp Saved") : Progress && Progress->bScanned ? TEXT("Card Ready") : TEXT("Visit")));
             if (Lines.Num() >= 9)
             {
-                Lines.Add(TEXT("Move focus to inspect more stops. Back returns to the mission."));
+                Lines.Add(TEXT("Atlas compares worlds. Back returns to the mission."));
                 break;
             }
         }
@@ -966,6 +1330,8 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
 void AAstroAdventureGameModeBase::UpdateDestinationFocus()
 {
+    ApplyFirstLoopStaging();
+
     for (int32 Index = 0; Index < DestinationActors.Num(); ++Index)
     {
         if (DestinationActors[Index])
@@ -980,45 +1346,106 @@ void AAstroAdventureGameModeBase::UpdateDestinationFocus()
     {
         const FVector FocusLocation = DestinationActors[FocusedDestinationIndex]->GetActorLocation();
         const float VisualScale = Lessons.IsValidIndex(FocusedDestinationIndex) ? Lessons[FocusedDestinationIndex].MapScale : 1.0f;
-        PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(VisualScale));
-        const bool bAtlasLike = CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::MissionComplete;
-        PlayerPawn->SetCameraFocusTarget(bAtlasLike ? RouteCameraFocusTarget(DestinationActors) : FocusLocation + DestinationCameraFocusOffset(VisualScale));
+        if (IsHomeCompositionScreen(CurrentScreen))
+        {
+            PlayerPawn->SetTravelTarget(FVector(-250.0f, 140.0f, 1020.0f));
+            PlayerPawn->SetCameraFocusTarget(FVector(-560.0f, 355.0f, 460.0f));
+        }
+        else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
+        {
+            PlayerPawn->SetTravelTarget(FocusLocation + FVector(360.0f, 240.0f, 86.0f));
+            const FVector FirstLoopTeachingTarget = FocusLocation + FVector(-140.0f, -20.0f, 220.0f);
+            PlayerPawn->SetCameraFocusTarget(FirstLoopTeachingTarget);
+        }
+        else
+        {
+            PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(VisualScale));
+            const bool bAtlasLike = CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::MissionComplete;
+            PlayerPawn->SetCameraFocusTarget(bAtlasLike ? RouteCameraFocusTarget(DestinationActors) : FocusLocation + DestinationCameraFocusOffset(VisualScale));
+        }
     }
 
     RefreshScenePresentation();
 }
 
+void AAstroAdventureGameModeBase::ApplyLightingLook()
+{
+    EAstroLightingLook Look = EAstroLightingLook::MissionLook;
+    if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
+    {
+        Look = EAstroLightingLook::HomeLook;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::AtlasView || CurrentScreen == EAstroMissionScreen::Passport || CurrentScreen == EAstroMissionScreen::MissionComplete)
+    {
+        Look = EAstroLightingLook::AtlasLook;
+    }
+
+    const FAstroLightingSettings Settings = GetLightingSettings(Look);
+    if (KeyLightActor && KeyLightActor->GetLightComponent())
+    {
+        KeyLightActor->GetLightComponent()->SetIntensity(Settings.KeyIntensity);
+    }
+    if (SunLightActor && SunLightActor->PointLightComponent)
+    {
+        SunLightActor->PointLightComponent->SetIntensity(Settings.SunIntensity);
+    }
+    if (PlayerFillLightActor && PlayerFillLightActor->PointLightComponent)
+    {
+        PlayerFillLightActor->PointLightComponent->SetIntensity(Settings.FillIntensity);
+    }
+    if (SkyLightActor && SkyLightActor->GetLightComponent())
+    {
+        SkyLightActor->GetLightComponent()->SetIntensity(Settings.SkyIntensity);
+    }
+    if (LookDevVolume)
+    {
+        LookDevVolume->Settings.AutoExposureBias = Settings.ExposureBias;
+        LookDevVolume->Settings.BloomIntensity = Settings.BloomIntensity;
+        LookDevVolume->Settings.BloomThreshold = Settings.BloomThreshold;
+        LookDevVolume->Settings.ColorSaturation = Settings.Saturation;
+    }
+}
+
 void AAstroAdventureGameModeBase::RefreshScenePresentation()
 {
+    ApplyFirstLoopStaging();
+    ApplyLightingLook();
+
     const bool bAtlasLike = CurrentScreen == EAstroMissionScreen::AtlasView
         || CurrentScreen == EAstroMissionScreen::Passport
         || CurrentScreen == EAstroMissionScreen::MissionComplete;
+    const bool bHomeLike = ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex);
 
     for (int32 Index = 0; Index < DestinationActors.Num(); ++Index)
     {
         if (DestinationActors[Index])
         {
-            DestinationActors[Index]->SetPresentationMode(bAtlasLike ? EAstroDestinationPresentationMode::Atlas : EAstroDestinationPresentationMode::Mission);
+            DestinationActors[Index]->SetPresentationMode(bHomeLike ? EAstroDestinationPresentationMode::Home : bAtlasLike ? EAstroDestinationPresentationMode::Atlas : EAstroDestinationPresentationMode::Mission);
             DestinationActors[Index]->SetActorHiddenInGame(!ShouldShowDestinationInCurrentView(Index));
         }
     }
 
-    for (int32 Index = 0; Index < RouteMarkerActors.Num(); ++Index)
-    {
+      for (int32 Index = 0; Index < RouteMarkerActors.Num(); ++Index)
+      {
         if (RouteMarkerActors[Index])
         {
             const int32 OwnerIndex = RouteMarkerOwnerIndices.IsValidIndex(Index) ? RouteMarkerOwnerIndices[Index] : INDEX_NONE;
-            RouteMarkerActors[Index]->SetActorHiddenInGame(OwnerIndex != INDEX_NONE && !ShouldShowDestinationInCurrentView(OwnerIndex));
-        }
-    }
+            RouteMarkerActors[Index]->SetActorHiddenInGame(IsFirstLoopStagedScreen(CurrentScreen) || CurrentScreen == EAstroMissionScreen::Scanning || (OwnerIndex != INDEX_NONE && !ShouldShowDestinationInCurrentView(OwnerIndex)));
+          }
+      }
 
-    const bool bShowNebula = CurrentScreen == EAstroMissionScreen::Home
-        || CurrentScreen == EAstroMissionScreen::AgeSelect
-        || CurrentScreen == EAstroMissionScreen::MissionPrompt
-        || CurrentScreen == EAstroMissionScreen::AtlasView
+      const bool bShowScanBeam = IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::Scanning;
+      for (AStaticMeshActor* ScanBeamActor : ScanBeamActors)
+      {
+          if (ScanBeamActor)
+          {
+              ScanBeamActor->SetActorHiddenInGame(!bShowScanBeam);
+          }
+      }
+
+      const bool bShowNebula = CurrentScreen == EAstroMissionScreen::AtlasView
         || CurrentScreen == EAstroMissionScreen::Passport
-        || CurrentScreen == EAstroMissionScreen::MissionComplete
-        || CurrentScreen == EAstroMissionScreen::PauseMenu;
+        || CurrentScreen == EAstroMissionScreen::MissionComplete;
     for (int32 Index = 0; Index < BackdropActors.Num(); ++Index)
     {
         if (BackdropActors[Index] && NebulaBackdropStartIndex != INDEX_NONE && Index >= NebulaBackdropStartIndex)
@@ -1027,6 +1454,7 @@ void AAstroAdventureGameModeBase::RefreshScenePresentation()
         }
     }
 
+    UpdateSunTeachingVisual();
     RefreshPlayerPresentation();
 }
 
@@ -1046,12 +1474,34 @@ void AAstroAdventureGameModeBase::RefreshPlayerPresentation()
     {
         Profile = EAstroCameraPresentationProfile::Stable;
     }
-    else if (IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::DiscoveryCard)
+    else if (IsScanEffectActive() || CurrentScreen == EAstroMissionScreen::Scanning || CurrentScreen == EAstroMissionScreen::DiscoveryCard)
     {
         Profile = EAstroCameraPresentationProfile::Scan;
     }
+    else if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
+    {
+        Profile = EAstroCameraPresentationProfile::Home;
+    }
 
-    PlayerPawn->SetCameraPresentationProfile(Profile);
+    EAstroCameraCompositionProfile Composition = EAstroCameraCompositionProfile::MissionFocus;
+    if (Profile == EAstroCameraPresentationProfile::Home)
+    {
+        Composition = CurrentScreen == EAstroMissionScreen::MissionPrompt ? EAstroCameraCompositionProfile::Launch : EAstroCameraCompositionProfile::Home;
+    }
+    else if (Profile == EAstroCameraPresentationProfile::Atlas)
+    {
+        Composition = EAstroCameraCompositionProfile::Atlas;
+    }
+    else if (Profile == EAstroCameraPresentationProfile::Scan)
+    {
+        Composition = CurrentScreen == EAstroMissionScreen::DiscoveryCard ? EAstroCameraCompositionProfile::DiscoveryHold : EAstroCameraCompositionProfile::ScanFocus;
+    }
+    else if (CurrentScreen == EAstroMissionScreen::StampAward)
+    {
+        Composition = EAstroCameraCompositionProfile::StampHold;
+    }
+
+    PlayerPawn->SetCameraCompositionProfile(Composition);
     PlayerPawn->SetScannerActive(IsScanEffectActive());
 
     if (const FAstroDestinationLesson* Lesson = GetFocusedLesson())
@@ -1072,8 +1522,17 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
         return true;
     }
 
-    if (CurrentScreen == EAstroMissionScreen::Home || CurrentScreen == EAstroMissionScreen::AgeSelect || CurrentScreen == EAstroMissionScreen::MissionPrompt)
+    if (CurrentScreen == EAstroMissionScreen::Home || CurrentScreen == EAstroMissionScreen::AgeSelect)
     {
+        return DestinationIndex == 0 || DestinationIndex == 1;
+    }
+
+    if (CurrentScreen == EAstroMissionScreen::MissionPrompt)
+    {
+        if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
+        {
+            return DestinationIndex == 0 || DestinationIndex == 1;
+        }
         const int32 Count = FMath::Max(1, DestinationActors.Num());
         return DestinationIndex == FocusedDestinationIndex || DestinationIndex == (FocusedDestinationIndex + 1) % Count;
     }
@@ -1089,7 +1548,7 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
         return false;
     }
 
-    return DestinationIndex == FocusedDestinationIndex || DestinationIndex == FocusedDestinationIndex + 1;
+    return DestinationIndex == FocusedDestinationIndex || DestinationIndex == (FocusedDestinationIndex + 1) % Count;
 }
 
 void AAstroAdventureGameModeBase::MarkScanned(const FName DestinationId)
@@ -1107,9 +1566,17 @@ bool AAstroAdventureGameModeBase::HasStampForDestination(const FName Destination
 
 void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLesson& Lesson)
 {
-    LastScanTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+      LastScanTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+      for (AStaticMeshActor* ExistingBeam : ScanBeamActors)
+      {
+          if (ExistingBeam)
+          {
+              ExistingBeam->Destroy();
+          }
+      }
+      ScanBeamActors.Reset();
 
-    AAstroDestinationActor* FocusActor = nullptr;
+      AAstroDestinationActor* FocusActor = nullptr;
     for (AAstroDestinationActor* DestinationActor : DestinationActors)
     {
         if (DestinationActor && DestinationActor->DestinationId == Lesson.DestinationId)
@@ -1124,22 +1591,90 @@ void AAstroAdventureGameModeBase::TriggerScanFeedback(const FAstroDestinationLes
         FocusActor->SetFocused(true);
     }
 
-    if (PlayerPawn)
-    {
-        if (FocusActor)
-        {
-            const FVector FocusLocation = FocusActor->GetActorLocation();
-            PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
-            PlayerPawn->SetCameraFocusTarget(FocusLocation + DestinationCameraFocusOffset(Lesson.MapScale));
-        }
-        PlayerPawn->SetCameraPresentationProfile(EAstroCameraPresentationProfile::Scan);
-        PlayerPawn->SetScannerActive(true);
+      if (PlayerPawn)
+      {
+          if (FocusActor)
+          {
+              const FVector FocusLocation = FocusActor->GetActorLocation();
+              PlayerPawn->SetTravelTarget(FocusLocation + DestinationTravelOffset(Lesson.MapScale));
+              PlayerPawn->SetScannerTarget(FocusLocation + FVector(0.0f, 0.0f, 18.0f));
+
+              if (UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")))
+              {
+                  UMaterialInterface* ScannerBeamMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Art/AstroAdventureOwned/MaterialInstances/MI_Scanner_Beam.MI_Scanner_Beam"));
+                  UStaticMesh* SphereMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+                  const FVector ShipStart = PlayerPawn->GetActorLocation() + FVector(44.0f, 0.0f, 18.0f);
+                  const FVector BeamEnd = FocusLocation + FVector(0.0f, 0.0f, 16.0f + Lesson.MapScale * 12.0f);
+                  const FVector BeamVector = BeamEnd - ShipStart;
+                  const float BeamLength = BeamVector.Size();
+                  if (BeamLength > 1.0f)
+                  {
+                      const FVector BeamMidpoint = ShipStart + BeamVector * 0.5f;
+                      const FRotator BeamRotation = BeamVector.Rotation();
+                      AStaticMeshActor* BeamCore = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), BeamMidpoint, BeamRotation);
+                      if (BeamCore)
+                      {
+                          BeamCore->GetStaticMeshComponent()->SetStaticMesh(CubeMesh);
+                          BeamCore->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+                          BeamCore->GetStaticMeshComponent()->SetCastShadow(false);
+                          BeamCore->SetActorScale3D(FVector(BeamLength / 100.0f, 0.005f, 0.005f));
+                          if (ScannerBeamMaterial)
+                          {
+                              BeamCore->GetStaticMeshComponent()->SetMaterial(0, ScannerBeamMaterial);
+                          }
+                          else
+                          {
+                              ApplyRuntimeColor(BeamCore, FLinearColor(0.35f, 1.0f, 0.78f, 0.46f), 0.14f);
+                          }
+                          ScanBeamActors.Add(BeamCore);
+                      }
+
+                      if (SphereMesh)
+                      {
+                          AStaticMeshActor* ContactPulse = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), BeamEnd + FVector(0.0f, 0.0f, 34.0f), FRotator::ZeroRotator);
+                          if (ContactPulse)
+                          {
+                              ContactPulse->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+                              ContactPulse->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+                              ContactPulse->GetStaticMeshComponent()->SetCastShadow(false);
+                              const float PulseScale = FMath::Clamp(0.32f + Lesson.MapScale * 0.24f, 0.36f, 0.72f);
+                              ContactPulse->SetActorScale3D(FVector(PulseScale));
+                              ApplyRuntimeColor(ContactPulse, FLinearColor(0.30f, 1.0f, 0.76f, 0.62f), 0.58f);
+                              ScanBeamActors.Add(ContactPulse);
+                          }
+
+                          AStaticMeshActor* ContactGlow = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), BeamEnd + FVector(0.0f, 0.0f, 38.0f), FRotator::ZeroRotator);
+                          if (ContactGlow)
+                          {
+                              ContactGlow->GetStaticMeshComponent()->SetStaticMesh(SphereMesh);
+                              ContactGlow->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+                              ContactGlow->GetStaticMeshComponent()->SetCastShadow(false);
+                              const float GlowScale = FMath::Clamp(0.52f + Lesson.MapScale * 0.34f, 0.56f, 1.02f);
+                              ContactGlow->SetActorScale3D(FVector(GlowScale));
+                              ApplyRuntimeColor(ContactGlow, FLinearColor(0.18f, 0.86f, 1.0f, 0.26f), 0.18f);
+                              ScanBeamActors.Add(ContactGlow);
+                          }
+                      }
+                  }
+              }
+          }
+          PlayerPawn->SetCameraCompositionProfile(EAstroCameraCompositionProfile::ScanFocus);
         PlayerPawn->SetShipAccentColor(Lesson.DisplayColor.GetClamped(0.0f, 1.0f));
-        PlayerPawn->TriggerScannerPulse(1.0f);
+      }
+  }
+
+void AAstroAdventureGameModeBase::FinishScanReveal()
+{
+    if (CurrentScreen != EAstroMissionScreen::Scanning)
+    {
+        return;
     }
+
+    PendingScanDestinationId = NAME_None;
+    SetMissionScreen(EAstroMissionScreen::DiscoveryCard);
 }
 
-void AAstroAdventureGameModeBase::TriggerStampFeedback(const FAstroDestinationLesson& Lesson)
+  void AAstroAdventureGameModeBase::TriggerStampFeedback(const FAstroDestinationLesson& Lesson)
 {
     LastStampTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
 
@@ -1163,7 +1698,7 @@ void AAstroAdventureGameModeBase::TriggerStampFeedback(const FAstroDestinationLe
     {
         if (FocusActor)
         {
-            PlayerPawn->SetCameraFocusTarget(FocusActor->GetActorLocation() + DestinationCameraFocusOffset(Lesson.MapScale));
+            PlayerPawn->SetCameraFocusTarget(FocusActor->GetActorLocation() + FVector(0.0f, 0.0f, 18.0f));
         }
         PlayerPawn->SetShipAccentColor(Lesson.DisplayColor.GetClamped(0.0f, 1.0f));
         PlayerPawn->TriggerScannerPulse(1.0f);
@@ -1194,21 +1729,20 @@ void AAstroAdventureGameModeBase::SelectAgeBand(const int32 Index)
 
 void AAstroAdventureGameModeBase::ExecutePauseSelection()
 {
-    if (PauseMenuIndex == 0)
-    {
-        CurrentScreen = PreviousScreen;
-    }
-    else if (PauseMenuIndex == 1)
-    {
-        ClearPassportProgress();
-        FocusedDestinationIndex = 0;
-        CurrentScreen = EAstroMissionScreen::MissionPrompt;
-        UpdateDestinationFocus();
-    }
-    else if (PauseMenuIndex == 2)
-    {
-        CurrentScreen = EAstroMissionScreen::AgeSelect;
-    }
+      if (PauseMenuIndex == 0)
+      {
+          SetMissionScreen(PreviousScreen);
+      }
+      else if (PauseMenuIndex == 1)
+      {
+          ClearPassportProgress();
+          FocusedDestinationIndex = 0;
+          SetMissionScreen(EAstroMissionScreen::MissionPrompt);
+      }
+      else if (PauseMenuIndex == 2)
+      {
+          SetMissionScreen(EAstroMissionScreen::AgeSelect);
+      }
     else
     {
         UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
@@ -1221,20 +1755,19 @@ void AAstroAdventureGameModeBase::ExecuteHomeSelection()
     {
         ClearPassportProgress();
         FocusedDestinationIndex = 0;
-        LastFeedback.Empty();
-        CurrentScreen = EAstroMissionScreen::AgeSelect;
-        UpdateDestinationFocus();
-    }
+          LastFeedback.Empty();
+          SetMissionScreen(EAstroMissionScreen::AgeSelect);
+      }
     else if (HomeMenuIndex == 1)
     {
-        if (CountCompletedStops() > 0)
+        if (HasAnyProgress())
         {
             if (IsMissionComplete())
             {
-                MissionCompleteMenuIndex = 0;
-                CurrentScreen = EAstroMissionScreen::MissionComplete;
-                return;
-            }
+                  MissionCompleteMenuIndex = 0;
+                  SetMissionScreen(EAstroMissionScreen::MissionComplete);
+                  return;
+              }
 
             for (int32 Index = 0; Index < Lessons.Num(); ++Index)
             {
@@ -1244,11 +1777,11 @@ void AAstroAdventureGameModeBase::ExecuteHomeSelection()
                     FocusedDestinationIndex = Index;
                     break;
                 }
-            }
-            LastFeedback.Empty();
-            CurrentScreen = EAstroMissionScreen::MissionPrompt;
-            UpdateDestinationFocus();
-        }
+              }
+              LastFeedback.Empty();
+              const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Lessons[FocusedDestinationIndex].DestinationId) : nullptr;
+              SetMissionScreen(Progress && Progress->bScanned ? EAstroMissionScreen::DiscoveryCard : EAstroMissionScreen::MissionPrompt);
+          }
         else
         {
             LastFeedback = TEXT("Start a new expedition first.");
@@ -1258,10 +1791,10 @@ void AAstroAdventureGameModeBase::ExecuteHomeSelection()
     {
         ClearPassportProgress();
         FocusedDestinationIndex = 0;
-        LastFeedback = TEXT("Passport reset. Ready for a fresh launch.");
-        HomeMenuIndex = 0;
-        UpdateDestinationFocus();
-    }
+          LastFeedback = TEXT("Passport reset. Ready for a fresh launch.");
+          HomeMenuIndex = 0;
+          SetMissionScreen(EAstroMissionScreen::Home);
+      }
     else
     {
         UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
@@ -1270,22 +1803,21 @@ void AAstroAdventureGameModeBase::ExecuteHomeSelection()
 
 void AAstroAdventureGameModeBase::ExecuteMissionCompleteSelection()
 {
-    if (MissionCompleteMenuIndex == 0)
-    {
-        ClearPassportProgress();
-        FocusedDestinationIndex = 0;
-        CurrentScreen = EAstroMissionScreen::MissionPrompt;
-        UpdateDestinationFocus();
-    }
-    else if (MissionCompleteMenuIndex == 1)
-    {
-        PreviousScreen = EAstroMissionScreen::MissionComplete;
-        CurrentScreen = EAstroMissionScreen::AtlasView;
-    }
-    else if (MissionCompleteMenuIndex == 2)
-    {
-        CurrentScreen = EAstroMissionScreen::AgeSelect;
-    }
+      if (MissionCompleteMenuIndex == 0)
+      {
+          ClearPassportProgress();
+          FocusedDestinationIndex = 0;
+          SetMissionScreen(EAstroMissionScreen::MissionPrompt);
+      }
+      else if (MissionCompleteMenuIndex == 1)
+      {
+          PreviousScreen = EAstroMissionScreen::MissionComplete;
+          SetMissionScreen(EAstroMissionScreen::AtlasView);
+      }
+      else if (MissionCompleteMenuIndex == 2)
+      {
+          SetMissionScreen(EAstroMissionScreen::AgeSelect);
+      }
     else
     {
         UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
@@ -1327,9 +1859,19 @@ bool AAstroAdventureGameModeBase::HasAnyProgress() const
     return false;
 }
 
+bool AAstroAdventureGameModeBase::IsFirstStopLocked() const
+{
+    if (!Lessons.IsValidIndex(0))
+    {
+        return false;
+    }
+
+    return FocusedDestinationIndex == 0 && !HasStampForDestination(Lessons[0].DestinationId);
+}
+
 bool AAstroAdventureGameModeBase::IsMissionPlayScreen() const
 {
-    return CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward;
+    return CurrentScreen == EAstroMissionScreen::Navigation || CurrentScreen == EAstroMissionScreen::Scanning || CurrentScreen == EAstroMissionScreen::DiscoveryCard || CurrentScreen == EAstroMissionScreen::DeepDive || CurrentScreen == EAstroMissionScreen::Quiz || CurrentScreen == EAstroMissionScreen::QuizFeedback || CurrentScreen == EAstroMissionScreen::StampAward;
 }
 
 int32 AAstroAdventureGameModeBase::CountCompletedStops() const
@@ -1390,12 +1932,11 @@ bool AAstroAdventureGameModeBase::AdvanceToNextRouteStop()
         const FAstroDestinationProgress* Progress = ProgressSave ? ProgressSave->DestinationProgress.Find(Candidate.DestinationId) : nullptr;
         if (!Progress || !Progress->bQuizCompleted)
         {
-            FocusedDestinationIndex = CandidateIndex;
-            LastFeedback = FString::Printf(TEXT("Next stop: %s. Use Right/D or arrows to travel."), *Candidate.DisplayName.ToString());
-            CurrentScreen = EAstroMissionScreen::Navigation;
-            bShowingHint = false;
-            UpdateDestinationFocus();
-            return true;
+              FocusedDestinationIndex = CandidateIndex;
+    LastFeedback = FString::Printf(TEXT("Next stop: %s. Use arrows, WASD, or D-pad to travel."), *Candidate.DisplayName.ToString());
+              bShowingHint = false;
+              SetMissionScreen(EAstroMissionScreen::Navigation);
+              return true;
         }
     }
 

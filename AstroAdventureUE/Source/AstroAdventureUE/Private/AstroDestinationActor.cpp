@@ -1,8 +1,10 @@
 #include "AstroDestinationActor.h"
 
+#include "Components/BillboardComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/Texture2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -11,10 +13,11 @@ namespace
 {
 constexpr int32 DestinationMotifCount = 18;
 constexpr float DestinationPresentationScaleFloor = 0.58f;
-constexpr float DestinationFocusedScaleMultiplier = 1.18f;
-constexpr float FocusedLabelWorldSize = 42.0f;
+constexpr float DestinationFocusedScaleMultiplier = 1.12f;
+constexpr float FocusedLabelWorldSize = 38.0f;
 constexpr float DiscoveredLabelWorldSize = 30.0f;
 constexpr float IdleLabelWorldSize = 24.0f;
+const TCHAR* OwnedMaterialRoot = TEXT("/Game/Art/AstroAdventureOwned/MaterialInstances/");
 
 FLinearColor BlendColor(const FLinearColor& From, const FLinearColor& To, const float Alpha)
 {
@@ -92,22 +95,122 @@ float DestinationBodyEmissiveStrength(const FString& Id)
 {
     if (Id == TEXT("sun"))
     {
-        return 1.55f;
+        return 0.22f;
     }
     if (Id == TEXT("neptune") || Id == TEXT("uranus") || Id == TEXT("earth") || Id == TEXT("europa"))
     {
-        return 0.58f;
+        return 0.26f;
     }
     if (Id == TEXT("venus") || Id == TEXT("mars") || Id == TEXT("jupiter") || Id == TEXT("saturn"))
     {
-        return 0.5f;
+        return 0.24f;
     }
     if (Id == TEXT("mercury") || Id == TEXT("moon") || Id == TEXT("pluto") || Id == TEXT("asteroid_belt"))
     {
-        return 0.38f;
+        return 0.12f;
     }
 
-    return 0.45f;
+    return 0.18f;
+}
+
+FLinearColor DestinationFocusHaloColor(const FString& Id, const FLinearColor& BaseColor)
+{
+    if (Id == TEXT("sun"))
+    {
+        return FLinearColor(1.0f, 0.62f, 0.16f, 0.14f);
+    }
+    if (Id == TEXT("mercury"))
+    {
+        return FLinearColor(1.0f, 0.64f, 0.24f, 0.22f);
+    }
+
+    return WithAlpha(BlendColor(BaseColor, FLinearColor(1.0f, 0.92f, 0.28f, 1.0f), 0.4f), 0.4f);
+}
+
+float DestinationFocusHaloEmissiveStrength(const FString& Id)
+{
+    if (Id == TEXT("sun"))
+    {
+        return 0.10f;
+    }
+    if (Id == TEXT("mercury"))
+    {
+        return 0.18f;
+    }
+
+    return 0.24f;
+}
+
+FAstroDestinationVisualProfile MakeVisualProfile(const FString& Id, const FLinearColor& Color, const float VisualScale)
+{
+    FAstroDestinationVisualProfile Profile;
+    Profile.BasePalette = ReadableDestinationColor(Id, Color);
+    Profile.MissionScale = FMath::Max(VisualScale, DestinationPresentationScaleFloor);
+    Profile.AtlasScale = Profile.MissionScale * 0.82f;
+    Profile.FocusRingMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Focus_Ring.MI_Focus_Ring");
+    Profile.StampTexture = TEXT("/Game/Art/AstroAdventureOwned/Textures/UI/T_Stamp_Generic");
+    Profile.LabelPlacement = FVector(0.0f, 0.0f, 82.0f + 28.0f * Profile.MissionScale);
+    Profile.SurfaceMotif = FText::FromString(TEXT("stylized surface detail"));
+    Profile.SilhouetteCue = FText::FromString(TEXT("round world"));
+    Profile.ObservationCue = FText::FromString(TEXT("Look for its color and shape."));
+
+    if (Id == TEXT("sun"))
+    {
+        // The generated Sun material assets currently cook but render too dark in
+        // packaged play. The child-facing slice applies a proven emissive body in
+        // code until the authored material graph is rebuilt.
+        Profile.BodyMaterial.Empty();
+        Profile.CoronaOrAtmosphereMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Sun_Corona.MI_Sun_Corona");
+        Profile.StampTexture = TEXT("/Game/Art/AstroAdventureOwned/Textures/UI/T_Stamp_Sun");
+        Profile.SurfaceMotif = FText::FromString(TEXT("warm mottled star surface"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("soft corona and safe-distance ring"));
+        Profile.ObservationCue = FText::FromString(TEXT("A star glows because it makes its own light."));
+    }
+    else if (Id == TEXT("mercury") || Id == TEXT("moon"))
+    {
+        Profile.BodyMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Mercury_Surface.MI_Mercury_Surface");
+        Profile.StampTexture = Id == TEXT("mercury") ? TEXT("/Game/Art/AstroAdventureOwned/Textures/UI/T_Stamp_Mercury") : Profile.StampTexture;
+        Profile.SurfaceMotif = FText::FromString(TEXT("large dark crater pattern"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("rocky gray cratered body"));
+        Profile.ObservationCue = FText::FromString(TEXT("Craters are clues from impacts."));
+    }
+    else if (Id == TEXT("venus"))
+    {
+        Profile.BodyMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Venus_Surface.MI_Venus_Surface");
+        Profile.SurfaceMotif = FText::FromString(TEXT("golden cloud bands"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("hazy warm atmosphere"));
+        Profile.ObservationCue = FText::FromString(TEXT("Thick clouds hide Venus's rocky surface."));
+    }
+    else if (Id == TEXT("europa"))
+    {
+        Profile.BodyMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Europa_Surface.MI_Europa_Surface");
+        Profile.SurfaceMotif = FText::FromString(TEXT("blue icy cracks"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("small cracked ice moon"));
+        Profile.ObservationCue = FText::FromString(TEXT("Cracks hint that Europa has an icy shell."));
+    }
+    else if (Id == TEXT("saturn"))
+    {
+        Profile.BodyMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Saturn_Surface.MI_Saturn_Surface");
+        Profile.SurfaceMotif = FText::FromString(TEXT("pale bands and wide rings"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("giant planet with rings"));
+        Profile.ObservationCue = FText::FromString(TEXT("Saturn is easy to spot by its rings."));
+    }
+    else if (Id == TEXT("uranus"))
+    {
+        Profile.BodyMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Uranus_Surface.MI_Uranus_Surface");
+        Profile.SurfaceMotif = FText::FromString(TEXT("pale cyan tilted ice giant"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("tilted cyan ring cue"));
+        Profile.ObservationCue = FText::FromString(TEXT("Uranus rolls around the Sun on its side."));
+    }
+    else if (Id == TEXT("neptune"))
+    {
+        Profile.BodyMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Neptune_Surface.MI_Neptune_Surface");
+        Profile.SurfaceMotif = FText::FromString(TEXT("deep blue storm streaks"));
+        Profile.SilhouetteCue = FText::FromString(TEXT("deep blue ice giant"));
+        Profile.ObservationCue = FText::FromString(TEXT("Neptune is a far, windy ice giant."));
+    }
+
+    return Profile;
 }
 }
 
@@ -121,6 +224,29 @@ AAstroDestinationActor::AAstroDestinationActor()
     BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
     BodyMesh->SetupAttachment(Root);
     BodyMesh->SetMobility(EComponentMobility::Movable);
+
+    SurfaceArt = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SurfaceArt"));
+    SurfaceArt->SetupAttachment(Root);
+    SurfaceArt->SetMobility(EComponentMobility::Movable);
+    SurfaceArt->SetVisibility(false);
+    SurfaceArt->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    SurfaceArt->SetCastShadow(false);
+
+    AtmosphereArt = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AtmosphereArt"));
+    AtmosphereArt->SetupAttachment(Root);
+    AtmosphereArt->SetMobility(EComponentMobility::Movable);
+    AtmosphereArt->SetVisibility(false);
+    AtmosphereArt->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    AtmosphereArt->SetCastShadow(false);
+
+    BillboardArt = CreateDefaultSubobject<UBillboardComponent>(TEXT("BillboardArt"));
+    BillboardArt->SetupAttachment(Root);
+    BillboardArt->SetMobility(EComponentMobility::Movable);
+    BillboardArt->SetVisibility(false);
+    BillboardArt->SetHiddenInGame(true);
+    BillboardArt->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    BillboardArt->SetCastShadow(false);
+    BillboardArt->bIsScreenSizeScaled = false;
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     if (SphereMesh.Succeeded())
@@ -152,6 +278,9 @@ AAstroDestinationActor::AAstroDestinationActor()
     {
         CylinderMeshAsset = CylinderMesh.Object;
         FocusBeacon->SetStaticMesh(CylinderMesh.Object);
+        SurfaceArt->SetStaticMesh(CylinderMesh.Object);
+        AtmosphereArt->SetStaticMesh(CylinderMesh.Object);
+        FocusHalo->SetStaticMesh(CylinderMesh.Object);
     }
 
     Nameplate = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Nameplate"));
@@ -169,9 +298,14 @@ AAstroDestinationActor::AAstroDestinationActor()
     }
 
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicShapeMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> EmissiveShapeMaterial(TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
     if (BasicShapeMaterial.Succeeded())
     {
         ColorMaterialTemplate = BasicShapeMaterial.Object;
+    }
+    else if (EmissiveShapeMaterial.Succeeded())
+    {
+        ColorMaterialTemplate = EmissiveShapeMaterial.Object;
     }
 
     for (int32 Index = 0; Index < DestinationMotifCount; ++Index)
@@ -210,19 +344,23 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
     DestinationId = Lesson.DestinationId;
     DisplayName = Lesson.DisplayName;
     const FString DestinationKey = DestinationId.ToString().ToLower();
-    BaseColor = ReadableDestinationColor(DestinationKey, Color);
-    BaseVisualScale = FMath::Max(VisualScale, DestinationPresentationScaleFloor);
+    ApplyVisualProfile(MakeVisualProfile(DestinationKey, Color, VisualScale));
     const uint32 ShapeHash = GetTypeHash(DestinationId);
     const float WidthCue = 0.94f + 0.04f * static_cast<float>(ShapeHash % 4);
     const float DepthCue = 0.94f + 0.035f * static_cast<float>((ShapeHash / 4) % 4);
     const float HeightCue = 0.9f + 0.035f * static_cast<float>((ShapeHash / 16) % 5);
     BodyIdleScale = FVector(WidthCue, DepthCue, HeightCue);
     BodyFocusedScale = BodyIdleScale + FVector(0.04f, 0.04f, 0.12f);
+    if (DestinationKey == TEXT("sun"))
+    {
+        BodyIdleScale = FVector(1.0f);
+        BodyFocusedScale = FVector(1.04f);
+    }
 #if WITH_EDITOR
     SetActorLabel(DisplayName.ToString());
 #endif
     Label->SetText(DisplayName);
-    Label->SetRelativeLocation(FVector(0.0f, 0.0f, 82.0f + 28.0f * BaseVisualScale));
+    Label->SetRelativeLocation(CurrentVisualProfile.LabelPlacement);
     Nameplate->SetRelativeLocation(FVector(-5.0f, 0.0f, 76.0f + 28.0f * BaseVisualScale));
     Nameplate->SetRelativeRotation(Label->GetRelativeRotation());
     UpdateNameplateLayout();
@@ -230,12 +368,23 @@ void AAstroDestinationActor::Configure(const FAstroDestinationLesson& Lesson, co
     FocusBeacon->SetRelativeScale3D(FVector(0.08f, 0.08f, 1.55f + 0.35f * BaseVisualScale));
 
     ApplyColor(BodyMesh, BaseColor, DestinationBodyEmissiveStrength(DestinationKey));
-    ApplyColor(FocusHalo, WithAlpha(BlendColor(BaseColor, FLinearColor(1.0f, 0.92f, 0.28f, 1.0f), 0.4f), 0.64f), 1.7f);
-    ApplyColor(FocusBeacon, FLinearColor(0.42f, 0.9f, 1.0f, 0.78f), 2.05f);
-    ApplyColor(Nameplate, FLinearColor(0.01f, 0.025f, 0.06f, 0.92f), 0.16f);
+    ApplyColor(FocusHalo, DestinationFocusHaloColor(DestinationKey, BaseColor), DestinationFocusHaloEmissiveStrength(DestinationKey));
+    ApplyColor(FocusBeacon, FLinearColor(0.42f, 0.9f, 1.0f, 0.46f), 0.86f);
+    ApplyColor(Nameplate, FLinearColor(0.92f, 0.68f, 0.30f, 0.72f), 0.04f);
+    ApplyProfileArt();
     ConfigureMotifs();
     SetActorScale3D(FVector(BaseVisualScale));
     ApplyFocusVisuals();
+}
+
+void AAstroDestinationActor::ApplyVisualProfile(const FAstroDestinationVisualProfile& VisualProfile)
+{
+    CurrentVisualProfile = VisualProfile;
+    BaseColor = CurrentVisualProfile.BasePalette.GetClamped(0.0f, 1.0f);
+    BaseVisualScale = FMath::Max(CurrentVisualProfile.MissionScale, DestinationPresentationScaleFloor);
+    BodyMaterialAsset = LoadProfileMaterial(CurrentVisualProfile.BodyMaterial);
+    AtmosphereMaterialAsset = LoadProfileMaterial(CurrentVisualProfile.CoronaOrAtmosphereMaterial);
+    FocusRingMaterialAsset = LoadProfileMaterial(CurrentVisualProfile.FocusRingMaterial);
 }
 
 void AAstroDestinationActor::ApplyColor(UStaticMeshComponent* Mesh, const FLinearColor& Color, const float EmissiveStrength)
@@ -266,6 +415,68 @@ void AAstroDestinationActor::ApplyColor(UStaticMeshComponent* Mesh, const FLinea
             Material->SetScalarParameterValue(TEXT("Alpha"), Color.A);
             Material->SetScalarParameterValue(TEXT("Roughness"), 0.72f);
         }
+    }
+}
+
+UMaterialInterface* AAstroDestinationActor::LoadProfileMaterial(const FString& ProfileMaterialPath) const
+{
+    if (ProfileMaterialPath.IsEmpty())
+    {
+        return nullptr;
+    }
+    return LoadObject<UMaterialInterface>(nullptr, *ProfileMaterialPath);
+}
+
+void AAstroDestinationActor::ApplyProfileArt()
+{
+    const FString Id = DestinationId.ToString().ToLower();
+    const bool bHasBodyArt = BodyMaterialAsset != nullptr;
+    const bool bIsSun = Id == TEXT("sun");
+
+    SurfaceArt->SetVisibility(false);
+    BillboardArt->SetVisibility(false);
+    BillboardArt->SetHiddenInGame(true);
+    SurfaceArt->SetRelativeLocation(FVector(-58.0f, 0.0f, 0.0f));
+    SurfaceArt->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+    SurfaceArt->SetRelativeScale3D(FVector(1.34f, 1.34f, 0.006f));
+
+    AtmosphereArt->SetVisibility(AtmosphereMaterialAsset != nullptr);
+    AtmosphereArt->SetRelativeLocation(FVector(-63.0f, 0.0f, 0.0f));
+    AtmosphereArt->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+    AtmosphereArt->SetRelativeScale3D(FVector(bIsSun ? 1.46f : 1.24f, bIsSun ? 1.46f : 1.24f, 0.004f));
+    if (AtmosphereMaterialAsset)
+    {
+        AtmosphereArt->SetMaterial(0, AtmosphereMaterialAsset);
+    }
+
+    FocusHalo->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+    if (FocusRingMaterialAsset)
+    {
+        FocusHalo->SetMaterial(0, FocusRingMaterialAsset);
+    }
+
+    BodyMesh->SetVisibility(true);
+    BodyMesh->SetRelativeLocation(FVector::ZeroVector);
+    BodyMesh->SetCastShadow(false);
+    if (bIsSun)
+    {
+        BodyMesh->SetVisibility(false);
+        if (UTexture2D* SunSprite = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Art/AstroAdventureOwned/Textures/Planets/T_Sun_Disk_ChildReadable.T_Sun_Disk_ChildReadable")))
+        {
+            BillboardArt->SetSprite(SunSprite);
+            BillboardArt->SetRelativeLocation(FVector::ZeroVector);
+            BillboardArt->SetRelativeScale3D(FVector(0.86f));
+            BillboardArt->SetVisibility(true);
+            BillboardArt->SetHiddenInGame(false);
+        }
+        SurfaceArt->SetVisibility(false);
+        AtmosphereArt->SetVisibility(false);
+        return;
+    }
+
+    if (BodyMaterialAsset)
+    {
+        BodyMesh->SetMaterial(0, BodyMaterialAsset);
     }
 }
 
@@ -309,7 +520,8 @@ void AAstroDestinationActor::UpdateNameplateLayout()
     const float LabelScaleCompensation = 1.0f / FMath::Max(GetActorScale3D().GetAbsMax(), 0.1f);
 
     const bool bAtlasMode = PresentationMode == EAstroDestinationPresentationMode::Atlas;
-    Nameplate->SetVisibility(bIsFocused && !bAtlasMode);
+    const bool bHomeMode = PresentationMode == EAstroDestinationPresentationMode::Home;
+    Nameplate->SetVisibility(bIsFocused && !bAtlasMode && !bHomeMode);
     Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
 
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
@@ -317,7 +529,7 @@ void AAstroDestinationActor::UpdateNameplateLayout()
         ? (bAtlasMode ? DiscoveredLabelWorldSize : FocusedLabelWorldSize)
         : (bAtlasMode ? IdleLabelWorldSize : (bIsDiscovered ? DiscoveredLabelWorldSize : IdleLabelWorldSize));
     Label->SetWorldSize(LabelSize);
-    Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : (bAtlasMode ? FColor(142, 178, 215) : FColor(188, 224, 255)));
+    Label->SetTextRenderColor(bIsFocused ? FColor(255, 244, 118) : ((bAtlasMode || bHomeMode) ? FColor(142, 178, 215) : FColor(188, 224, 255)));
 }
 
 void AAstroDestinationActor::ConfigureMotifs()
@@ -335,15 +547,8 @@ void AAstroDestinationActor::ConfigureMotifs()
 
     if (Id == TEXT("sun"))
     {
-        SetMotif(0, CylinderMeshAsset, FVector::ZeroVector, FRotator(0.0f, 90.0f, 0.0f), FVector(1.7f, 1.7f, 0.014f), FLinearColor(1.0f, 0.42f, 0.02f, 0.68f), 1.45f);
-        for (int32 RayIndex = 0; RayIndex < 8; ++RayIndex)
-        {
-            const float Angle = (2.0f * PI * static_cast<float>(RayIndex)) / 8.0f;
-            const float Y = FMath::Cos(Angle) * 82.0f;
-            const float Z = FMath::Sin(Angle) * 82.0f;
-            SetMotif(1 + RayIndex, CubeMeshAsset, FVector(-4.0f, Y, Z), FRotator(0.0f, 0.0f, FMath::RadiansToDegrees(Angle)), FVector(0.02f, 0.44f, 0.045f), FLinearColor(1.0f, 0.82f, 0.16f, 0.92f), 1.85f);
-        }
-        SetMotif(15, CylinderMeshAsset, FVector(SurfaceX - 1.0f, -17.0f, 20.0f), FRotator(0.0f, 90.0f, 0.0f), FVector(0.28f, 0.28f, 0.012f), FLinearColor(1.0f, 0.92f, 0.36f, 0.95f), 1.7f);
+        // The Sun's authored surface and corona carry the identity. Extra mesh rays read
+        // as black/white wedge artifacts in the first-play camera, so keep this layer calm.
         return;
     }
 
@@ -413,18 +618,26 @@ void AAstroDestinationActor::ConfigureMotifs()
 
     if (Id == TEXT("mercury") || Id == TEXT("moon"))
     {
-        const FLinearColor Crater = BlendColor(BaseColor, Black, 0.5f);
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -20.0f, 18.0f), FRotator::ZeroRotator, FVector(0.012f, 0.16f, 0.16f), Crater, 0.02f);
-        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 16.0f, 5.0f), FRotator::ZeroRotator, FVector(0.012f, 0.11f, 0.11f), Crater, 0.02f);
-        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -24.0f), FRotator::ZeroRotator, FVector(0.012f, 0.13f, 0.13f), Crater, 0.02f);
-        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 1.0f, 28.0f, -18.0f), FRotator::ZeroRotator, FVector(0.01f, 0.08f, 0.08f), BlendColor(BaseColor, White, 0.2f), 0.02f);
+        const bool bMercury = Id == TEXT("mercury");
+        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.60f : 0.5f);
+        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.46f : 0.42f);
+        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.78f, 0.38f, 1.0f) : White, bMercury ? 0.46f : 0.34f);
+        const float CraterDepth = bMercury ? 0.013f : 0.012f;
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.38f : 0.42f, bMercury ? 0.38f : 0.42f), Crater, bMercury ? 0.006f : 0.0f);
+        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.31f : 0.34f, bMercury ? 0.31f : 0.34f), CraterSoft, bMercury ? 0.004f : 0.0f);
+        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.33f : 0.38f, bMercury ? 0.33f : 0.38f), Crater, bMercury ? 0.004f : 0.0f);
+        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.010f, bMercury ? 0.23f : 0.18f, bMercury ? 0.23f : 0.18f), CraterRim, bMercury ? 0.05f : 0.02f);
+        if (bMercury)
+        {
+            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.010f, 0.20f, 0.17f), CraterSoft, 0.004f);
+        }
         if (Id == TEXT("moon"))
         {
             SetMotif(16, CubeMeshAsset, FVector(SurfaceX - 5.0f, -54.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), FVector(0.01f, 0.32f, 0.012f), FLinearColor(0.72f, 0.84f, 1.0f, 0.72f), 0.12f);
         }
         else
         {
-            SetMotif(15, CylinderMeshAsset, FVector(SurfaceX - 2.0f, 30.0f, 28.0f), FRotator(0.0f, 90.0f, 0.0f), FVector(0.11f, 0.11f, 0.012f), FLinearColor(1.0f, 0.48f, 0.08f, 1.0f), 0.35f);
+            SetMotif(16, CubeMeshAsset, FVector(SurfaceX - 5.0f, 1.0f, 0.0f), FRotator(0.0f, 0.0f, -8.0f), FVector(0.008f, 0.38f, 0.008f), FLinearColor(1.0f, 0.70f, 0.28f, 0.18f), 0.035f);
         }
         return;
     }
@@ -484,17 +697,30 @@ void AAstroDestinationActor::SetPresentationMode(const EAstroDestinationPresenta
 
 void AAstroDestinationActor::ApplyFocusVisuals()
 {
-    const float Scale = bIsFocused ? BaseVisualScale * DestinationFocusedScaleMultiplier : BaseVisualScale;
+    float Scale = bIsFocused ? BaseVisualScale * DestinationFocusedScaleMultiplier : BaseVisualScale;
+    const bool bHomeMode = PresentationMode == EAstroDestinationPresentationMode::Home;
+    if (bHomeMode && DestinationId == FName(TEXT("sun")))
+    {
+        Scale = FMath::Max(BaseVisualScale * 1.22f, 1.38f);
+    }
+    if (bHomeMode && DestinationId == FName(TEXT("mercury")))
+    {
+        Scale = FMath::Max(BaseVisualScale * 0.82f, 0.62f);
+    }
     SetActorScale3D(FVector(Scale));
 
     BodyMesh->SetRenderCustomDepth(bIsFocused);
     BodyMesh->SetRelativeScale3D(bIsFocused ? BodyFocusedScale : BodyIdleScale);
 
-    FocusHalo->SetVisibility(bIsFocused);
-    FocusHalo->SetRelativeScale3D(bIsFocused ? FVector(1.52f, 1.52f, 0.075f) : FVector(1.18f, 1.18f, 0.045f));
+    const bool bSun = DestinationId == FName(TEXT("sun"));
+    const bool bSuppressSunHalo = bSun && PresentationMode != EAstroDestinationPresentationMode::Atlas;
+    FocusHalo->SetVisibility(bIsFocused && !bSuppressSunHalo);
+    FocusHalo->SetRelativeScale3D(bIsFocused
+        ? (bSun ? FVector(1.16f, 1.16f, 0.006f) : bHomeMode ? FVector(1.22f, 1.22f, 0.008f) : FVector(1.28f, 1.28f, 0.01f))
+        : FVector(1.0f, 1.0f, 0.006f));
 
-    FocusBeacon->SetVisibility(bIsFocused);
-    FocusBeacon->SetRelativeScale3D(bIsFocused ? FVector(0.1f, 0.1f, 1.85f + 0.45f * BaseVisualScale) : FVector(0.06f, 0.06f, 1.25f));
+    FocusBeacon->SetVisibility(false);
+    FocusBeacon->SetRelativeScale3D(FVector(0.04f, 0.04f, 0.18f));
 
     UpdateNameplateLayout();
 }

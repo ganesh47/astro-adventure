@@ -2,7 +2,10 @@
 
 #include "AstroAdventureGameModeBase.h"
 #include "AstroPlayerPawn.h"
+#include "Engine/Engine.h"
 #include "Engine/World.h"
+#include "Framework/Application/SlateApplication.h"
+#include "GameFramework/PlayerInput.h"
 #include "InputCoreTypes.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -12,70 +15,167 @@ namespace
     constexpr float NavigationReleaseThreshold = 0.25f;
 }
 
+void AAstroAdventurePlayerController::BeginPlay()
+{
+    Super::BeginPlay();
+    ConfigureGameInputMode();
+}
+
 void AAstroAdventurePlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
-    InputComponent->BindKey(EKeys::Right, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
-    InputComponent->BindKey(EKeys::Right, IE_Repeat, this, &AAstroAdventurePlayerController::FocusNext);
-    InputComponent->BindKey(EKeys::D, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
-    InputComponent->BindKey(EKeys::D, IE_Repeat, this, &AAstroAdventurePlayerController::FocusNext);
-    InputComponent->BindKey(EKeys::Gamepad_RightShoulder, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
-    InputComponent->BindKey(EKeys::Gamepad_DPad_Right, IE_Pressed, this, &AAstroAdventurePlayerController::FocusNext);
-
-    InputComponent->BindKey(EKeys::Left, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
-    InputComponent->BindKey(EKeys::Left, IE_Repeat, this, &AAstroAdventurePlayerController::FocusPrevious);
-    InputComponent->BindKey(EKeys::A, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
-    InputComponent->BindKey(EKeys::A, IE_Repeat, this, &AAstroAdventurePlayerController::FocusPrevious);
-    InputComponent->BindKey(EKeys::Gamepad_LeftShoulder, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
-    InputComponent->BindKey(EKeys::Gamepad_DPad_Left, IE_Pressed, this, &AAstroAdventurePlayerController::FocusPrevious);
-
-    InputComponent->BindKey(EKeys::Enter, IE_Pressed, this, &AAstroAdventurePlayerController::Confirm);
-    InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAstroAdventurePlayerController::Confirm);
-    InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, IE_Pressed, this, &AAstroAdventurePlayerController::Confirm);
-
-    InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
-    InputComponent->BindKey(EKeys::BackSpace, IE_Pressed, this, &AAstroAdventurePlayerController::Back);
-    InputComponent->BindKey(EKeys::Gamepad_FaceButton_Right, IE_Pressed, this, &AAstroAdventurePlayerController::Back);
-
-    InputComponent->BindKey(EKeys::H, IE_Pressed, this, &AAstroAdventurePlayerController::Hint);
-    InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, IE_Pressed, this, &AAstroAdventurePlayerController::Hint);
-
-    InputComponent->BindKey(EKeys::M, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
-    InputComponent->BindKey(EKeys::Gamepad_LeftTrigger, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
-    InputComponent->BindKey(EKeys::Gamepad_LeftThumbstick, IE_Pressed, this, &AAstroAdventurePlayerController::MoreInfo);
-
-    InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
-    InputComponent->BindKey(EKeys::Gamepad_RightTrigger, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
-    InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Passport);
-
-    InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
-    InputComponent->BindKey(EKeys::Up, IE_Repeat, this, &AAstroAdventurePlayerController::AnswerUp);
-    InputComponent->BindKey(EKeys::W, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
-    InputComponent->BindKey(EKeys::W, IE_Repeat, this, &AAstroAdventurePlayerController::AnswerUp);
-    InputComponent->BindKey(EKeys::Gamepad_DPad_Up, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerUp);
-    InputComponent->BindKey(EKeys::Down, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerDown);
-    InputComponent->BindKey(EKeys::Down, IE_Repeat, this, &AAstroAdventurePlayerController::AnswerDown);
-    InputComponent->BindKey(EKeys::S, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerDown);
-    InputComponent->BindKey(EKeys::S, IE_Repeat, this, &AAstroAdventurePlayerController::AnswerDown);
-    InputComponent->BindKey(EKeys::Gamepad_DPad_Down, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerDown);
+    // Digital key/button presses are handled in InputKey so packaged builds have one deterministic path.
     InputComponent->BindAxis(TEXT("MoveForward"), this, &AAstroAdventurePlayerController::NavigateVertical);
     InputComponent->BindAxis(TEXT("MoveRight"), this, &AAstroAdventurePlayerController::NavigateHorizontal);
+}
 
-    InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerOne);
-    InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerTwo);
-    InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &AAstroAdventurePlayerController::AnswerThree);
+bool AAstroAdventurePlayerController::InputKey(const FInputKeyEventArgs& Params)
+{
+    const bool bIsPressed = Params.Event == IE_Pressed;
+    const bool bIsRepeat = Params.Event == IE_Repeat;
+    if (!bIsPressed && !bIsRepeat)
+    {
+        return Super::InputKey(Params);
+    }
 
-    InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
-    InputComponent->BindKey(EKeys::Gamepad_Special_Left, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
-    InputComponent->BindKey(EKeys::Gamepad_Special_Right, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
-    InputComponent->BindKey(EKeys::Gamepad_RightThumbstick, IE_Pressed, this, &AAstroAdventurePlayerController::Pause);
+    const FKey Key = Params.Key;
+    const bool bAllowRepeat = bIsPressed || bIsRepeat;
+
+    if (bIsPressed && (Key == EKeys::Enter || Key == EKeys::SpaceBar || Key == EKeys::Gamepad_FaceButton_Bottom))
+    {
+        Confirm();
+        return true;
+    }
+
+    if (bIsPressed && (Key == EKeys::BackSpace || Key == EKeys::Gamepad_FaceButton_Right))
+    {
+        Back();
+        return true;
+    }
+
+    if (bIsPressed && (Key == EKeys::Escape || Key == EKeys::Q || Key == EKeys::Gamepad_Special_Left || Key == EKeys::Gamepad_Special_Right || Key == EKeys::Gamepad_RightThumbstick))
+    {
+        Pause();
+        return true;
+    }
+
+    if (bIsPressed && (Key == EKeys::M || Key == EKeys::Gamepad_LeftTrigger || Key == EKeys::Gamepad_LeftThumbstick))
+    {
+        MoreInfo();
+        return true;
+    }
+
+    if (bIsPressed && (Key == EKeys::P || Key == EKeys::Gamepad_RightTrigger || Key == EKeys::Gamepad_FaceButton_Left))
+    {
+        Passport();
+        return true;
+    }
+
+    if (bIsPressed && (Key == EKeys::H || Key == EKeys::Gamepad_FaceButton_Top))
+    {
+        Hint();
+        return true;
+    }
+
+    if (bIsPressed && Key == EKeys::LeftMouseButton)
+    {
+        PointerConfirm();
+        return true;
+    }
+
+    if (bAllowRepeat && (Key == EKeys::Right || Key == EKeys::D || Key == EKeys::Gamepad_RightShoulder || Key == EKeys::Gamepad_DPad_Right))
+    {
+        FocusNext();
+        return true;
+    }
+
+    if (bAllowRepeat && (Key == EKeys::Left || Key == EKeys::A || Key == EKeys::Gamepad_LeftShoulder || Key == EKeys::Gamepad_DPad_Left))
+    {
+        FocusPrevious();
+        return true;
+    }
+
+    if (bAllowRepeat && (Key == EKeys::Up || Key == EKeys::W || Key == EKeys::Gamepad_DPad_Up))
+    {
+        AnswerUp();
+        return true;
+    }
+
+    if (bAllowRepeat && (Key == EKeys::Down || Key == EKeys::S || Key == EKeys::Gamepad_DPad_Down))
+    {
+        AnswerDown();
+        return true;
+    }
+
+    if (bIsPressed && Key == EKeys::One)
+    {
+        AnswerOne();
+        return true;
+    }
+
+    if (bIsPressed && Key == EKeys::Two)
+    {
+        AnswerTwo();
+        return true;
+    }
+
+    if (bIsPressed && Key == EKeys::Three)
+    {
+        AnswerThree();
+        return true;
+    }
+
+    return Super::InputKey(Params);
+}
+
+void AAstroAdventurePlayerController::ConfigureGameInputMode()
+{
+    bShowMouseCursor = true;
+    bEnableClickEvents = true;
+    bEnableMouseOverEvents = false;
+    SetIgnoreMoveInput(false);
+    SetIgnoreLookInput(false);
+
+    FInputModeGameOnly InputMode;
+    InputMode.SetConsumeCaptureMouseDown(false);
+    SetInputMode(InputMode);
+
+    if (GEngine && GEngine->GameViewport)
+    {
+        GEngine->GameViewport->SetSuppressTransitionMessage(true);
+    }
+    if (FSlateApplication::IsInitialized())
+    {
+        FSlateApplication::Get().SetAllUserFocusToGameViewport();
+    }
+}
+
+void AAstroAdventurePlayerController::NotifyHomeInputIfNeeded(AAstroAdventureGameModeBase* GameMode)
+{
+    if (!GameMode || bHomeInputHeartbeatSent || GameMode->GetCurrentScreen() != EAstroMissionScreen::Home)
+    {
+        return;
+    }
+
+    bHomeInputHeartbeatSent = true;
+    GameMode->NotifyHomeInputReceived();
 }
 
 void AAstroAdventurePlayerController::FocusNext()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
+        NotifyHomeInputIfNeeded(GameMode);
+        if (GameMode->GetCurrentScreen() == EAstroMissionScreen::MissionPrompt)
+        {
+            if (!CanAcceptFocusStep())
+            {
+                return;
+            }
+            RouteToMissionPrompt();
+            return;
+        }
         if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
         {
             return;
@@ -94,6 +194,7 @@ void AAstroAdventurePlayerController::FocusPrevious()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
+        NotifyHomeInputIfNeeded(GameMode);
         if (GameMode->GetCurrentScreen() == EAstroMissionScreen::Quiz)
         {
             return;
@@ -112,6 +213,7 @@ void AAstroAdventurePlayerController::Confirm()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
+        NotifyHomeInputIfNeeded(GameMode);
         GameMode->Confirm();
     }
 }
@@ -120,6 +222,7 @@ void AAstroAdventurePlayerController::Back()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
+        NotifyHomeInputIfNeeded(GameMode);
         GameMode->Back();
     }
 }
@@ -156,11 +259,51 @@ void AAstroAdventurePlayerController::Pause()
     }
 }
 
+void AAstroAdventurePlayerController::PointerConfirm()
+{
+    AAstroAdventureGameModeBase* GameMode = GetWorld() ? GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>() : nullptr;
+    if (!GameMode)
+    {
+        return;
+    }
+
+    float MouseX = 0.0f;
+    float MouseY = 0.0f;
+    int32 ViewportX = 0;
+    int32 ViewportY = 0;
+    GetViewportSize(ViewportX, ViewportY);
+    if (GetMousePosition(MouseX, MouseY) && ViewportX > 0 && ViewportY > 0)
+    {
+        NotifyHomeInputIfNeeded(GameMode);
+        if (GameMode->HandlePointerConfirm(MouseX, MouseY, static_cast<float>(ViewportX), static_cast<float>(ViewportY)))
+        {
+            return;
+        }
+    }
+
+    // A click used only to focus the packaged window should not advance the child's route.
+}
+
+void AAstroAdventurePlayerController::RouteToMissionPrompt()
+{
+    Confirm();
+    TriggerFocusFeedback(1.0f);
+}
+
 void AAstroAdventurePlayerController::AnswerUp()
 {
     if (AAstroAdventureGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAstroAdventureGameModeBase>())
     {
         const EAstroMissionScreen Screen = GameMode->GetCurrentScreen();
+        if (Screen == EAstroMissionScreen::MissionPrompt)
+        {
+            if (!CanAcceptFocusStep())
+            {
+                return;
+            }
+            RouteToMissionPrompt();
+            return;
+        }
         if (!CanAcceptFocusStep())
         {
             return;
@@ -171,7 +314,7 @@ void AAstroAdventurePlayerController::AnswerUp()
             GameMode->MoveQuizFocus(-1);
             TriggerFocusFeedback(-1.0f);
         }
-        else if (Screen == EAstroMissionScreen::Navigation || Screen == EAstroMissionScreen::AtlasView || Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::StampAward)
+        else if (Screen == EAstroMissionScreen::Navigation || Screen == EAstroMissionScreen::AtlasView || Screen == EAstroMissionScreen::Passport)
         {
             GameMode->FocusNextDestination();
             TriggerFocusFeedback(1.0f);
@@ -199,7 +342,7 @@ void AAstroAdventurePlayerController::AnswerDown()
             GameMode->MoveQuizFocus(1);
             TriggerFocusFeedback(1.0f);
         }
-        else if (Screen == EAstroMissionScreen::Navigation || Screen == EAstroMissionScreen::AtlasView || Screen == EAstroMissionScreen::Passport || Screen == EAstroMissionScreen::StampAward)
+        else if (Screen == EAstroMissionScreen::Navigation || Screen == EAstroMissionScreen::AtlasView || Screen == EAstroMissionScreen::Passport)
         {
             GameMode->FocusPreviousDestination();
             TriggerFocusFeedback(-1.0f);

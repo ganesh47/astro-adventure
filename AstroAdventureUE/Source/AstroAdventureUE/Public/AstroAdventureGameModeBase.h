@@ -2,11 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "TimerManager.h"
 #include "AstroLearningTypes.h"
 #include "AstroAdventureGameModeBase.generated.h"
 
 class AAstroDestinationActor;
 class AAstroPlayerPawn;
+class ADirectionalLight;
+class APointLight;
+class APostProcessVolume;
+class ASkyLight;
 class UAstroProgressSaveGame;
 class AStaticMeshActor;
 
@@ -55,6 +60,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Astro Adventure")
     void SubmitAnswer(int32 ChoiceIndex);
 
+    void NotifyHomeInputReceived();
+    bool HandlePointerConfirm(float ScreenX, float ScreenY, float ViewportWidth, float ViewportHeight);
+
     FString GetHudStatusLine() const;
     FString GetHudPrimaryLine() const;
     TArray<FString> GetHudDetailLines() const;
@@ -86,7 +94,35 @@ private:
     UPROPERTY()
     TArray<AStaticMeshActor*> BackdropActors;
 
+    UPROPERTY()
+    AStaticMeshActor* SunTeachingGlowActor = nullptr;
+
+    UPROPERTY()
+    AStaticMeshActor* SunTeachingBodyActor = nullptr;
+
+    UPROPERTY()
+    AStaticMeshActor* SunTeachingCoreActor = nullptr;
+
+    UPROPERTY()
+    TArray<AStaticMeshActor*> SunTeachingRayActors;
+
+    UPROPERTY()
+    ADirectionalLight* KeyLightActor = nullptr;
+
+    UPROPERTY()
+    APointLight* SunLightActor = nullptr;
+
+    UPROPERTY()
+    APointLight* PlayerFillLightActor = nullptr;
+
+    UPROPERTY()
+    ASkyLight* SkyLightActor = nullptr;
+
+    UPROPERTY()
+    APostProcessVolume* LookDevVolume = nullptr;
+
     int32 NebulaBackdropStartIndex = INDEX_NONE;
+    TArray<FVector> DestinationRoutePositions;
 
     UPROPERTY()
     UAstroProgressSaveGame* ProgressSave = nullptr;
@@ -101,6 +137,8 @@ private:
     int32 AgeSelectIndex = 1;
     float LastScanTime = -100.0f;
     float LastStampTime = -100.0f;
+    FName PendingScanDestinationId;
+    FTimerHandle ScanRevealTimerHandle;
     bool bShowingHint = false;
     bool bLastAnswerCorrect = false;
     FString LastFeedback;
@@ -112,16 +150,22 @@ private:
     void SpawnOrbitMarker(int32 OwnerIndex, const FVector& Center, float Radius, const FLinearColor& Color);
     void SpawnAsteroidBelt(int32 OwnerIndex, const FVector& Center);
     void SpawnBackdrop();
+    void SpawnSunTeachingVisual();
+    void UpdateSunTeachingVisual();
+    void ApplyFirstLoopStaging();
+    void ApplyLightingLook();
     void RefreshScenePresentation();
     void RefreshPlayerPresentation();
     bool ShouldShowDestinationInCurrentView(int32 DestinationIndex) const;
     void LoadProgress();
     void SaveProgress() const;
     void UpdateDestinationFocus();
+    void SetMissionScreen(EAstroMissionScreen NewScreen);
     void MarkScanned(const FName DestinationId);
     void CompleteQuiz(const FName DestinationId, bool bAnsweredCorrectly);
     bool HasStampForDestination(FName DestinationId) const;
     void TriggerScanFeedback(const FAstroDestinationLesson& Lesson);
+    void FinishScanReveal();
     void TriggerStampFeedback(const FAstroDestinationLesson& Lesson);
     void SelectAgeBand(int32 Index);
     void ExecutePauseSelection();
@@ -129,6 +173,7 @@ private:
     void ExecuteMissionCompleteSelection();
     void ClearPassportProgress();
     bool HasAnyProgress() const;
+    bool IsFirstStopLocked() const;
     bool IsMissionPlayScreen() const;
     int32 CountCompletedStops() const;
     bool IsMissionComplete() const;

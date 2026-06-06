@@ -18,6 +18,7 @@ enum class EAstroMissionScreen : uint8
     AgeSelect,
     MissionPrompt,
     Navigation,
+    Scanning,
     DiscoveryCard,
     DeepDive,
     Passport,
