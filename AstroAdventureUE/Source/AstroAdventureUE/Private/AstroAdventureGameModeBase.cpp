@@ -217,8 +217,7 @@ FVector FirstLoopTeachingCameraTarget(const EAstroMissionScreen Screen, const FV
 {
     if (Screen == EAstroMissionScreen::StampAward && NextStopLocation)
     {
-        const FVector SunWeightedRoute = FocusLocation * 0.58f + (*NextStopLocation) * 0.42f;
-        return SunWeightedRoute + FVector(-660.0f, 88.0f, -56.0f);
+        return (*NextStopLocation) + FVector(-420.0f, 92.0f, 132.0f);
     }
 
     if (Screen == EAstroMissionScreen::Scanning)
@@ -1722,6 +1721,11 @@ bool AAstroAdventureGameModeBase::ShouldShowDestinationInCurrentView(const int32
 
     if (ShouldUseFirstLoopStaging(CurrentScreen, FocusedDestinationIndex))
     {
+        if (CurrentScreen == EAstroMissionScreen::StampAward && FocusedDestinationIndex == 0)
+        {
+            return DestinationIndex == 1;
+        }
+
         if (CurrentScreen == EAstroMissionScreen::Scanning
             || CurrentScreen == EAstroMissionScreen::DiscoveryCard
             || CurrentScreen == EAstroMissionScreen::DeepDive

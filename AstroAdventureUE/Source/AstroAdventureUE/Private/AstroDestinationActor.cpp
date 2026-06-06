@@ -429,6 +429,36 @@ void AAstroDestinationActor::ApplyProfileArt()
     const FString Id = DestinationId.ToString().ToLower();
     const bool bHasBodyArt = BodyMaterialAsset != nullptr;
     const bool bIsSun = Id == TEXT("sun");
+    auto ApplySelfLitSun = [this]()
+    {
+        UMaterialInterface* EmissiveTemplate = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial"));
+        UMaterialInstanceDynamic* Material = BodyMesh ? BodyMesh->CreateDynamicMaterialInstance(0, EmissiveTemplate) : nullptr;
+        if (!Material && BodyMesh)
+        {
+            Material = BodyMesh->CreateAndSetMaterialInstanceDynamic(0);
+        }
+        if (!Material)
+        {
+            return;
+        }
+
+        const FLinearColor SunColor(1.0f, 0.55f, 0.08f, 1.0f);
+        Material->SetVectorParameterValue(TEXT("Color"), SunColor);
+        Material->SetVectorParameterValue(TEXT("BaseColor"), SunColor);
+        Material->SetVectorParameterValue(TEXT("Base Color"), SunColor);
+        Material->SetVectorParameterValue(TEXT("ShapeColor"), SunColor);
+        Material->SetVectorParameterValue(TEXT("Tint"), SunColor);
+        Material->SetVectorParameterValue(TEXT("DiffuseColor"), SunColor);
+        Material->SetVectorParameterValue(TEXT("EmissiveColor"), SunColor * 1.12f);
+        Material->SetVectorParameterValue(TEXT("Emissive Color"), SunColor * 1.12f);
+        Material->SetVectorParameterValue(TEXT("Emissive"), SunColor * 1.12f);
+        Material->SetScalarParameterValue(TEXT("EmissiveStrength"), 1.12f);
+        Material->SetScalarParameterValue(TEXT("Emissive Strength"), 1.12f);
+        Material->SetScalarParameterValue(TEXT("EmissiveIntensity"), 1.12f);
+        Material->SetScalarParameterValue(TEXT("Glow"), 1.12f);
+        Material->SetScalarParameterValue(TEXT("Opacity"), 1.0f);
+        Material->SetScalarParameterValue(TEXT("Roughness"), 0.54f);
+    };
 
     SurfaceArt->SetVisibility(false);
     BillboardArt->SetVisibility(false);
@@ -459,14 +489,7 @@ void AAstroDestinationActor::ApplyProfileArt()
     if (bIsSun)
     {
         BodyMesh->SetVisibility(true);
-        if (BodyMaterialAsset)
-        {
-            BodyMesh->SetMaterial(0, BodyMaterialAsset);
-        }
-        else
-        {
-            ApplyColor(BodyMesh, FLinearColor(1.0f, 0.62f, 0.10f, 1.0f), 1.58f);
-        }
+        ApplySelfLitSun();
         SurfaceArt->SetVisibility(false);
         BillboardArt->SetVisibility(false);
         BillboardArt->SetHiddenInGame(true);
@@ -525,8 +548,8 @@ void AAstroDestinationActor::UpdateNameplateLayout()
     const bool bAtlasMode = PresentationMode == EAstroDestinationPresentationMode::Atlas;
     const bool bHomeMode = PresentationMode == EAstroDestinationPresentationMode::Home;
     const bool bFirstLoopTeachMode = PresentationMode == EAstroDestinationPresentationMode::FirstLoopTeach;
-    Nameplate->SetVisibility(bIsFocused && !bAtlasMode && !bHomeMode);
-    Label->SetVisibility(!bHomeMode || bFirstLoopTeachMode);
+    Nameplate->SetVisibility(bIsFocused && !bAtlasMode && !bHomeMode && !bFirstLoopTeachMode);
+    Label->SetVisibility(!bFirstLoopTeachMode && (bHomeMode || bAtlasMode || bIsFocused || bIsDiscovered));
     Nameplate->SetRelativeScale3D(FVector(PlateDepth, PlateWidth * FocusWidthBoost, PlateHeight) * LabelScaleCompensation);
 
     Label->SetRelativeScale3D(FVector(LabelScaleCompensation));
@@ -708,11 +731,11 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     const bool bTeachingMode = bHomeMode || bFirstLoopTeachMode;
     if (bTeachingMode && DestinationId == FName(TEXT("sun")))
     {
-        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.78f : 1.48f), bFirstLoopTeachMode ? 2.28f : 1.74f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.12f : 1.42f), bFirstLoopTeachMode ? 1.58f : 1.68f);
     }
     if (bTeachingMode && DestinationId == FName(TEXT("mercury")))
     {
-        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.86f : 1.48f), bFirstLoopTeachMode ? 1.42f : 1.18f);
+        Scale = FMath::Max(BaseVisualScale * (bFirstLoopTeachMode ? 1.48f : 1.48f), bFirstLoopTeachMode ? 1.12f : 1.18f);
     }
     SetActorScale3D(FVector(Scale));
 
@@ -720,7 +743,7 @@ void AAstroDestinationActor::ApplyFocusVisuals()
     BodyMesh->SetRelativeScale3D(bIsFocused ? BodyFocusedScale : BodyIdleScale);
 
     const bool bSun = DestinationId == FName(TEXT("sun"));
-    const bool bSuppressSunHalo = bSun && PresentationMode != EAstroDestinationPresentationMode::Atlas && !bFirstLoopTeachMode;
+    const bool bSuppressSunHalo = bSun && PresentationMode != EAstroDestinationPresentationMode::Atlas;
     FocusHalo->SetVisibility(bIsFocused && !bSuppressSunHalo);
     FocusHalo->SetRelativeScale3D(bIsFocused
         ? (bSun ? FVector(1.08f, 1.08f, 0.005f) : bHomeMode ? FVector(1.22f, 1.22f, 0.008f) : FVector(1.28f, 1.28f, 0.01f))
