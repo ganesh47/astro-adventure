@@ -156,9 +156,6 @@ FAstroDestinationVisualProfile MakeVisualProfile(const FString& Id, const FLinea
 
     if (Id == TEXT("sun"))
     {
-        // The generated Sun material assets currently cook but render too dark in
-        // packaged play. The child-facing slice applies a proven emissive body in
-        // code until the authored material graph is rebuilt.
         Profile.BodyMaterial.Empty();
         Profile.CoronaOrAtmosphereMaterial = FString(OwnedMaterialRoot) + TEXT("MI_Sun_Corona.MI_Sun_Corona");
         Profile.StampTexture = TEXT("/Game/Art/AstroAdventureOwned/Textures/UI/T_Stamp_Sun");
@@ -461,18 +458,20 @@ void AAstroDestinationActor::ApplyProfileArt()
     BodyMesh->SetCastShadow(false);
     if (bIsSun)
     {
-        BodyMesh->SetVisibility(false);
-        if (UTexture2D* SunSprite = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Art/AstroAdventureOwned/Textures/Planets/T_Sun_Disk_ChildReadable.T_Sun_Disk_ChildReadable")))
+        BodyMesh->SetVisibility(true);
+        if (BodyMaterialAsset)
         {
-            BillboardArt->SetSprite(SunSprite);
-            BillboardArt->SetRelativeLocation(FVector::ZeroVector);
-            BillboardArt->SetRelativeScale3D(FVector(0.94f));
-            BillboardArt->SetVisibility(true);
-            BillboardArt->SetHiddenInGame(false);
+            BodyMesh->SetMaterial(0, BodyMaterialAsset);
+        }
+        else
+        {
+            ApplyColor(BodyMesh, FLinearColor(1.0f, 0.72f, 0.16f, 1.0f), 1.25f);
         }
         SurfaceArt->SetVisibility(false);
-        // A visible Sun body is better for first-play learning than the current
-        // flat corona card, which reads as a second yellow planet in packaged play.
+        BillboardArt->SetVisibility(false);
+        BillboardArt->SetHiddenInGame(true);
+        // A visible, material-driven Sun body is better for first-play learning
+        // than the prior flat sprite/corona cards, which looked like rendering bugs.
         AtmosphereArt->SetVisibility(false);
         AtmosphereArt->SetHiddenInGame(true);
         return;
