@@ -293,9 +293,9 @@ void AAstroMissionHUD::DrawHUD()
         DrawText(TEXT("My Solar Passport"), FLinearColor(1.0f, 0.88f, 0.42f), PanelX, FMath::Clamp(Canvas->SizeY * 0.070f, 30.0f, 72.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 1.92f : 2.18f, false);
         DrawText(TEXT("Meet the Sun, our star. Find a clue. Collect a stamp."), FLinearColor(0.92f, 0.99f, 1.0f), PanelX + 3.0f, FMath::Clamp(Canvas->SizeY * 0.145f, 70.0f, 120.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 0.88f : 0.98f, false);
 
-        DrawRect(FLinearColor(0.02f, 0.025f, 0.035f, 0.54f), PanelX + 7.0f, PanelY + 8.0f, PanelW, PanelH);
+        DrawRect(FLinearColor(0.03f, 0.035f, 0.045f, 0.42f), PanelX + 7.0f, PanelY + 8.0f, PanelW, PanelH);
         DrawRect(FLinearColor(0.72f, 0.51f, 0.28f, 0.88f), PanelX, PanelY, PanelW, PanelH);
-        DrawRect(FLinearColor(0.16f, 0.07f, 0.05f, 0.88f), PanelX + 12.0f, PanelY + 10.0f, PanelW - 24.0f, PanelH - 20.0f);
+        DrawRect(FLinearColor(0.28f, 0.16f, 0.10f, 0.88f), PanelX + 12.0f, PanelY + 10.0f, PanelW - 24.0f, PanelH - 20.0f);
         DrawRect(FLinearColor(1.0f, 0.78f, 0.28f, 0.95f), PanelX, PanelY, 12.0f, PanelH);
         DrawRect(FLinearColor(1.0f, 0.86f, 0.48f, 0.28f), PanelX + 22.0f, PanelY + 38.0f, PanelW - 44.0f, 2.0f);
 
@@ -778,10 +778,10 @@ void AAstroMissionHUD::DrawFirstRouteCue(const float X, const float Y, const flo
 
 void AAstroMissionHUD::DrawPassportFrame(const float X, const float Y, const float W, const float H)
 {
-    DrawRect(FLinearColor(0.02f, 0.025f, 0.035f, 0.66f), X - 6.0f, Y + 7.0f, W + 12.0f, H);
+    DrawRect(FLinearColor(0.03f, 0.035f, 0.045f, 0.50f), X - 6.0f, Y + 7.0f, W + 12.0f, H);
     DrawRect(FLinearColor(0.86f, 0.72f, 0.42f, 0.94f), X, Y, W, H);
     DrawOwnedTexture(PassportCardTexture, X, Y, W, H, FLinearColor(1.0f, 1.0f, 1.0f, 0.24f));
-    DrawRect(FLinearColor(0.18f, 0.07f, 0.05f, 0.86f), X + 8.0f, Y + 8.0f, W - 16.0f, H - 16.0f);
+    DrawRect(FLinearColor(0.26f, 0.14f, 0.09f, 0.84f), X + 8.0f, Y + 8.0f, W - 16.0f, H - 16.0f);
     DrawRect(FLinearColor(0.95f, 0.78f, 0.22f, 0.98f), X, Y, 16.0f, H);
     DrawRect(FLinearColor(0.98f, 0.88f, 0.56f, 0.36f), X + 30.0f, Y + 18.0f, W - 60.0f, 2.0f);
     DrawRect(FLinearColor(0.94f, 0.64f, 0.20f, 0.32f), X + 30.0f, Y + H - 54.0f, W - 60.0f, 2.0f);
