@@ -624,17 +624,17 @@ void AAstroDestinationActor::ConfigureMotifs()
     if (Id == TEXT("mercury") || Id == TEXT("moon"))
     {
         const bool bMercury = Id == TEXT("mercury");
-        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.82f : 0.5f);
-        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.66f : 0.42f);
-        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.84f, 0.46f, 1.0f) : White, bMercury ? 0.72f : 0.34f);
-        const float CraterDepth = bMercury ? 0.022f : 0.012f;
-        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.66f : 0.42f, bMercury ? 0.66f : 0.42f), Crater, bMercury ? 0.046f : 0.0f);
-        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.55f : 0.34f, bMercury ? 0.55f : 0.34f), CraterSoft, bMercury ? 0.034f : 0.0f);
-        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.58f : 0.38f, bMercury ? 0.58f : 0.38f), Crater, bMercury ? 0.034f : 0.0f);
-        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.016f, bMercury ? 0.46f : 0.18f, bMercury ? 0.46f : 0.18f), CraterRim, bMercury ? 0.18f : 0.02f);
+        const FLinearColor Crater = BlendColor(BaseColor, Black, bMercury ? 0.88f : 0.5f);
+        const FLinearColor CraterSoft = BlendColor(BaseColor, Black, bMercury ? 0.74f : 0.42f);
+        const FLinearColor CraterRim = BlendColor(BaseColor, bMercury ? FLinearColor(1.0f, 0.84f, 0.46f, 1.0f) : White, bMercury ? 0.80f : 0.34f);
+        const float CraterDepth = bMercury ? 0.026f : 0.012f;
+        SetMotif(6, SphereMeshAsset, FVector(SurfaceX - 1.0f, -18.0f, 16.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.72f : 0.42f, bMercury ? 0.72f : 0.42f), Crater, bMercury ? 0.052f : 0.0f);
+        SetMotif(7, SphereMeshAsset, FVector(SurfaceX - 1.0f, 14.0f, 3.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.62f : 0.34f, bMercury ? 0.62f : 0.34f), CraterSoft, bMercury ? 0.040f : 0.0f);
+        SetMotif(8, SphereMeshAsset, FVector(SurfaceX - 1.0f, -2.0f, -20.0f), FRotator::ZeroRotator, FVector(CraterDepth, bMercury ? 0.64f : 0.38f, bMercury ? 0.64f : 0.38f), Crater, bMercury ? 0.040f : 0.0f);
+        SetMotif(9, SphereMeshAsset, FVector(SurfaceX - 2.0f, 25.0f, -15.0f), FRotator::ZeroRotator, FVector(0.016f, bMercury ? 0.54f : 0.18f, bMercury ? 0.54f : 0.18f), CraterRim, bMercury ? 0.22f : 0.02f);
         if (bMercury)
         {
-            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.016f, 0.44f, 0.34f), CraterSoft, 0.036f);
+            SetMotif(17, SphereMeshAsset, FVector(SurfaceX - 1.0f, -32.0f, -6.0f), FRotator::ZeroRotator, FVector(0.016f, 0.50f, 0.38f), CraterSoft, 0.040f);
         }
         if (Id == TEXT("moon"))
         {
@@ -642,7 +642,7 @@ void AAstroDestinationActor::ConfigureMotifs()
         }
         else
         {
-            SetMotif(16, CubeMeshAsset, FVector(SurfaceX - 5.0f, 1.0f, 0.0f), FRotator(0.0f, 0.0f, -8.0f), FVector(0.008f, 0.38f, 0.008f), FLinearColor(1.0f, 0.70f, 0.28f, 0.18f), 0.035f);
+            SetMotif(16, CubeMeshAsset, FVector(SurfaceX - 5.0f, 1.0f, 0.0f), FRotator(0.0f, 0.0f, -8.0f), FVector(0.010f, 0.46f, 0.010f), FLinearColor(1.0f, 0.70f, 0.28f, 0.24f), 0.055f);
         }
         return;
     }

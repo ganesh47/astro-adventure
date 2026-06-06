@@ -286,8 +286,8 @@ void AAstroMissionHUD::DrawHUD()
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
         const float PanelX = FMath::Clamp(Canvas->SizeX * 0.055f, 28.0f, 86.0f);
-        const float PanelW = FMath::Clamp(Canvas->SizeX * 0.36f, 380.0f, 510.0f);
-        const float PanelH = FMath::Clamp(Canvas->SizeY * 0.265f, 194.0f, 224.0f);
+        const float PanelW = FMath::Clamp(Canvas->SizeX * 0.43f, 560.0f, 640.0f);
+        const float PanelH = FMath::Clamp(Canvas->SizeY * 0.34f, 260.0f, 286.0f);
         const float PanelY = FMath::Clamp(Canvas->SizeY * 0.235f, 116.0f, 220.0f);
 
         DrawText(TEXT("My Solar Passport"), FLinearColor(1.0f, 0.88f, 0.42f), PanelX, FMath::Clamp(Canvas->SizeY * 0.070f, 30.0f, 72.0f), GEngine->GetSmallFont(), Canvas->SizeX < 1000.0f ? 1.92f : 2.18f, false);
@@ -305,8 +305,8 @@ void AAstroMissionHUD::DrawHUD()
         DrawBadge(TEXT("Collect"), PanelX + 208.0f, PanelY + 42.0f, 96.0f, FLinearColor(0.60f, 0.28f, 0.72f, 0.94f), FLinearColor::White, 0.68f);
         const float RowX = PanelX + 22.0f;
         const float RowW = PanelW - 44.0f;
-        const float RowStep = FMath::Clamp(PanelH * 0.16f, 34.0f, 40.0f);
-        float RowY = PanelY + 74.0f;
+        const float RowStep = FMath::Clamp(PanelH * 0.16f, 44.0f, 48.0f);
+        float RowY = PanelY + 82.0f;
         for (const FString& Line : Buckets.MenuRows)
         {
             const bool bFocused = Line.TrimStart().StartsWith(TEXT(">")) || Line.StartsWith(TEXT("READY:"));
@@ -349,22 +349,22 @@ void AAstroMissionHUD::DrawHUD()
         || CurrentScreen == EAstroMissionScreen::Quiz
         || CurrentScreen == EAstroMissionScreen::QuizFeedback
         || CurrentScreen == EAstroMissionScreen::StampAward;
-    const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 620.0f
+    const float MaxCardW = CurrentScreen == EAstroMissionScreen::StampAward ? 760.0f
         : CurrentScreen == EAstroMissionScreen::Scanning ? 540.0f
-        : CurrentScreen == EAstroMissionScreen::DeepDive ? 800.0f
-        : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 720.0f
+        : CurrentScreen == EAstroMissionScreen::DeepDive ? 920.0f
+        : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 820.0f
         : CurrentScreen == EAstroMissionScreen::Navigation ? 560.0f
-        : bHasQuizRows ? 820.0f
+        : bHasQuizRows ? 920.0f
         : bHasMenuRows ? 760.0f
-        : bWorldTeachingScreen ? 620.0f
+        : bWorldTeachingScreen ? 760.0f
         : 700.0f;
     const float CardW = FMath::Min(Canvas->SizeX - Margin * 2.0f, MaxCardW);
     const float CardH = CurrentScreen == EAstroMissionScreen::Home
         ? FMath::Clamp(Canvas->SizeY * 0.42f, 226.0f, 246.0f)
         : bHasPassportRows ? 310.0f
-        : bHasQuizRows ? 372.0f
+        : bHasQuizRows ? 434.0f
         : bHasMenuRows ? 204.0f
-        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 286.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 340.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 220.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 218.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 132.0f : CurrentScreen == EAstroMissionScreen::Navigation ? 142.0f : 118.0f)
+        : bWorldTeachingScreen ? (CurrentScreen == EAstroMissionScreen::StampAward ? 336.0f : CurrentScreen == EAstroMissionScreen::DeepDive ? 378.0f : CurrentScreen == EAstroMissionScreen::QuizFeedback ? 258.0f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 250.0f : CurrentScreen == EAstroMissionScreen::Scanning ? 132.0f : CurrentScreen == EAstroMissionScreen::Navigation ? 142.0f : 118.0f)
         : Buckets.BodyLines.Num() >= 3 ? 184.0f : 164.0f;
     const float CardX = CurrentScreen == EAstroMissionScreen::StampAward
         ? FMath::Clamp(Canvas->SizeX * 0.07f, 34.0f, 96.0f)
@@ -374,7 +374,7 @@ void AAstroMissionHUD::DrawHUD()
         ? FMath::Clamp(Canvas->SizeX * 0.045f, 34.0f, 72.0f)
         : (Canvas->SizeX - CardW) * 0.5f;
     const float DesiredCardY = CurrentScreen == EAstroMissionScreen::StampAward
-        ? FMath::Clamp(Canvas->SizeY * 0.18f, HeaderH + 20.0f, 168.0f)
+        ? FMath::Clamp(Canvas->SizeY * 0.15f, HeaderH + 18.0f, 142.0f)
         : bHasQuizRows
         ? FMath::Max(HeaderH + 12.0f, FMath::Clamp(Canvas->SizeY * 0.28f, 176.0f, 236.0f))
         : CurrentScreen == EAstroMissionScreen::Scanning
@@ -429,16 +429,16 @@ void AAstroMissionHUD::DrawHUD()
             : LowerPrompt.Contains(TEXT("mercury"))
             ? TEXT("World clue: Mercury is small, rocky, and cratered.")
             : TEXT("World clue: match your answer to what you scanned.");
-        DrawRect(FLinearColor(0.04f, 0.16f, 0.18f, 0.86f), CardX + 42.0f, Y, CardW - 84.0f, 38.0f);
-        DrawRect(FLinearColor(0.35f, 0.90f, 0.86f, 0.94f), CardX + 42.0f, Y, 10.0f, 38.0f);
-        DrawMiniLearningIcon(LowerPrompt.Contains(TEXT("mercury")) ? TEXT("Mercury") : TEXT("Sun"), CardX + 70.0f, Y + 19.0f, 20.0f);
-        DrawText(AstroClipTextToWidth(QuizClue, CardW - 144.0f, 0.84f), FLinearColor(0.88f, 1.0f, 0.96f), CardX + 92.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.84f, false);
-        Y += 46.0f;
+        DrawRect(FLinearColor(0.04f, 0.16f, 0.18f, 0.88f), CardX + 42.0f, Y, CardW - 84.0f, 48.0f);
+        DrawRect(FLinearColor(0.35f, 0.90f, 0.86f, 0.94f), CardX + 42.0f, Y, 12.0f, 48.0f);
+        DrawMiniLearningIcon(LowerPrompt.Contains(TEXT("mercury")) ? TEXT("Mercury") : TEXT("Sun"), CardX + 76.0f, Y + 24.0f, 26.0f);
+        DrawText(AstroClipTextToWidth(QuizClue, CardW - 158.0f, 1.02f), FLinearColor(0.88f, 1.0f, 0.96f), CardX + 104.0f, Y + 13.0f, GEngine->GetSmallFont(), 1.02f, false);
+        Y += 58.0f;
         for (const FString& Line : Buckets.QuizRows)
         {
             const bool bFocused = Line.TrimStart().StartsWith(TEXT(">"));
             DrawQuizRow(Line, CardX + 42.0f, Y, CardW - 84.0f, bFocused);
-            Y += 66.0f;
+            Y += 78.0f;
         }
     }
     else if (bHasMenuRows)
@@ -500,7 +500,7 @@ void AAstroMissionHUD::DrawHUD()
         for (const FString& Line : Buckets.BodyLines)
         {
             const float BodyX = CardX + 42.0f;
-            const float BodyScale = CurrentScreen == EAstroMissionScreen::StampAward ? 1.06f : CurrentScreen == EAstroMissionScreen::DeepDive ? 0.94f : 1.02f;
+            const float BodyScale = CurrentScreen == EAstroMissionScreen::StampAward ? 1.14f : CurrentScreen == EAstroMissionScreen::DeepDive ? 1.00f : CurrentScreen == EAstroMissionScreen::DiscoveryCard ? 1.12f : 1.02f;
             if (CurrentScreen == EAstroMissionScreen::DeepDive && DrawDeepDiveSectionLine(Line, BodyX, Y, CardW - 84.0f))
             {
                 ++DrawnLines;
@@ -529,7 +529,7 @@ void AAstroMissionHUD::DrawHUD()
             }
 
             Y += 2.0f;
-            DrawLine(Line, CardX + 42.0f, Y, FLinearColor(0.76f, 0.90f, 0.92f), 0.84f);
+            DrawLine(Line, CardX + 42.0f, Y, FLinearColor(0.76f, 0.90f, 0.92f), CurrentScreen == EAstroMissionScreen::QuizFeedback ? 0.98f : 0.84f);
             ++DrawnLines;
         }
     }
@@ -789,7 +789,7 @@ void AAstroMissionHUD::DrawPassportFrame(const float X, const float Y, const flo
 
 void AAstroMissionHUD::DrawStampAwardHero(const float X, const float Y, const float W, const float H)
 {
-    const float StampSize = FMath::Clamp(W * 0.20f, 96.0f, 124.0f);
+    const float StampSize = FMath::Clamp(W * 0.22f, 112.0f, 150.0f);
     const float StampX = X + W - StampSize - 40.0f;
     const float StampY = Y + 38.0f;
     const float CenterX = StampX + StampSize * 0.5f;
@@ -811,27 +811,27 @@ void AAstroMissionHUD::DrawStampAwardHero(const float X, const float Y, const fl
 
     DrawRect(FLinearColor(1.0f, 0.94f, 0.55f, 0.58f), StampX - 8.0f, StampY - 8.0f, StampSize + 16.0f, 4.0f);
     DrawRect(FLinearColor(1.0f, 0.94f, 0.55f, 0.58f), StampX - 8.0f, StampY + StampSize + 4.0f, StampSize + 16.0f, 4.0f);
-    DrawText(TEXT("SUN STAMP!"), FLinearColor(1.0f, 0.90f, 0.48f), StampX + 4.0f, StampY + StampSize + 10.0f, GEngine->GetSmallFont(), 0.70f, false);
-    DrawText(TEXT("You found a star!"), FLinearColor(1.0f, 0.96f, 0.78f), X + 48.0f, Y + 132.0f, GEngine->GetSmallFont(), 0.86f, false);
-    DrawText(TEXT("The Sun makes its own light."), FLinearColor(0.88f, 0.98f, 1.0f), X + 48.0f, Y + 156.0f, GEngine->GetSmallFont(), 0.78f, false);
+    DrawText(TEXT("SUN STAMP!"), FLinearColor(1.0f, 0.90f, 0.48f), StampX + 4.0f, StampY + StampSize + 10.0f, GEngine->GetSmallFont(), 0.86f, false);
+    DrawText(TEXT("You found a star!"), FLinearColor(1.0f, 0.96f, 0.78f), X + 48.0f, Y + 136.0f, GEngine->GetSmallFont(), 1.04f, false);
+    DrawText(TEXT("The Sun makes its own light."), FLinearColor(0.88f, 0.98f, 1.0f), X + 48.0f, Y + 166.0f, GEngine->GetSmallFont(), 0.96f, false);
 
-    const float MercuryX = FMath::Max(X + 318.0f, StampX - 118.0f);
-    const float MercuryY = StampY + StampSize * 0.62f;
-    DrawRect(FLinearColor(1.0f, 0.78f, 0.26f, 0.70f), MercuryX - 82.0f, MercuryY - 2.0f, 72.0f, 4.0f);
-    DrawSoftEllipse(MercuryX, MercuryY, 34.0f, 29.0f, FLinearColor(0.46f, 0.50f, 0.48f, 0.98f), 22);
-    DrawSoftEllipse(MercuryX - 11.0f, MercuryY - 7.0f, 10.0f, 7.0f, FLinearColor(0.10f, 0.12f, 0.12f, 0.62f), 10);
-    DrawSoftEllipse(MercuryX + 11.0f, MercuryY + 4.0f, 11.0f, 8.0f, FLinearColor(0.12f, 0.13f, 0.13f, 0.56f), 10);
-    DrawSoftEllipse(MercuryX - 1.0f, MercuryY + 13.0f, 8.0f, 5.0f, FLinearColor(0.20f, 0.20f, 0.18f, 0.48f), 8);
-    DrawText(TEXT("Next: Mercury"), FLinearColor(0.78f, 0.96f, 1.0f), MercuryX - 46.0f, MercuryY + 36.0f, GEngine->GetSmallFont(), 0.70f, false);
-    DrawText(TEXT("crater world"), FLinearColor(0.94f, 0.84f, 0.58f), MercuryX - 44.0f, MercuryY + 56.0f, GEngine->GetSmallFont(), 0.58f, false);
+    const float MercuryX = FMath::Max(X + 356.0f, StampX - 146.0f);
+    const float MercuryY = StampY + StampSize * 0.70f;
+    DrawRect(FLinearColor(1.0f, 0.78f, 0.26f, 0.78f), MercuryX - 116.0f, MercuryY - 3.0f, 104.0f, 6.0f);
+    DrawSoftEllipse(MercuryX, MercuryY, 48.0f, 41.0f, FLinearColor(0.56f, 0.59f, 0.55f, 0.98f), 24);
+    DrawSoftEllipse(MercuryX - 16.0f, MercuryY - 11.0f, 14.0f, 10.0f, FLinearColor(0.10f, 0.12f, 0.12f, 0.64f), 10);
+    DrawSoftEllipse(MercuryX + 15.0f, MercuryY + 6.0f, 15.0f, 11.0f, FLinearColor(0.12f, 0.13f, 0.13f, 0.58f), 10);
+    DrawSoftEllipse(MercuryX - 2.0f, MercuryY + 18.0f, 11.0f, 7.0f, FLinearColor(0.20f, 0.20f, 0.18f, 0.50f), 8);
+    DrawText(TEXT("Next: Mercury"), FLinearColor(0.78f, 0.96f, 1.0f), MercuryX - 62.0f, MercuryY + 48.0f, GEngine->GetSmallFont(), 0.88f, false);
+    DrawText(TEXT("closest crater planet"), FLinearColor(0.94f, 0.84f, 0.58f), MercuryX - 74.0f, MercuryY + 72.0f, GEngine->GetSmallFont(), 0.72f, false);
 
     const float BadgeY = Y + H - 52.0f;
     const float BadgeW = FMath::Min(W - 80.0f, 540.0f);
     DrawRect(FLinearColor(0.04f, 0.20f, 0.28f, 0.94f), X + 40.0f, BadgeY, BadgeW, 38.0f);
     DrawRect(FLinearColor(0.80f, 0.96f, 1.0f, 0.28f), X + 48.0f, BadgeY + 5.0f, BadgeW - 16.0f, 2.0f);
     DrawRect(FLinearColor(0.94f, 0.64f, 0.18f, 0.96f), X + 40.0f, BadgeY, 12.0f, 38.0f);
-    DrawText(TEXT("NEXT STOP: MERCURY"), FLinearColor(0.86f, 1.0f, 1.0f), X + 62.0f, BadgeY + 7.0f, GEngine->GetSmallFont(), 0.88f, false);
-    DrawText(TEXT("Look for craters on the small rocky closest planet."), FLinearColor(1.0f, 0.92f, 0.66f), X + 264.0f, BadgeY + 12.0f, GEngine->GetSmallFont(), 0.64f, false);
+    DrawText(TEXT("NEXT STOP: MERCURY"), FLinearColor(0.86f, 1.0f, 1.0f), X + 62.0f, BadgeY + 6.0f, GEngine->GetSmallFont(), 1.00f, false);
+    DrawText(TEXT("Closest planet to the Sun. Look for craters."), FLinearColor(1.0f, 0.92f, 0.66f), X + 288.0f, BadgeY + 10.0f, GEngine->GetSmallFont(), 0.78f, false);
 }
 
 void AAstroMissionHUD::DrawStampStrip(const FString& StatusLine, const float X, const float Y, const float W)
@@ -1042,15 +1042,14 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
 
     if (bHasQuizRows)
     {
-        AddActionIfMissing(Actions, TEXT("Pick: Up/Down"));
-        AddActionIfMissing(Actions, TEXT("Select: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Help: H/Y"));
+        AddActionIfMissing(Actions, TEXT("Pick"));
+        AddActionIfMissing(Actions, TEXT("Select"));
+        AddActionIfMissing(Actions, TEXT("Help"));
     }
     else if (Screen == EAstroMissionScreen::Home)
     {
-        AddActionIfMissing(Actions, TEXT("Pick: Arrows"));
-        AddActionIfMissing(Actions, TEXT("Start: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Mouse: Choose"));
+        AddActionIfMissing(Actions, TEXT("Pick"));
+        AddActionIfMissing(Actions, TEXT("Start"));
     }
     else if (Screen == EAstroMissionScreen::AgeSelect)
     {
@@ -1096,27 +1095,23 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::DiscoveryCard)
     {
-        AddActionIfMissing(Actions, TEXT("Quiz: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("More: M/LT"));
-        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
+        AddActionIfMissing(Actions, TEXT("Quiz"));
+        AddActionIfMissing(Actions, TEXT("More"));
     }
     else if (Screen == EAstroMissionScreen::DeepDive)
     {
-        AddActionIfMissing(Actions, TEXT("Close: Backspace/B"));
-        AddActionIfMissing(Actions, TEXT("Quiz: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
+        AddActionIfMissing(Actions, TEXT("Quiz"));
+        AddActionIfMissing(Actions, TEXT("Back"));
     }
     else if (Screen == EAstroMissionScreen::QuizFeedback)
     {
-        AddActionIfMissing(Actions, TEXT("Next: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Help: H/Y"));
-        AddActionIfMissing(Actions, TEXT("Back: Backspace/B"));
+        AddActionIfMissing(Actions, TEXT("Next"));
+        AddActionIfMissing(Actions, TEXT("Help"));
     }
     else if (Screen == EAstroMissionScreen::StampAward)
     {
-        AddActionIfMissing(Actions, TEXT("Next: Enter/Space"));
-        AddActionIfMissing(Actions, TEXT("Passport: P/RT"));
-        AddActionIfMissing(Actions, TEXT("Back: Esc"));
+        AddActionIfMissing(Actions, TEXT("Next"));
+        AddActionIfMissing(Actions, TEXT("Passport"));
     }
     else
     {
@@ -1126,7 +1121,13 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
 
     float BadgeX = X;
-    for (int32 Index = 0; Index < Actions.Num() && Index < 3; ++Index)
+    const bool bTwoChipScreen = Screen == EAstroMissionScreen::Home
+        || Screen == EAstroMissionScreen::DiscoveryCard
+        || Screen == EAstroMissionScreen::DeepDive
+        || Screen == EAstroMissionScreen::QuizFeedback
+        || Screen == EAstroMissionScreen::StampAward;
+    const int32 MaxActions = bTwoChipScreen ? 2 : 3;
+    for (int32 Index = 0; Index < Actions.Num() && Index < MaxActions; ++Index)
     {
         const float BadgeW = FMath::Clamp(34.0f + Actions[Index].Len() * 6.2f, 96.0f, 188.0f);
         if (BadgeX + BadgeW > X + W)
@@ -1170,18 +1171,18 @@ void AAstroMissionHUD::DrawHomeRow(const FString& Text, const float X, const flo
     const FLinearColor Stripe = bFocused ? FLinearColor(1.0f, 0.95f, 0.62f, 1.0f) : FLinearColor(0.18f, 0.46f, 0.56f, 0.74f);
     const FLinearColor TextColor = bFocused ? FLinearColor(0.05f, 0.06f, 0.07f, 1.0f) : FLinearColor(0.94f, 0.98f, 1.0f, 1.0f);
 
-    DrawRect(Fill, X, Y, W, 32.0f);
-    DrawRect(Stripe, X, Y, bFocused ? 16.0f : 10.0f, 32.0f);
+    DrawRect(Fill, X, Y, W, 42.0f);
+    DrawRect(Stripe, X, Y, bFocused ? 18.0f : 12.0f, 42.0f);
 
     if (bFocused)
     {
         const FString Verb = AstroActionVerbForChoice(ChoiceText);
-        DrawText(Verb, TextColor, X + 20.0f, Y + 8.0f, GEngine->GetSmallFont(), 0.70f, false);
-        DrawText(AstroClipTextToWidth(ChoiceText, W - 126.0f, 0.96f), TextColor, X + 96.0f, Y + 7.0f, GEngine->GetSmallFont(), 0.96f, false);
+        DrawText(Verb, TextColor, X + 22.0f, Y + 11.0f, GEngine->GetSmallFont(), 0.82f, false);
+        DrawText(AstroClipTextToWidth(ChoiceText, W - 140.0f, 1.14f), TextColor, X + 108.0f, Y + 10.0f, GEngine->GetSmallFont(), 1.14f, false);
     }
     else
     {
-        DrawText(AstroClipTextToWidth(ChoiceText, W - 42.0f, 0.88f), TextColor, X + 26.0f, Y + 7.0f, GEngine->GetSmallFont(), 0.88f, false);
+        DrawText(AstroClipTextToWidth(ChoiceText, W - 48.0f, 1.02f), TextColor, X + 30.0f, Y + 10.0f, GEngine->GetSmallFont(), 1.02f, false);
     }
 }
 
@@ -1208,12 +1209,19 @@ void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const flo
     const FLinearColor Stripe = bFocused ? FLinearColor(1.0f, 0.94f, 0.60f, 1.0f) : FLinearColor(0.28f, 0.56f, 0.86f, 0.84f);
     const FLinearColor TextColor = bFocused ? FLinearColor(0.06f, 0.06f, 0.08f, 1.0f) : FLinearColor(0.94f, 0.97f, 1.0f, 1.0f);
 
-    DrawRect(Fill, X, Y, W, 64.0f);
-    DrawRect(Stripe, X, Y, 12.0f, 64.0f);
-    DrawSoftEllipse(X + 48.0f, Y + 32.0f, 24.0f, 22.0f, bFocused ? FLinearColor(1.0f, 0.94f, 0.62f, 0.92f) : FLinearColor(0.22f, 0.42f, 0.50f, 0.90f), 18);
-    DrawText(ChoiceNumber.IsEmpty() ? TEXT("?") : ChoiceNumber, TextColor, X + 42.0f, Y + 22.0f, GEngine->GetSmallFont(), 0.94f, false);
-    DrawText(bFocused ? TEXT("YOUR PICK") : TEXT("pick"), TextColor, X + 82.0f, Y + 10.0f, GEngine->GetSmallFont(), 0.58f, false);
-    DrawText(AstroClipTextToWidth(ChoiceBody, W - 116.0f, 1.14f), TextColor, X + 82.0f, Y + 31.0f, GEngine->GetSmallFont(), 1.14f, false);
+    constexpr float RowH = 74.0f;
+    DrawRect(FLinearColor(0.02f, 0.04f, 0.05f, bFocused ? 0.42f : 0.24f), X + 5.0f, Y + 6.0f, W, RowH);
+    DrawRect(Fill, X, Y, W, RowH);
+    DrawRect(Stripe, X, Y, bFocused ? 18.0f : 12.0f, RowH);
+    if (bFocused)
+    {
+        DrawRect(FLinearColor(1.0f, 0.95f, 0.58f, 0.92f), X, Y, W, 4.0f);
+        DrawRect(FLinearColor(1.0f, 0.95f, 0.58f, 0.72f), X, Y + RowH - 4.0f, W, 4.0f);
+    }
+    DrawSoftEllipse(X + 54.0f, Y + RowH * 0.5f, 28.0f, 26.0f, bFocused ? FLinearColor(1.0f, 0.94f, 0.62f, 0.96f) : FLinearColor(0.22f, 0.42f, 0.50f, 0.90f), 18);
+    DrawText(ChoiceNumber.IsEmpty() ? TEXT("?") : ChoiceNumber, TextColor, X + 47.0f, Y + 26.0f, GEngine->GetSmallFont(), 1.08f, false);
+    DrawText(bFocused ? TEXT("PICK THIS") : TEXT("choice"), TextColor, X + 94.0f, Y + 10.0f, GEngine->GetSmallFont(), bFocused ? 0.72f : 0.62f, false);
+    DrawText(AstroClipTextToWidth(ChoiceBody, W - 132.0f, 1.28f), TextColor, X + 94.0f, Y + 35.0f, GEngine->GetSmallFont(), 1.28f, false);
 }
 
 void AAstroMissionHUD::DrawPassportRow(const FString& Text, const float X, const float Y, const float W)
