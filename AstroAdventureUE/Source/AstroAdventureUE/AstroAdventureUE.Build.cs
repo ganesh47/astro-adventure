@@ -13,8 +13,11 @@ public class AstroAdventureUE : ModuleRules
             "Engine",
             "InputCore",
             "EnhancedInput",
+            "Slate",
+            "SlateCore",
             "UMG",
-            "CommonUI"
+            "CommonUI",
+            "ImageWrapper"
         });
     }
 }
