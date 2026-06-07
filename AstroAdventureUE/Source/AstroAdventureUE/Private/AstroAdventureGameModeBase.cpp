@@ -1379,21 +1379,21 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         if (Lesson->DestinationId == FName(TEXT("sun")))
         {
-            Lines.Add(TEXT("Closer Look: Stars make light deep inside."));
-            Lines.Add(TEXT("Compare: The Sun is much bigger than Earth."));
-            Lines.Add(TEXT("Word Explorer: Star means a huge glowing ball that makes light."));
+            Lines.Add(TEXT("See: Stars glow because they make their own light."));
+            Lines.Add(TEXT("Compare: Earth reflects sunlight; the Sun makes light."));
+            Lines.Add(TEXT("Word: Star means a huge glowing ball that makes light."));
         }
         else if (Lesson->DestinationId == FName(TEXT("mercury")))
         {
-            Lines.Add(TEXT("Closer Look: Mercury is rocky and keeps craters because it has little air."));
+            Lines.Add(TEXT("See: Mercury keeps crater marks because it has little air."));
             Lines.Add(TEXT("Compare: Mercury is much smaller than Earth."));
-            Lines.Add(TEXT("Word Explorer: A crater is a bowl mark from a space rock."));
+            Lines.Add(TEXT("Word: Crater means a bowl mark from a space rock."));
         }
         else
         {
-            Lines.Add(FString::Printf(TEXT("Closer Look: %s"), *Lesson->DeepDiveText.ToString()));
+            Lines.Add(FString::Printf(TEXT("See: %s"), *Lesson->DeepDiveText.ToString()));
             Lines.Add(FString::Printf(TEXT("Compare: %s"), *Lesson->CompareFact.ToString()));
-            Lines.Add(FString::Printf(TEXT("Word Explorer: %s"), *Lesson->GlossaryText.ToString()));
+            Lines.Add(FString::Printf(TEXT("Word: %s"), *Lesson->GlossaryText.ToString()));
         }
         Lines.Add(TEXT("Back closes this; Confirm opens the quiz."));
     }

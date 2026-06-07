@@ -700,8 +700,8 @@ void AAstroMissionHUD::DrawLearningBadgeRow(const EAstroMissionScreen Screen, co
 
     if (Screen == EAstroMissionScreen::DeepDive)
     {
-        FirstLabel = TEXT("LOOK");
-        FirstDetail = TEXT("light and heat");
+        FirstLabel = TEXT("SEE");
+        FirstDetail = TEXT("watch the clue");
         SecondLabel = TEXT("COMPARE");
         SecondDetail = TEXT("star, not planet");
         ThirdIcon = TEXT("Info");
@@ -889,9 +889,9 @@ bool AAstroMissionHUD::DrawDeepDiveSectionLine(const FString& Text, const float 
 
     Label.TrimStartAndEndInline();
     Detail.TrimStartAndEndInline();
-    const bool bCloser = Label.Equals(TEXT("Closer Look"), ESearchCase::IgnoreCase);
+    const bool bCloser = Label.Equals(TEXT("Closer Look"), ESearchCase::IgnoreCase) || Label.Equals(TEXT("See"), ESearchCase::IgnoreCase);
     const bool bCompare = Label.Equals(TEXT("Compare"), ESearchCase::IgnoreCase);
-    const bool bWord = Label.Equals(TEXT("Word Explorer"), ESearchCase::IgnoreCase);
+    const bool bWord = Label.Equals(TEXT("Word Explorer"), ESearchCase::IgnoreCase) || Label.Equals(TEXT("Word"), ESearchCase::IgnoreCase);
     if (!bCloser && !bCompare && !bWord)
     {
         return false;
@@ -900,20 +900,23 @@ bool AAstroMissionHUD::DrawDeepDiveSectionLine(const FString& Text, const float 
     const FLinearColor Fill = bCloser ? FLinearColor(0.84f, 0.39f, 0.14f, 0.96f)
         : bCompare ? FLinearColor(0.12f, 0.46f, 0.60f, 0.96f)
         : FLinearColor(0.42f, 0.28f, 0.62f, 0.96f);
-    const FString BadgeText = bCloser ? TEXT("LOOK") : bCompare ? TEXT("COMPARE") : TEXT("WORD");
-    DrawRect(FLinearColor(0.02f, 0.04f, 0.05f, 0.40f), X, Y + 2.0f, W, 48.0f);
-    DrawBadge(BadgeText, X + 8.0f, Y + 9.0f, bCompare ? 112.0f : 92.0f, Fill, FLinearColor::White, 0.66f);
+    const FString BadgeText = bCloser ? TEXT("SEE") : bCompare ? TEXT("COMPARE") : TEXT("WORD");
+    DrawRect(FLinearColor(0.02f, 0.04f, 0.05f, 0.34f), X + 3.0f, Y + 5.0f, W, 56.0f);
+    DrawRect(bCloser ? FLinearColor(0.38f, 0.20f, 0.12f, 0.78f) : bCompare ? FLinearColor(0.06f, 0.22f, 0.30f, 0.78f) : FLinearColor(0.22f, 0.16f, 0.34f, 0.78f), X, Y + 2.0f, W, 56.0f);
+    DrawRect(FLinearColor(1.0f, 0.90f, 0.48f, 0.22f), X + 10.0f, Y + 8.0f, W - 20.0f, 2.0f);
+    DrawBadge(BadgeText, X + 12.0f, Y + 15.0f, bCompare ? 112.0f : 82.0f, Fill, FLinearColor::White, 0.66f);
+    DrawMiniLearningIcon(bCloser ? TEXT("Sun") : bCompare ? TEXT("Info") : TEXT("Stamp"), X + (bCompare ? 142.0f : 112.0f), Y + 30.0f, 24.0f);
 
-    const float TextX = X + (bCompare ? 136.0f : 116.0f);
-    float TextY = Y + 9.0f;
-    const TArray<FString> Wrapped = AstroWrapTextToWidth(Detail, W - (TextX - X) - 16.0f, 0.88f, 2);
+    const float TextX = X + (bCompare ? 168.0f : 138.0f);
+    float TextY = Y + 15.0f;
+    const TArray<FString> Wrapped = AstroWrapTextToWidth(Detail, W - (TextX - X) - 18.0f, 0.92f, 2);
     for (const FString& WrappedLine : Wrapped)
     {
-        DrawText(WrappedLine, FLinearColor(0.91f, 0.98f, 1.0f), TextX, TextY, GEngine->GetSmallFont(), 0.88f, false);
-        TextY += 19.0f;
+        DrawText(WrappedLine, FLinearColor(1.0f, 0.96f, 0.78f), TextX, TextY, GEngine->GetSmallFont(), 0.92f, false);
+        TextY += 20.0f;
     }
 
-    Y = FMath::Max(Y + 54.0f, TextY + 8.0f);
+    Y = FMath::Max(Y + 64.0f, TextY + 10.0f);
     return true;
 }
 
