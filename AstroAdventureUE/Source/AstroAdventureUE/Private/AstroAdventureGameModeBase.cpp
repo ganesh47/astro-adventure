@@ -1229,7 +1229,7 @@ FString AAstroAdventureGameModeBase::GetHudPrimaryLine() const
     switch (CurrentScreen)
     {
     case EAstroMissionScreen::Home:
-        return TEXT("Look at the Sun route");
+        return TEXT("Start your Solar Passport");
     case EAstroMissionScreen::AgeSelect:
         return TEXT("Choose your explorer level");
     case EAstroMissionScreen::MissionPrompt:
@@ -1271,7 +1271,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
 
     if (CurrentScreen == EAstroMissionScreen::Home)
     {
-        const TCHAR* Options[] = {TEXT("Start: Sun -> Mercury"), TEXT("Continue saved route"), TEXT("Reset Passport"), TEXT("Quit")};
+        const TCHAR* Options[] = {TEXT("Start Expedition: Sun -> Mercury"), TEXT("Continue saved route"), TEXT("Reset Passport"), TEXT("Quit")};
         const int32 StampCount = CountCompletedStops();
         const bool bHasProgress = HasAnyProgress();
         for (int32 Index = 0; Index < 4; ++Index)
@@ -1279,7 +1279,7 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
             FString Label = Options[Index];
             if (Index == 1)
             {
-                Label = StampCount > 0 ? FString::Printf(TEXT("Continue saved route: %d stamps"), StampCount) : bHasProgress ? TEXT("Continue saved route") : TEXT("Continue route - no stamps yet");
+                Label = StampCount > 0 ? FString::Printf(TEXT("Continue saved route: %d stamps"), StampCount) : bHasProgress ? TEXT("Continue saved route") : TEXT("Continue saved route - no stamps yet");
             }
             Lines.Add(FString::Printf(TEXT("%s %s"), Index == HomeMenuIndex ? TEXT(">") : TEXT(" "), *Label));
         }
