@@ -432,14 +432,14 @@ void AAstroMissionHUD::DrawHUD()
         Y += 8.0f;
         const FString LowerPrompt = DisplayPrimaryLine.ToLower();
         const FString QuizClue = LowerPrompt.Contains(TEXT("sun"))
-            ? TEXT("Remember: The Sun makes its own light.")
+            ? TEXT("Clue challenge: choose the sign that the Sun is a star.")
             : LowerPrompt.Contains(TEXT("mercury"))
-            ? TEXT("Remember: Mercury is small, gray, and cratered.")
-            : TEXT("Remember: match your answer to what you scanned.");
-        DrawRect(FLinearColor(0.04f, 0.16f, 0.18f, 0.88f), CardX + 42.0f, Y, CardW - 84.0f, 48.0f);
-        DrawRect(FLinearColor(0.35f, 0.90f, 0.86f, 0.94f), CardX + 42.0f, Y, 12.0f, 48.0f);
+            ? TEXT("Clue challenge: choose the crater clue for Mercury.")
+            : TEXT("Clue challenge: match your answer to what you scanned.");
+        DrawRect(FLinearColor(0.20f, 0.12f, 0.08f, 0.90f), CardX + 42.0f, Y, CardW - 84.0f, 48.0f);
+        DrawRect(FLinearColor(1.0f, 0.74f, 0.20f, 0.94f), CardX + 42.0f, Y, 12.0f, 48.0f);
         DrawMiniLearningIcon(LowerPrompt.Contains(TEXT("mercury")) ? TEXT("Mercury") : TEXT("Sun"), CardX + 76.0f, Y + 24.0f, 26.0f);
-        DrawText(AstroClipTextToWidth(QuizClue, CardW - 158.0f, 1.02f), FLinearColor(0.88f, 1.0f, 0.96f), CardX + 104.0f, Y + 13.0f, GEngine->GetSmallFont(), 1.02f, false);
+        DrawText(AstroClipTextToWidth(QuizClue, CardW - 158.0f, 1.02f), FLinearColor(1.0f, 0.96f, 0.74f), CardX + 104.0f, Y + 13.0f, GEngine->GetSmallFont(), 1.02f, false);
         Y += 58.0f;
         for (const FString& Line : Buckets.QuizRows)
         {
@@ -1102,8 +1102,8 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::DiscoveryCard)
     {
-        AddActionIfMissing(Actions, TEXT("Quiz"));
-        AddActionIfMissing(Actions, TEXT("More"));
+        AddActionIfMissing(Actions, TEXT("Pick quiz"));
+        AddActionIfMissing(Actions, TEXT("More info"));
     }
     else if (Screen == EAstroMissionScreen::DeepDive)
     {
@@ -1112,7 +1112,7 @@ void AAstroMissionHUD::DrawActionBar(const EAstroMissionScreen Screen, const flo
     }
     else if (Screen == EAstroMissionScreen::QuizFeedback)
     {
-        AddActionIfMissing(Actions, TEXT("Next"));
+        AddActionIfMissing(Actions, TEXT("Try clue"));
         AddActionIfMissing(Actions, TEXT("Help"));
     }
     else if (Screen == EAstroMissionScreen::StampAward)
@@ -1214,9 +1214,9 @@ void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const flo
         }
     }
 
-    const FLinearColor Fill = bFocused ? FLinearColor(0.98f, 0.66f, 0.18f, 0.96f) : FLinearColor(0.08f, 0.19f, 0.24f, 0.96f);
-    const FLinearColor Stripe = bFocused ? FLinearColor(1.0f, 0.94f, 0.60f, 1.0f) : FLinearColor(0.28f, 0.56f, 0.86f, 0.84f);
-    const FLinearColor TextColor = bFocused ? FLinearColor(0.06f, 0.06f, 0.08f, 1.0f) : FLinearColor(0.94f, 0.97f, 1.0f, 1.0f);
+    const FLinearColor Fill = bFocused ? FLinearColor(0.98f, 0.66f, 0.18f, 0.96f) : FLinearColor(0.28f, 0.20f, 0.15f, 0.94f);
+    const FLinearColor Stripe = bFocused ? FLinearColor(1.0f, 0.94f, 0.60f, 1.0f) : FLinearColor(0.86f, 0.54f, 0.24f, 0.70f);
+    const FLinearColor TextColor = bFocused ? FLinearColor(0.06f, 0.06f, 0.08f, 1.0f) : FLinearColor(1.0f, 0.94f, 0.78f, 1.0f);
 
     constexpr float RowH = 74.0f;
     DrawRect(FLinearColor(0.02f, 0.04f, 0.05f, bFocused ? 0.42f : 0.24f), X + 5.0f, Y + 6.0f, W, RowH);
@@ -1229,7 +1229,7 @@ void AAstroMissionHUD::DrawQuizRow(const FString& Text, const float X, const flo
     }
     DrawSoftEllipse(X + 54.0f, Y + RowH * 0.5f, 28.0f, 26.0f, bFocused ? FLinearColor(1.0f, 0.94f, 0.62f, 0.96f) : FLinearColor(0.22f, 0.42f, 0.50f, 0.90f), 18);
     DrawText(ChoiceNumber.IsEmpty() ? TEXT("?") : ChoiceNumber, TextColor, X + 47.0f, Y + 26.0f, GEngine->GetSmallFont(), 1.08f, false);
-    DrawText(bFocused ? TEXT("PICK THIS") : TEXT("choice"), TextColor, X + 94.0f, Y + 10.0f, GEngine->GetSmallFont(), bFocused ? 0.72f : 0.62f, false);
+    DrawText(bFocused ? TEXT("TRY THIS CLUE") : TEXT("clue card"), TextColor, X + 94.0f, Y + 10.0f, GEngine->GetSmallFont(), bFocused ? 0.72f : 0.62f, false);
     DrawText(AstroClipTextToWidth(ChoiceBody, W - 132.0f, 1.28f), TextColor, X + 94.0f, Y + 35.0f, GEngine->GetSmallFont(), 1.28f, false);
 }
 

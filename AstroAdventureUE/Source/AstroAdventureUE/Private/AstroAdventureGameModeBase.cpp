@@ -1341,16 +1341,16 @@ TArray<FString> AAstroAdventureGameModeBase::GetHudDetailLines() const
     {
         if (Lesson->DestinationId == FName(TEXT("sun")))
         {
-            Lines.Add(TEXT("Look: the Sun makes its own light."));
-            Lines.Add(TEXT("That clue means it is a star."));
+            Lines.Add(TEXT("The Sun is a star."));
+            Lines.Add(TEXT("It makes its own light."));
             Lines.Add(TEXT("More Info: Look, Compare, Word."));
             return Lines;
         }
 
         if (Lesson->DestinationId == FName(TEXT("mercury")))
         {
-            Lines.Add(TEXT("Look: Mercury is small, gray, and cratered."));
-            Lines.Add(TEXT("It is the closest planet to the Sun."));
+            Lines.Add(TEXT("Mercury is a tiny rocky planet."));
+            Lines.Add(TEXT("Its gray surface has crater marks."));
             Lines.Add(TEXT("More Info explains the crater clue."));
             return Lines;
         }
