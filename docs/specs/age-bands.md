@@ -22,12 +22,14 @@ Astro Adventure targets kids ages 4-12 while staying playable with families, cla
 ## Accessibility and Privacy
 
 - Use CAST UDL as the design frame: provide multiple ways to engage, perceive information, and respond. https://www.cast.org/what-we-do/universal-design-for-learning/
-- Use W3C WCAG 2.2 as a reference for readable, operable UI patterns even when the first prototype is Unreal rather than web. https://www.w3.org/TR/WCAG22/
+- Use W3C WCAG 2.2 plus Apple platform accessibility guidance as references for readable, operable UI patterns. https://www.w3.org/TR/WCAG22/
 - Treat under-13 privacy as a default constraint. Do not collect names, emails, voice, chat, precise location, analytics identifiers, or persistent child profiles in public prototypes. FTC COPPA guidance: https://www.ftc.gov/business-guidance/resources/childrens-online-privacy-protection-rule-not-just-kids-sites
 
 ## Requirements
 
 - Default copy is short, concrete, and couch-readable, with read-aloud-ready variants for ages 4-6.
+- Ages 4-6 receive two-choice recognition activities; ages 7-9 and 10-12 receive three choices with different conceptual depth.
+- Ask for an Explorer Mode, not an exact birthdate.
 - Hints and retries are always available in learning checks.
 - No account, chat, leaderboard, or telemetry requirement for M0/M1 learning validation.
 - Any future persistence must document data fields, retention, parental consent needs, and public/private handling before implementation.

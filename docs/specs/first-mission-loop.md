@@ -4,13 +4,13 @@ Supports public issue #7. Connects to #12 for the current Mercury, Mars, and Eur
 
 ## Goal
 
-Define the first playable astronomy mission for kids ages 8-12 using the Unreal `M0_DeploymentProof` map. The loop should prove that Astro Adventure teaches through controller-first exploration, not by stopping play for a lecture.
+Define the first playable astronomy mission for kids ages 4–12 using the native Apple Signal Sweep scene. The loop should prove that Astro Adventure teaches through exploration, not by stopping play for a lecture.
 
 ## Audience Assumptions
 
-- Target learners: ages 8-12.
-- Reading: short sentences, familiar words, one new science term at a time.
-- Play setting: couch, PC monitor, classroom display, or TV with an Xbox-style controller.
+- Target learners: ages 4–12 through the 4–6, 7–9, and 10–12 Explorer Modes.
+- Reading: audio-ready recognition for 4–6; short concrete text for 7–9; evidence-oriented text for 10–12.
+- Play setting: handheld iPhone/iPad, classroom display, or Apple TV couch play.
 - Adult support may be nearby, but the mission should be understandable without adult narration.
 - Player-facing facts must be either sourced in this spec or marked `source needed` before implementation.
 
@@ -139,9 +139,9 @@ This mission must satisfy `docs/specs/accessibility-baseline.md`.
 
 ## Asset Workflow
 
-This mission can ship in the first Unreal prototype using primitives, simple materials, text labels, UMG widgets, and Blueprint-authored scene objects.
+This mission can ship in the native prototype using RealityKit primitives, simple materials, and SwiftUI panels.
 
-Any new art, texture, model, font, audio, generated image, or third-party asset must follow `docs/specs/unreal-asset-hygiene.md`:
+Any new art, texture, model, font, audio, generated image, or third-party asset must follow `docs/specs/apple-asset-hygiene.md`:
 
 - Add an entry to `assets/manifest/assets.csv` before committing the asset.
 - Include source URL or `original`.
@@ -152,13 +152,13 @@ The first mission does not require imported planet textures. If textures are add
 
 ## Public-Safe Boundary
 
-This spec is public-safe. It intentionally excludes Xbox validation details, private device identifiers, certificates, package signing, store metadata, private build evidence, and restricted SDK material.
+This spec intentionally excludes signing credentials, private device identifiers, player data, and App Store Connect secrets.
 
-Implementation may mention PC and Xbox-style couch play at a high level only.
+Implementation must work through platform-default touch or Siri Remote input without requiring a physical controller.
 
 ## Implementation Notes
 
-- Rebuild the Mercury, Mars, and Europa scene in Unreal under `AstroAdventureUE`.
+- Build the Mercury, Mars, and Europa scene in `AstroWorld`.
 - Keep navigation deterministic for early testing.
 - Keep facts in data so curriculum review can update copy without rewriting mission flow.
 - Keep the quiz loop modular so #14 can attach one prompt per destination.
@@ -171,12 +171,12 @@ Implementation may mention PC and Xbox-style couch play at a high level only.
 - Adaptive learning.
 - Account/profile persistence.
 - Final art direction.
-- Store-ready Xbox certification or deployment proof.
+- Store-ready signing, notarization, or Apple Arcade acceptance.
 - Private validation evidence.
 
 ## Open Questions
 
 - Should the discovery card use first-person Mission Control voice or neutral narrator voice?
-- What minimum text size should Unreal enforce for TV-readable destination labels?
+- What minimum optical text size should tvOS enforce for television-readable destination labels?
 - Should the first badge be named by the player, by the destination set, or by the science concept?
 - Which exact curriculum reviewer signs off on source wording before M1 implementation?

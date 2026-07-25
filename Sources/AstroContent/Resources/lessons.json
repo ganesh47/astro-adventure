@@ -1,0 +1,245 @@
+[
+  {
+    "id": "mercury",
+    "displayName": "Mercury",
+    "kind": "planet",
+    "source": {
+      "title": "NASA Science: Mercury Facts",
+      "url": "https://science.nasa.gov/mercury/facts/",
+      "reviewStatus": "reviewed"
+    },
+    "content": {
+      "ages4To6": {
+        "discoveryText": "Mercury is a small planet close to the Sun.",
+        "readAloudText": "Mercury is the little world nearest our Sun.",
+        "quiz": {
+          "prompt": "Which clue belongs to Mercury?",
+          "choices": [
+            {
+              "id": "sun",
+              "text": "It is close to the Sun."
+            },
+            {
+              "id": "ice",
+              "text": "It is an icy moon."
+            }
+          ],
+          "correctChoiceID": "sun",
+          "correctFeedback": "You found Mercury! It is the closest planet to the Sun.",
+          "retryFeedback": "Almost. Try the clue with the bright Sun.",
+          "hint": "Look for the Sun clue."
+        }
+      },
+      "ages7To9": {
+        "discoveryText": "Mercury is the closest planet to the Sun. It travels around the Sun quickly.",
+        "quiz": {
+          "prompt": "Which clue helps identify Mercury?",
+          "choices": [
+            {
+              "id": "sun",
+              "text": "It is the closest planet to the Sun."
+            },
+            {
+              "id": "rust",
+              "text": "It is famous for red rusty dust."
+            },
+            {
+              "id": "ice",
+              "text": "It is an icy moon of Jupiter."
+            }
+          ],
+          "correctChoiceID": "sun",
+          "correctFeedback": "Nice scan! Mercury is the planet closest to the Sun.",
+          "retryFeedback": "Try the clue about where Mercury travels.",
+          "hint": "Look for the clue that mentions the Sun."
+        }
+      },
+      "ages10To12": {
+        "discoveryText": "Mercury is the innermost and smallest planet. Its short orbit takes about 88 Earth days.",
+        "quiz": {
+          "prompt": "Which observation best identifies Mercury?",
+          "choices": [
+            {
+              "id": "short_orbit",
+              "text": "It is the innermost planet and has a short orbit."
+            },
+            {
+              "id": "oxidized_dust",
+              "text": "Iron oxidation makes its surface look red."
+            },
+            {
+              "id": "jupiter_moon",
+              "text": "It is an ice-covered moon orbiting Jupiter."
+            }
+          ],
+          "correctChoiceID": "short_orbit",
+          "correctFeedback": "Correct. Mercury's position nearest the Sun gives it the shortest planetary orbit.",
+          "retryFeedback": "Compare each object's location and orbit.",
+          "hint": "Which planet travels around the Sun in about 88 Earth days?"
+        }
+      }
+    }
+  },
+  {
+    "id": "mars",
+    "displayName": "Mars",
+    "kind": "planet",
+    "source": {
+      "title": "NASA Science: Mars Facts",
+      "url": "https://science.nasa.gov/mars/facts/",
+      "reviewStatus": "reviewed"
+    },
+    "content": {
+      "ages4To6": {
+        "discoveryText": "Mars is called the red planet.",
+        "readAloudText": "Mars looks red because its dusty ground has rusty iron.",
+        "quiz": {
+          "prompt": "Which color clue belongs to Mars?",
+          "choices": [
+            {
+              "id": "red",
+              "text": "Red and rusty"
+            },
+            {
+              "id": "icy",
+              "text": "White and icy"
+            }
+          ],
+          "correctChoiceID": "red",
+          "correctFeedback": "Great exploring! Rusty dust makes Mars look red.",
+          "retryFeedback": "Try the warm red clue.",
+          "hint": "Mars is called the red planet."
+        }
+      },
+      "ages7To9": {
+        "discoveryText": "Mars looks red because rusty iron is mixed into its rocks, soil, and dust.",
+        "quiz": {
+          "prompt": "Why does Mars look red from far away?",
+          "choices": [
+            {
+              "id": "rust",
+              "text": "Rusty iron is mixed into its dust."
+            },
+            {
+              "id": "plants",
+              "text": "It is covered in red plants."
+            },
+            {
+              "id": "jupiter",
+              "text": "Jupiter shines red light on it."
+            }
+          ],
+          "correctChoiceID": "rust",
+          "correctFeedback": "Great detective work! Rusty iron in the dust gives Mars its red color.",
+          "retryFeedback": "Try the answer that matches the dust clue.",
+          "hint": "Rust can turn iron reddish."
+        }
+      },
+      "ages10To12": {
+        "discoveryText": "Iron minerals in Martian rocks and soil oxidize. This rusting process gives much of the surface its reddish color.",
+        "quiz": {
+          "prompt": "Which process best explains Mars's reddish surface?",
+          "choices": [
+            {
+              "id": "oxidation",
+              "text": "Iron-bearing minerals oxidize in the soil and dust."
+            },
+            {
+              "id": "vegetation",
+              "text": "Seasonal vegetation changes the surface color."
+            },
+            {
+              "id": "reflected_light",
+              "text": "Red light reflected from Jupiter colors the surface."
+            }
+          ],
+          "correctChoiceID": "oxidation",
+          "correctFeedback": "Exactly. Oxidation of iron-bearing minerals produces the rusty color.",
+          "retryFeedback": "Look for a process involving iron and oxygen.",
+          "hint": "Oxidation is the chemical process we commonly call rusting."
+        }
+      }
+    }
+  },
+  {
+    "id": "europa",
+    "displayName": "Europa",
+    "kind": "moon",
+    "source": {
+      "title": "NASA Science: Europa Facts",
+      "url": "https://science.nasa.gov/jupiter/moons/europa/europa-facts/",
+      "reviewStatus": "reviewed"
+    },
+    "content": {
+      "ages4To6": {
+        "discoveryText": "Europa is an icy moon that goes around Jupiter.",
+        "readAloudText": "Europa is a shiny ice moon. An ocean may hide under its ice.",
+        "quiz": {
+          "prompt": "What kind of world is Europa?",
+          "choices": [
+            {
+              "id": "icy_moon",
+              "text": "An icy moon"
+            },
+            {
+              "id": "red_planet",
+              "text": "A red planet"
+            }
+          ],
+          "correctChoiceID": "icy_moon",
+          "correctFeedback": "Excellent! Europa is one of Jupiter's icy moons.",
+          "retryFeedback": "Try the world covered with ice.",
+          "hint": "Europa goes around Jupiter."
+        }
+      },
+      "ages7To9": {
+        "discoveryText": "Europa is an icy moon of Jupiter. Evidence suggests a salty ocean may exist beneath its ice.",
+        "quiz": {
+          "prompt": "What kind of world is Europa?",
+          "choices": [
+            {
+              "id": "icy_moon",
+              "text": "An icy moon of Jupiter"
+            },
+            {
+              "id": "small_planet",
+              "text": "The smallest planet near the Sun"
+            },
+            {
+              "id": "red_planet",
+              "text": "A red planet with rusty dust"
+            }
+          ],
+          "correctChoiceID": "icy_moon",
+          "correctFeedback": "Excellent explorer! Europa is Jupiter's icy moon.",
+          "retryFeedback": "Try the clue that says Europa is a moon, not a planet.",
+          "hint": "Europa travels around Jupiter."
+        }
+      },
+      "ages10To12": {
+        "discoveryText": "Europa's young icy surface and magnetic measurements provide evidence for a global salty ocean beneath its shell.",
+        "quiz": {
+          "prompt": "Which evidence-based description fits Europa?",
+          "choices": [
+            {
+              "id": "ocean_moon",
+              "text": "An icy Jovian moon with evidence for a subsurface ocean"
+            },
+            {
+              "id": "inner_planet",
+              "text": "An inner planet with the shortest orbit around the Sun"
+            },
+            {
+              "id": "oxidized_planet",
+              "text": "A planet colored by oxidized iron-rich dust"
+            }
+          ],
+          "correctChoiceID": "ocean_moon",
+          "correctFeedback": "Correct. Multiple observations support the model of a salty ocean beneath Europa's ice.",
+          "retryFeedback": "Separate the planet clues from the moon-and-ocean evidence.",
+          "hint": "Europa orbits Jupiter, and its icy shell may cover liquid water."
+        }
+      }
+    }
+  }
+]

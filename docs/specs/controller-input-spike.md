@@ -1,32 +1,45 @@
-# Controller Input Spike
+# Apple Input Spike
 
 ## Status
 
-Accepted planning spec for the M0 Unreal prototype.
+Accepted planning spec for native Apple parity.
 
 ## Goal
 
-Define the first controller-first input contract for Astro Adventure in Unreal Engine `5.7.4`.
+Define one semantic input contract with touch, Siri Remote, keyboard development fallback, and physical controllers.
 
-## Recommended Unreal Input Approach
+## Semantic actions
 
-Use Unreal Enhanced Input with one public mapping context:
+- Move: two-axis ship motion.
+- Focus next/previous: cycle destinations or quiz choices.
+- Confirm/scan: activate the focused action.
+- Cancel/back: return without losing discovery progress.
+- Help/hint: reveal age-appropriate guidance.
+- Pause/menu: suspend gameplay and open settings.
 
-- Move: left stick and WASD/arrow fallback.
-- Focus next/previous: bumpers and Q/E fallback.
-- Confirm/scan: face button south and Enter/Space fallback.
-- Cancel/back: face button east and Escape fallback.
-- Help/hint: controller menu/view button or H fallback.
-- Pause/menu: start/menu button and P fallback.
+`AstroUI` and `AstroWorld` consume semantic actions rather than controller brand button names.
 
-## M0 Validation Requirements
+## Platform mapping
 
-- Keyboard fallback works without a gamepad.
-- Xbox-style controller input can navigate focus and submit scan/quiz actions.
+| Action | iPhone/iPad | Apple TV | Physical controller |
+| --- | --- | --- | --- |
+| Move | Virtual thumbstick or direct gesture | Directional remote input | Left stick |
+| Focus | Tap or swipe | Directional focus | D-pad, stick, or shoulders |
+| Confirm/scan | Tap action | Select | Primary face button |
+| Back | Visible back action | Menu/back | Secondary face button |
+| Hint | Visible hint action | Focusable hint action | Configured auxiliary button |
+| Pause | Visible pause action | Play/pause or menu | Menu button |
+
+## M0 validation
+
+- Touch completes the iOS mission without a gamepad.
+- Siri Remote completes the tvOS mission without a gamepad.
+- A connected Xbox, PlayStation, or MFi controller can navigate and submit actions.
 - Exactly one destination or answer is focused at a time.
 - Input state is visible through UI text and focus treatment, not color alone.
-- Haptics remain deferred until a visible setting exists.
+- Disconnecting a controller leaves a usable platform-default input path.
+- Haptics remain disabled until a visible setting and non-haptic alternative exist.
 
-## Implementation Notes
+## Implementation notes
 
-Create the Enhanced Input mapping context in Unreal under `/Game/Input/IMC_AstroAdventure`. The C++ shell only guarantees the project compiles; Blueprint assets own the first playable input graph until the flow stabilizes.
+Use SwiftUI actions for menus and learning panels, Game Controller for physical devices, and an input router for RealityKit movement. Display glyphs derived from the connected controller rather than hard-coding one brand.

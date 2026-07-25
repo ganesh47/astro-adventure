@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Superseded by [Decision 0003: Native Apple Pivot](0003-native-apple-pivot.md).
 
 ## Decision
 

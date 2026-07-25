@@ -11,3 +11,9 @@ labels: bug
 ## Steps To Reproduce
 
 ## Environment
+
+- Platform:
+- OS version:
+- Device or simulator:
+- Input method:
+- Explorer Mode:

@@ -1,36 +1,28 @@
-# Unreal generated folders
-Binaries/
+# Swift and Xcode generated output
+.build/
+.swiftpm/
+DerivedData/
 Build/
-DerivedDataCache/
-Intermediate/
-Saved/
-Script/
+build/
+*.xcarchive
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.bcsymbolmap
+*.resultbundle
+*.xcresult
+Package.resolved
 
-# Unreal generated/project-local files
-*.sln
-*.suo
-*.opensdf
-*.sdf
-*.VC.db
-*.VC.opendb
+# Xcode user-local state
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
+xcuserdata/
+
+# Other IDE/editor folders
 *.code-workspace
-*.xcworkspace
-*.xcodeproj
 *.xcuserdata/
 
-# Unreal packaged output and local artifacts
-PackagedBuilds/
-StagedBuilds/
-Releases/
-*.pak
-*.utoc
-*.ucas
-*.appx
-*.appxbundle
-*.msix
-*.msixbundle
-
-# IDE/editor folders
 .vs/
 .vscode/
 .idea/
@@ -51,10 +43,11 @@ $RECYCLE.BIN/
 .env.*
 !.env.example
 
-# Local validation output
+# Local validation and release output
 artifacts/
+Releases/
 
-# Private or restricted artifacts must not be committed here.
+# Private signing and credential material must not be committed here.
 *.pfx
 *.p12
 *.cer
@@ -65,3 +58,5 @@ artifacts/
 *.key
 *.pem
 *.publishsettings
+*.provisionprofile
+AuthKey_*.p8

@@ -201,7 +201,7 @@ On correct answer or completed retry:
 - Show discovered state through icon/label/text plus visual treatment.
 - If all three destinations are reflected, enter mission complete.
 
-The quiz should expose simple events or state outputs for Unreal Blueprint/C++ implementation:
+The quiz exposes semantic state changes through `MissionSession`:
 
 - `QuestionOpened(destinationId)`
 - `AnswerSubmitted(destinationId, answerId, isCorrect)`
@@ -211,13 +211,13 @@ The quiz should expose simple events or state outputs for Unreal Blueprint/C++ i
 
 ## Asset Workflow
 
-The first quiz can use text panels, simple icons, existing primitive scene elements, and UI materials. New images, icons, fonts, audio, generated art, Unreal binary assets, or third-party packages must follow `docs/specs/unreal-asset-hygiene.md` and be listed in `assets/manifest/assets.csv` before commit.
+The first quiz can use SwiftUI text panels, SF Symbols, and primitive scene elements. New images, icons, fonts, audio, generated art, 3D assets, or third-party packages must follow `docs/specs/apple-asset-hygiene.md` and be listed in `assets/manifest/assets.csv` before commit.
 
 If answer cards use destination images, the image source and license must be public-safe and reviewed before player-facing use.
 
 ## Public-Safe Boundary
 
-This spec is public-safe. It contains no Xbox validation steps, private device data, signing material, restricted SDK information, store metadata, or private build evidence. Keep implementation notes at the level of controller-first PC and Xbox-style couch play.
+This spec contains no private device data, signing material, player data, App Store Connect secrets, or signed build evidence.
 
 ## Non-Goals
 
@@ -233,5 +233,5 @@ This spec is public-safe. It contains no Xbox validation steps, private device d
 
 - Should each destination always ask the same first question, or should future builds rotate between sourced variants?
 - Should the hint button appear immediately or only after one incorrect attempt?
-- What data format should hold sourced question metadata in Unreal?
+- When should lesson JSON move from one bundled catalog to localized per-mission files?
 - Who performs final curriculum approval for each player-facing fact?

@@ -31,6 +31,7 @@ Every manifest row must include:
 - `id`: stable lowercase identifier using letters, numbers, and underscores.
 - `title`: human-readable asset title.
 - `type`: one of `image`, `audio`, `model`, `material`, `font`, `video`, `text`, `package`, or `other`.
+- `repository_path`: committed path, or empty while the row is only a candidate.
 - `source_url`: a public URL, `original`, or `private-only`.
 - `license`: one of `public-domain`, `cc0`, `cc-by-4.0`, `mit`, `apache-2.0`, `bsd-3-clause`, `original-project-owned`, `ai-generated-project-owned`, `proprietary-private-only`, or `unknown`.
 - `author`: creator, source organization, or `Astro Adventure contributors`.
@@ -38,7 +39,7 @@ Every manifest row must include:
 - `tool`: tool name for AI-generated assets, otherwise `none`.
 - `notes`: public-safe attribution, modification, or review notes.
 - `approved_for_public_repo`: `yes`, `no`, or `needs-review`.
-- `approved_for_xbox_build`: `yes`, `no`, or `not-reviewed`.
+- `approved_for_apple_build`: `yes`, `no`, or `not-reviewed`.
 - `review_status`: `accepted`, `needs-review`, or `rejected`.
 - `rejection_reason`: empty unless `review_status` is `rejected`.
 
@@ -50,7 +51,7 @@ Use `approved_for_public_repo=needs-review` for candidates that look promising b
 
 Use `approved_for_public_repo=no` for private-only, paid marketplace, restricted SDK, license-unclear, or redistribution-unclear material. Rejected rows may stay in the manifest as public-safe decision records, but the asset files must not be committed.
 
-`approved_for_xbox_build` is a public-safe readiness flag for project planning only. It must not contain or imply private platform validation, certification status, account details, device details, restricted SDK details, or unpublished release information.
+`approved_for_apple_build` records whether an accepted asset has also passed Apple-platform performance, format, and presentation review. It does not imply App Review or Apple Arcade acceptance.
 
 ## AI-Generated Assets
 

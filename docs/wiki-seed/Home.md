@@ -1,29 +1,28 @@
 # Astro Adventure Research Wiki
 
-This is the seed content for the GitHub Wiki. Stable decisions and accepted specs should be promoted back into the public repository under `docs/`.
+This is seed content for the GitHub Wiki. Stable decisions and accepted specs belong in the public repository under `docs/`.
 
-## Research Map
+## Research map
 
-- [Xbox Dev Mode Research](Xbox-Dev-Mode-Research)
-- [Unreal Xbox Path](Unreal-Xbox-Path)
 - [Astronomy Curriculum](Astronomy-Curriculum)
 - [Planet And Solar System Facts](Planet-And-Solar-System-Facts)
 - [Controller Interaction Ideas](Controller-Interaction-Ideas)
 - [Asset Sources And Licensing](Asset-Sources-And-Licensing)
 - [AI Agent Workflow](AI-Agent-Workflow)
 
-## Stable Repo Specs
+## Stable repository docs
 
-Stable decisions should live in the repository under `docs/specs/` and can be summarized here after review.
-
-- Public/private boundary audit
+- Native Apple architecture
+- Product roadmap
+- Native Apple parity
 - Accessibility baseline
 - Controller-first UI baseline
+- Age bands
 
-## Current Questions
+## Current questions
 
-- What is the smallest reliable Xbox Dev Mode deployment proof?
-- Which Unreal 5.7.4 install path and Windows tooling should be standardized first?
-- Which astronomy concepts are most playful for ages 8-12?
-- Which asset sources are safe for a public open-source repo?
-- What first mission and quiz loop best exercise controller-first accessibility without deep production scope?
+- What is the oldest iPhone, iPad, and Apple TV hardware baseline that sustains 60 FPS?
+- Which touch and Siri Remote interactions feel equivalent without feeling identical?
+- What content depth makes each Explorer Mode genuinely distinct?
+- Which asset sources are safe for a public open-source repository?
+- What mission interactions reinforce science without feeling like a pasted-on quiz?

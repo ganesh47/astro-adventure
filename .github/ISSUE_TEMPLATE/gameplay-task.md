@@ -10,4 +10,10 @@ labels: gameplay
 
 ## Learning Connection
 
+## Age Bands
+
+## Platforms and Input
+
+## Accessibility and Privacy
+
 ## Acceptance Criteria

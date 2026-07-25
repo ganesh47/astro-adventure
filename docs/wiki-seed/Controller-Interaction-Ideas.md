@@ -2,7 +2,7 @@
 
 ## Goal
 
-Map Xbox controller inputs and vibration to astronomy and physics lessons.
+Map touch, Siri Remote, and physical-controller input to astronomy and physics lessons.
 
 ## Ideas
 

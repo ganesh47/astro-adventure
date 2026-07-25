@@ -16,7 +16,7 @@ Use AI assistants to accelerate research, specs, curriculum, and asset curation 
 
 - AI-generated content is draft until reviewed.
 - Asset sources and licenses must be recorded.
-- Public docs must avoid private Xbox publishing details.
+- Public docs and logs must avoid signing credentials, personal data, and App Store Connect secrets.
 - Agents should work from issue scope, keep edits narrow, and avoid overwriting unrelated in-progress work.
 - Stable project baselines belong in `docs/specs/`; research drafts and source-gathering notes can begin in the Wiki.
 - Gameplay, quiz, and asset work should link back to the accessibility, controller-first UI, and public/private boundary baselines before implementation.

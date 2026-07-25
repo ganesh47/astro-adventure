@@ -1,42 +1,36 @@
 # Research Index
 
-Living research is kept in the GitHub Wiki. Stable specs and accepted decisions are promoted back into this repository.
+Research begins in public issues and becomes a stable decision or spec after review.
 
-If the Wiki needs to be initialized manually, seed pages are available in `docs/wiki-seed/`.
+## Active platform research
 
-## Wiki Pages
+- RealityKit rendering and performance across iPhone, iPad, and Apple TV 4K.
+- SwiftUI focus behavior and Siri Remote interaction on tvOS.
+- Game Controller glyphs, disconnection, and optional controller haptics.
+- Local persistence, private iCloud synchronization, and save conflict handling.
+- Game Center achievements suitable for a noncompetitive educational game.
+- Apple accessibility APIs and Accessibility Nutrition Labels.
+- Kids Category privacy, parental gates, metadata, and external-link rules.
+- App Store and Apple Arcade product positioning.
 
-- Home
-- Xbox Dev Mode Research
-- Unreal Xbox Path
-- Astronomy Curriculum
-- Learning Design
-- Age Bands
-- Educational Progression
-- DevSecOps Validation
-- Planet And Solar System Facts
-- Controller Interaction Ideas
-- Asset Sources And Licensing
-- AI Agent Workflow
+## Curriculum research
 
-## Stable Repo Docs
+- NASA Science and NASA Space Place.
+- ESA education resources.
+- Next Generation Science Standards.
+- CAST Universal Design for Learning.
+- W3C WCAG as a supporting interface reference.
+- Public museum and university astronomy education resources.
 
-- `docs/vision.md`
+## Stable outputs
+
 - `docs/architecture.md`
-- `docs/specs/m0-xbox-dev-mode-proof.md`
-- `docs/specs/pc-toolchain-checklist.md`
-- `docs/specs/multi-agent-prioritization.md`
-- `docs/specs/first-mission-loop.md`
-- `docs/specs/first-quiz-loop.md`
-- `docs/specs/learning-design.md`
+- `docs/ROADMAP.md`
+- `docs/decisions/0003-native-apple-pivot.md`
+- `docs/specs/m0-native-apple-parity.md`
 - `docs/specs/age-bands.md`
-- `docs/specs/educational-progression.md`
+- `docs/specs/accessibility-baseline.md`
+- `docs/specs/apple-asset-hygiene.md`
 - `docs/specs/devsecops-validation.md`
-- `docs/specs/unreal-xbox-path.md`
-- `docs/specs/asset-manifest-workflow-validation.md`
-- `docs/decisions/0002-unreal-5-7-4-pivot.md`
-- `assets/manifest/assets.csv`
 
-## Source Families
-
-Stable specs should prefer public, primary sources: Epic Unreal documentation, Microsoft Learn and Xbox publishing pages, GitHub Docs, NASA Science and NASA Space Place, Next Generation Science Standards, IES/What Works Clearinghouse, CAST Universal Design for Learning, FTC COPPA guidance, and W3C WCAG.
+Use current primary sources for platform facts and record the access date when a requirement may change.

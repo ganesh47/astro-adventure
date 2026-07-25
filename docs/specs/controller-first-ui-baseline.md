@@ -4,7 +4,7 @@ Supports public issue #13.
 
 ## Goal
 
-Define the first shared UI rules for couch play on PC and Xbox so menus, mission prompts, quizzes, and retry flows feel consistent before deep gameplay production begins.
+Define shared UI rules for touch and couch play so iPhone, iPad, and Apple TV menus, mission prompts, quizzes, and retry flows feel consistent.
 
 This spec depends on `docs/specs/accessibility-baseline.md`.
 
@@ -16,7 +16,7 @@ This spec depends on `docs/specs/accessibility-baseline.md`.
 - Help/hint: reveal age-appropriate guidance when the current screen supports it.
 - Directional navigation: move focus between selectable elements in predictable screen order.
 
-Final button glyphs should be assigned during Unreal input implementation and kept consistent across PC and Xbox builds.
+Button glyphs must match the active physical controller. Touch and Siri Remote instructions use action meaning instead of console-specific letters.
 
 ## Focus Behavior
 
@@ -60,7 +60,7 @@ All states must satisfy the accessibility baseline for color, vibration, audio, 
 - Trigger incorrect feedback, request a hint, retry, and continue after a correct answer.
 - Disable vibration and confirm the gravity/thrust cue remains understandable.
 - View the same menu on a monitor and TV-scale layout without relying on tiny labels.
-- Confirm no public docs or screenshots expose private Xbox publishing details.
+- Confirm no public docs, logs, or screenshots expose signing credentials, player data, or App Store Connect secrets.
 
 ## Non-goals
 
