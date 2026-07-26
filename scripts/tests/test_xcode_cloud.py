@@ -1,7 +1,10 @@
 import importlib.util
 import pathlib
+import plistlib
 import sys
+import tempfile
 import unittest
+import zipfile
 
 
 MODULE_PATH = (
@@ -78,6 +81,82 @@ class XcodeCloudTests(unittest.TestCase):
         self.assertEqual(reference, "reference-id")
         self.assertEqual(client.requests[0][0], "GET")
         self.assertIn("/ciWorkflows/workflow-id/repository", client.requests[0][1])
+
+    def test_state_value_reads_build_upload_state(self):
+        state, errors = xcode_cloud._state_value(
+            {
+                "state": {
+                    "state": "FAILED",
+                    "errors": [{"description": "Invalid bundle"}],
+                }
+            }
+        )
+
+        self.assertEqual(state, "FAILED")
+        self.assertEqual(errors[0]["description"], "Invalid bundle")
+
+    def test_ipa_metadata_reads_versions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            ipa_path = pathlib.Path(directory) / "Astro Adventure.ipa"
+            with zipfile.ZipFile(ipa_path, "w") as archive:
+                archive.writestr(
+                    "Payload/Astro Adventure.app/Info.plist",
+                    plistlib.dumps(
+                        {
+                            "CFBundleShortVersionString": "0.2.0",
+                            "CFBundleVersion": "12",
+                        }
+                    ),
+                )
+
+            marketing_version, build_number = xcode_cloud._ipa_metadata(
+                ipa_path
+            )
+
+        self.assertEqual(marketing_version, "0.2.0")
+        self.assertEqual(build_number, "12")
+
+    def test_existing_tvos_build_matches_platform_and_version(self):
+        client = FakeClient(
+            [
+                {
+                    "data": [
+                        {
+                            "id": "tvos-build-id",
+                            "attributes": {
+                                "processingState": "VALID",
+                                "version": "12",
+                            },
+                            "relationships": {
+                                "preReleaseVersion": {
+                                    "data": {
+                                        "type": "preReleaseVersions",
+                                        "id": "prerelease-id",
+                                    }
+                                }
+                            },
+                        }
+                    ],
+                    "included": [
+                        {
+                            "type": "preReleaseVersions",
+                            "id": "prerelease-id",
+                            "attributes": {
+                                "platform": "TV_OS",
+                                "version": "0.2.0",
+                            },
+                        }
+                    ],
+                }
+            ]
+        )
+
+        build_id = xcode_cloud._existing_tvos_build(
+            client, "app-id", "0.2.0", "12"
+        )
+
+        self.assertEqual(build_id, "tvos-build-id")
+        self.assertIn("filter%5Bversion%5D=12", client.requests[0][1])
 
 
 if __name__ == "__main__":

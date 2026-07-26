@@ -64,6 +64,8 @@ jobs:
             --branch "$XCODE_CLOUD_SOURCE_BRANCH"
 
       - name: Wait for Xcode Cloud
+        id: wait
+        continue-on-error: true
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -73,6 +75,20 @@ jobs:
             --build-run-id "${{ steps.trigger.outputs.build_run_id }}" \
             --timeout-seconds 5100 \
             --poll-seconds 30
+
+      - name: Publish signed tvOS fallback
+        if: steps.wait.outcome == 'failure'
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          python3 ci_scripts/xcode_cloud.py publish-tvos \
+            --build-run-id "${{ steps.trigger.outputs.build_run_id }}" \
+            --app-id "6794763212" \
+            --beta-group-id "d6fddb1e-a5e9-4c1f-99cd-8cf3d24c7f78" \
+            --timeout-seconds 1200 \
+            --poll-seconds 15
 
       - name: Add App Store Connect summary
         if: always() && steps.trigger.outputs.build_run_id != ''

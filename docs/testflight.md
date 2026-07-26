@@ -11,10 +11,13 @@ the Apple signing, archive, and TestFlight delivery service.
 3. After CI succeeds, `Xcode Cloud TestFlight` calls the App Store Connect API
    to start the configured Xcode Cloud workflow.
 4. Xcode Cloud runs device builds and analysis for iOS and tvOS, then archives
-   the iOS app using Apple-managed signing.
-5. The iOS TestFlight post-action assigns the archive to the
-   `Astro Adventure Internal` testing group.
-6. GitHub Actions polls the Xcode Cloud build and reports its final result.
+   both apps using Apple-managed signing.
+5. The TestFlight post-actions assign successful archives to
+   `Astro Adventure Internal`.
+6. GitHub Actions polls the Xcode Cloud build. If Apple's extra Development or
+   Ad Hoc tvOS export fails because the team has no registered Apple TV, the
+   job publishes the successful signed App Store export through the Build
+   Uploads API and assigns the same internal group.
 
 The workflow can also be started manually from GitHub Actions. Manual runs
 default to the `main` branch.
@@ -58,6 +61,8 @@ contains:
 - Build and Analyze actions for `AstroAdventure-tvOS`.
 - An Archive action for `AstroAdventure-iOS` with an internal TestFlight
   post-action targeting `Astro Adventure Internal`.
+- An Archive action for `AstroAdventure-tvOS` with an internal TestFlight
+  post-action targeting `Astro Adventure Internal`.
 
 GitHub is the automatic start condition. The Xcode Cloud workflow is started
 through the App Store Connect API only after GitHub CI succeeds, preventing a
@@ -85,24 +90,26 @@ Xcode Cloud build 9 completed successfully after the repair. App Store Connect
 reports version `0.2.0` build `9` as `VALID`, with an `INTERNAL_ONLY` audience,
 and assigns it to `Astro Adventure Internal`.
 
-The Xcode export logs can also contain a `Session Proxy Provider` authentication
-warning. That warning was not the terminal cause for build 8: the App Store IPA
-export completed, and the App Store Connect build-upload record reported the
-two bundle validation errors above.
+Xcode Cloud build 11 produced valid iOS and tvOS App Store exports. The tvOS
+build now includes the standard and wide Top Shelf artwork required by App
+Store bundle validation. App Store Connect reports tvOS version `0.2.0` build
+`11` as `VALID` and assigns it to `Astro Adventure Internal`.
 
-## tvOS TestFlight prerequisite
+## tvOS export fallback
 
-tvOS Build and Analyze actions are active. The tvOS Archive and TestFlight
-post-action are intentionally not active yet because this Apple Developer team
-has no registered Apple TV device. Xcode Cloud attempts development and ad hoc
-tvOS exports alongside the App Store export, and those exports fail without a
-real device registered to the team.
+The Apple Developer team does not currently have a registered Apple TV device.
+Xcode Cloud therefore fails the optional Development and Ad Hoc tvOS exports,
+even though its signed App Store export succeeds and is valid for TestFlight.
 
-Register a physical Apple TV's UDID in Certificates, Identifiers & Profiles.
-After Apple has refreshed the managed provisioning profiles, add an Archive
-action for `AstroAdventure-tvOS` with internal distribution and a tvOS
-TestFlight post-action targeting `Astro Adventure Internal`. Do not register a
-placeholder or fabricated device identifier.
+The GitHub workflow handles that condition without a fabricated device:
+`publish-tvos` downloads the Xcode Cloud App Store export, uploads it through
+App Store Connect's Build Uploads API, waits for Apple validation, and assigns
+the internal group. Registering a physical Apple TV UDID later will allow all
+Xcode Cloud export methods to succeed, but it is not required for TestFlight.
+
+The Xcode export logs can also contain a `Session Proxy Provider`
+authentication warning. It is non-terminal when the signed App Store export is
+present.
 
 ## Operations
 
