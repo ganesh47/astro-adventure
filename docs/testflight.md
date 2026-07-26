@@ -81,6 +81,10 @@ The source metadata now keeps iPhone support landscape-only, declares all four
 iPad orientations, and omits the optional controller-requirement dictionary.
 Repository validation tests enforce both App Store rules before promotion.
 
+Xcode Cloud build 9 completed successfully after the repair. App Store Connect
+reports version `0.2.0` build `9` as `VALID`, with an `INTERNAL_ONLY` audience,
+and assigns it to `Astro Adventure Internal`.
+
 The Xcode export logs can also contain a `Session Proxy Provider` authentication
 warning. That warning was not the terminal cause for build 8: the App Store IPA
 export completed, and the App Store Connect build-upload record reported the
