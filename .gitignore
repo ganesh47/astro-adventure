@@ -60,3 +60,4 @@ Releases/
 *.publishsettings
 *.provisionprofile
 AuthKey_*.p8
+*.p8

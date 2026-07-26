@@ -1,0 +1,88 @@
+name: Xcode Cloud TestFlight
+
+on:
+  workflow_run:
+    workflows:
+      - Continuous Integration
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: Git branch for Xcode Cloud to build
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xcode-cloud-testflight
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    name: Trigger and monitor Xcode Cloud
+    if: >-
+      vars.XCODE_CLOUD_WORKFLOW_ID != '' &&
+      (
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' &&
+          github.event.workflow_run.head_branch == 'main'
+        )
+      )
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    environment: testflight-release
+
+    steps:
+      - name: Checkout validated source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Install App Store Connect client dependencies
+        run: pip3 install --requirement ci_scripts/requirements.txt
+
+      - name: Trigger Xcode Cloud
+        id: trigger
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          XCODE_CLOUD_WORKFLOW_ID: ${{ vars.XCODE_CLOUD_WORKFLOW_ID }}
+          XCODE_CLOUD_SOURCE_BRANCH: ${{ inputs.source_branch || 'main' }}
+        run: |
+          python3 ci_scripts/xcode_cloud.py trigger \
+            --workflow-id "$XCODE_CLOUD_WORKFLOW_ID" \
+            --branch "$XCODE_CLOUD_SOURCE_BRANCH"
+
+      - name: Wait for Xcode Cloud
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          python3 ci_scripts/xcode_cloud.py wait \
+            --build-run-id "${{ steps.trigger.outputs.build_run_id }}" \
+            --timeout-seconds 5100 \
+            --poll-seconds 30
+
+      - name: Add App Store Connect summary
+        if: always() && steps.trigger.outputs.build_run_id != ''
+        env:
+          BUILD_RUN_ID: ${{ steps.trigger.outputs.build_run_id }}
+        run: |
+          {
+            echo "## Xcode Cloud TestFlight"
+            echo
+            echo "- Build run ID: \`$BUILD_RUN_ID\`"
+            echo "- App: Astro Adventure: Space Quest"
+            echo "- App Store Connect ID: \`6794763212\`"
+          } >> "$GITHUB_STEP_SUMMARY"

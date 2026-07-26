@@ -17,6 +17,7 @@ settings:
     SWIFT_VERSION: 6.0
     SWIFT_STRICT_CONCURRENCY: complete
     ENABLE_USER_SCRIPT_SANDBOXING: true
+    DEVELOPMENT_TEAM: J3387FUR8X
     CODE_SIGN_STYLE: Automatic
 
 packages:
@@ -39,6 +40,7 @@ targets:
         CFBundleDisplayName: Astro Adventure
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
         GCSupportsControllerUserInteraction: true
         GCRequiresControllerUserInteraction: false
         LSApplicationCategoryType: public.app-category.games
@@ -48,11 +50,11 @@ targets:
           - UIInterfaceOrientationLandscapeRight
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.astro-adventure.game
+        PRODUCT_BUNDLE_IDENTIFIER: com.ganesh47.astroadventure
         PRODUCT_NAME: Astro Adventure
         TARGETED_DEVICE_FAMILY: "1,2"
         SUPPORTS_MACCATALYST: false
-        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     dependencies:
       - package: AstroAdventureKit
@@ -73,15 +75,16 @@ targets:
         CFBundleDisplayName: Astro Adventure
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
         GCSupportsControllerUserInteraction: true
         GCRequiresControllerUserInteraction: false
         LSApplicationCategoryType: public.app-category.games
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.astro-adventure.game.tv
+        PRODUCT_BUNDLE_IDENTIFIER: com.ganesh47.astroadventure
         PRODUCT_NAME: Astro Adventure
         TARGETED_DEVICE_FAMILY: "3"
-        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: "App Icon & Top Shelf Image"
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     dependencies:
       - package: AstroAdventureKit

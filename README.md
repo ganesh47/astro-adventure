@@ -4,6 +4,7 @@
 [![Repository Hygiene](https://github.com/ganesh47/astro-adventure/actions/workflows/pr-hygiene.yml/badge.svg)](https://github.com/ganesh47/astro-adventure/actions/workflows/pr-hygiene.yml)
 [![DevSecOps Security](https://github.com/ganesh47/astro-adventure/actions/workflows/security.yml/badge.svg)](https://github.com/ganesh47/astro-adventure/actions/workflows/security.yml)
 [![CodeQL](https://github.com/ganesh47/astro-adventure/actions/workflows/codeql.yml/badge.svg)](https://github.com/ganesh47/astro-adventure/actions/workflows/codeql.yml)
+[![Xcode Cloud TestFlight](https://github.com/ganesh47/astro-adventure/actions/workflows/testflight.yml/badge.svg)](https://github.com/ganesh47/astro-adventure/actions/workflows/testflight.yml)
 
 Astro Adventure is an open-source, native Apple astronomy game for kids ages 4–12. Players explore planets and moons, scan distinctive clues, collect discovery cards, and reinforce what they find through encouraging age-banded challenges.
 
@@ -81,6 +82,10 @@ After changing `project.yml`, regenerate the committed project:
 ```bash
 xcodegen generate --spec project.yml
 ```
+
+Successful CI runs on `main` are promoted through Xcode Cloud to TestFlight.
+See [docs/testflight.md](docs/testflight.md) for the delivery architecture,
+required GitHub configuration, and manual operations.
 
 ## Public-by-default development
 
