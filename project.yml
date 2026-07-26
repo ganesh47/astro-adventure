@@ -42,10 +42,14 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
         GCSupportsControllerUserInteraction: true
-        GCRequiresControllerUserInteraction: false
         LSApplicationCategoryType: public.app-category.games
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        "UISupportedInterfaceOrientations~ipad":
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
     settings:
@@ -77,7 +81,6 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
         GCSupportsControllerUserInteraction: true
-        GCRequiresControllerUserInteraction: false
         LSApplicationCategoryType: public.app-category.games
     settings:
       base:

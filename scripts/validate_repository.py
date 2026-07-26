@@ -108,6 +108,13 @@ LICENSES = {
     "unknown",
 }
 
+REQUIRED_IPAD_ORIENTATIONS = {
+    "UIInterfaceOrientationPortrait",
+    "UIInterfaceOrientationPortraitUpsideDown",
+    "UIInterfaceOrientationLandscapeLeft",
+    "UIInterfaceOrientationLandscapeRight",
+}
+
 
 def tracked_and_untracked_files() -> list[Path]:
     result = subprocess.run(
@@ -308,6 +315,51 @@ def validate_privacy_manifest(errors: list[str]) -> None:
         errors.append("M0 must not declare collected data types")
 
 
+def validate_apple_metadata(errors: list[str]) -> None:
+    plist_paths = (
+        ROOT / "Apps/iOS/Info.plist",
+        ROOT / "Apps/tvOS/Info.plist",
+    )
+    plists: dict[Path, dict[str, object]] = {}
+    for path in plist_paths:
+        try:
+            with path.open("rb") as plist_file:
+                plist = plistlib.load(plist_file)
+        except (OSError, plistlib.InvalidFileException) as error:
+            errors.append(
+                f"{path.relative_to(ROOT)} is not a valid property list: {error}"
+            )
+            continue
+
+        plists[path] = plist
+        controller_requirement = plist.get("GCRequiresControllerUserInteraction")
+        if controller_requirement is not None and not isinstance(
+            controller_requirement, dict
+        ):
+            errors.append(
+                f"{path.relative_to(ROOT)} "
+                "GCRequiresControllerUserInteraction must be a dictionary"
+            )
+
+    ios_path = ROOT / "Apps/iOS/Info.plist"
+    ios_plist = plists.get(ios_path)
+    if ios_plist is None:
+        return
+
+    ipad_orientations = set(
+        ios_plist.get(
+            "UISupportedInterfaceOrientations~ipad",
+            ios_plist.get("UISupportedInterfaceOrientations", []),
+        )
+    )
+    missing_orientations = REQUIRED_IPAD_ORIENTATIONS - ipad_orientations
+    if missing_orientations:
+        errors.append(
+            "Apps/iOS/Info.plist must support all iPad multitasking orientations; "
+            f"missing: {', '.join(sorted(missing_orientations))}"
+        )
+
+
 def validate_markdown_links(errors: list[str]) -> None:
     link_pattern = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
     for markdown_path in ROOT.rglob("*.md"):
@@ -345,6 +397,7 @@ def main() -> int:
     validate_manifest(errors)
     validate_lessons(errors)
     validate_privacy_manifest(errors)
+    validate_apple_metadata(errors)
     validate_markdown_links(errors)
 
     if errors:

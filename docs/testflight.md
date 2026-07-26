@@ -69,25 +69,22 @@ The GitHub credentials, repository access, CI gate, App Store Connect API
 trigger, Xcode Cloud checkout, build, analysis, signing configuration, and
 internal testing group have all been verified.
 
-The iOS archive currently stops during **Prepare Build for App Store Connect**
-inside Apple's Xcode Cloud service:
+Xcode Cloud build 8 successfully archived and exported the app for App Store
+distribution. App Store Connect then rejected the uploaded bundle with two
+metadata validation errors:
 
-```text
-Unable to authenticate with App Store Connect
-Failed to find an account with App Store Connect access for the configured team
-```
+- iPad multitasking required all four supported interface orientations.
+- `GCRequiresControllerUserInteraction` was encoded as a Boolean even though
+  Apple defines it as a dictionary.
 
-The failure originates from Xcode Cloud's `Session Proxy Provider`. The same App
-Store Connect API key successfully starts and monitors the build, and Xcode
-Cloud successfully checks out and builds the repository before the failure.
-This isolates the remaining iOS delivery problem to Apple's hosted
-App Store Connect session rather than the repository, GitHub secrets, or app
-signing configuration.
+The source metadata now keeps iPhone support landscape-only, declares all four
+iPad orientations, and omits the optional controller-requirement dictionary.
+Repository validation tests enforce both App Store rules before promotion.
 
-Open an [Apple Developer Support request][apple-support] for Xcode Cloud and
-include the app Apple ID, team ID, Xcode Cloud workflow ID, failed build number,
-timestamp, and the complete `Prepare Build for App Store Connect` log. Never
-attach the `.p8` private key.
+The Xcode export logs can also contain a `Session Proxy Provider` authentication
+warning. That warning was not the terminal cause for build 8: the App Store IPA
+export completed, and the App Store Connect build-upload record reported the
+two bundle validation errors above.
 
 ## tvOS TestFlight prerequisite
 
@@ -130,7 +127,6 @@ Apple references:
 - [Distribute Xcode Cloud builds through TestFlight][testflight-distribution]
 - [Automate Xcode Cloud workflows and builds][api-automation]
 
-[apple-support]: https://developer.apple.com/help/app-store-connect/
 [workflow-setup]: https://developer.apple.com/documentation/xcode/configuring-your-first-xcode-cloud-workflow/
 [testflight-distribution]: https://developer.apple.com/documentation/xcode/distributing-your-xcode-cloud-builds-through-testflight
 [api-automation]: https://developer.apple.com/documentation/appstoreconnectapi/xcode-cloud-workflows-and-builds

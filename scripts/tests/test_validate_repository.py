@@ -98,6 +98,95 @@ jobs: {}
         self.assertEqual(len(errors), 1)
         self.assertIn("pull_request_target", errors[0])
 
+    def test_apple_metadata_rejects_invalid_controller_and_ipad_values(self) -> None:
+        ios_plist = self.root / "Apps/iOS/Info.plist"
+        tvos_plist = self.root / "Apps/tvOS/Info.plist"
+        ios_plist.parent.mkdir(parents=True)
+        tvos_plist.parent.mkdir(parents=True)
+        ios_plist.write_text(
+            """
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>GCRequiresControllerUserInteraction</key>
+  <false/>
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+</dict>
+</plist>
+""".strip(),
+            encoding="utf-8",
+        )
+        tvos_plist.write_text(
+            """
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>GCSupportsControllerUserInteraction</key>
+  <true/>
+</dict>
+</plist>
+""".strip(),
+            encoding="utf-8",
+        )
+        errors: list[str] = []
+
+        with patch.object(VALIDATOR, "ROOT", self.root):
+            VALIDATOR.validate_apple_metadata(errors)
+
+        self.assertEqual(len(errors), 2)
+        self.assertTrue(
+            any("must be a dictionary" in error for error in errors)
+        )
+        self.assertTrue(
+            any("iPad multitasking orientations" in error for error in errors)
+        )
+
+    def test_apple_metadata_accepts_platform_specific_valid_values(self) -> None:
+        ios_plist = self.root / "Apps/iOS/Info.plist"
+        tvos_plist = self.root / "Apps/tvOS/Info.plist"
+        ios_plist.parent.mkdir(parents=True)
+        tvos_plist.parent.mkdir(parents=True)
+        valid_orientations = "\n".join(
+            f"    <string>{orientation}</string>"
+            for orientation in sorted(VALIDATOR.REQUIRED_IPAD_ORIENTATIONS)
+        )
+        ios_plist.write_text(
+            f"""
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+{valid_orientations}
+  </array>
+</dict>
+</plist>
+""".strip(),
+            encoding="utf-8",
+        )
+        tvos_plist.write_text(
+            """
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>GCSupportsControllerUserInteraction</key>
+  <true/>
+</dict>
+</plist>
+""".strip(),
+            encoding="utf-8",
+        )
+        errors: list[str] = []
+
+        with patch.object(VALIDATOR, "ROOT", self.root):
+            VALIDATOR.validate_apple_metadata(errors)
+
+        self.assertEqual(errors, [])
+
 
 if __name__ == "__main__":
     unittest.main()
