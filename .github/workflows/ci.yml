@@ -23,6 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
+          lfs: true
           persist-credentials: false
 
       - name: Toolchain
@@ -33,11 +34,28 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
-      - name: Verify generated Xcode project
+      - name: Generate Xcode project
         run: |
           xcodegen generate --spec project.yml
+
+      - name: Verify generated project configuration
+        run: |
+          for scheme in AstroAdventure-iOS AstroAdventure-tvOS; do
+            settings="$(
+              xcodebuild \
+                -project AstroAdventure.xcodeproj \
+                -scheme "$scheme" \
+                -showBuildSettings
+            )"
+
+            grep -Fq \
+              "PRODUCT_BUNDLE_IDENTIFIER = com.ganesh47.astroadventure" \
+              <<< "$settings"
+            grep -Fq "DEVELOPMENT_TEAM = J3387FUR8X" <<< "$settings"
+            grep -Fq "CODE_SIGN_STYLE = Automatic" <<< "$settings"
+          done
+
           git diff --exit-code -- \
-            AstroAdventure.xcodeproj \
             Apps/iOS/Info.plist \
             Apps/tvOS/Info.plist
 
@@ -65,6 +83,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
+          lfs: true
           persist-credentials: false
 
       - name: Install XcodeGen
