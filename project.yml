@@ -82,6 +82,9 @@ targets:
         ITSAppUsesNonExemptEncryption: false
         GCSupportsControllerUserInteraction: true
         LSApplicationCategoryType: public.app-category.games
+        TVTopShelfImage:
+          TVTopShelfPrimaryImage: "Top Shelf Image"
+          TVTopShelfPrimaryImageWide: "Top Shelf Image Wide"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ganesh47.astroadventure

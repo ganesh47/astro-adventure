@@ -127,6 +127,13 @@ jobs: {}
 <dict>
   <key>GCSupportsControllerUserInteraction</key>
   <true/>
+  <key>TVTopShelfImage</key>
+  <dict>
+    <key>TVTopShelfPrimaryImage</key>
+    <string>Top Shelf Image</string>
+    <key>TVTopShelfPrimaryImageWide</key>
+    <string>Top Shelf Image Wide</string>
+  </dict>
 </dict>
 </plist>
 """.strip(),
@@ -175,6 +182,13 @@ jobs: {}
 <dict>
   <key>GCSupportsControllerUserInteraction</key>
   <true/>
+  <key>TVTopShelfImage</key>
+  <dict>
+    <key>TVTopShelfPrimaryImage</key>
+    <string>Top Shelf Image</string>
+    <key>TVTopShelfPrimaryImageWide</key>
+    <string>Top Shelf Image Wide</string>
+  </dict>
 </dict>
 </plist>
 """.strip(),
@@ -186,6 +200,49 @@ jobs: {}
             VALIDATOR.validate_apple_metadata(errors)
 
         self.assertEqual(errors, [])
+
+    def test_apple_metadata_requires_tvos_top_shelf_images(self) -> None:
+        ios_plist = self.root / "Apps/iOS/Info.plist"
+        tvos_plist = self.root / "Apps/tvOS/Info.plist"
+        ios_plist.parent.mkdir(parents=True)
+        tvos_plist.parent.mkdir(parents=True)
+        valid_orientations = "\n".join(
+            f"    <string>{orientation}</string>"
+            for orientation in sorted(VALIDATOR.REQUIRED_IPAD_ORIENTATIONS)
+        )
+        ios_plist.write_text(
+            f"""
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+{valid_orientations}
+  </array>
+</dict>
+</plist>
+""".strip(),
+            encoding="utf-8",
+        )
+        tvos_plist.write_text(
+            """
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+  <key>GCSupportsControllerUserInteraction</key>
+  <true/>
+</dict>
+</plist>
+""".strip(),
+            encoding="utf-8",
+        )
+        errors: list[str] = []
+
+        with patch.object(VALIDATOR, "ROOT", self.root):
+            VALIDATOR.validate_apple_metadata(errors)
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn("Top Shelf image assets", errors[0])
 
 
 if __name__ == "__main__":

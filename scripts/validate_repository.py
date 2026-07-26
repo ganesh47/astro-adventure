@@ -26,6 +26,22 @@ REQUIRED_PATHS = (
     "Apps/iOS/AstroAdventureIOSApp.swift",
     "Apps/tvOS/AstroAdventureTVApp.swift",
     "Apps/Shared/PrivacyInfo.xcprivacy",
+    (
+        "Apps/Shared/Assets.xcassets/App Icon & Top Shelf Image.brandassets/"
+        "Top Shelf Image.imageset/Top Shelf Image.png"
+    ),
+    (
+        "Apps/Shared/Assets.xcassets/App Icon & Top Shelf Image.brandassets/"
+        "Top Shelf Image.imageset/Top Shelf Image@2x.png"
+    ),
+    (
+        "Apps/Shared/Assets.xcassets/App Icon & Top Shelf Image.brandassets/"
+        "Top Shelf Image Wide.imageset/Top Shelf Image Wide.png"
+    ),
+    (
+        "Apps/Shared/Assets.xcassets/App Icon & Top Shelf Image.brandassets/"
+        "Top Shelf Image Wide.imageset/Top Shelf Image Wide@2x.png"
+    ),
     "Sources/AstroGameCore/MissionSession.swift",
     "Sources/AstroContent/Resources/lessons.json",
     "assets/manifest/assets.csv",
@@ -357,6 +373,22 @@ def validate_apple_metadata(errors: list[str]) -> None:
         errors.append(
             "Apps/iOS/Info.plist must support all iPad multitasking orientations; "
             f"missing: {', '.join(sorted(missing_orientations))}"
+        )
+
+    tvos_path = ROOT / "Apps/tvOS/Info.plist"
+    tvos_plist = plists.get(tvos_path)
+    if tvos_plist is None:
+        return
+
+    top_shelf = tvos_plist.get("TVTopShelfImage")
+    expected_top_shelf = {
+        "TVTopShelfPrimaryImage": "Top Shelf Image",
+        "TVTopShelfPrimaryImageWide": "Top Shelf Image Wide",
+    }
+    if top_shelf != expected_top_shelf:
+        errors.append(
+            "Apps/tvOS/Info.plist must declare standard and wide Top Shelf "
+            "image assets"
         )
 
 

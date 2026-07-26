@@ -26,5 +26,12 @@
 	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.games</string>
+	<key>TVTopShelfImage</key>
+	<dict>
+		<key>TVTopShelfPrimaryImage</key>
+		<string>Top Shelf Image</string>
+		<key>TVTopShelfPrimaryImageWide</key>
+		<string>Top Shelf Image Wide</string>
+	</dict>
 </dict>
 </plist>
