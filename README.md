@@ -83,9 +83,11 @@ After changing `project.yml`, regenerate the committed project:
 xcodegen generate --spec project.yml
 ```
 
-Successful CI runs on `main` are promoted through Xcode Cloud to TestFlight.
-See [docs/testflight.md](docs/testflight.md) for the delivery architecture,
-required GitHub configuration, and manual operations.
+Successful CI runs on `main` trigger the Xcode Cloud TestFlight workflow. The
+automation is configured and verified through the Apple handoff; see the
+[TestFlight runbook](docs/testflight.md) for current delivery status and Apple
+team prerequisites, delivery architecture, GitHub configuration, and manual
+operations.
 
 ## Public-by-default development
 
