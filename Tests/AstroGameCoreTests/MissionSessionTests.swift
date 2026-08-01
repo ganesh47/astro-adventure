@@ -22,6 +22,10 @@ final class MissionSessionTests: XCTestCase {
         XCTAssertTrue(session.wasLastAnswerCorrect)
         XCTAssertTrue(session.isMissionComplete)
         session.confirm()
+        XCTAssertEqual(session.phase, .quizRoundComplete)
+        XCTAssertEqual(session.roundScore, 125)
+        XCTAssertEqual(session.progress.leaderboard.count, 1)
+        session.confirm()
         XCTAssertEqual(session.phase, .missionComplete)
     }
 
@@ -45,6 +49,32 @@ final class MissionSessionTests: XCTestCase {
         XCTAssertEqual(session.focusedContent?.quiz.choices.count, 2)
         session.ageBand = .ages10To12
         XCTAssertEqual(session.focusedContent?.quiz.choices.count, 3)
+    }
+
+    func testThreeQuestionRoundTracksScoreStreakAndLeaderboard() {
+        let quizzes = [Self.lesson.content.ages7To9.quiz, Self.lesson.content.ages7To9.quiz,
+                       Self.lesson.content.ages7To9.quiz]
+        let session = MissionSession(
+            lessons: [Self.lesson],
+            quizProvider: { _, _ in quizzes }
+        )
+        session.confirm()
+        session.confirm()
+        session.confirm()
+
+        for question in 0..<3 {
+            XCTAssertEqual(session.quizQuestionIndex, question)
+            session.submitAnswer(at: 0, now: Date(timeIntervalSince1970: 10))
+            session.confirm(now: Date(timeIntervalSince1970: 10))
+        }
+
+        XCTAssertEqual(session.phase, .quizRoundComplete)
+        XCTAssertEqual(session.roundCorrectAnswers, 3)
+        XCTAssertEqual(session.roundBestStreak, 3)
+        XCTAssertEqual(session.roundScore, 420)
+        XCTAssertEqual(session.roundStars, 3)
+        XCTAssertEqual(session.progress.leaderboard.first?.score, 420)
+        XCTAssertEqual(session.progress.destinations["mercury"]?.bestRoundStars, 3)
     }
 
     private static let lesson: DestinationLesson = {

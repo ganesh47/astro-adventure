@@ -44,7 +44,11 @@ public actor JSONProgressStore: ProgressStoring {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(progress)
-        try data.write(to: fileURL, options: [.atomic, .completeFileProtection])
+        #if os(iOS) || os(tvOS)
+            try data.write(to: fileURL, options: [.atomic, .completeFileProtection])
+        #else
+            try data.write(to: fileURL, options: .atomic)
+        #endif
     }
 }
 

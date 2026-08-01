@@ -39,7 +39,8 @@ let package = Package(
                 "AstroGameCore",
                 "AstroServices",
                 "AstroWorld",
-            ]
+            ],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "AstroGameCoreTests",

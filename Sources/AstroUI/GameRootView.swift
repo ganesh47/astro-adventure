@@ -1,27 +1,30 @@
+import AstroContent
 import AstroGameCore
 import AstroWorld
 import SwiftUI
 
 public struct GameRootView: View {
     @State private var session: MissionSession
+    private let onProgressChanged: (GameProgress) -> Void
 
-    public init(lessons: [DestinationLesson]) {
-        _session = State(initialValue: MissionSession(lessons: lessons))
+    public init(
+        lessons: [DestinationLesson],
+        progress: GameProgress? = nil,
+        onProgressChanged: @escaping (GameProgress) -> Void = { _ in }
+    ) {
+        _session = State(
+            initialValue: MissionSession(
+                lessons: lessons,
+                progress: progress,
+                quizProvider: QuizRoundCatalog.quizzes
+            )
+        )
+        self.onProgressChanged = onProgressChanged
     }
 
     public var body: some View {
         #if os(tvOS)
             game
-                .onMoveCommand { direction in
-                    switch direction {
-                    case .left, .up:
-                        session.focusPrevious()
-                    case .right, .down:
-                        session.focusNext()
-                    default:
-                        break
-                    }
-                }
                 .onExitCommand {
                     session.back()
                 }
@@ -43,14 +46,80 @@ public struct GameRootView: View {
             .ignoresSafeArea()
             .accessibilityHidden(true)
 
-            VStack(spacing: 20) {
-                header
-                Spacer()
-                missionPanel
+            if session.phase == .quizRoundComplete,
+                let lesson = session.focusedLesson
+            {
+                QuizRoundResultsView(
+                    destinationName: lesson.displayName,
+                    score: session.roundScore,
+                    stars: session.roundStars,
+                    correctAnswers: session.roundCorrectAnswers,
+                    totalQuestions: session.quizQuestions.count,
+                    bestStreak: session.roundBestStreak,
+                    leaderboard: session.progress.leaderboard,
+                    onContinue: { session.confirm() }
+                )
+            } else if session.phase == .discoveryCard,
+                let lesson = session.focusedLesson
+            {
+                DiscoveryStoryView(
+                    destinationName: lesson.displayName,
+                    ageBand: session.ageBand,
+                    slides: DiscoveryStoryCatalog.slides(
+                        destinationID: lesson.id,
+                        ageBand: session.ageBand
+                    ),
+                    quizQuestionCount: QuizRoundCatalog.quizzes(
+                        destinationID: lesson.id,
+                        ageBand: session.ageBand
+                    ).count,
+                    onComplete: {
+                        session.confirm()
+                    },
+                    onBack: {
+                        session.back()
+                    }
+                )
+                .id("\(lesson.id)-\(session.ageBand.rawValue)")
+            } else if session.phase == .quiz,
+                let lesson = session.focusedLesson,
+                let quiz = session.currentQuiz
+            {
+                QuizChallengeView(
+                    destinationName: lesson.displayName,
+                    ageBand: session.ageBand,
+                    quiz: quiz,
+                    isShowingHint: session.isShowingHint,
+                    completedCount: session.completedDestinationCount,
+                    totalCount: session.lessons.count,
+                    questionIndex: session.quizQuestionIndex,
+                    questionCount: session.quizQuestions.count,
+                    score: session.roundScore,
+                    streak: session.currentStreak,
+                    onSelectAnswer: { index in
+                        session.submitAnswer(at: index)
+                    },
+                    onHint: {
+                        session.requestHint()
+                    },
+                    onBack: {
+                        session.back()
+                    }
+                )
+                .id("\(lesson.id)-\(session.ageBand.rawValue)-quiz")
+            } else {
+                VStack(spacing: 20) {
+                    header
+                    Spacer()
+                    missionPanel
+                }
+                .padding(28)
             }
-            .padding(28)
         }
         .preferredColorScheme(.dark)
+        .onChange(of: session.progress) { _, progress in
+            onProgressChanged(progress)
+        }
     }
 
     private var header: some View {
@@ -148,9 +217,21 @@ public struct GameRootView: View {
                 Text(session.lastFeedback)
                     .font(.title2.bold())
                     .multilineTextAlignment(.center)
+                if session.wasLastAnswerCorrect {
+                    HStack(spacing: 18) {
+                        Label("\(session.roundScore) points", systemImage: "star.circle.fill")
+                            .foregroundStyle(.yellow)
+                        Label("\(session.currentStreak) streak", systemImage: "flame.fill")
+                            .foregroundStyle(.orange)
+                    }
+                    .font(.headline.weight(.bold))
+                }
                 primaryButton(session.wasLastAnswerCorrect ? "Continue" : "Try Again") {
                     session.confirm()
                 }
+
+            case .quizRoundComplete:
+                EmptyView()
 
             case .missionComplete:
                 Image(systemName: "sparkles")
@@ -196,16 +277,18 @@ public struct GameRootView: View {
                         if session.progress.destinations[lesson.id]?.isQuizCompleted == true {
                             Label("Collected", systemImage: "checkmark.seal.fill")
                                 .font(.caption)
+                        } else if index == session.focusedDestinationIndex {
+                            Label("Selected", systemImage: "checkmark.circle.fill")
+                                .font(.caption)
                         } else {
-                            Text(index == session.focusedDestinationIndex ? "Focused" : "Explore")
+                            Text("Explore")
                                 .font(.caption)
                         }
                     }
                     .frame(minWidth: 112)
                 }
-                .buttonStyle(
-                    SelectableButtonStyle(isSelected: index == session.focusedDestinationIndex)
-                )
+                .buttonStyle(.bordered)
+                .tint(index == session.focusedDestinationIndex ? .cyan : .gray)
             }
         }
     }
@@ -223,9 +306,8 @@ public struct GameRootView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.vertical, 6)
                 }
-                .buttonStyle(
-                    SelectableButtonStyle(isSelected: index == session.focusedQuizChoiceIndex)
-                )
+                .buttonStyle(.bordered)
+                .controlSize(.large)
             }
         }
     }
@@ -259,26 +341,5 @@ public struct GameRootView: View {
             }
         }
         .buttonStyle(.bordered)
-    }
-}
-
-private struct SelectableButtonStyle: ButtonStyle {
-    let isSelected: Bool
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(.horizontal, 18)
-            .padding(.vertical, 12)
-            .foregroundStyle(.white)
-            .background(
-                isSelected ? Color.cyan.opacity(0.8) : Color.white.opacity(0.12),
-                in: RoundedRectangle(cornerRadius: 14)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(isSelected ? .white : .white.opacity(0.25), lineWidth: 2)
-            }
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
 }
