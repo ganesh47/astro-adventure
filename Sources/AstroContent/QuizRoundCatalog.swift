@@ -52,7 +52,8 @@ public enum QuizRoundCatalog {
                     .init(id: "deep_ocean", text: "A deep ocean carries heat away"),
                 ],
                 correct: "thin_air",
-                correctFeedback: "Temperature detective! Mercury has almost no atmosphere to share heat.",
+                correctFeedback:
+                    "Temperature detective! Mercury has almost no atmosphere to share heat.",
                 retryFeedback: "Think about what a blanket of air does for a planet.",
                 hint: "Mercury is missing a thick blanket of air."
             ),
@@ -179,7 +180,8 @@ public enum QuizRoundCatalog {
                     .init(id: "green_clouds", text: "Thick green clouds"),
                 ],
                 correct: "cracked_ice",
-                correctFeedback: "Ice investigator! Europa’s bright shell is crossed by cracks and ridges.",
+                correctFeedback:
+                    "Ice investigator! Europa’s bright shell is crossed by cracks and ridges.",
                 retryFeedback: "Remember the close-up picture of the bright surface.",
                 hint: "It is a frozen form of water."
             ),

@@ -280,7 +280,8 @@ struct QuizChallengeView: View {
         case "lava_desert", "iron_core":
             QuizOptionVisual(imageName: "mars-canyons", symbol: "flame.fill", color: .red)
         case "bright_hollows":
-            QuizOptionVisual(imageName: "mercury-hollows", symbol: "circle.grid.cross.fill", color: .yellow)
+            QuizOptionVisual(
+                imageName: "mercury-hollows", symbol: "circle.grid.cross.fill", color: .yellow)
         case "storm_clouds", "thick_cloud":
             QuizOptionVisual(imageName: "mars-polar-cap", symbol: "cloud.bolt.fill", color: .purple)
         case "ice_mountains", "polar_shadow":
@@ -296,7 +297,8 @@ struct QuizChallengeView: View {
         case "seasonal_ice":
             QuizOptionVisual(imageName: "mars-polar-cap", symbol: "snowflake", color: .cyan)
         case "never_change":
-            QuizOptionVisual(imageName: "mars-comparison", symbol: "pause.circle.fill", color: .gray)
+            QuizOptionVisual(
+                imageName: "mars-comparison", symbol: "pause.circle.fill", color: .gray)
         case "fly_away":
             QuizOptionVisual(imageName: "mars-landscape", symbol: "paperplane.fill", color: .purple)
         case "chaos_blocks":

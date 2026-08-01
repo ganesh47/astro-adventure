@@ -121,10 +121,14 @@ public struct GameProgress: Codable, Equatable, Sendable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = Self.currentSchemaVersion
         missionID = try values.decodeIfPresent(String.self, forKey: .missionID) ?? "signal-sweep"
-        selectedAgeBand = try values.decodeIfPresent(AgeBand.self, forKey: .selectedAgeBand) ?? .ages7To9
-        destinations = try values.decodeIfPresent([String: DestinationProgress].self, forKey: .destinations) ?? [:]
+        selectedAgeBand =
+            try values.decodeIfPresent(AgeBand.self, forKey: .selectedAgeBand) ?? .ages7To9
+        destinations =
+            try values.decodeIfPresent([String: DestinationProgress].self, forKey: .destinations)
+            ?? [:]
         totalScore = try values.decodeIfPresent(Int.self, forKey: .totalScore) ?? 0
         bestStreak = try values.decodeIfPresent(Int.self, forKey: .bestStreak) ?? 0
-        leaderboard = try values.decodeIfPresent([LeaderboardEntry].self, forKey: .leaderboard) ?? []
+        leaderboard =
+            try values.decodeIfPresent([LeaderboardEntry].self, forKey: .leaderboard) ?? []
     }
 }

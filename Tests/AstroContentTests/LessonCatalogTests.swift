@@ -37,9 +37,10 @@ final class LessonCatalogTests: XCTestCase {
                     ageBand: ageBand
                 )
                 XCTAssertEqual(quizzes.count, 5)
-                XCTAssertTrue(quizzes.allSatisfy { quiz in
-                    quiz.choices.contains { $0.id == quiz.correctChoiceID }
-                })
+                XCTAssertTrue(
+                    quizzes.allSatisfy { quiz in
+                        quiz.choices.contains { $0.id == quiz.correctChoiceID }
+                    })
                 let expectedChoices = ageBand == .ages4To6 ? 2 : 3
                 XCTAssertTrue(quizzes.allSatisfy { $0.choices.count == expectedChoices })
             }

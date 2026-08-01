@@ -344,35 +344,80 @@ public enum DiscoveryStoryCatalog {
     private static func facts(for slideID: String) -> [DiscoveryFact] {
         switch slideID {
         case "mercury-colors":
-            [.init(value: "1st", label: "planet from Sun"), .init(value: "4,880 km", label: "diameter")]
+            [
+                .init(value: "1st", label: "planet from Sun"),
+                .init(value: "4,880 km", label: "diameter"),
+            ]
         case "mercury-caloris":
-            [.init(value: "1,550 km", label: "basin width"), .init(value: "88 days", label: "one Mercury year")]
+            [
+                .init(value: "1,550 km", label: "basin width"),
+                .init(value: "88 days", label: "one Mercury year"),
+            ]
         case "mercury-hollows":
-            [.init(value: "17 km", label: "image width"), .init(value: "2015", label: "MESSENGER view")]
+            [
+                .init(value: "17 km", label: "image width"),
+                .init(value: "2015", label: "MESSENGER view"),
+            ]
         case "mercury-horizon":
-            [.init(value: "430°C", label: "hot daytime"), .init(value: "−180°C", label: "cold nighttime")]
+            [
+                .init(value: "430°C", label: "hot daytime"),
+                .init(value: "−180°C", label: "cold nighttime"),
+            ]
         case "mercury-polar-ice":
-            [.init(value: "<−173°C", label: "cold crater"), .init(value: "H₂O", label: "hidden ice")]
+            [
+                .init(value: "<−173°C", label: "cold crater"),
+                .init(value: "H₂O", label: "hidden ice"),
+            ]
         case "mars-size":
-            [.init(value: "53%", label: "of Earth’s diameter"), .init(value: "38%", label: "of Earth’s gravity")]
+            [
+                .init(value: "53%", label: "of Earth’s diameter"),
+                .init(value: "38%", label: "of Earth’s gravity"),
+            ]
         case "mars-surface":
-            [.init(value: "360°", label: "rover panorama"), .init(value: "2", label: "small moons")]
+            [
+                .init(value: "360°", label: "rover panorama"),
+                .init(value: "2", label: "small moons"),
+            ]
         case "mars-canyons":
-            [.init(value: "≈4,000 km", label: "canyon length"), .init(value: "¼", label: "around Mars")]
+            [
+                .init(value: "≈4,000 km", label: "canyon length"),
+                .init(value: "¼", label: "around Mars"),
+            ]
         case "mars-olympus":
-            [.init(value: "600 km", label: "volcano width"), .init(value: "24 km", label: "summit height")]
+            [
+                .init(value: "600 km", label: "volcano width"),
+                .init(value: "24 km", label: "summit height"),
+            ]
         case "mars-polar-cap":
-            [.init(value: "1996–97", label: "Hubble views"), .init(value: "2", label: "kinds of ice")]
+            [
+                .init(value: "1996–97", label: "Hubble views"),
+                .init(value: "2", label: "kinds of ice"),
+            ]
         case "europa-world":
-            [.init(value: "3,122 km", label: "diameter"), .init(value: "3.5 days", label: "orbit of Jupiter")]
+            [
+                .init(value: "3,122 km", label: "diameter"),
+                .init(value: "3.5 days", label: "orbit of Jupiter"),
+            ]
         case "europa-cracks":
-            [.init(value: "671,000 km", label: "from Jupiter"), .init(value: "1", label: "icy shell")]
+            [
+                .init(value: "671,000 km", label: "from Jupiter"),
+                .init(value: "1", label: "icy shell"),
+            ]
         case "europa-ocean":
-            [.init(value: "2024", label: "Clipper launched"), .init(value: "49", label: "planned flybys")]
+            [
+                .init(value: "2024", label: "Clipper launched"),
+                .init(value: "49", label: "planned flybys"),
+            ]
         case "europa-chaos":
-            [.init(value: "300 km", label: "image width"), .init(value: "1998", label: "Galileo flyby")]
+            [
+                .init(value: "300 km", label: "image width"),
+                .init(value: "1998", label: "Galileo flyby"),
+            ]
         case "europa-juno":
-            [.init(value: "1,521 km", label: "Juno distance"), .init(value: "2022", label: "close flyby")]
+            [
+                .init(value: "1,521 km", label: "Juno distance"),
+                .init(value: "2022", label: "close flyby"),
+            ]
         default:
             []
         }

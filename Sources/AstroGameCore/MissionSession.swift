@@ -228,7 +228,8 @@ public final class MissionSession {
             currentStreak = 0
         }
 
-        destinationProgress.isQuizCompleted = destinationProgress.isQuizCompleted
+        destinationProgress.isQuizCompleted =
+            destinationProgress.isQuizCompleted
             || (isCorrect && quizQuestionIndex == quizQuestions.count - 1)
         destinationProgress.correctAnswers += isCorrect ? 1 : 0
         destinationProgress.masteryScore = min(

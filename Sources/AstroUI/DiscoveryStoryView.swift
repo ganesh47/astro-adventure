@@ -1,6 +1,6 @@
+import AVFoundation
 import AstroContent
 import AstroGameCore
-import AVFoundation
 import SwiftUI
 
 #if canImport(UIKit)
@@ -115,8 +115,8 @@ struct DiscoveryStoryView: View {
                     "SPACE FLASHCARD · \(destinationName.uppercased())",
                     systemImage: "rectangle.stack.fill"
                 )
-                    .font(.headline.weight(.black))
-                    .tracking(1.8)
+                .font(.headline.weight(.black))
+                .tracking(1.8)
                 Text("\(ageBand.modeName) · \(ageBand.displayName)")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white.opacity(0.76))

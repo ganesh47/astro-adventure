@@ -104,9 +104,11 @@ struct QuizRoundResultsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(entry.explorerName)
                             .font(.headline.weight(.bold))
-                        Text("\(entry.destinationName) · \(entry.correctAnswers)/\(entry.totalQuestions) cards")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.62))
+                        Text(
+                            "\(entry.destinationName) · \(entry.correctAnswers)/\(entry.totalQuestions) cards"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.62))
                     }
                     Spacer()
                     Text("\(entry.score)")

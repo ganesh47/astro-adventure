@@ -52,8 +52,10 @@ final class MissionSessionTests: XCTestCase {
     }
 
     func testThreeQuestionRoundTracksScoreStreakAndLeaderboard() {
-        let quizzes = [Self.lesson.content.ages7To9.quiz, Self.lesson.content.ages7To9.quiz,
-                       Self.lesson.content.ages7To9.quiz]
+        let quizzes = [
+            Self.lesson.content.ages7To9.quiz, Self.lesson.content.ages7To9.quiz,
+            Self.lesson.content.ages7To9.quiz,
+        ]
         let session = MissionSession(
             lessons: [Self.lesson],
             quizProvider: { _, _ in quizzes }
