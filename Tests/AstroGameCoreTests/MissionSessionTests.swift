@@ -43,6 +43,16 @@ final class MissionSessionTests: XCTestCase {
         XCTAssertEqual(session.phase, .quiz)
     }
 
+    func testBackFromWorldSelectionReturnsToWelcomeScreen() {
+        let session = MissionSession(lessons: [Self.lesson])
+
+        session.confirm()
+        XCTAssertEqual(session.phase, .navigation)
+
+        session.back()
+        XCTAssertEqual(session.phase, .missionPrompt)
+    }
+
     func testChangingAgeBandSelectsAgeSpecificContent() {
         let session = MissionSession(lessons: [Self.lesson])
         session.ageBand = .ages4To6

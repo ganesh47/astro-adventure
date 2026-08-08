@@ -5,6 +5,7 @@ import SwiftUI
 
 public struct GameRootView: View {
     @State private var session: MissionSession
+    @FocusState private var primaryActionFocused: Bool
     private let onProgressChanged: (GameProgress) -> Void
 
     public init(
@@ -24,10 +25,14 @@ public struct GameRootView: View {
 
     public var body: some View {
         #if os(tvOS)
-            game
-                .onExitCommand {
-                    session.back()
-                }
+            if session.phase == .missionPrompt {
+                game
+            } else {
+                game
+                    .onExitCommand {
+                        session.back()
+                    }
+            }
         #else
             game
         #endif
@@ -120,6 +125,12 @@ public struct GameRootView: View {
         .onChange(of: session.progress) { _, progress in
             onProgressChanged(progress)
         }
+        .onChange(of: session.phase) {
+            primaryActionFocused = true
+        }
+        .onAppear {
+            primaryActionFocused = true
+        }
     }
 
     private var header: some View {
@@ -128,7 +139,7 @@ public struct GameRootView: View {
                 Text("ASTRO ADVENTURE")
                     .font(.headline.weight(.black))
                     .tracking(1.5)
-                Text("Signal Sweep")
+                Text("Explore • Learn • Play")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -160,20 +171,47 @@ public struct GameRootView: View {
         VStack(spacing: 18) {
             switch session.phase {
             case .missionPrompt:
-                Text("Ready, space explorer?")
-                    .font(.largeTitle.bold())
-                Text("Scan three worlds and collect their clue cards.")
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                primaryButton("Start Mission", systemImage: "play.fill") {
+                Text(
+                    session.completedDestinationCount > 0
+                        ? "Welcome back, Explorer!"
+                        : "Ready to explore space?"
+                )
+                .font(.largeTitle.bold())
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                Text(
+                    session.completedDestinationCount > 0
+                        ? "Keep exploring, discover surprising facts, and grow your score."
+                        : "Pick a world, see real space photos, then play a quick picture quiz."
+                )
+                .font(.title3)
+                .multilineTextAlignment(.center)
+                missionSteps
+                primaryButton(
+                    session.completedDestinationCount > 0
+                        ? "Continue Adventure"
+                        : "Begin Adventure",
+                    systemImage: "rocket.fill"
+                ) {
                     session.confirm()
                 }
+                #if os(tvOS)
+                    Label(
+                        "Press Back on the Siri Remote to leave",
+                        systemImage: "chevron.backward.circle"
+                    )
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.74))
+                #endif
 
             case .navigation:
-                Text("Choose a world to scan")
+                Text("Choose your next world")
                     .font(.title2.bold())
                 destinationSelector
-                primaryButton("Scan \(session.focusedLesson?.displayName ?? "World")") {
+                primaryButton(
+                    "Explore \(session.focusedLesson?.displayName ?? "World")",
+                    systemImage: "sparkles"
+                ) {
                     session.confirm()
                 }
 
@@ -249,10 +287,10 @@ public struct GameRootView: View {
             }
 
             Text(
-                "Discovery cards \(session.completedDestinationCount)/\(session.lessons.count)"
+                "Worlds explored \(session.completedDestinationCount) of \(session.lessons.count)"
             )
             .font(.footnote.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(.white.opacity(0.7))
         }
         .frame(maxWidth: 760)
         .padding(26)
@@ -261,6 +299,31 @@ public struct GameRootView: View {
             RoundedRectangle(cornerRadius: 28)
                 .stroke(.white.opacity(0.2), lineWidth: 1)
         }
+    }
+
+    private var missionSteps: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                missionStep("Pick a world", systemImage: "globe.americas.fill")
+                missionStep("See NASA photos", systemImage: "photo.fill")
+                missionStep("Play a quiz", systemImage: "gamecontroller.fill")
+            }
+
+            VStack(spacing: 8) {
+                missionStep("Pick a world", systemImage: "globe.americas.fill")
+                missionStep("See NASA photos", systemImage: "photo.fill")
+                missionStep("Play a quiz", systemImage: "gamecontroller.fill")
+            }
+        }
+    }
+
+    private func missionStep(_ title: String, systemImage: String) -> some View {
+        Label(title, systemImage: systemImage)
+            .font(.footnote.weight(.bold))
+            .foregroundStyle(.white.opacity(0.9))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 9)
+            .background(.white.opacity(0.1), in: Capsule())
     }
 
     private var destinationSelector: some View {
@@ -326,6 +389,7 @@ public struct GameRootView: View {
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
+        .focused($primaryActionFocused)
     }
 
     private func secondaryButton(

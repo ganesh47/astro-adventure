@@ -175,6 +175,8 @@ public final class MissionSession {
     public func back() {
         isShowingHint = false
         switch phase {
+        case .navigation:
+            phase = .missionPrompt
         case .quiz:
             phase = .discoveryCard
         case .discoveryCard, .quizFeedback, .quizRoundComplete:
