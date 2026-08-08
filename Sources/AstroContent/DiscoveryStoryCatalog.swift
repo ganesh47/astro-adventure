@@ -49,13 +49,16 @@ public enum DiscoveryStoryCatalog {
     ) -> [DiscoverySlide] {
         switch destinationID {
         case "mercury":
-            mercurySlides(for: ageBand)
+            mercurySlides(for: ageBand) + distanceSlides(for: "mercury", ageBand: ageBand)
         case "mars":
-            marsSlides(for: ageBand)
+            marsSlides(for: ageBand) + distanceSlides(for: "mars", ageBand: ageBand)
         case "europa":
-            europaSlides(for: ageBand)
+            europaSlides(for: ageBand) + distanceSlides(for: "europa", ageBand: ageBand)
         default:
-            []
+            SolarSystemExpansionCatalog.slides(
+                destinationID: destinationID,
+                ageBand: ageBand
+            ) ?? []
         }
     }
 
@@ -437,5 +440,82 @@ public enum DiscoveryStoryCatalog {
         case .ages10To12:
             scientist
         }
+    }
+
+    private static func distanceSlides(
+        for destinationID: String,
+        ageBand: AgeBand
+    ) -> [DiscoverySlide] {
+        let details:
+            (
+                name: String, image: String, credit: String, sourceID: String,
+                au: String, distance: String, lightTime: String
+            )
+        switch destinationID {
+        case "mercury":
+            details = (
+                "Mercury", "mercury-color",
+                "NASA/Johns Hopkins APL/Carnegie Institution of Washington", "PIA12842",
+                "0.39 AU", "58 million km", "3.2 min"
+            )
+        case "mars":
+            details = (
+                "Mars", "mars-comparison", "NASA/JPL", "PIA02570",
+                "1.52 AU", "228 million km", "12.7 min"
+            )
+        default:
+            details = (
+                "Europa", "europa-global", "NASA/JPL-Caltech/University of Arizona",
+                "PIA16827", "≈5.2 AU", "≈778 million km", "≈43 min"
+            )
+        }
+
+        let distanceBody = copy(
+            for: ageBand,
+            junior:
+                "One AU is the distance from the Sun to Earth. \(details.name)’s clue is \(details.au).",
+            explorer:
+                "Astronomers use AU as a Solar System ruler. \(details.name) is about \(details.au), or \(details.distance), from the Sun.",
+            scientist:
+                "An astronomical unit is about 150 million kilometres. \(details.name)’s average solar distance is \(details.au), approximately \(details.distance)."
+        )
+        let lightBody = copy(
+            for: ageBand,
+            junior:
+                "Light is the fastest traveller we know, but space is huge. Sunlight needs \(details.lightTime) to reach \(details.name).",
+            explorer:
+                "Sunlight races at almost 300,000 kilometres each second. It still takes \(details.lightTime) to reach \(details.name).",
+            scientist:
+                "At 299,792 kilometres per second, light crosses \(details.name)’s average solar distance in \(details.lightTime)—also the minimum one-way radio delay."
+        )
+
+        return [
+            DiscoverySlide(
+                id: "\(destinationID)-distance",
+                imageName: details.image,
+                title: "The AU distance ruler",
+                body: distanceBody,
+                narration: "The AU distance ruler. \(distanceBody)",
+                credit: details.credit,
+                sourceID: details.sourceID,
+                facts: [
+                    .init(value: details.au, label: "from the Sun"),
+                    .init(value: details.distance, label: "average distance"),
+                ]
+            ),
+            DiscoverySlide(
+                id: "\(destinationID)-light-time",
+                imageName: details.image,
+                title: "Racing sunlight",
+                body: lightBody,
+                narration: "Racing sunlight. \(lightBody)",
+                credit: details.credit,
+                sourceID: details.sourceID,
+                facts: [
+                    .init(value: details.lightTime, label: "sunlight trip"),
+                    .init(value: "299,792 km/s", label: "speed of light"),
+                ]
+            ),
+        ]
     }
 }

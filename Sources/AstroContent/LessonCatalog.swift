@@ -16,7 +16,16 @@ public enum LessonCatalog {
         }
 
         let data = try Data(contentsOf: url)
-        return try decode(data)
+        let lessons = try decode(data) + SolarSystemExpansionCatalog.lessons
+        try validate(lessons)
+        let solarSystemOrder = [
+            "sun", "mercury", "venus", "earth", "moon", "mars", "ceres", "jupiter",
+            "europa", "saturn", "uranus", "neptune", "pluto",
+        ]
+        let order = Dictionary(uniqueKeysWithValues: solarSystemOrder.enumerated().map { ($1, $0) })
+        return lessons.sorted {
+            order[$0.id, default: .max] < order[$1.id, default: .max]
+        }
     }
 
     public static func decode(_ data: Data) throws -> [DestinationLesson] {

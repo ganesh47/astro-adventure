@@ -4,7 +4,7 @@ import XCTest
 @testable import AstroGameCore
 
 final class LessonCatalogTests: XCTestCase {
-    func testEveryDestinationAndAgeBandHasAFiveCardDiscoveryDeck() throws {
+    func testEveryDestinationAndAgeBandHasASevenCardDiscoveryDeck() throws {
         let lessons = try LessonCatalog.bundled()
 
         for lesson in lessons {
@@ -14,7 +14,7 @@ final class LessonCatalogTests: XCTestCase {
                     ageBand: ageBand
                 )
 
-                XCTAssertEqual(slides.count, 5, "\(lesson.id) \(ageBand)")
+                XCTAssertEqual(slides.count, 7, "\(lesson.id) \(ageBand)")
                 XCTAssertTrue(slides.allSatisfy { !$0.imageName.isEmpty })
                 XCTAssertTrue(slides.allSatisfy { !$0.narration.isEmpty })
                 XCTAssertTrue(slides.allSatisfy { !$0.credit.isEmpty })
@@ -23,7 +23,7 @@ final class LessonCatalogTests: XCTestCase {
         }
     }
 
-    func testEveryFlashcardDeckHasFactsAndFiveQuizQuestions() throws {
+    func testEveryFlashcardDeckHasFactsAndSevenQuizQuestions() throws {
         for lesson in try LessonCatalog.bundled() {
             for ageBand in AgeBand.allCases {
                 let slides = DiscoveryStoryCatalog.slides(
@@ -36,7 +36,7 @@ final class LessonCatalogTests: XCTestCase {
                     destinationID: lesson.id,
                     ageBand: ageBand
                 )
-                XCTAssertEqual(quizzes.count, 5)
+                XCTAssertEqual(quizzes.count, 7)
                 XCTAssertTrue(
                     quizzes.allSatisfy { quiz in
                         quiz.choices.contains { $0.id == quiz.correctChoiceID }
@@ -47,10 +47,16 @@ final class LessonCatalogTests: XCTestCase {
         }
     }
 
-    func testBundledCatalogContainsTheParityDestinations() throws {
+    func testBundledCatalogContainsTheSolarSystemCollection() throws {
         let lessons = try LessonCatalog.bundled()
 
-        XCTAssertEqual(lessons.map(\.id), ["mercury", "mars", "europa"])
+        XCTAssertEqual(
+            lessons.map(\.id),
+            [
+                "sun", "mercury", "venus", "earth", "moon", "mars", "ceres", "jupiter",
+                "europa", "saturn", "uranus", "neptune", "pluto",
+            ]
+        )
     }
 
     func testEveryAgeBandHasTheExpectedChoiceCount() throws {
@@ -67,7 +73,7 @@ final class LessonCatalogTests: XCTestCase {
         let lessons = try LessonCatalog.bundled()
 
         XCTAssertThrowsError(try LessonCatalog.validate([lessons[0], lessons[0]])) { error in
-            XCTAssertEqual(error as? LessonCatalogError, .duplicateLessonID("mercury"))
+            XCTAssertEqual(error as? LessonCatalogError, .duplicateLessonID(lessons[0].id))
         }
     }
 }

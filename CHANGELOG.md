@@ -2,13 +2,17 @@
 
 All notable public changes to Astro Adventure are tracked here.
 
-## Unreleased — 0.2.0-alpha.0
+## v0.2.0 - 2026-08-08
 
 - Pivoted the active game from Unreal/Xbox to native iOS, iPadOS, and tvOS.
 - Added Swift 6 packages for gameplay, content, services, RealityKit presentation, and SwiftUI.
 - Added separate iOS and tvOS app targets generated from `project.yml`.
-- Ported the Mercury, Mars, and Europa mission state and learning rules.
+- Expanded the learning journey to 13 Solar System destinations, from the Sun to Pluto and Ceres.
+- Added seven NASA-powered flashcards and seven quiz questions for every destination and age band.
+- Added kid-friendly lessons about colors, shapes, gravity, astronomical units, sunlight travel time, rotation, orbits, and signature planetary features.
 - Added distinct content and quiz complexity for ages 4–6, 7–9, and 10–12.
+- Added a focus-aware tvOS destination rail, colorful Solar System presentation, improved welcome flow, and remote-friendly navigation.
+- Added TestFlight delivery through GitHub Actions and Xcode Cloud for iOS and tvOS.
 - Added public GitHub Actions automation for Swift tests, formatting, app builds, repository hygiene, dependency review, and CodeQL.
 - Replaced platform-private repository planning with a public-by-default contribution and automation model.
 

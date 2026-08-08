@@ -24,21 +24,12 @@ public struct AstroWorldView: View {
             let root = Entity()
             root.name = "AstroAdventureWorld"
 
-            let destinationPositions: [SIMD3<Float>] = [
-                [-1.8, 0.3, 0],
-                [0, 0.15, 0],
-                [1.8, 0.3, 0],
-            ]
-            let destinationColors: [PlatformColor] = [
-                PlatformColor(red: 0.65, green: 0.65, blue: 0.61, alpha: 1),
-                PlatformColor(red: 0.87, green: 0.28, blue: 0.13, alpha: 1),
-                PlatformColor(red: 0.48, green: 0.82, blue: 1, alpha: 1),
-            ]
-
-            for (index, lesson) in lessons.prefix(3).enumerated() {
-                let radius: Float = lesson.id == "mars" ? 0.42 : 0.34
+            let planets = lessons.filter { $0.kind == "planet" }
+            for (index, lesson) in planets.enumerated() {
+                let spacing = Float(index) / Float(max(planets.count - 1, 1))
+                let radius = radius(for: lesson.id)
                 let material = SimpleMaterial(
-                    color: destinationColors[index],
+                    color: color(for: lesson.id),
                     roughness: 0.72,
                     isMetallic: false
                 )
@@ -47,7 +38,11 @@ public struct AstroWorldView: View {
                     materials: [material]
                 )
                 destination.name = lesson.id
-                destination.position = destinationPositions[index]
+                destination.position = [
+                    -2.75 + spacing * 5.5,
+                    0.1 + sin(spacing * .pi) * 0.38,
+                    -Float(index % 3) * 0.12,
+                ]
                 destination.generateCollisionShapes(recursive: false)
                 root.addChild(destination)
             }
@@ -107,5 +102,30 @@ public struct AstroWorldView: View {
         }
         .accessibilityHidden(true)
         .background(Color.black)
+    }
+
+    private func radius(for destinationID: String) -> Float {
+        switch destinationID {
+        case "jupiter": 0.38
+        case "saturn": 0.34
+        case "uranus", "neptune": 0.27
+        case "earth", "venus": 0.2
+        case "mars": 0.17
+        default: 0.14
+        }
+    }
+
+    private func color(for destinationID: String) -> PlatformColor {
+        switch destinationID {
+        case "mercury": PlatformColor(red: 0.62, green: 0.61, blue: 0.57, alpha: 1)
+        case "venus": PlatformColor(red: 0.91, green: 0.68, blue: 0.28, alpha: 1)
+        case "earth": PlatformColor(red: 0.2, green: 0.58, blue: 0.92, alpha: 1)
+        case "mars": PlatformColor(red: 0.82, green: 0.25, blue: 0.12, alpha: 1)
+        case "jupiter": PlatformColor(red: 0.79, green: 0.59, blue: 0.43, alpha: 1)
+        case "saturn": PlatformColor(red: 0.88, green: 0.75, blue: 0.48, alpha: 1)
+        case "uranus": PlatformColor(red: 0.45, green: 0.86, blue: 0.87, alpha: 1)
+        case "neptune": PlatformColor(red: 0.18, green: 0.37, blue: 0.88, alpha: 1)
+        default: PlatformColor.white
+        }
     }
 }

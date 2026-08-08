@@ -6,6 +6,7 @@ import SwiftUI
 public struct GameRootView: View {
     @State private var session: MissionSession
     @FocusState private var primaryActionFocused: Bool
+    @FocusState private var focusedDestinationID: String?
     private let onProgressChanged: (GameProgress) -> Void
 
     public init(
@@ -125,8 +126,13 @@ public struct GameRootView: View {
         .onChange(of: session.progress) { _, progress in
             onProgressChanged(progress)
         }
-        .onChange(of: session.phase) {
-            primaryActionFocused = true
+        .onChange(of: session.phase) { _, phase in
+            switch phase {
+            case .missionPrompt, .navigation, .quizFeedback, .missionComplete:
+                primaryActionFocused = true
+            case .discoveryCard, .quiz, .quizRoundComplete:
+                primaryActionFocused = false
+            }
         }
         .onAppear {
             primaryActionFocused = true
@@ -327,32 +333,55 @@ public struct GameRootView: View {
     }
 
     private var destinationSelector: some View {
-        HStack(spacing: 12) {
-            ForEach(Array(session.lessons.enumerated()), id: \.element.id) { index, lesson in
-                Button {
-                    while session.focusedDestinationIndex != index {
-                        session.focusNext()
-                    }
-                } label: {
-                    VStack(spacing: 5) {
-                        Text(lesson.displayName)
-                            .font(.headline)
-                        if session.progress.destinations[lesson.id]?.isQuizCompleted == true {
-                            Label("Collected", systemImage: "checkmark.seal.fill")
-                                .font(.caption)
-                        } else if index == session.focusedDestinationIndex {
-                            Label("Selected", systemImage: "checkmark.circle.fill")
-                                .font(.caption)
-                        } else {
-                            Text("Explore")
-                                .font(.caption)
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 12) {
+                ForEach(Array(session.lessons.enumerated()), id: \.element.id) { index, lesson in
+                    Button {
+                        selectDestination(at: index)
+                        #if os(tvOS)
+                            session.confirm()
+                        #endif
+                    } label: {
+                        VStack(spacing: 4) {
+                            Text(lesson.displayName)
+                                .font(.headline)
+                            Text(lesson.kind.uppercased())
+                                .font(.caption2.weight(.black))
+                                .tracking(0.8)
+                                .foregroundStyle(.secondary)
+                            if session.progress.destinations[lesson.id]?.isQuizCompleted == true {
+                                Label("Collected", systemImage: "checkmark.seal.fill")
+                                    .font(.caption)
+                            } else if index == session.focusedDestinationIndex {
+                                Label("Selected", systemImage: "checkmark.circle.fill")
+                                    .font(.caption)
+                            } else {
+                                Text("Explore")
+                                    .font(.caption)
+                            }
                         }
+                        .frame(minWidth: 138)
                     }
-                    .frame(minWidth: 112)
+                    .buttonStyle(.bordered)
+                    .tint(index == session.focusedDestinationIndex ? .cyan : .gray)
+                    .focused($focusedDestinationID, equals: lesson.id)
                 }
-                .buttonStyle(.bordered)
-                .tint(index == session.focusedDestinationIndex ? .cyan : .gray)
             }
+        }
+        .scrollIndicators(.hidden)
+        .frame(maxWidth: 720)
+        .onChange(of: focusedDestinationID) { _, destinationID in
+            guard
+                let destinationID,
+                let index = session.lessons.firstIndex(where: { $0.id == destinationID })
+            else { return }
+            selectDestination(at: index)
+        }
+    }
+
+    private func selectDestination(at index: Int) {
+        while session.focusedDestinationIndex != index {
+            session.focusNext()
         }
     }
 

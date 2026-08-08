@@ -6,10 +6,14 @@ public enum QuizRoundCatalog {
         ageBand: AgeBand
     ) -> [QuizContent] {
         switch destinationID {
-        case "mercury": mercury(for: ageBand)
-        case "mars": mars(for: ageBand)
-        case "europa": europa(for: ageBand)
-        default: []
+        case "mercury": mercury(for: ageBand) + distanceQuizzes(for: "mercury", ageBand: ageBand)
+        case "mars": mars(for: ageBand) + distanceQuizzes(for: "mars", ageBand: ageBand)
+        case "europa": europa(for: ageBand) + distanceQuizzes(for: "europa", ageBand: ageBand)
+        default:
+            SolarSystemExpansionCatalog.quizzes(
+                destinationID: destinationID,
+                ageBand: ageBand
+            ) ?? []
         }
     }
 
@@ -244,5 +248,49 @@ public enum QuizRoundCatalog {
             retryFeedback: retryFeedback,
             hint: hint
         )
+    }
+
+    private static func distanceQuizzes(
+        for destinationID: String,
+        ageBand: AgeBand
+    ) -> [QuizContent] {
+        let details: (name: String, au: String, lightTime: String)
+        switch destinationID {
+        case "mercury": details = ("Mercury", "0.39 AU", "3.2 minutes")
+        case "mars": details = ("Mars", "1.52 AU", "12.7 minutes")
+        default: details = ("Europa", "about 5.2 AU", "about 43 minutes")
+        }
+
+        let auChoices = [
+            QuizChoice(id: "\(destinationID)-au", text: details.au),
+            QuizChoice(id: "\(destinationID)-au-earth", text: "1 AU"),
+            QuizChoice(id: "\(destinationID)-au-neptune", text: "30 AU"),
+        ]
+        let lightChoices = [
+            QuizChoice(id: "\(destinationID)-light", text: details.lightTime),
+            QuizChoice(id: "\(destinationID)-light-short", text: "about 1 second"),
+            QuizChoice(id: "\(destinationID)-light-long", text: "about 4 hours"),
+        ]
+
+        return [
+            make(
+                ageBand: ageBand,
+                prompt: "About how far is \(details.name) from the Sun?",
+                choices: auChoices,
+                correct: "\(destinationID)-au",
+                correctFeedback: "AU ace! \(details.name)’s clue is \(details.au).",
+                retryFeedback: "Try the AU number from the distance card.",
+                hint: "One AU is the average Sun-to-Earth distance."
+            ),
+            make(
+                ageBand: ageBand,
+                prompt: "How long does sunlight take to reach \(details.name)?",
+                choices: lightChoices,
+                correct: "\(destinationID)-light",
+                correctFeedback: "Light-speed win! The trip takes \(details.lightTime).",
+                retryFeedback: "Farther worlds wait longer for sunlight.",
+                hint: "Remember the number on the racing-sunlight card."
+            ),
+        ]
     }
 }
