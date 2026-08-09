@@ -48,6 +48,8 @@ public enum DiscoveryStoryCatalog {
         ageBand: AgeBand
     ) -> [DiscoverySlide] {
         switch destinationID {
+        case SpaceTechnologyCatalog.destinationID:
+            SpaceTechnologyCatalog.slides(ageBand: ageBand)
         case "mercury":
             mercurySlides(for: ageBand) + distanceSlides(for: "mercury", ageBand: ageBand)
         case "mars":

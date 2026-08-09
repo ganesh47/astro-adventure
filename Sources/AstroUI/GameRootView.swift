@@ -4,7 +4,29 @@ import AstroWorld
 import SwiftUI
 
 public struct GameRootView: View {
+    private enum ExplorerSection: String, CaseIterable, Identifiable {
+        case solarSystem
+        case technologyLab
+
+        var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .solarSystem: "Solar System"
+            case .technologyLab: "Technology Lab"
+            }
+        }
+
+        var systemImage: String {
+            switch self {
+            case .solarSystem: "circle.hexagongrid.fill"
+            case .technologyLab: "antenna.radiowaves.left.and.right"
+            }
+        }
+    }
+
     @State private var session: MissionSession
+    @State private var selectedSection: ExplorerSection = .solarSystem
     @FocusState private var primaryActionFocused: Bool
     @FocusState private var focusedDestinationID: String?
     private let onProgressChanged: (GameProgress) -> Void
@@ -198,7 +220,7 @@ public struct GameRootView: View {
                 Text(
                     session.completedDestinationCount > 0
                         ? "Keep exploring, discover surprising facts, and grow your score."
-                        : "Pick a world, see real space photos, then play a quick picture quiz."
+                        : "Pick a world or technology lab, see real space photos, then play a picture quiz."
                 )
                 .font(compact ? .subheadline : .title3)
                 .multilineTextAlignment(.center)
@@ -223,11 +245,16 @@ public struct GameRootView: View {
                 #endif
 
             case .navigation:
-                Text("Choose your next world")
-                    .font((compact ? Font.title3 : Font.title2).bold())
+                Text(
+                    selectedSection == .solarSystem
+                        ? "Choose your next world"
+                        : "Enter the Space Technology Lab"
+                )
+                .font((compact ? Font.title3 : Font.title2).bold())
+                sectionSelector(compact: compact)
                 destinationSelector(compact: compact)
                 primaryButton(
-                    "Explore \(session.focusedLesson?.displayName ?? "World")",
+                    "Explore \(session.focusedLesson?.displayName ?? "Adventure")",
                     systemImage: "sparkles"
                 ) {
                     session.confirm()
@@ -305,11 +332,9 @@ public struct GameRootView: View {
                 }
             }
 
-            Text(
-                "Worlds explored \(session.completedDestinationCount) of \(session.lessons.count)"
-            )
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(.white.opacity(0.7))
+            Text(progressSummary)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.7))
         }
         .frame(maxWidth: 760)
         .padding(compact ? 14 : 26)
@@ -323,13 +348,15 @@ public struct GameRootView: View {
     private func missionSteps(compact: Bool) -> some View {
         ViewThatFits(in: .horizontal) {
             HStack(spacing: compact ? 6 : 10) {
-                missionStep("Pick a world", systemImage: "globe.americas.fill", compact: compact)
+                missionStep(
+                    "Pick an adventure", systemImage: "globe.americas.fill", compact: compact)
                 missionStep("See NASA photos", systemImage: "photo.fill", compact: compact)
                 missionStep("Play a quiz", systemImage: "gamecontroller.fill", compact: compact)
             }
 
             VStack(spacing: 8) {
-                missionStep("Pick a world", systemImage: "globe.americas.fill", compact: compact)
+                missionStep(
+                    "Pick an adventure", systemImage: "globe.americas.fill", compact: compact)
                 missionStep("See NASA photos", systemImage: "photo.fill", compact: compact)
                 missionStep("Play a quiz", systemImage: "gamecontroller.fill", compact: compact)
             }
@@ -345,10 +372,28 @@ public struct GameRootView: View {
             .background(.white.opacity(0.1), in: Capsule())
     }
 
+    private func sectionSelector(compact: Bool) -> some View {
+        HStack(spacing: compact ? 8 : 12) {
+            ForEach(ExplorerSection.allCases) { section in
+                Button {
+                    selectSection(section)
+                } label: {
+                    Label(section.title, systemImage: section.systemImage)
+                        .font((compact ? Font.caption : Font.subheadline).weight(.black))
+                        .padding(.horizontal, compact ? 4 : 10)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(compact ? .small : .regular)
+                .tint(selectedSection == section ? .cyan : .gray.opacity(0.55))
+                .accessibilityHint("Shows \(section.title) adventures")
+            }
+        }
+    }
+
     private func destinationSelector(compact: Bool) -> some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: compact ? 8 : 12) {
-                ForEach(Array(session.lessons.enumerated()), id: \.element.id) { index, lesson in
+                ForEach(sectionLessons, id: \.element.id) { index, lesson in
                     Button {
                         selectDestination(at: index)
                         #if os(tvOS)
@@ -396,6 +441,35 @@ public struct GameRootView: View {
             else { return }
             selectDestination(at: index)
         }
+    }
+
+    private var sectionLessons: [(offset: Int, element: DestinationLesson)] {
+        Array(session.lessons.enumerated()).filter { _, lesson in
+            let isTechnologyLab = lesson.id == "space-technology-lab"
+            return selectedSection == .technologyLab ? isTechnologyLab : !isTechnologyLab
+        }
+    }
+
+    private var progressSummary: String {
+        let lessons = sectionLessons.map(\.element)
+        let completed = lessons.filter {
+            session.progress.destinations[$0.id]?.isQuizCompleted == true
+        }.count
+
+        return switch selectedSection {
+        case .solarSystem:
+            "Worlds explored \(completed) of \(lessons.count)"
+        case .technologyLab:
+            "Technology labs completed \(completed) of \(lessons.count)"
+        }
+    }
+
+    private func selectSection(_ section: ExplorerSection) {
+        guard selectedSection != section else { return }
+        selectedSection = section
+        guard let first = sectionLessons.first else { return }
+        selectDestination(at: first.offset)
+        focusedDestinationID = first.element.id
     }
 
     private func selectDestination(at index: Int) {

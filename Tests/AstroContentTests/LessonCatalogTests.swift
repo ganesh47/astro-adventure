@@ -4,7 +4,7 @@ import XCTest
 @testable import AstroGameCore
 
 final class LessonCatalogTests: XCTestCase {
-    func testEveryDestinationAndAgeBandHasASevenCardDiscoveryDeck() throws {
+    func testEveryDestinationAndAgeBandHasACompleteDiscoveryDeck() throws {
         let lessons = try LessonCatalog.bundled()
 
         for lesson in lessons {
@@ -14,7 +14,8 @@ final class LessonCatalogTests: XCTestCase {
                     ageBand: ageBand
                 )
 
-                XCTAssertEqual(slides.count, 7, "\(lesson.id) \(ageBand)")
+                let expectedCount = lesson.id == "space-technology-lab" ? 10 : 7
+                XCTAssertEqual(slides.count, expectedCount, "\(lesson.id) \(ageBand)")
                 XCTAssertTrue(slides.allSatisfy { !$0.imageName.isEmpty })
                 XCTAssertTrue(slides.allSatisfy { !$0.narration.isEmpty })
                 XCTAssertTrue(slides.allSatisfy { !$0.credit.isEmpty })
@@ -23,7 +24,7 @@ final class LessonCatalogTests: XCTestCase {
         }
     }
 
-    func testEveryFlashcardDeckHasFactsAndSevenQuizQuestions() throws {
+    func testEveryFlashcardDeckHasFactsAndMatchingQuizQuestions() throws {
         for lesson in try LessonCatalog.bundled() {
             for ageBand in AgeBand.allCases {
                 let slides = DiscoveryStoryCatalog.slides(
@@ -36,7 +37,7 @@ final class LessonCatalogTests: XCTestCase {
                     destinationID: lesson.id,
                     ageBand: ageBand
                 )
-                XCTAssertEqual(quizzes.count, 7)
+                XCTAssertEqual(quizzes.count, slides.count)
                 XCTAssertTrue(
                     quizzes.allSatisfy { quiz in
                         quiz.choices.contains { $0.id == quiz.correctChoiceID }
@@ -54,9 +55,27 @@ final class LessonCatalogTests: XCTestCase {
             lessons.map(\.id),
             [
                 "sun", "mercury", "venus", "earth", "moon", "mars", "ceres", "jupiter",
-                "europa", "saturn", "uranus", "neptune", "pluto",
+                "europa", "saturn", "uranus", "neptune", "pluto", "space-technology-lab",
             ]
         )
+    }
+
+    func testTechnologyLabCoversCoreSpaceResearchTools() throws {
+        let titles = DiscoveryStoryCatalog.slides(
+            destinationID: "space-technology-lab",
+            ageBand: .ages7To9
+        ).map(\.title)
+
+        XCTAssertTrue(titles.contains { $0.contains("Engines") })
+        XCTAssertTrue(titles.contains { $0.contains("Launch vehicles") })
+        XCTAssertTrue(titles.contains { $0.contains("Boosters") })
+        XCTAssertTrue(titles.contains { $0.contains("ISS") })
+        XCTAssertTrue(titles.contains { $0.contains("Satellites") })
+        XCTAssertTrue(titles.contains { $0.contains("spacesuit") })
+        XCTAssertTrue(titles.contains { $0.contains("Radio") })
+        XCTAssertTrue(titles.contains { $0.contains("Deep Space Network") })
+        XCTAssertTrue(titles.contains { $0.contains("Telescopes") })
+        XCTAssertTrue(titles.contains { $0.contains("Robots") })
     }
 
     func testEveryAgeBandHasTheExpectedChoiceCount() throws {

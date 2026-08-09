@@ -6,6 +6,8 @@ public enum QuizRoundCatalog {
         ageBand: AgeBand
     ) -> [QuizContent] {
         switch destinationID {
+        case SpaceTechnologyCatalog.destinationID:
+            SpaceTechnologyCatalog.quizzes(ageBand: ageBand)
         case "mercury": mercury(for: ageBand) + distanceQuizzes(for: "mercury", ageBand: ageBand)
         case "mars": mars(for: ageBand) + distanceQuizzes(for: "mars", ageBand: ageBand)
         case "europa": europa(for: ageBand) + distanceQuizzes(for: "europa", ageBand: ageBand)

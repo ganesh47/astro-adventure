@@ -42,6 +42,16 @@ No NASA endorsement is implied.
 | `pluto-heart.jpg` | PIA19718 | NASA/Johns Hopkins University Applied Physics Laboratory/Southwest Research Institute | https://images.nasa.gov/details/PIA19718 |
 | `ceres-map.jpg` | PIA20351 | NASA/JPL-Caltech/UCLA/MPS/DLR/IDA | https://images.nasa.gov/details/PIA20351 |
 | `ceres-occator.jpg` | PIA21398 | NASA/JPL-Caltech/UCLA/MPS/DLR/IDA | https://images.nasa.gov/details/PIA21398 |
+| `tech-engine.jpg` | SSC-2015-00064 | NASA/Stennis Space Center | https://images.nasa.gov/details/SSC-2015-00064 |
+| `tech-launch.jpg` | NHQ202211160028 | NASA/Joel Kowsky | https://images.nasa.gov/details/NHQ202211160028 |
+| `tech-boosters.jpg` | 20220721 FSB2 1 | NASA/Northrop Grumman | https://images.nasa.gov/details/20220721%20FSB2%201 |
+| `tech-iss.jpg` | iss072e316172 | NASA | https://images.nasa.gov/details/iss072e316172 |
+| `tech-satellite.jpg` | GSFC_20171208_Archive_e001696 | NASA/Goddard Space Flight Center | https://images.nasa.gov/details/GSFC_20171208_Archive_e001696 |
+| `tech-spacesuit.jpg` | iss054e022823 | NASA | https://images.nasa.gov/details/iss054e022823 |
+| `tech-radio.jpg` | PIA25136 | NASA/JPL-Caltech | https://images.nasa.gov/details/PIA25136 |
+| `tech-dsn.jpg` | PIA26147 | NASA/JPL-Caltech | https://images.nasa.gov/details/PIA26147 |
+| `tech-telescope.jpg` | GSFC_20171208_Archive_e002151 | NASA | https://images.nasa.gov/details/GSFC_20171208_Archive_e002151 |
+| `tech-rover.jpg` | PIA24542 | NASA/JPL-Caltech/MSSS | https://images.nasa.gov/details/PIA24542 |
 
 ## Educational facts
 
@@ -63,6 +73,14 @@ are reviewed against NASA's destination and mission references:
 - [Neptune facts](https://science.nasa.gov/neptune/neptune-facts/)
 - [Pluto facts](https://science.nasa.gov/dwarf-planets/pluto/facts/)
 - [Ceres facts](https://science.nasa.gov/dwarf-planets/ceres/facts/)
+- [Space Launch System propulsion](https://www.nasa.gov/wp-content/uploads/2020/02/sls-appendix.pdf)
+- [International Space Station facts and figures](https://www.nasa.gov/international-space-station/space-station-facts-and-figures/)
+- [What is a satellite?](https://spaceplace.nasa.gov/satellite/en/)
+- [What is a spacesuit?](https://www.nasa.gov/humans-in-space/what-is-a-spacesuit/)
+- [Deep Space Network overview](https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/)
+- [Radio astronomy introduction](https://radiojove.gsfc.nasa.gov/education/educationalcd/RadioAstronomyTutorial/Workbook%20PDF%20Files/Introduction.pdf)
+- [Why put a telescope in space?](https://science.nasa.gov/mission/hubble/overview/why-have-a-telescope-in-space/)
+- [NASA robotics](https://www.nasa.gov/robotics/)
 
 Numbers are rounded for an age-appropriate learning experience. Temperature
 values refer to representative surface extremes and mission plans may be updated

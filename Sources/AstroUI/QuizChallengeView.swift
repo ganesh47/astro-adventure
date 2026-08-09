@@ -332,6 +332,66 @@ struct QuizChallengeView: View {
                 symbol: "scope",
                 color: choiceID == "juno_1521" ? .cyan : .indigo
             )
+        case "tech_thrust", "tech_solar_pull", "tech_cloud_bounce":
+            QuizOptionVisual(
+                imageName: "tech-engine",
+                symbol: choiceID == "tech_thrust" ? "flame.fill" : "arrow.up.circle.fill",
+                color: choiceID == "tech_thrust" ? .orange : .purple
+            )
+        case "tech_payload", "tech_launch_smoke", "tech_empty_tank":
+            QuizOptionVisual(
+                imageName: "tech-launch",
+                symbol: choiceID == "tech_payload" ? "shippingbox.fill" : "cloud.fill",
+                color: choiceID == "tech_payload" ? .cyan : .gray
+            )
+        case "tech_stage_mass", "tech_stage_color", "tech_stage_sound":
+            QuizOptionVisual(
+                imageName: "tech-boosters",
+                symbol: "arrow.up.right.circle.fill",
+                color: choiceID == "tech_stage_mass" ? .orange : .indigo
+            )
+        case "tech_iss_90", "tech_iss_90_days", "tech_iss_9_years":
+            QuizOptionVisual(
+                imageName: "tech-iss",
+                symbol: "clock.fill",
+                color: choiceID == "tech_iss_90" ? .cyan : .purple
+            )
+        case "tech_satellite_parts", "tech_satellite_wings", "tech_satellite_sails":
+            QuizOptionVisual(
+                imageName: "tech-satellite",
+                symbol: "antenna.radiowaves.left.and.right",
+                color: choiceID == "tech_satellite_parts" ? .blue : .orange
+            )
+        case "tech_suit_life", "tech_suit_wings", "tech_suit_room":
+            QuizOptionVisual(
+                imageName: "tech-spacesuit",
+                symbol: "person.crop.circle.fill",
+                color: choiceID == "tech_suit_life" ? .mint : .purple
+            )
+        case "tech_radio_waves", "tech_radio_rain", "tech_radio_rocks":
+            QuizOptionVisual(
+                imageName: "tech-radio",
+                symbol: "wave.3.right.circle.fill",
+                color: choiceID == "tech_radio_waves" ? .cyan : .brown
+            )
+        case "tech_dsn_rotation", "tech_dsn_weather", "tech_dsn_gravity":
+            QuizOptionVisual(
+                imageName: "tech-dsn",
+                symbol: "globe.americas.fill",
+                color: choiceID == "tech_dsn_rotation" ? .teal : .indigo
+            )
+        case "tech_telescope_air", "tech_telescope_near", "tech_telescope_day":
+            QuizOptionVisual(
+                imageName: "tech-telescope",
+                symbol: "telescope.fill",
+                color: choiceID == "tech_telescope_air" ? .purple : .blue
+            )
+        case "tech_rover_drive", "tech_orbiter_stay", "tech_dish_drive":
+            QuizOptionVisual(
+                imageName: "tech-rover",
+                symbol: "camera.metering.center.weighted",
+                color: choiceID == "tech_rover_drive" ? .orange : .gray
+            )
         default:
             QuizOptionVisual(
                 imageName: "mercury-horizon",

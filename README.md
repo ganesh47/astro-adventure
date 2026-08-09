@@ -6,7 +6,7 @@
 [![CodeQL](https://github.com/ganesh47/astro-adventure/actions/workflows/codeql.yml/badge.svg)](https://github.com/ganesh47/astro-adventure/actions/workflows/codeql.yml)
 [![Xcode Cloud TestFlight](https://github.com/ganesh47/astro-adventure/actions/workflows/testflight.yml/badge.svg)](https://github.com/ganesh47/astro-adventure/actions/workflows/testflight.yml)
 
-Astro Adventure is an open-source, native Apple astronomy game for kids ages 4–12. Players explore the Sun, all eight planets, moons, and dwarf planets; collect NASA-powered discovery cards; and reinforce what they find through encouraging age-banded challenges.
+Astro Adventure is an open-source, native Apple astronomy game for kids ages 4–12. Players explore the Sun, all eight planets, moons, dwarf planets, and a Space Technology Lab; collect NASA-powered discovery cards; and reinforce what they find through encouraging age-banded challenges.
 
 The active targets are iPhone, iPad, and Apple TV. The game uses Swift 6, SwiftUI, and RealityKit, with a shared gameplay core and platform-appropriate touch, Siri Remote, and physical-controller input.
 
@@ -20,6 +20,7 @@ The active targets are iPhone, iPad, and Apple TV. The game uses Swift 6, SwiftU
 - Three age modes: Junior Explorer (4–6), Space Explorer (7–9), and Mission Scientist (10–12).
 - Shared mission flow: prompt, navigation, scan, discovery card, quiz, feedback, and completion.
 - Thirteen Solar System destinations with seven flashcards and seven quiz questions per destination.
+- A ten-card Space Technology Lab covering propulsion, launch vehicles, boosters, the ISS, satellites, spacesuits, radio astronomy, deep-space communications, telescopes, and robotic explorers.
 - Kid-friendly concepts spanning colors, round shapes and gravity, AU distance, sunlight travel time, rotation, orbits, and signature planetary features.
 - RealityKit scene rendered from source-controlled primitives.
 - SwiftUI interface for iOS, iPadOS, and tvOS.
