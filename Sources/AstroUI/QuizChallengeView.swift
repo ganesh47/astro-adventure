@@ -32,6 +32,8 @@ struct QuizChallengeView: View {
 
     var body: some View {
         GeometryReader { proxy in
+            let compact = proxy.size.height < 520
+
             ZStack {
                 Color.black.opacity(0.48)
                     .ignoresSafeArea()
@@ -47,20 +49,23 @@ struct QuizChallengeView: View {
                 )
                 .ignoresSafeArea()
 
-                VStack(spacing: 22) {
-                    challengeHeader
-                    question
-                    answerCards(availableWidth: proxy.size.width - 128)
+                VStack(spacing: compact ? 8 : 22) {
+                    challengeHeader(compact: compact)
+                    question(compact: compact)
+                    answerCards(
+                        availableWidth: proxy.size.width - (compact ? 88 : 128),
+                        compact: compact
+                    )
 
-                    if isShowingHint {
-                        hintBanner
+                    if isShowingHint && !compact {
+                        hintBanner(compact: false)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
 
-                    utilityControls
+                    utilityControls(compact: compact)
                 }
-                .padding(.horizontal, 64)
-                .padding(.vertical, 42)
+                .padding(.horizontal, compact ? 44 : 64)
+                .padding(.vertical, compact ? 10 : 42)
             }
         }
         .preferredColorScheme(.dark)
@@ -70,52 +75,58 @@ struct QuizChallengeView: View {
         }
     }
 
-    private var challengeHeader: some View {
+    private func challengeHeader(compact: Bool) -> some View {
         HStack {
-            VStack(alignment: .leading, spacing: 5) {
+            VStack(alignment: .leading, spacing: compact ? 1 : 5) {
                 Label("CLUE CHALLENGE", systemImage: "sparkles")
-                    .font(.headline.weight(.black))
-                    .tracking(1.8)
+                    .font((compact ? Font.caption : Font.headline).weight(.black))
+                    .tracking(compact ? 1.2 : 1.8)
                     .foregroundStyle(.yellow)
                 Text("\(destinationName) · \(ageBand.modeName)")
-                    .font(.subheadline.weight(.semibold))
+                    .font((compact ? Font.caption2 : Font.subheadline).weight(.semibold))
                     .foregroundStyle(.white.opacity(0.72))
             }
 
             Spacer()
 
-            HStack(spacing: 14) {
+            HStack(spacing: compact ? 6 : 14) {
                 statusPill(
                     "\(questionIndex + 1)/\(questionCount)",
                     icon: "rectangle.stack.fill",
-                    color: .cyan
+                    color: .cyan,
+                    compact: compact
                 )
-                statusPill("\(score)", icon: "star.fill", color: .yellow)
-                statusPill("\(streak)", icon: "flame.fill", color: .orange)
+                statusPill("\(score)", icon: "star.fill", color: .yellow, compact: compact)
+                statusPill("\(streak)", icon: "flame.fill", color: .orange, compact: compact)
             }
         }
     }
 
-    private func statusPill(_ value: String, icon: String, color: Color) -> some View {
+    private func statusPill(
+        _ value: String,
+        icon: String,
+        color: Color,
+        compact: Bool
+    ) -> some View {
         Label(value, systemImage: icon)
-            .font(.headline.monospacedDigit().weight(.black))
+            .font((compact ? Font.caption : Font.headline).monospacedDigit().weight(.black))
             .foregroundStyle(color)
-            .padding(.horizontal, 15)
-            .padding(.vertical, 9)
+            .padding(.horizontal, compact ? 9 : 15)
+            .padding(.vertical, compact ? 5 : 9)
             .background(.white.opacity(0.08), in: Capsule())
             .overlay { Capsule().stroke(color.opacity(0.4), lineWidth: 1.5) }
     }
 
-    private var question: some View {
-        VStack(spacing: 8) {
+    private func question(compact: Bool) -> some View {
+        VStack(spacing: compact ? 2 : 8) {
             Text("Choose your best clue")
-                .font(.headline.weight(.bold))
+                .font((compact ? Font.caption : Font.headline).weight(.bold))
                 .foregroundStyle(.white.opacity(0.66))
                 .textCase(.uppercase)
                 .tracking(1.4)
 
             Text(quiz.prompt)
-                .font(.system(size: 45, weight: .bold, design: .rounded))
+                .font(.system(size: compact ? 25 : 45, weight: .bold, design: .rounded))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
@@ -124,8 +135,8 @@ struct QuizChallengeView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private func answerCards(availableWidth: CGFloat) -> some View {
-        let spacing: CGFloat = 24
+    private func answerCards(availableWidth: CGFloat, compact: Bool) -> some View {
+        let spacing: CGFloat = compact ? 10 : 24
         let count = max(CGFloat(quiz.choices.count), 1)
         let cardWidth = min(
             (availableWidth - spacing * (count - 1)) / count,
@@ -144,7 +155,8 @@ struct QuizChallengeView: View {
                         letter: String(UnicodeScalar(65 + index)!),
                         text: choice.text,
                         visual: optionVisual,
-                        isFocused: isFocused
+                        isFocused: isFocused,
+                        compact: compact
                     )
                 }
                 .buttonStyle(.plain)
@@ -157,13 +169,13 @@ struct QuizChallengeView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private var hintBanner: some View {
+    private func hintBanner(compact: Bool) -> some View {
         HStack(spacing: 14) {
             Image(systemName: "lightbulb.max.fill")
                 .font(.title2)
                 .foregroundStyle(.yellow)
             Text(quiz.hint)
-                .font(.title3.weight(.semibold))
+                .font((compact ? Font.subheadline : Font.title3).weight(.semibold))
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 14)
@@ -179,20 +191,27 @@ struct QuizChallengeView: View {
         .accessibilityLabel("Hint, \(quiz.hint)")
     }
 
-    private var utilityControls: some View {
-        HStack(spacing: 18) {
+    private func utilityControls(compact: Bool) -> some View {
+        HStack(spacing: compact ? 8 : 18) {
             Button(action: onBack) {
-                Label("Discovery Story", systemImage: "photo.on.rectangle.angled")
+                Label(
+                    compact ? "Cards" : "Discovery Story", systemImage: "photo.on.rectangle.angled")
             }
             .buttonStyle(.bordered)
-            .controlSize(.large)
+            .controlSize(compact ? .small : .large)
             .focused($focusedUtility, equals: .back)
 
             Spacer()
 
-            Text("Move, focus, and press to answer")
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(.white.opacity(0.55))
+            Text(
+                compact && isShowingHint
+                    ? quiz.hint
+                    : (compact ? "Tap an answer" : "Move, focus, and press to answer")
+            )
+            .font((compact ? Font.caption : Font.subheadline).weight(.medium))
+            .foregroundStyle(isShowingHint ? .yellow : .white.opacity(0.55))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
 
             Spacer()
 
@@ -204,7 +223,7 @@ struct QuizChallengeView: View {
                 .foregroundStyle(.yellow)
             }
             .buttonStyle(.bordered)
-            .controlSize(.large)
+            .controlSize(compact ? .small : .large)
             .disabled(isShowingHint)
             .focused($focusedUtility, equals: .hint)
         }
@@ -334,6 +353,7 @@ private struct QuizAnswerCard: View {
     let text: String
     let visual: QuizOptionVisual
     let isFocused: Bool
+    let compact: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -343,7 +363,7 @@ private struct QuizAnswerCard: View {
                         .resizable()
                         .scaledToFill()
                         .frame(maxWidth: .infinity)
-                        .frame(height: 230)
+                        .frame(height: compact ? 82 : 230)
                         .clipped()
                 } else {
                     visual.color.opacity(0.32)
@@ -357,36 +377,40 @@ private struct QuizAnswerCard: View {
 
                 HStack {
                     Text(letter)
-                        .font(.title2.weight(.black))
-                        .frame(width: 52, height: 52)
+                        .font((compact ? Font.subheadline : Font.title2).weight(.black))
+                        .frame(width: compact ? 30 : 52, height: compact ? 30 : 52)
                         .background(.white, in: Circle())
                         .foregroundStyle(visual.color)
 
                     Spacer()
 
                     Image(systemName: visual.symbol)
-                        .font(.title.weight(.bold))
+                        .font((compact ? Font.title3 : Font.title).weight(.bold))
                         .foregroundStyle(.white)
                         .shadow(radius: 8)
                 }
-                .padding(18)
+                .padding(compact ? 8 : 18)
             }
-            .frame(height: 230)
+            .frame(height: compact ? 82 : 230)
             .clipped()
 
             Text(text)
-                .font(.system(size: 25, weight: .bold, design: .rounded))
+                .font(.system(size: compact ? 15 : 25, weight: .bold, design: .rounded))
                 .multilineTextAlignment(.leading)
                 .lineLimit(3)
                 .minimumScaleFactor(0.75)
-                .frame(maxWidth: .infinity, minHeight: 120, alignment: .topLeading)
-                .padding(20)
+                .frame(
+                    maxWidth: .infinity,
+                    minHeight: compact ? 48 : 120,
+                    alignment: .topLeading
+                )
+                .padding(compact ? 8 : 20)
                 .foregroundStyle(.white)
                 .background(visual.color.opacity(0.42))
         }
-        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: compact ? 18 : 30, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
+            RoundedRectangle(cornerRadius: compact ? 18 : 30, style: .continuous)
                 .stroke(
                     isFocused ? Color.white : visual.color.opacity(0.72),
                     lineWidth: isFocused ? 6 : 2
@@ -397,7 +421,7 @@ private struct QuizAnswerCard: View {
             radius: isFocused ? 30 : 10,
             y: isFocused ? 8 : 4
         )
-        .scaleEffect(isFocused ? 1.055 : 0.96)
+        .scaleEffect(isFocused ? (compact ? 1.02 : 1.055) : (compact ? 0.99 : 0.96))
         .opacity(isFocused ? 1 : 0.78)
         .animation(.spring(response: 0.28, dampingFraction: 0.72), value: isFocused)
     }

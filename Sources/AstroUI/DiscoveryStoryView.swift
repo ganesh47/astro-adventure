@@ -37,6 +37,8 @@ struct DiscoveryStoryView: View {
     var body: some View {
         GeometryReader { proxy in
             if let slide = selectedSlide {
+                let compact = proxy.size.height < 520
+
                 ZStack {
                     if let image = bundledImage(named: slide.imageName) {
                         image
@@ -71,14 +73,14 @@ struct DiscoveryStoryView: View {
                     .ignoresSafeArea()
                     .accessibilityHidden(true)
 
-                    VStack(alignment: .leading, spacing: 0) {
-                        storyHeader(slide: slide)
-                        Spacer()
-                        storyCopy(slide: slide)
-                        storyControls
+                    VStack(alignment: .leading, spacing: compact ? 6 : 0) {
+                        storyHeader(slide: slide, compact: compact)
+                        Spacer(minLength: compact ? 4 : 8)
+                        storyCopy(slide: slide, compact: compact)
+                        storyControls(compact: compact)
                     }
-                    .padding(.horizontal, 64)
-                    .padding(.vertical, 46)
+                    .padding(.horizontal, compact ? 44 : 64)
+                    .padding(.vertical, compact ? 12 : 46)
                 }
                 .animation(.easeInOut(duration: 0.45), value: selectedIndex)
                 .onAppear {
@@ -108,33 +110,37 @@ struct DiscoveryStoryView: View {
         .preferredColorScheme(.dark)
     }
 
-    private func storyHeader(slide: DiscoverySlide) -> some View {
+    private func storyHeader(slide: DiscoverySlide, compact: Bool) -> some View {
         HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: compact ? 2 : 8) {
                 Label(
                     "SPACE FLASHCARD · \(destinationName.uppercased())",
                     systemImage: "rectangle.stack.fill"
                 )
-                .font(.headline.weight(.black))
-                .tracking(1.8)
+                .font((compact ? Font.caption : Font.headline).weight(.black))
+                .tracking(compact ? 1.2 : 1.8)
                 Text("\(ageBand.modeName) · \(ageBand.displayName)")
-                    .font(.subheadline.weight(.semibold))
+                    .font((compact ? Font.caption2 : Font.subheadline).weight(.semibold))
                     .foregroundStyle(.white.opacity(0.76))
             }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 14)
+            .padding(.horizontal, compact ? 10 : 18)
+            .padding(.vertical, compact ? 7 : 14)
             .background(
                 .black.opacity(0.5),
-                in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+                in: RoundedRectangle(cornerRadius: compact ? 12 : 18, style: .continuous)
             )
 
             Spacer()
 
-            HStack(spacing: 10) {
+            HStack(spacing: compact ? 5 : 10) {
                 ForEach(slides.indices, id: \.self) { index in
                     Capsule()
                         .fill(index == selectedIndex ? Color.cyan : Color.white.opacity(0.35))
-                        .frame(width: index == selectedIndex ? 42 : 20, height: 8)
+                        .frame(
+                            width: index == selectedIndex
+                                ? (compact ? 24 : 42) : (compact ? 12 : 20),
+                            height: compact ? 5 : 8
+                        )
                 }
             }
             .accessibilityElement(children: .ignore)
@@ -143,48 +149,61 @@ struct DiscoveryStoryView: View {
         }
     }
 
-    private func storyCopy(slide: DiscoverySlide) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
+    private func storyCopy(slide: DiscoverySlide, compact: Bool) -> some View {
+        VStack(alignment: .leading, spacing: compact ? 6 : 14) {
             Text(slide.title)
-                .font(.system(size: 52, weight: .bold, design: .rounded))
+                .font(.system(size: compact ? 30 : 52, weight: .bold, design: .rounded))
                 .lineLimit(2)
+                .minimumScaleFactor(0.78)
 
             Text(slide.body)
-                .font(.system(size: 30, weight: .medium, design: .rounded))
+                .font(.system(size: compact ? 17 : 30, weight: .medium, design: .rounded))
                 .foregroundStyle(.white.opacity(0.94))
-                .lineSpacing(5)
+                .lineSpacing(compact ? 1 : 5)
+                .lineLimit(compact ? 2 : nil)
+                .minimumScaleFactor(0.78)
                 .frame(maxWidth: 1120, alignment: .leading)
 
-            HStack(spacing: 14) {
+            HStack(spacing: compact ? 8 : 14) {
                 ForEach(Array(slide.facts.enumerated()), id: \.offset) { _, fact in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(fact.value)
-                            .font(.system(size: 26, weight: .black, design: .rounded))
+                            .font(
+                                .system(
+                                    size: compact ? 17 : 26,
+                                    weight: .black,
+                                    design: .rounded
+                                )
+                            )
                             .foregroundStyle(.yellow)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
                         Text(fact.label.uppercased())
-                            .font(.caption.weight(.bold))
+                            .font((compact ? Font.caption2 : Font.caption).weight(.bold))
                             .tracking(0.8)
                             .foregroundStyle(.white.opacity(0.78))
                     }
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, compact ? 10 : 18)
+                    .padding(.vertical, compact ? 5 : 10)
                     .background(.black.opacity(0.58), in: Capsule())
                     .overlay { Capsule().stroke(.yellow.opacity(0.48), lineWidth: 2) }
                 }
             }
 
             Text("\(slide.credit) · \(slide.sourceID)")
-                .font(.footnote.weight(.medium))
+                .font((compact ? Font.caption2 : Font.footnote).weight(.medium))
                 .foregroundStyle(.white.opacity(0.68))
-                .padding(.top, 4)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .padding(.top, compact ? 0 : 4)
         }
         .shadow(color: .black.opacity(0.8), radius: 12, y: 4)
-        .padding(.bottom, 28)
+        .padding(.bottom, compact ? 4 : 28)
         .accessibilityElement(children: .combine)
     }
 
-    private var storyControls: some View {
-        HStack(spacing: 18) {
+    private func storyControls(compact: Bool) -> some View {
+        HStack(spacing: compact ? 8 : 18) {
             Button {
                 narrator.stopSpeaking(at: .immediate)
                 onBack()
@@ -192,16 +211,16 @@ struct DiscoveryStoryView: View {
                 Label("Worlds", systemImage: "globe.americas.fill")
             }
             .buttonStyle(.bordered)
-            .controlSize(.large)
+            .controlSize(compact ? .small : .large)
             .focused($focusedControl, equals: .worlds)
 
             Button {
                 showPreviousSlide()
             } label: {
-                Label("Previous", systemImage: "chevron.left")
+                Label(compact ? "Back" : "Previous", systemImage: "chevron.left")
             }
             .buttonStyle(.bordered)
-            .controlSize(.large)
+            .controlSize(compact ? .small : .large)
             .disabled(selectedIndex == 0)
             .focused($focusedControl, equals: .previous)
 
@@ -209,35 +228,41 @@ struct DiscoveryStoryView: View {
                 narrationEnabled.toggle()
             } label: {
                 Label(
-                    narrationEnabled ? "Narration On" : "Narration Off",
+                    compact
+                        ? (narrationEnabled ? "Sound On" : "Sound Off")
+                        : (narrationEnabled ? "Narration On" : "Narration Off"),
                     systemImage: narrationEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill"
                 )
             }
             .buttonStyle(.bordered)
-            .controlSize(.large)
+            .controlSize(compact ? .small : .large)
             .focused($focusedControl, equals: .narration)
             .accessibilityHint("Turns automatic spoken descriptions on or off")
 
             Spacer()
 
-            Text("CARD \(selectedIndex + 1) OF \(slides.count)")
-                .font(.headline.monospacedDigit())
-                .foregroundStyle(.white.opacity(0.78))
+            Text(
+                compact
+                    ? "\(selectedIndex + 1)/\(slides.count)"
+                    : "CARD \(selectedIndex + 1) OF \(slides.count)"
+            )
+            .font((compact ? Font.caption : Font.headline).monospacedDigit())
+            .foregroundStyle(.white.opacity(0.78))
 
             Button {
                 showNextSlideOrComplete()
             } label: {
                 Label(
                     selectedIndex == slides.count - 1
-                        ? "Start \(quizQuestionCount)-Question Quiz"
-                        : "Next Card",
+                        ? (compact ? "Start Quiz" : "Start \(quizQuestionCount)-Question Quiz")
+                        : (compact ? "Next" : "Next Card"),
                     systemImage: selectedIndex == slides.count - 1
                         ? "gamecontroller.fill"
                         : "chevron.right"
                 )
             }
             .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .controlSize(compact ? .small : .large)
             .focused($focusedControl, equals: .next)
         }
     }

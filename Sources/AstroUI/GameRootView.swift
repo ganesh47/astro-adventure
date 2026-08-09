@@ -114,12 +114,20 @@ public struct GameRootView: View {
                 )
                 .id("\(lesson.id)-\(session.ageBand.rawValue)-quiz")
             } else {
-                VStack(spacing: 20) {
-                    header
-                    Spacer()
-                    missionPanel
+                GeometryReader { proxy in
+                    let compact = proxy.size.height < 520
+
+                    VStack(spacing: compact ? 8 : 20) {
+                        header(compact: compact)
+                        Spacer(minLength: compact ? 4 : 20)
+                        missionPanel(compact: compact)
+                        if compact {
+                            Spacer(minLength: 0)
+                        }
+                    }
+                    .padding(.horizontal, compact ? 48 : 28)
+                    .padding(.vertical, compact ? 10 : 28)
                 }
-                .padding(28)
             }
         }
         .preferredColorScheme(.dark)
@@ -139,15 +147,17 @@ public struct GameRootView: View {
         }
     }
 
-    private var header: some View {
+    private func header(compact: Bool) -> some View {
         HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: compact ? 0 : 4) {
                 Text("ASTRO ADVENTURE")
-                    .font(.headline.weight(.black))
+                    .font((compact ? Font.subheadline : Font.headline).weight(.black))
                     .tracking(1.5)
-                Text("Explore • Learn • Play")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if !compact {
+                    Text("Explore • Learn • Play")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             Spacer()
@@ -173,8 +183,8 @@ public struct GameRootView: View {
     }
 
     @ViewBuilder
-    private var missionPanel: some View {
-        VStack(spacing: 18) {
+    private func missionPanel(compact: Bool) -> some View {
+        VStack(spacing: compact ? 8 : 18) {
             switch session.phase {
             case .missionPrompt:
                 Text(
@@ -182,7 +192,7 @@ public struct GameRootView: View {
                         ? "Welcome back, Explorer!"
                         : "Ready to explore space?"
                 )
-                .font(.largeTitle.bold())
+                .font((compact ? Font.title2 : Font.largeTitle).bold())
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 Text(
@@ -190,9 +200,11 @@ public struct GameRootView: View {
                         ? "Keep exploring, discover surprising facts, and grow your score."
                         : "Pick a world, see real space photos, then play a quick picture quiz."
                 )
-                .font(.title3)
+                .font(compact ? .subheadline : .title3)
                 .multilineTextAlignment(.center)
-                missionSteps
+                .lineLimit(compact ? 1 : nil)
+                .minimumScaleFactor(0.8)
+                missionSteps(compact: compact)
                 primaryButton(
                     session.completedDestinationCount > 0
                         ? "Continue Adventure"
@@ -212,8 +224,8 @@ public struct GameRootView: View {
 
             case .navigation:
                 Text("Choose your next world")
-                    .font(.title2.bold())
-                destinationSelector
+                    .font((compact ? Font.title3 : Font.title2).bold())
+                destinationSelector(compact: compact)
                 primaryButton(
                     "Explore \(session.focusedLesson?.displayName ?? "World")",
                     systemImage: "sparkles"
@@ -223,10 +235,11 @@ public struct GameRootView: View {
 
             case .discoveryCard:
                 Text("\(session.focusedLesson?.displayName ?? "World") discovered!")
-                    .font(.largeTitle.bold())
+                    .font((compact ? Font.title2 : Font.largeTitle).bold())
                 Text(session.focusedContent?.discoveryText ?? "")
-                    .font(.title3)
+                    .font(compact ? .subheadline : .title3)
                     .multilineTextAlignment(.center)
+                    .lineLimit(compact ? 2 : nil)
                 primaryButton("Check the Clue", systemImage: "sparkles") {
                     session.confirm()
                 }
@@ -255,11 +268,11 @@ public struct GameRootView: View {
 
             case .quizFeedback:
                 Image(systemName: session.wasLastAnswerCorrect ? "star.fill" : "arrow.clockwise")
-                    .font(.system(size: 44))
+                    .font(.system(size: compact ? 30 : 44))
                     .foregroundStyle(session.wasLastAnswerCorrect ? .yellow : .cyan)
                     .accessibilityHidden(true)
                 Text(session.lastFeedback)
-                    .font(.title2.bold())
+                    .font((compact ? Font.title3 : Font.title2).bold())
                     .multilineTextAlignment(.center)
                 if session.wasLastAnswerCorrect {
                     HStack(spacing: 18) {
@@ -279,13 +292,13 @@ public struct GameRootView: View {
 
             case .missionComplete:
                 Image(systemName: "sparkles")
-                    .font(.system(size: 52))
+                    .font(.system(size: compact ? 34 : 52))
                     .foregroundStyle(.yellow)
                     .accessibilityHidden(true)
                 Text("Mission complete!")
-                    .font(.largeTitle.bold())
+                    .font((compact ? Font.title2 : Font.largeTitle).bold())
                 Text("You matched three space clues like a real explorer.")
-                    .font(.title3)
+                    .font(compact ? .subheadline : .title3)
                     .multilineTextAlignment(.center)
                 primaryButton("Explore Again", systemImage: "arrow.clockwise") {
                     session.confirm()
@@ -299,7 +312,7 @@ public struct GameRootView: View {
             .foregroundStyle(.white.opacity(0.7))
         }
         .frame(maxWidth: 760)
-        .padding(26)
+        .padding(compact ? 14 : 26)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 28))
         .overlay {
             RoundedRectangle(cornerRadius: 28)
@@ -307,34 +320,34 @@ public struct GameRootView: View {
         }
     }
 
-    private var missionSteps: some View {
+    private func missionSteps(compact: Bool) -> some View {
         ViewThatFits(in: .horizontal) {
-            HStack(spacing: 10) {
-                missionStep("Pick a world", systemImage: "globe.americas.fill")
-                missionStep("See NASA photos", systemImage: "photo.fill")
-                missionStep("Play a quiz", systemImage: "gamecontroller.fill")
+            HStack(spacing: compact ? 6 : 10) {
+                missionStep("Pick a world", systemImage: "globe.americas.fill", compact: compact)
+                missionStep("See NASA photos", systemImage: "photo.fill", compact: compact)
+                missionStep("Play a quiz", systemImage: "gamecontroller.fill", compact: compact)
             }
 
             VStack(spacing: 8) {
-                missionStep("Pick a world", systemImage: "globe.americas.fill")
-                missionStep("See NASA photos", systemImage: "photo.fill")
-                missionStep("Play a quiz", systemImage: "gamecontroller.fill")
+                missionStep("Pick a world", systemImage: "globe.americas.fill", compact: compact)
+                missionStep("See NASA photos", systemImage: "photo.fill", compact: compact)
+                missionStep("Play a quiz", systemImage: "gamecontroller.fill", compact: compact)
             }
         }
     }
 
-    private func missionStep(_ title: String, systemImage: String) -> some View {
+    private func missionStep(_ title: String, systemImage: String, compact: Bool) -> some View {
         Label(title, systemImage: systemImage)
-            .font(.footnote.weight(.bold))
+            .font((compact ? Font.caption : Font.footnote).weight(.bold))
             .foregroundStyle(.white.opacity(0.9))
-            .padding(.horizontal, 14)
-            .padding(.vertical, 9)
+            .padding(.horizontal, compact ? 10 : 14)
+            .padding(.vertical, compact ? 6 : 9)
             .background(.white.opacity(0.1), in: Capsule())
     }
 
-    private var destinationSelector: some View {
+    private func destinationSelector(compact: Bool) -> some View {
         ScrollView(.horizontal) {
-            LazyHStack(spacing: 12) {
+            LazyHStack(spacing: compact ? 8 : 12) {
                 ForEach(Array(session.lessons.enumerated()), id: \.element.id) { index, lesson in
                     Button {
                         selectDestination(at: index)
@@ -342,27 +355,32 @@ public struct GameRootView: View {
                             session.confirm()
                         #endif
                     } label: {
-                        VStack(spacing: 4) {
+                        VStack(spacing: compact ? 2 : 4) {
                             Text(lesson.displayName)
-                                .font(.headline)
+                                .font((compact ? Font.subheadline : Font.headline).weight(.bold))
+                                .lineLimit(1)
                             Text(lesson.kind.uppercased())
                                 .font(.caption2.weight(.black))
                                 .tracking(0.8)
                                 .foregroundStyle(.secondary)
                             if session.progress.destinations[lesson.id]?.isQuizCompleted == true {
                                 Label("Collected", systemImage: "checkmark.seal.fill")
-                                    .font(.caption)
+                                    .font(compact ? .caption2 : .caption)
                             } else if index == session.focusedDestinationIndex {
                                 Label("Selected", systemImage: "checkmark.circle.fill")
-                                    .font(.caption)
+                                    .font(compact ? .caption2 : .caption)
                             } else {
                                 Text("Explore")
-                                    .font(.caption)
+                                    .font(compact ? .caption2 : .caption)
                             }
                         }
-                        .frame(minWidth: 138)
+                        .frame(
+                            minWidth: compact ? 112 : 138,
+                            minHeight: compact ? 56 : nil
+                        )
                     }
                     .buttonStyle(.bordered)
+                    .controlSize(compact ? .small : .regular)
                     .tint(index == session.focusedDestinationIndex ? .cyan : .gray)
                     .focused($focusedDestinationID, equals: lesson.id)
                 }
@@ -370,6 +388,7 @@ public struct GameRootView: View {
         }
         .scrollIndicators(.hidden)
         .frame(maxWidth: 720)
+        .frame(height: compact ? 70 : nil)
         .onChange(of: focusedDestinationID) { _, destinationID in
             guard
                 let destinationID,
