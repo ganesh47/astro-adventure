@@ -5,17 +5,67 @@ public enum QuizRoundCatalog {
         destinationID: String,
         ageBand: AgeBand
     ) -> [QuizContent] {
-        switch destinationID {
-        case SpaceTechnologyCatalog.destinationID:
-            SpaceTechnologyCatalog.quizzes(ageBand: ageBand)
-        case "mercury": mercury(for: ageBand) + distanceQuizzes(for: "mercury", ageBand: ageBand)
-        case "mars": mars(for: ageBand) + distanceQuizzes(for: "mars", ageBand: ageBand)
-        case "europa": europa(for: ageBand) + distanceQuizzes(for: "europa", ageBand: ageBand)
-        default:
-            SolarSystemExpansionCatalog.quizzes(
-                destinationID: destinationID,
-                ageBand: ageBand
-            ) ?? []
+        let sourceQuizzes: [QuizContent] =
+            switch destinationID {
+            case SpaceTechnologyCatalog.destinationID:
+                SpaceTechnologyCatalog.quizzes(ageBand: ageBand)
+            case "mercury":
+                mercury(for: ageBand) + distanceQuizzes(for: "mercury", ageBand: ageBand)
+            case "mars": mars(for: ageBand) + distanceQuizzes(for: "mars", ageBand: ageBand)
+            case "europa": europa(for: ageBand) + distanceQuizzes(for: "europa", ageBand: ageBand)
+            default:
+                SolarSystemExpansionCatalog.quizzes(
+                    destinationID: destinationID,
+                    ageBand: ageBand
+                ) ?? []
+            }
+
+        return mixAnswerPositions(
+            sourceQuizzes,
+            destinationID: destinationID,
+            ageBand: ageBand
+        )
+    }
+
+    private static func mixAnswerPositions(
+        _ quizzes: [QuizContent],
+        destinationID: String,
+        ageBand: AgeBand
+    ) -> [QuizContent] {
+        let destinationOffset = destinationID.unicodeScalars.reduce(0) {
+            ($0 + Int($1.value)) % 3
+        }
+        let ageOffset =
+            switch ageBand {
+            case .ages4To6: 0
+            case .ages7To9: 1
+            case .ages10To12: 2
+            }
+
+        return quizzes.enumerated().map { questionIndex, quiz in
+            guard
+                quiz.choices.count > 1,
+                let correctChoice = quiz.choices.first(where: {
+                    $0.id == quiz.correctChoiceID
+                })
+            else { return quiz }
+
+            var reorderedChoices = quiz.choices.filter {
+                $0.id != quiz.correctChoiceID
+            }
+            let targetIndex =
+                (questionIndex + destinationOffset + ageOffset + 1)
+                % quiz.choices.count
+            reorderedChoices.insert(correctChoice, at: targetIndex)
+
+            return QuizContent(
+                prompt: quiz.prompt,
+                choices: reorderedChoices,
+                correctChoiceID: quiz.correctChoiceID,
+                correctFeedback: quiz.correctFeedback,
+                retryFeedback: quiz.retryFeedback,
+                hint: quiz.hint
+            )
         }
     }
 

@@ -44,6 +44,17 @@ final class LessonCatalogTests: XCTestCase {
                     })
                 let expectedChoices = ageBand == .ages4To6 ? 2 : 3
                 XCTAssertTrue(quizzes.allSatisfy { $0.choices.count == expectedChoices })
+
+                let correctPositions = Set(
+                    quizzes.compactMap { quiz in
+                        quiz.choices.firstIndex { $0.id == quiz.correctChoiceID }
+                    }
+                )
+                XCTAssertEqual(
+                    correctPositions,
+                    Set(0..<expectedChoices),
+                    "\(lesson.id) \(ageBand) should use every answer-card position"
+                )
             }
         }
     }
