@@ -32,6 +32,8 @@ There is no countdown, streak target, or player-facing ranking. Every correct cl
 
 tvOS stores a bounded encoded log in device preferences and migrates a legacy file when available. iPhone and iPad retain atomic JSON storage. Saves are serialized and can be retried when storage fails. Load failures offer Retry or Begin a new space log; a new log is immediately queued for storage. Cloud synchronization remains future work.
 
+The shared privacy manifest declares UserDefaults access under reason `CA92.1` for app-local progress and narration preferences. It continues to declare no data collection or tracking. Repository validation rejects a missing declaration before signed delivery. See [Apple's required-reason API guidance](https://developer.apple.com/documentation/technotes/tn3183-adding-required-reason-api-entries-to-your-privacy-manifest).
+
 ## Validation
 
 - Unit regressions cover earned rewards before Continue, duplicate and invalid actions, locked rounds, penalty-free help, safe destination focus, pause exit, completion Back, and next-adventure selection.

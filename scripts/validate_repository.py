@@ -330,6 +330,22 @@ def validate_privacy_manifest(errors: list[str]) -> None:
     if manifest.get("NSPrivacyCollectedDataTypes") != []:
         errors.append("M0 must not declare collected data types")
 
+    # UserDefaults and SwiftUI AppStorage store only this app's local preferences.
+    # Apple requires the corresponding API category even when no data is collected.
+    accessed_apis = manifest.get("NSPrivacyAccessedAPITypes", [])
+    if not isinstance(accessed_apis, list) or not any(
+        isinstance(entry, dict)
+        and entry.get("NSPrivacyAccessedAPIType")
+        == "NSPrivacyAccessedAPICategoryUserDefaults"
+        and isinstance(entry.get("NSPrivacyAccessedAPITypeReasons"), list)
+        and "CA92.1" in entry["NSPrivacyAccessedAPITypeReasons"]
+        for entry in accessed_apis
+    ):
+        errors.append(
+            "Privacy manifest must declare UserDefaults API access with reason CA92.1"
+        )
+
+
 
 def validate_apple_metadata(errors: list[str]) -> None:
     plist_paths = (

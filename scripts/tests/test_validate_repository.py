@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import plistlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -97,6 +98,60 @@ jobs: {}
 
         self.assertEqual(len(errors), 1)
         self.assertIn("pull_request_target", errors[0])
+
+    def validate_privacy(self, accessed_apis: object, **overrides: object) -> list[str]:
+        path = self.root / "Apps/Shared/PrivacyInfo.xcprivacy"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        manifest = {
+            "NSPrivacyTracking": False,
+            "NSPrivacyCollectedDataTypes": [],
+            "NSPrivacyAccessedAPITypes": accessed_apis,
+        }
+        manifest.update(overrides)
+        path.write_bytes(plistlib.dumps(manifest))
+        errors: list[str] = []
+        with patch.object(VALIDATOR, "ROOT", self.root):
+            VALIDATOR.validate_privacy_manifest(errors)
+        return errors
+
+    def test_privacy_requires_user_defaults_reason(self) -> None:
+        for accessed_apis in (
+            [],
+            [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults"}],
+            [{
+                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                "NSPrivacyAccessedAPITypeReasons": ["1C8F.1"],
+            }],
+            [{
+                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+                "NSPrivacyAccessedAPITypeReasons": ["CA92.1"],
+            }],
+            "NSPrivacyAccessedAPICategoryUserDefaults",
+        ):
+            with self.subTest(accessed_apis=accessed_apis):
+                errors = self.validate_privacy(accessed_apis)
+                self.assertEqual(len(errors), 1)
+                self.assertIn("UserDefaults API access with reason CA92.1", errors[0])
+
+    def test_privacy_accepts_app_local_user_defaults_declaration(self) -> None:
+        errors = self.validate_privacy([{
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"],
+        }])
+        self.assertEqual(errors, [])
+
+    def test_required_api_reason_does_not_permit_tracking_or_collection(self) -> None:
+        errors = self.validate_privacy(
+            [{
+                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                "NSPrivacyAccessedAPITypeReasons": ["CA92.1"],
+            }],
+            NSPrivacyTracking=True,
+            NSPrivacyCollectedDataTypes=[{"NSPrivacyCollectedDataType": "Location"}],
+        )
+        self.assertEqual(len(errors), 2)
+        self.assertTrue(any("tracking disabled" in error for error in errors))
+        self.assertTrue(any("collected data types" in error for error in errors))
 
     def test_apple_metadata_rejects_invalid_controller_and_ipad_values(self) -> None:
         ios_plist = self.root / "Apps/iOS/Info.plist"
