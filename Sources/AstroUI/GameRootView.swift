@@ -25,6 +25,7 @@ public struct GameRootView: View {
         }
     }
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var session: MissionSession
     @State private var isPaused = false
     @FocusState private var resumeFocused: Bool
@@ -411,6 +412,8 @@ public struct GameRootView: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: compact ? 8 : 12) {
                 ForEach(sectionLessons, id: \.element.id) { index, lesson in
+                    let selected = index == session.focusedDestinationIndex
+                    let focused = focusedDestinationID == lesson.id
                     Button {
                         selectDestination(at: index)
                         #if os(tvOS)
@@ -424,7 +427,6 @@ public struct GameRootView: View {
                             Text(lesson.kind.uppercased())
                                 .font(.caption2.weight(.black))
                                 .tracking(0.8)
-                                .foregroundStyle(.secondary)
                             if session.progress.destinations[lesson.id]?.isQuizCompleted == true {
                                 Label("Stamped", systemImage: "checkmark.seal.fill")
                                     .font(compact ? .caption2 : .caption)
@@ -436,18 +438,30 @@ public struct GameRootView: View {
                                     .font(compact ? .caption2 : .caption)
                             }
                         }
+                        .foregroundStyle(selected ? Color.black : Color.white)
+                        .padding(compact ? 8 : 16)
                         .frame(
                             minWidth: compact ? 112 : 138,
-                            minHeight: compact ? 56 : nil
+                            minHeight: compact ? 56 : 84
                         )
+                        .background(
+                            selected ? Color.cyan : Color(red: 0.11, green: 0.15, blue: 0.22),
+                            in: RoundedRectangle(cornerRadius: compact ? 14 : 20)
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: compact ? 14 : 20)
+                                .stroke(
+                                    focused ? Color.white : Color.white.opacity(0.3),
+                                    lineWidth: focused ? 4 : 1)
+                        }
+                        .scaleEffect(focused && !reduceMotion ? 1.04 : 1)
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(compact ? .small : .regular)
-                    .tint(index == session.focusedDestinationIndex ? .cyan : .gray)
+                    .buttonStyle(.plain)
                     .focused($focusedDestinationID, equals: lesson.id)
                     .accessibilityIdentifier("destination.\(lesson.id)")
                 }
             }
+            .padding(.vertical, compact ? 4 : 10)
         }
         .scrollIndicators(.hidden)
         .frame(maxWidth: 720)
