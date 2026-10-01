@@ -30,15 +30,40 @@ public final class MissionSession {
     public private(set) var roundBestStreak: Int
     public private(set) var questionAttemptCount: Int
 
+    public private(set) var activeRoundAgeBand: AgeBand?
+    private var activeRoundQuestions: [QuizContent] = []
+    private var hasFinishedRound = false
+
     private let quizProvider: (String, AgeBand) -> [QuizContent]
 
     public var ageBand: AgeBand {
         get { progress.selectedAgeBand }
         set {
+            guard !isRoundInProgress else { return }
             progress.selectedAgeBand = newValue
             focusedQuizChoiceIndex = 0
             isShowingHint = false
         }
+    }
+
+    public var isRoundInProgress: Bool {
+        phase == .quiz || phase == .quizFeedback || phase == .quizRoundComplete
+    }
+
+    public var suggestedDestinationIndex: Int? {
+        guard !lessons.isEmpty else { return nil }
+        return (1...lessons.count).map {
+            (focusedDestinationIndex + $0) % lessons.count
+        }.first { progress.destinations[lessons[$0].id]?.isQuizCompleted != true }
+    }
+
+    public func exploreNextDestination() {
+        guard phase == .navigation || phase == .quizRoundComplete else { return }
+        if let next = suggestedDestinationIndex {
+            focusedDestinationIndex = next
+        }
+        phase = isMissionComplete ? .missionComplete : .navigation
+        resetTransientState()
     }
 
     public var focusedLesson: DestinationLesson? {
@@ -51,6 +76,7 @@ public final class MissionSession {
     }
 
     public var quizQuestions: [QuizContent] {
+        if isRoundInProgress { return activeRoundQuestions }
         guard let lesson = focusedLesson else { return [] }
         let provided = quizProvider(lesson.id, ageBand)
         return provided.isEmpty ? [lesson.content[ageBand].quiz] : provided
@@ -58,7 +84,7 @@ public final class MissionSession {
 
     public var currentQuiz: QuizContent? {
         let questions = quizQuestions
-        guard questions.indices.contains(quizQuestionIndex) else { return questions.first }
+        guard questions.indices.contains(quizQuestionIndex) else { return nil }
         return questions[quizQuestionIndex]
     }
 
@@ -67,9 +93,8 @@ public final class MissionSession {
     }
 
     public var roundStars: Int {
-        let possible = max(quizQuestions.count * 125, 1)
-        let ratio = Double(roundScore) / Double(possible)
-        return ratio >= 0.8 ? 3 : ratio >= 0.5 ? 2 : 1
+        // Every completed discovery earns the same celebration, with unlimited help.
+        hasFinishedRound ? 3 : 0
     }
 
     public var completedDestinationCount: Int {
@@ -115,12 +140,21 @@ public final class MissionSession {
         }
     }
 
+    public func selectDestination(at index: Int) {
+        guard phase == .navigation || phase == .missionPrompt,
+            lessons.indices.contains(index)
+        else { return }
+        focusedDestinationIndex = index
+        resetTransientState()
+    }
+
     public func focusNext() {
         guard !lessons.isEmpty else { return }
         if phase == .quiz {
             moveQuizFocus(by: 1)
             return
         }
+        guard phase == .navigation || phase == .missionPrompt else { return }
         focusedDestinationIndex = (focusedDestinationIndex + 1) % lessons.count
         resetTransientState()
     }
@@ -131,6 +165,7 @@ public final class MissionSession {
             moveQuizFocus(by: -1)
             return
         }
+        guard phase == .navigation || phase == .missionPrompt else { return }
         focusedDestinationIndex =
             (focusedDestinationIndex - 1 + lessons.count) % lessons.count
         resetTransientState()
@@ -159,14 +194,13 @@ public final class MissionSession {
                     questionAttemptCount = 0
                     phase = .quiz
                 } else {
-                    finishQuizRound(now: now)
                     phase = .quizRoundComplete
                 }
             } else {
                 phase = .quiz
             }
         case .quizRoundComplete:
-            phase = isMissionComplete ? .missionComplete : .navigation
+            exploreNextDestination()
         case .missionComplete:
             phase = .navigation
         }
@@ -179,14 +213,20 @@ public final class MissionSession {
             phase = .missionPrompt
         case .quiz:
             phase = .discoveryCard
-        case .discoveryCard, .quizFeedback, .quizRoundComplete:
+        case .discoveryCard, .quizFeedback, .quizRoundComplete, .missionComplete:
             phase = .navigation
         default:
             break
         }
     }
 
+    public func returnToWorlds() {
+        phase = .navigation
+        resetTransientState()
+    }
+
     public func requestHint() {
+        guard phase == .quiz else { return }
         isShowingHint = true
     }
 
@@ -202,6 +242,7 @@ public final class MissionSession {
 
     public func submitAnswer(at choiceIndex: Int, now: Date = Date()) {
         guard
+            phase == .quiz,
             let lesson = focusedLesson,
             let quiz = currentQuiz,
             quiz.choices.indices.contains(choiceIndex)
@@ -220,14 +261,7 @@ public final class MissionSession {
 
         if isCorrect {
             roundCorrectAnswers += 1
-            currentStreak += 1
-            roundBestStreak = max(roundBestStreak, currentStreak)
-            let firstTryBonus = questionAttemptCount == 1 ? 25 : 0
-            let streakBonus = min(max(currentStreak - 1, 0) * 15, 45)
-            let hintPenalty = isShowingHint ? 25 : 0
-            roundScore += max(50, 100 + firstTryBonus + streakBonus - hintPenalty)
-        } else {
-            currentStreak = 0
+            roundScore += 100
         }
 
         destinationProgress.isQuizCompleted =
@@ -254,6 +288,9 @@ public final class MissionSession {
             TimeInterval(delay * 24 * 60 * 60)
         )
         progress.destinations[lesson.id] = destinationProgress
+        if isCorrect && quizQuestionIndex == activeRoundQuestions.count - 1 {
+            finishQuizRound(now: now)
+        }
     }
 
     private func markScanned(destinationID: String) {
@@ -269,6 +306,9 @@ public final class MissionSession {
     }
 
     private func beginQuizRound() {
+        activeRoundAgeBand = ageBand
+        activeRoundQuestions = quizQuestions
+        hasFinishedRound = false
         quizQuestionIndex = 0
         focusedQuizChoiceIndex = 0
         roundScore = 0
@@ -280,7 +320,8 @@ public final class MissionSession {
     }
 
     private func finishQuizRound(now: Date) {
-        guard let lesson = focusedLesson else { return }
+        guard !hasFinishedRound, let lesson = focusedLesson else { return }
+        hasFinishedRound = true
         var destinationProgress = progress.destinations[lesson.id] ?? DestinationProgress()
         destinationProgress.bestRoundScore = max(destinationProgress.bestRoundScore, roundScore)
         destinationProgress.bestRoundStars = max(destinationProgress.bestRoundStars, roundStars)
@@ -289,7 +330,7 @@ public final class MissionSession {
         progress.bestStreak = max(progress.bestStreak, roundBestStreak)
         progress.leaderboard.append(
             LeaderboardEntry(
-                explorerName: ageBand.modeName,
+                explorerName: (activeRoundAgeBand ?? ageBand).modeName,
                 destinationName: lesson.displayName,
                 score: roundScore,
                 correctAnswers: roundCorrectAnswers,
@@ -299,9 +340,7 @@ public final class MissionSession {
             )
         )
         progress.leaderboard = Array(
-            progress.leaderboard.sorted {
-                $0.score == $1.score ? $0.achievedAt < $1.achievedAt : $0.score > $1.score
-            }.prefix(20)
+            progress.leaderboard.sorted { $0.achievedAt > $1.achievedAt }.prefix(20)
         )
     }
 }

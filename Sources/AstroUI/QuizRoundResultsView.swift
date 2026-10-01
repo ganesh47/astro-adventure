@@ -26,47 +26,29 @@ struct QuizRoundResultsView: View {
                 .ignoresSafeArea()
 
                 VStack(spacing: compact ? 8 : 24) {
-                    Label("ROUND COMPLETE", systemImage: "trophy.fill")
+                    Label("DISCOVERY SAVED", systemImage: "sparkles")
                         .font((compact ? Font.caption : Font.headline).weight(.black))
                         .tracking(compact ? 1.4 : 2)
                         .foregroundStyle(.yellow)
 
-                    Text("\(destinationName) Star Score")
-                        .font(
-                            .system(
-                                size: compact ? 28 : 48,
-                                weight: .black,
-                                design: .rounded
-                            )
-                        )
+                    Text("\(destinationName) discovered!")
+                        .font(.system(size: compact ? 28 : 48, weight: .black, design: .rounded))
+                        .multilineTextAlignment(.center)
 
-                    HStack(spacing: compact ? 5 : 8) {
-                        ForEach(0..<3, id: \.self) { index in
-                            Image(systemName: index < stars ? "star.fill" : "star")
-                                .font(.system(size: compact ? 30 : 54))
-                                .foregroundStyle(index < stars ? .yellow : .white.opacity(0.24))
-                                .rotationEffect(.degrees(index == 1 ? 0 : index == 0 ? -9 : 9))
-                        }
-                    }
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: compact ? 50 : 90))
+                        .foregroundStyle(.yellow)
+                        .accessibilityHidden(true)
 
-                    HStack(spacing: compact ? 8 : 16) {
-                        scoreChip(
-                            value: "\(score)", label: "POINTS", color: .yellow, compact: compact)
-                        scoreChip(
-                            value: "\(correctAnswers)/\(totalQuestions)",
-                            label: "CARDS MASTERED",
-                            color: .cyan,
-                            compact: compact
-                        )
-                        scoreChip(
-                            value: "🔥 \(bestStreak)",
-                            label: "BEST STREAK",
-                            color: .orange,
-                            compact: compact
-                        )
-                    }
-
-                    leaderboardPanel(compact: compact)
+                    Text("A new stamp for your Discovery Passport")
+                        .font((compact ? Font.headline : Font.title2).bold())
+                        .multilineTextAlignment(.center)
+                    Text(
+                        "You explored \(correctAnswers) of \(totalQuestions) clues.\nHints and retries help explorers learn!"
+                    )
+                    .font(compact ? .subheadline : .title3)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.white.opacity(0.9))
 
                     Button(action: onContinue) {
                         Label("Continue Exploring", systemImage: "rocket.fill")
@@ -77,6 +59,7 @@ struct QuizRoundResultsView: View {
                     .tint(.cyan)
                     .controlSize(compact ? .regular : .large)
                     .focused($continueFocused)
+                    .accessibilityIdentifier("results.continue")
                 }
                 .padding(.horizontal, compact ? 44 : 70)
                 .padding(.vertical, compact ? 8 : 36)
@@ -86,85 +69,4 @@ struct QuizRoundResultsView: View {
         .preferredColorScheme(.dark)
     }
 
-    private func scoreChip(
-        value: String,
-        label: String,
-        color: Color,
-        compact: Bool
-    ) -> some View {
-        VStack(spacing: compact ? 1 : 3) {
-            Text(value)
-                .font(.system(size: compact ? 20 : 30, weight: .black, design: .rounded))
-                .foregroundStyle(color)
-            Text(label)
-                .font((compact ? Font.caption2 : Font.caption).weight(.black))
-                .tracking(1)
-                .foregroundStyle(.white.opacity(0.65))
-        }
-        .frame(minWidth: compact ? 120 : 190)
-        .padding(.vertical, compact ? 6 : 13)
-        .background(.white.opacity(0.08), in: Capsule())
-        .overlay { Capsule().stroke(color.opacity(0.42), lineWidth: 2) }
-    }
-
-    private func leaderboardPanel(compact: Bool) -> some View {
-        VStack(spacing: compact ? 5 : 12) {
-            HStack {
-                Label("EXPLORER LEADERBOARD", systemImage: "medal.star.fill")
-                    .font((compact ? Font.caption : Font.headline).weight(.black))
-                    .tracking(compact ? 0.8 : 1.3)
-                Spacer()
-                Text(savedLocationLabel)
-                    .font((compact ? Font.caption2 : Font.caption).weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.55))
-            }
-
-            ForEach(
-                Array(leaderboard.prefix(compact ? 2 : 3).enumerated()),
-                id: \.element.id
-            ) { index, entry in
-                HStack(spacing: 16) {
-                    Text(["🥇", "🥈", "🥉"][index])
-                        .font(compact ? .body : .title2)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(entry.explorerName)
-                            .font((compact ? Font.subheadline : Font.headline).weight(.bold))
-                        Text(
-                            "\(entry.destinationName) · \(entry.correctAnswers)/\(entry.totalQuestions) cards"
-                        )
-                        .font(compact ? .caption2 : .caption)
-                        .foregroundStyle(.white.opacity(0.62))
-                    }
-                    Spacer()
-                    Text("\(entry.score)")
-                        .font(
-                            (compact ? Font.subheadline : Font.title2)
-                                .monospacedDigit().weight(.black)
-                        )
-                        .foregroundStyle(.yellow)
-                    Text("PTS")
-                        .font(.caption.weight(.black))
-                        .foregroundStyle(.white.opacity(0.5))
-                }
-                .padding(.horizontal, compact ? 10 : 18)
-                .padding(.vertical, compact ? 5 : 10)
-                .background(
-                    index == 0 ? Color.yellow.opacity(0.14) : Color.white.opacity(0.06),
-                    in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-                )
-            }
-        }
-        .frame(maxWidth: 900)
-        .padding(compact ? 10 : 20)
-        .background(.black.opacity(0.36), in: RoundedRectangle(cornerRadius: 24))
-        .overlay { RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.16)) }
-    }
-
-    private var savedLocationLabel: String {
-        #if os(tvOS)
-            "Saved on this Apple TV"
-        #else
-            "Saved on this device"
-        #endif
-    }
 }

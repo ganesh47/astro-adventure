@@ -1,3 +1,4 @@
+import AVFoundation
 import AstroGameCore
 import SwiftUI
 
@@ -21,13 +22,20 @@ struct QuizChallengeView: View {
     let onSelectAnswer: (Int) -> Void
     let onHint: () -> Void
     let onBack: () -> Void
+    var isPaused = false
 
+    @AppStorage("astro.narrationEnabled") private var narrationEnabled = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var narrator = AVSpeechSynthesizer()
     @FocusState private var focusedChoiceID: String?
     @FocusState private var focusedUtility: UtilityControl?
 
     private enum UtilityControl: Hashable {
         case back
         case hint
+        case narration
     }
 
     var body: some View {
@@ -68,11 +76,34 @@ struct QuizChallengeView: View {
                 .padding(.vertical, compact ? 10 : 42)
             }
         }
+        .onChange(of: isPaused) {
+            speakQuestion()
+        }
+        .onChange(of: scenePhase) {
+            speakQuestion()
+        }
         .preferredColorScheme(.dark)
-        .animation(.spring(response: 0.38, dampingFraction: 0.82), value: isShowingHint)
+        .animation(
+            reduceMotion ? nil : .spring(response: 0.38, dampingFraction: 0.82),
+            value: isShowingHint
+        )
         .onAppear {
             focusedChoiceID = quiz.choices.first?.id
+            speakQuestion()
         }
+        .onChange(of: questionIndex) {
+            focusedChoiceID = quiz.choices.first?.id
+            speakQuestion()
+        }
+        .onChange(of: isShowingHint) {
+            if isShowingHint {
+                focusAnswerAfterHint()
+                speak(quiz.hint)
+            }
+        }
+        .onChange(of: narrationEnabled) { speakQuestion() }
+        .onChange(of: voiceOverEnabled) { speakQuestion() }
+        .onDisappear { narrator.stopSpeaking(at: .immediate) }
     }
 
     private func challengeHeader(compact: Bool) -> some View {
@@ -96,8 +127,7 @@ struct QuizChallengeView: View {
                     color: .cyan,
                     compact: compact
                 )
-                statusPill("\(score)", icon: "star.fill", color: .yellow, compact: compact)
-                statusPill("\(streak)", icon: "flame.fill", color: .orange, compact: compact)
+
             }
         }
     }
@@ -119,7 +149,7 @@ struct QuizChallengeView: View {
 
     private func question(compact: Bool) -> some View {
         VStack(spacing: compact ? 2 : 8) {
-            Text("Choose your best clue")
+            Text("Help Mission Control solve the clue")
                 .font((compact ? Font.caption : Font.headline).weight(.bold))
                 .foregroundStyle(.white.opacity(0.66))
                 .textCase(.uppercase)
@@ -149,6 +179,7 @@ struct QuizChallengeView: View {
                 let isFocused = focusedChoiceID == choice.id
 
                 Button {
+                    narrator.stopSpeaking(at: .immediate)
                     onSelectAnswer(index)
                 } label: {
                     QuizAnswerCard(
@@ -162,6 +193,7 @@ struct QuizChallengeView: View {
                 .buttonStyle(.plain)
                 .frame(width: cardWidth)
                 .focused($focusedChoiceID, equals: choice.id)
+                .accessibilityIdentifier("quiz.answer.\(index)")
                 .accessibilityLabel("Answer \(index + 1), \(choice.text)")
                 .accessibilityHint("Selects this clue")
             }
@@ -215,7 +247,25 @@ struct QuizChallengeView: View {
 
             Spacer()
 
-            Button(action: onHint) {
+            if ageBand == .ages4To6 {
+                Button {
+                    narrationEnabled.toggle()
+                } label: {
+                    Label(
+                        narrationEnabled ? "Sound On" : "Sound Off",
+                        systemImage: narrationEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill"
+                    )
+                }
+                .buttonStyle(.bordered)
+                .controlSize(compact ? .small : .large)
+                .focused($focusedUtility, equals: .narration)
+                .accessibilityHint("Turns spoken clues and answers on or off")
+            }
+
+            Button {
+                onHint()
+                focusAnswerAfterHint()
+            } label: {
                 Label(
                     isShowingHint ? "Hint Revealed" : "Show a Hint",
                     systemImage: "lightbulb.fill"
@@ -226,7 +276,32 @@ struct QuizChallengeView: View {
             .controlSize(compact ? .small : .large)
             .disabled(isShowingHint)
             .focused($focusedUtility, equals: .hint)
+            .accessibilityIdentifier("quiz.hint")
         }
+    }
+
+    private func focusAnswerAfterHint() {
+        focusedUtility = nil
+        focusedChoiceID = quiz.choices.first?.id
+    }
+
+    private func speakQuestion() {
+        let answers = quiz.choices.enumerated().map {
+            "Answer \($0.offset + 1). \($0.element.text)"
+        }
+        let hint = isShowingHint ? ["Hint. \(quiz.hint)"] : []
+        speak(([quiz.prompt] + answers + hint).joined(separator: ". "))
+    }
+
+    private func speak(_ text: String) {
+        narrator.stopSpeaking(at: .immediate)
+        guard scenePhase == .active, narrationEnabled, !isPaused, ageBand == .ages4To6,
+            !voiceOverEnabled
+        else { return }
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.rate = 0.43
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        narrator.speak(utterance)
     }
 
     private func visual(for choiceID: String) -> QuizOptionVisual {
@@ -409,6 +484,7 @@ private struct QuizOptionVisual {
 }
 
 private struct QuizAnswerCard: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let letter: String
     let text: String
     let visual: QuizOptionVisual
@@ -481,9 +557,12 @@ private struct QuizAnswerCard: View {
             radius: isFocused ? 30 : 10,
             y: isFocused ? 8 : 4
         )
-        .scaleEffect(isFocused ? (compact ? 1.02 : 1.055) : (compact ? 0.99 : 0.96))
+        .scaleEffect(
+            reduceMotion ? 1 : isFocused ? (compact ? 1.02 : 1.055) : (compact ? 0.99 : 0.96)
+        )
         .opacity(isFocused ? 1 : 0.78)
-        .animation(.spring(response: 0.28, dampingFraction: 0.72), value: isFocused)
+        .animation(
+            reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.72), value: isFocused)
     }
 
     private func bundledImage(named name: String) -> Image? {

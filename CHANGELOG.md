@@ -2,6 +2,16 @@
 
 All notable public changes to Astro Adventure are tracked here.
 
+## Unreleased
+
+- Reframed adventures around a Discovery Passport, with a stamp for each completed world or technology lab and suggestions for the next unexplored destination.
+- Added a responsive explorer ship and destination beacon to the stylized training map.
+- Made hints and retries penalty-free, replacing competitive rankings and streak pressure with discovery celebrations.
+- Saved earned round rewards immediately, locked Explorer Mode during rounds, and prevented duplicate answers and stale destination focus from changing gameplay.
+- Added a Siri Remote Play/Pause menu, persistent narration preferences, spoken Junior Explorer quiz choices, VoiceOver narration coordination, and reduced-motion support.
+- Moved Apple TV progress to bounded local preferences with legacy file migration, serialized saves, and focused recovery controls.
+- Added regression coverage for gameplay and storage, plus an Apple TV remote-driven UI smoke test.
+
 ## v0.2.0 - 2026-08-08
 
 - Pivoted the active game from Unreal/Xbox to native iOS, iPadOS, and tvOS.

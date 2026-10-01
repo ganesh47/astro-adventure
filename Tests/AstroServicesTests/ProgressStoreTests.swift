@@ -55,4 +55,136 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(decoded.totalScore, 0)
         XCTAssertTrue(decoded.leaderboard.isEmpty)
     }
+
+    func testPreferencesMigratesLegacyLogAndUsesPreferencesAfterwards() async throws {
+        let suite = "AstroProgressTests-\(UUID().uuidString)"
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: file) }
+        let expected = GameProgress(totalScore: 250, bestStreak: 3)
+        try JSONEncoder().encode(expected).write(to: file)
+        let store = try PreferencesProgressStore(suiteName: suite, legacyFileURL: file)
+        let migrated = try await store.load()
+        XCTAssertEqual(migrated, expected)
+        try Data("broken legacy file".utf8).write(to: file)
+        let restored = try await store.load()
+        XCTAssertEqual(restored, expected)
+    }
+
+    func testPreferencesCapsLeaderboardWithoutLosingRewards() async throws {
+        let suite = "AstroProgressTests-\(UUID().uuidString)"
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let entries = (0..<50).map { score in
+            LeaderboardEntry(
+                explorerName: "Explorer", destinationName: "Mars", score: 50 - score,
+                correctAnswers: 1, totalQuestions: 1, bestStreak: 1,
+                achievedAt: Date(timeIntervalSince1970: Double(score))
+            )
+        }
+        let store = try PreferencesProgressStore(suiteName: suite)
+        try await store.save(GameProgress(totalScore: 5000, leaderboard: entries))
+        let restored = try await store.load()
+        XCTAssertEqual(restored?.totalScore, 5000)
+        XCTAssertEqual(restored?.leaderboard.count, 20)
+        XCTAssertEqual(restored?.leaderboard.first?.score, 1)
+        XCTAssertEqual(restored?.leaderboard.last?.score, 20)
+        // A legacy or externally restored preferences value is bounded on read as well.
+        UserDefaults(suiteName: suite)?.set(
+            try JSONEncoder().encode(GameProgress(totalScore: 5000, leaderboard: entries)),
+            forKey: "astro-adventure-progress-v2"
+        )
+        let legacyRestored = try await store.load()
+        XCTAssertEqual(legacyRestored?.leaderboard.count, 20)
+        XCTAssertEqual(legacyRestored?.leaderboard.first?.score, 1)
+
+    }
+
+    func testCorruptPreferencesReportsFailureAndPreservesBytes() async throws {
+        let suite = "AstroProgressTests-\(UUID().uuidString)"
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let bytes = Data("broken space log".utf8)
+        UserDefaults(suiteName: suite)?.set(bytes, forKey: "astro-adventure-progress-v2")
+        let store = try PreferencesProgressStore(suiteName: suite)
+        do {
+            _ = try await store.load()
+            XCTFail("Corrupt progress should be reported")
+        } catch {
+            XCTAssertEqual(
+                UserDefaults(suiteName: suite)?.data(forKey: "astro-adventure-progress-v2"), bytes
+            )
+        }
+    }
+
+    func testOversizedLogKeepsPreviouslyStoredRewards() async throws {
+        let suite = "AstroProgressTests-\(UUID().uuidString)"
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let store = try PreferencesProgressStore(suiteName: suite)
+        let original = GameProgress(totalScore: 200)
+        try await store.save(original)
+        let oversized = GameProgress(missionID: String(repeating: "x", count: 300_000))
+        do {
+            try await store.save(oversized)
+            XCTFail("Oversized progress should be reported")
+        } catch {
+            let restored = try await store.load()
+            XCTAssertEqual(restored, original)
+        }
+    }
+
+    @MainActor
+    func testSaveQueueCoalescesToLatestSnapshot() async throws {
+        let store = ControlledProgressStore()
+        let queue = ProgressSaveQueue(store: store)
+        queue.enqueue(GameProgress(totalScore: 100))
+        await store.waitForFirstSave()
+        queue.enqueue(GameProgress(totalScore: 200))
+        queue.enqueue(GameProgress(totalScore: 300))
+        await store.releaseFirstSave()
+        await queue.flush()
+        let scores = await store.scores
+        XCTAssertEqual(scores, [100, 300])
+        XCTAssertNil(queue.errorMessage)
+    }
+
+    @MainActor
+    func testSaveFailureCanRetryLatestRewards() async {
+        let store = ControlledProgressStore(failFirst: true)
+        let queue = ProgressSaveQueue(store: store)
+        queue.enqueue(GameProgress(totalScore: 100))
+        await store.releaseFirstSave()
+        await queue.flush()
+        XCTAssertNotNil(queue.errorMessage)
+        queue.enqueue(GameProgress(totalScore: 200))
+        await queue.flush()
+        let scores = await store.scores
+        XCTAssertEqual(scores, [200])
+        XCTAssertNil(queue.errorMessage)
+    }
+
+}
+
+private actor ControlledProgressStore: ProgressStoring {
+    private var firstSaveStarted = false
+    private var firstSaveReleased = false
+    private let failFirst: Bool
+    var scores: [Int] = []
+
+    init(failFirst: Bool = false) { self.failFirst = failFirst }
+
+    func load() async throws -> GameProgress? { nil }
+
+    func save(_ progress: GameProgress) async throws {
+        if !firstSaveStarted {
+            firstSaveStarted = true
+            while !firstSaveReleased { await Task.yield() }
+            if failFirst { throw ProgressStorageError.unavailable }
+        }
+        scores.append(progress.totalScore)
+    }
+
+    func waitForFirstSave() async {
+        while !firstSaveStarted { await Task.yield() }
+    }
+
+    func releaseFirstSave() { firstSaveReleased = true }
 }

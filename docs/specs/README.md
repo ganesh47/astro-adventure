@@ -6,6 +6,7 @@ Drafts should begin as GitHub issues. Once accepted, summarize the stable decisi
 
 ## Current Specs
 
+- `kids-discovery-gameplay.md` - current passport adventure, penalty-free help, remote pause, narration, and progress semantics.
 - `m0-native-apple-parity.md` - first native iOS/tvOS navigation, scan, quiz, and validation proof.
 - `controller-input-spike.md` - touch, Siri Remote, physical-controller, and input validation.
 - `apple-asset-hygiene.md` - Apple asset catalogs, USD/USDZ, Git LFS, and public licensing rules.

@@ -14,9 +14,18 @@ import SwiftUI
 
 public struct AstroWorldView: View {
     private let lessons: [DestinationLesson]
+    private let selectedDestinationID: String?
+    private let isExploring: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    public init(lessons: [DestinationLesson]) {
+    public init(
+        lessons: [DestinationLesson],
+        selectedDestinationID: String? = nil,
+        isExploring: Bool = false
+    ) {
         self.lessons = lessons
+        self.selectedDestinationID = selectedDestinationID
+        self.isExploring = isExploring
     }
 
     public var body: some View {
@@ -54,6 +63,8 @@ public struct AstroWorldView: View {
                 mesh: .generateSphere(radius: 0.7),
                 materials: [sunMaterial]
             )
+            sun.name = "sun"
+            sun.name = "sun"
             sun.position = [-3.5, 1.7, -1]
             root.addChild(sun)
 
@@ -70,6 +81,13 @@ public struct AstroWorldView: View {
             ship.orientation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
             ship.position = [0, -0.75, 0.25]
             root.addChild(ship)
+
+            let signal = ModelEntity(
+                mesh: .generateSphere(radius: 0.045),
+                materials: [UnlitMaterial(color: PlatformColor.white)]
+            )
+            signal.name = "ExplorerSignal"
+            root.addChild(signal)
 
             let starMaterial = UnlitMaterial(color: PlatformColor.white)
             for index in 0..<48 {
@@ -99,13 +117,37 @@ public struct AstroWorldView: View {
             root.addChild(camera)
 
             content.add(root)
+            updateExplorer(in: root)
+        } update: { content in
+            guard let root = content.entities.first else { return }
+            updateExplorer(in: root)
         }
         .accessibilityHidden(true)
         .background(Color.black)
     }
 
+    private func updateExplorer(in root: Entity) {
+        guard let ship = root.findEntity(named: "ExplorerShip"),
+            let signal = root.findEntity(named: "ExplorerSignal")
+        else { return }
+        // The training map is stylized, rather than a model of orbital distances.
+        let destination = selectedDestinationID.flatMap { root.findEntity(named: $0) }
+        let position = destination?.position ?? SIMD3<Float>(0, 0.75, 0)
+        signal.position =
+            position + [0, (destination.map { radius(for: $0.name) } ?? 0.2) + 0.14, 0.2]
+        signal.scale = isExploring ? [1.8, 1.8, 1.8] : [1, 1, 1]
+        var transform = ship.transform
+        transform.translation = position + [0, -0.55, 0.4]
+        if reduceMotion {
+            ship.transform = transform
+        } else {
+            ship.move(to: transform, relativeTo: root, duration: 0.65)
+        }
+    }
+
     private func radius(for destinationID: String) -> Float {
         switch destinationID {
+        case "sun": 0.7
         case "jupiter": 0.38
         case "saturn": 0.34
         case "uranus", "neptune": 0.27
