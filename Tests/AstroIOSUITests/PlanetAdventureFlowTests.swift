@@ -73,7 +73,12 @@ final class PlanetAdventureFlowTests: XCTestCase {
         app.activate()
         XCTAssertTrue(app.buttons["adventure.pause.resume"].waitForExistence(timeout: 10))
         tap("adventure.pause.resume")
-        XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
+        // XCTest can wait for playback to settle until the first authored checkpoint.
+        // Returning from the background must preserve either paused state.
+        if !app.buttons["video.answer.0"].exists {
+            XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
+        }
+        XCTAssertFalse(app.buttons["video.pause"].exists, "Returning must not restart playback")
         seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         tap("video.hint")
