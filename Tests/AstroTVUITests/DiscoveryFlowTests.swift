@@ -176,14 +176,13 @@ final class DiscoveryFlowTests: XCTestCase {
         capture("Television offline film")
         select("video.transcript")
         select("video.transcript.close")
-        select("video.play")
-        select("video.seek.forward")
-        select("video.seek.forward")
+        seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         select("video.hint")
         select("video.replay")
-        select("video.seek.forward")
-        select("video.seek.forward")
+        remote.press(.playPause)
+        if app.buttons["adventure.pause.resume"].exists { select("adventure.pause.resume") }
+        seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         app.terminate()
         app.launchArguments = ["--ui-testing"]
@@ -193,17 +192,23 @@ final class DiscoveryFlowTests: XCTestCase {
         capture("Television restored film question")
         solveQuestion(prefix: "video")
         XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
-        select("video.play")
-        select("video.seek.forward")
-        select("video.seek.forward")
+        seekToVideoQuestion()
         solveQuestion(prefix: "video")
         XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
         select("video.play")
-        select("video.seek.forward")
-        XCTAssertTrue(app.staticTexts["Space cinema complete!"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.staticTexts["Space cinema complete!"].waitForExistence(timeout: 35))
         capture("Television film completion")
         select("video.worlds")
         XCTAssertFalse(app.buttons["destination.mercury"].label.contains("Stamped"))
+    }
+
+    private func seekToVideoQuestion() {
+        // Core seeking is deterministic while paused, regardless of remote-focus latency.
+        for _ in 0..<3 {
+            if app.buttons["video.answer.0"].exists { return }
+            select("video.seek.forward")
+        }
+        XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 5))
     }
 
     private func solveQuestion(prefix: String) {

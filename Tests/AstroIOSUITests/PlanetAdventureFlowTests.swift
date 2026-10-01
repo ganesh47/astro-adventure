@@ -68,19 +68,19 @@ final class PlanetAdventureFlowTests: XCTestCase {
         capture("Touch offline film")
         tap("video.transcript")
         tap("video.transcript.close")
+        tap("video.play")
         XCUIDevice.shared.press(.home)
         app.activate()
         XCTAssertTrue(app.buttons["adventure.pause.resume"].waitForExistence(timeout: 10))
         tap("adventure.pause.resume")
         XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
-        tap("video.play")
-        tap("video.seek.forward")
-        tap("video.seek.forward")
+        seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         tap("video.hint")
         tap("video.replay")
-        tap("video.seek.forward")
-        tap("video.seek.forward")
+        tap("adventure.pause")
+        tap("adventure.pause.resume")
+        seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         app.terminate()
         app.launchArguments = ["--ui-testing"]
@@ -90,17 +90,23 @@ final class PlanetAdventureFlowTests: XCTestCase {
         capture("Touch paused film question")
         solveVideoQuestion()
         XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
-        tap("video.play")
-        tap("video.seek.forward")
-        tap("video.seek.forward")
+        seekToVideoQuestion()
         solveVideoQuestion()
         XCTAssertTrue(app.buttons["video.play"].waitForExistence(timeout: 5))
         tap("video.play")
-        tap("video.seek.forward")
-        XCTAssertTrue(app.staticTexts["Space cinema complete!"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.staticTexts["Space cinema complete!"].waitForExistence(timeout: 35))
         capture("Touch film completion")
         tap("video.worlds")
         XCTAssertFalse(app.buttons["destination.mercury"].label.contains("Stamped"))
+    }
+
+    private func seekToVideoQuestion() {
+        // Seek while paused: machine speed must not race a disappearing playback control.
+        for _ in 0..<3 {
+            if app.buttons["video.answer.0"].exists { return }
+            tap("video.seek.forward")
+        }
+        XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 5))
     }
 
     private func finishMission() {
