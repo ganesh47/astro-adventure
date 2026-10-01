@@ -25,7 +25,10 @@ public struct GameRootView: View {
         }
     }
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var session: MissionSession
+    @State private var isPaused = false
+    @FocusState private var resumeFocused: Bool
     @State private var selectedSection: ExplorerSection = .solarSystem
     @FocusState private var primaryActionFocused: Bool
     @FocusState private var focusedDestinationID: String?
@@ -52,6 +55,8 @@ public struct GameRootView: View {
                 game
             } else {
                 game
+                    .onPlayPauseCommand { isPaused.toggle() }
+                    .sheet(isPresented: $isPaused) { pausePanel }
                     .onExitCommand {
                         session.back()
                     }
@@ -63,8 +68,12 @@ public struct GameRootView: View {
 
     private var game: some View {
         ZStack {
-            AstroWorldView(lessons: session.lessons)
-                .ignoresSafeArea()
+            AstroWorldView(
+                lessons: session.lessons,
+                selectedDestinationID: session.focusedLesson?.id,
+                isExploring: session.phase != .missionPrompt && session.phase != .navigation
+            )
+            .ignoresSafeArea()
 
             LinearGradient(
                 colors: [.black.opacity(0.6), .clear, .black.opacity(0.72)],
@@ -85,7 +94,7 @@ public struct GameRootView: View {
                     totalQuestions: session.quizQuestions.count,
                     bestStreak: session.roundBestStreak,
                     leaderboard: session.progress.leaderboard,
-                    onContinue: { session.confirm() }
+                    onContinue: { continueToNextAdventure() }
                 )
             } else if session.phase == .discoveryCard,
                 let lesson = session.focusedLesson
@@ -106,7 +115,8 @@ public struct GameRootView: View {
                     },
                     onBack: {
                         session.back()
-                    }
+                    },
+                    isPaused: isPaused
                 )
                 .id("\(lesson.id)-\(session.ageBand.rawValue)")
             } else if session.phase == .quiz,
@@ -132,7 +142,8 @@ public struct GameRootView: View {
                     },
                     onBack: {
                         session.back()
-                    }
+                    },
+                    isPaused: isPaused
                 )
                 .id("\(lesson.id)-\(session.ageBand.rawValue)-quiz")
             } else {
@@ -176,7 +187,7 @@ public struct GameRootView: View {
                     .font((compact ? Font.subheadline : Font.headline).weight(.black))
                     .tracking(1.5)
                 if !compact {
-                    Text("Explore • Learn • Play")
+                    Text("Your Discovery Passport awaits")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -198,6 +209,7 @@ public struct GameRootView: View {
             } label: {
                 Label(session.ageBand.modeName, systemImage: "person.2.fill")
             }
+            .disabled(session.isRoundInProgress)
             .accessibilityLabel(
                 "Explorer mode, \(session.ageBand.modeName), \(session.ageBand.displayName)"
             )
@@ -212,14 +224,14 @@ public struct GameRootView: View {
                 Text(
                     session.completedDestinationCount > 0
                         ? "Welcome back, Explorer!"
-                        : "Ready to explore space?"
+                        : "Mission Control calling!"
                 )
                 .font((compact ? Font.title2 : Font.largeTitle).bold())
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 Text(
                     session.completedDestinationCount > 0
-                        ? "Keep exploring, discover surprising facts, and grow your score."
+                        ? "Mission Control is ready! Collect discovery stamps by exploring new worlds."
                         : "Pick a world or technology lab, see real space photos, then play a picture quiz."
                 )
                 .font(compact ? .subheadline : .title3)
@@ -235,6 +247,7 @@ public struct GameRootView: View {
                 ) {
                     session.confirm()
                 }
+                .accessibilityIdentifier("adventure.begin")
                 #if os(tvOS)
                     Label(
                         "Press Back on the Siri Remote to leave",
@@ -252,6 +265,11 @@ public struct GameRootView: View {
                 )
                 .font((compact ? Font.title3 : Font.title2).bold())
                 sectionSelector(compact: compact)
+                if let recommendation = recommendedLesson {
+                    Text("Mission Control suggests: \(recommendation.displayName)")
+                        .font((compact ? Font.subheadline : Font.title3).bold())
+                        .multilineTextAlignment(.center)
+                }
                 destinationSelector(compact: compact)
                 primaryButton(
                     "Explore \(session.focusedLesson?.displayName ?? "Adventure")",
@@ -259,6 +277,7 @@ public struct GameRootView: View {
                 ) {
                     session.confirm()
                 }
+                .accessibilityIdentifier("adventure.explore")
 
             case .discoveryCard:
                 Text("\(session.focusedLesson?.displayName ?? "World") discovered!")
@@ -301,18 +320,17 @@ public struct GameRootView: View {
                 Text(session.lastFeedback)
                     .font((compact ? Font.title3 : Font.title2).bold())
                     .multilineTextAlignment(.center)
-                if session.wasLastAnswerCorrect {
-                    HStack(spacing: 18) {
-                        Label("\(session.roundScore) points", systemImage: "star.circle.fill")
-                            .foregroundStyle(.yellow)
-                        Label("\(session.currentStreak) streak", systemImage: "flame.fill")
-                            .foregroundStyle(.orange)
-                    }
-                    .font(.headline.weight(.bold))
-                }
+                Text(
+                    session.wasLastAnswerCorrect
+                        ? "Clue discovered!" : "Take your time. Hints are always welcome."
+                )
+                .font(compact ? .subheadline : .title3)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.white.opacity(0.9))
                 primaryButton(session.wasLastAnswerCorrect ? "Continue" : "Try Again") {
                     session.confirm()
                 }
+                .accessibilityIdentifier("feedback.continue")
 
             case .quizRoundComplete:
                 EmptyView()
@@ -324,7 +342,7 @@ public struct GameRootView: View {
                     .accessibilityHidden(true)
                 Text("Mission complete!")
                     .font((compact ? Font.title2 : Font.largeTitle).bold())
-                Text("You matched three space clues like a real explorer.")
+                Text("Your passport is full! Different worlds have different clues.")
                     .font(compact ? .subheadline : .title3)
                     .multilineTextAlignment(.center)
                 primaryButton("Explore Again", systemImage: "arrow.clockwise") {
@@ -394,6 +412,8 @@ public struct GameRootView: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: compact ? 8 : 12) {
                 ForEach(sectionLessons, id: \.element.id) { index, lesson in
+                    let selected = index == session.focusedDestinationIndex
+                    let focused = focusedDestinationID == lesson.id
                     Button {
                         selectDestination(at: index)
                         #if os(tvOS)
@@ -407,9 +427,8 @@ public struct GameRootView: View {
                             Text(lesson.kind.uppercased())
                                 .font(.caption2.weight(.black))
                                 .tracking(0.8)
-                                .foregroundStyle(.secondary)
                             if session.progress.destinations[lesson.id]?.isQuizCompleted == true {
-                                Label("Collected", systemImage: "checkmark.seal.fill")
+                                Label("Stamped", systemImage: "checkmark.seal.fill")
                                     .font(compact ? .caption2 : .caption)
                             } else if index == session.focusedDestinationIndex {
                                 Label("Selected", systemImage: "checkmark.circle.fill")
@@ -419,17 +438,30 @@ public struct GameRootView: View {
                                     .font(compact ? .caption2 : .caption)
                             }
                         }
+                        .foregroundStyle(selected ? Color.black : Color.white)
+                        .padding(compact ? 8 : 16)
                         .frame(
                             minWidth: compact ? 112 : 138,
-                            minHeight: compact ? 56 : nil
+                            minHeight: compact ? 56 : 84
                         )
+                        .background(
+                            selected ? Color.cyan : Color(red: 0.11, green: 0.15, blue: 0.22),
+                            in: RoundedRectangle(cornerRadius: compact ? 14 : 20)
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: compact ? 14 : 20)
+                                .stroke(
+                                    focused ? Color.white : Color.white.opacity(0.3),
+                                    lineWidth: focused ? 4 : 1)
+                        }
+                        .scaleEffect(focused && !reduceMotion ? 1.04 : 1)
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(compact ? .small : .regular)
-                    .tint(index == session.focusedDestinationIndex ? .cyan : .gray)
+                    .buttonStyle(.plain)
                     .focused($focusedDestinationID, equals: lesson.id)
+                    .accessibilityIdentifier("destination.\(lesson.id)")
                 }
             }
+            .padding(.vertical, compact ? 4 : 10)
         }
         .scrollIndicators(.hidden)
         .frame(maxWidth: 720)
@@ -458,13 +490,53 @@ public struct GameRootView: View {
 
         return switch selectedSection {
         case .solarSystem:
-            "Worlds explored \(completed) of \(lessons.count)"
+            "Discovery Passport · \(completed) of \(lessons.count) world stamps"
         case .technologyLab:
-            "Technology labs completed \(completed) of \(lessons.count)"
+            "Discovery Passport · \(completed) of \(lessons.count) lab stamps"
         }
     }
 
+    private var recommendedLesson: DestinationLesson? {
+        sectionLessons.first {
+            session.progress.destinations[$0.element.id]?.isQuizCompleted != true
+        }?.element
+    }
+
+    private func continueToNextAdventure() {
+        session.exploreNextDestination()
+        selectedSection =
+            session.focusedLesson?.id == "space-technology-lab" ? .technologyLab : .solarSystem
+    }
+
+    private var pausePanel: some View {
+        VStack(spacing: 24) {
+            Label("Mission paused", systemImage: "pause.circle.fill")
+                .font(.largeTitle.bold())
+            Text("Take your time, Explorer. Your discoveries are safe.")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+            Text("Move to choose. Press to explore. Back returns. Hints help you learn.")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+            Button("Resume Adventure") { isPaused = false }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .focused($resumeFocused)
+                .accessibilityIdentifier("adventure.pause.resume")
+            Button("Return to Worlds") {
+                session.returnToWorlds()
+                isPaused = false
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.large)
+            .accessibilityIdentifier("adventure.pause.worlds")
+        }
+        .padding(48)
+        .onAppear { resumeFocused = true }
+    }
+
     private func selectSection(_ section: ExplorerSection) {
+        guard session.phase == .navigation else { return }
         guard selectedSection != section else { return }
         selectedSection = section
         guard let first = sectionLessons.first else { return }
@@ -473,9 +545,7 @@ public struct GameRootView: View {
     }
 
     private func selectDestination(at index: Int) {
-        while session.focusedDestinationIndex != index {
-            session.focusNext()
-        }
+        session.selectDestination(at: index)
     }
 
     private var quizChoices: some View {

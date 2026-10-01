@@ -18,13 +18,15 @@ The active targets are iPhone, iPad, and Apple TV. The game uses Swift 6, SwiftU
 `M0: Native Apple Parity` rebuilds the Mercury, Mars, and Europa proof as a native Apple game:
 
 - Three age modes: Junior Explorer (4–6), Space Explorer (7–9), and Mission Scientist (10–12).
-- Shared mission flow: prompt, navigation, scan, discovery card, quiz, feedback, and completion.
+- Shared mission flow: Mission Control welcome, destination selection, narrated discovery cards, picture quizzes, encouraging feedback, and Discovery Passport stamps.
 - Thirteen Solar System destinations with seven flashcards and seven quiz questions per destination.
 - A ten-card Space Technology Lab covering propulsion, launch vehicles, boosters, the ISS, satellites, spacesuits, radio astronomy, deep-space communications, telescopes, and robotic explorers.
 - Kid-friendly concepts spanning colors, round shapes and gravity, AU distance, sunlight travel time, rotation, orbits, and signature planetary features.
 - RealityKit scene rendered from source-controlled primitives.
 - SwiftUI interface for iOS, iPadOS, and tvOS.
-- Local, versioned progress with an offline-first service boundary.
+- Penalty-free hints and retries, a suggestion for the next unexplored adventure, and Siri Remote pause/resume controls.
+- Local, versioned progress with an offline-first service boundary: bounded preferences on Apple TV and an Application Support JSON log on iPhone/iPad.
+- Persistent narration preferences, spoken Junior Explorer quiz choices, VoiceOver coordination, and reduced-motion presentation.
 - Unit-tested learning rules and validated lesson data.
 
 The current development version is `0.2.0-alpha.0`.
@@ -78,7 +80,11 @@ xcodebuild -project AstroAdventure.xcodeproj -scheme AstroAdventure-iOS \
   -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project AstroAdventure.xcodeproj -scheme AstroAdventure-tvOS \
   -destination 'generic/platform=tvOS Simulator' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project AstroAdventure.xcodeproj -scheme AstroAdventure-tvOS \
+  -destination 'platform=tvOS Simulator,name=Apple TV' CODE_SIGNING_ALLOWED=NO test
 ```
+
+The Apple TV UI test uses an isolated Debug-only space log and Siri Remote actions. Pick an available tvOS simulator name or ID from `xcrun simctl list devices available` if your installed runtime uses a different device name. CI runs this gameplay test before allowing a main-branch build to reach TestFlight.
 
 After changing `project.yml`, regenerate the committed project:
 

@@ -13,18 +13,31 @@
 		3952C134EFC36CEC317F449D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
 		54BD1498BAE310010D3FB407 /* AstroUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5A7EE07D38D75EACEB60D83 /* AstroUI */; };
 		8A3DBF10A3173073256CC310 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
+		D1AAFA1A295A9E336E2D39FC /* DiscoveryFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */; };
 		E4397B7C60491C22A8337191 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
 		F650018B6F28409BC32EC2C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		C1DE9D0FE040584B249CB99C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47E3AC10F68BFDC1389F4F6B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 96B746305D8C3B48439F9AF7;
+			remoteInfo = "AstroAdventure-tvOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		1CE816EA02C844B2F2455264 /* AstroAdventure-tvOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "AstroAdventure-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryFlowTests.swift; sourceTree = "<group>"; };
+		0C6F53AEA0E024CF5883507B /* Astro Adventure.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Astro Adventure.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D654AEADE4132F3F788534D /* AstroAdventure-tvOS-UITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "AstroAdventure-tvOS-UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureTVApp.swift; sourceTree = "<group>"; };
 		86F6F81C93F4ADDB7373A2F1 /* AstroAdventureIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureIOSApp.swift; sourceTree = "<group>"; };
-		9F3D6F27A2DB5B9B3FE81148 /* AstroAdventure-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "AstroAdventure-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		CCC708F16C44B44A9F0DB726 /* Astro-Adventure 2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Astro-Adventure 2"; path = .; sourceTree = SOURCE_ROOT; };
 		EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F748344C2CF42FF69231B134 /* Astro Adventure.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Astro Adventure.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +65,7 @@
 			children = (
 				8FACE401881803854BE46898 /* Apps */,
 				6A9B87235407B9F27022339F /* Packages */,
+				B0269BCF96217D16D4D40486 /* Tests */,
 				633E8EC1A6A8FF83A0210A68 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,8 +73,9 @@
 		633E8EC1A6A8FF83A0210A68 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9F3D6F27A2DB5B9B3FE81148 /* AstroAdventure-iOS.app */,
-				1CE816EA02C844B2F2455264 /* AstroAdventure-tvOS.app */,
+				0C6F53AEA0E024CF5883507B /* Astro Adventure.app */,
+				F748344C2CF42FF69231B134 /* Astro Adventure.app */,
+				3D654AEADE4132F3F788534D /* AstroAdventure-tvOS-UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,6 +86,14 @@
 				CCC708F16C44B44A9F0DB726 /* Astro-Adventure 2 */,
 			);
 			name = Packages;
+			sourceTree = "<group>";
+		};
+		6AB262B172BC73F6B34E85B2 /* AstroTVUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */,
+			);
+			path = AstroTVUITests;
 			sourceTree = "<group>";
 		};
 		6D551F4B9729BB65FBB2B92B /* iOS */ = {
@@ -89,6 +112,14 @@
 				BACAA3C02DD5871FE9EDBC4E /* tvOS */,
 			);
 			path = Apps;
+			sourceTree = "<group>";
+		};
+		B0269BCF96217D16D4D40486 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				6AB262B172BC73F6B34E85B2 /* AstroTVUITests */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		B150C21D99FE4B3A8643320B /* Shared */ = {
@@ -111,6 +142,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4768C2FE9E2432CF01784CE9 /* AstroAdventure-tvOS-UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A3B7763DF05A8A68829BF08 /* Build configuration list for PBXNativeTarget "AstroAdventure-tvOS-UITests" */;
+			buildPhases = (
+				2B8BE53E7C04329C47D02CFD /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8955C627C0BCB18D7F8C29AD /* PBXTargetDependency */,
+			);
+			name = "AstroAdventure-tvOS-UITests";
+			packageProductDependencies = (
+			);
+			productName = "AstroAdventure-tvOS-UITests";
+			productReference = 3D654AEADE4132F3F788534D /* AstroAdventure-tvOS-UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		7568C39A825937EC24EAD4FD /* AstroAdventure-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 85AE289067AC7FEF3BFE5377 /* Build configuration list for PBXNativeTarget "AstroAdventure-iOS" */;
@@ -128,7 +177,7 @@
 				EF4E6075809D88D70F7EED45 /* AstroUI */,
 			);
 			productName = "AstroAdventure-iOS";
-			productReference = 9F3D6F27A2DB5B9B3FE81148 /* AstroAdventure-iOS.app */;
+			productReference = 0C6F53AEA0E024CF5883507B /* Astro Adventure.app */;
 			productType = "com.apple.product-type.application";
 		};
 		96B746305D8C3B48439F9AF7 /* AstroAdventure-tvOS */ = {
@@ -148,7 +197,7 @@
 				A5A7EE07D38D75EACEB60D83 /* AstroUI */,
 			);
 			productName = "AstroAdventure-tvOS";
-			productReference = 1CE816EA02C844B2F2455264 /* AstroAdventure-tvOS.app */;
+			productReference = F748344C2CF42FF69231B134 /* Astro Adventure.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -160,6 +209,11 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					4768C2FE9E2432CF01784CE9 = {
+						DevelopmentTeam = J3387FUR8X;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 96B746305D8C3B48439F9AF7;
+					};
 					7568C39A825937EC24EAD4FD = {
 						DevelopmentTeam = J3387FUR8X;
 						ProvisioningStyle = Automatic;
@@ -189,6 +243,7 @@
 			targets = (
 				7568C39A825937EC24EAD4FD /* AstroAdventure-iOS */,
 				96B746305D8C3B48439F9AF7 /* AstroAdventure-tvOS */,
+				4768C2FE9E2432CF01784CE9 /* AstroAdventure-tvOS-UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +278,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2B8BE53E7C04329C47D02CFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1AAFA1A295A9E336E2D39FC /* DiscoveryFlowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		89532C9D7429119908C8269E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -233,7 +296,33 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		8955C627C0BCB18D7F8C29AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 96B746305D8C3B48439F9AF7 /* AstroAdventure-tvOS */;
+			targetProxy = C1DE9D0FE040584B249CB99C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		118B64752505D9458E6F4F2B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ganesh47.astroadventure.uitests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = "AstroAdventure-tvOS";
+				TVOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 		607F9AFDCF01D4F508EAC9EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -316,6 +405,24 @@
 				PRODUCT_NAME = "Astro Adventure";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		816EB2513B701BB3E395B52C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ganesh47.astroadventure.uitests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = "AstroAdventure-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
@@ -442,6 +549,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5A3B7763DF05A8A68829BF08 /* Build configuration list for PBXNativeTarget "AstroAdventure-tvOS-UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				816EB2513B701BB3E395B52C /* Debug */,
+				118B64752505D9458E6F4F2B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		6A8A5D3BDC521DE49F328F17 /* Build configuration list for PBXNativeTarget "AstroAdventure-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

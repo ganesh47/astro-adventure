@@ -16,9 +16,13 @@ struct DiscoveryStoryView: View {
     let quizQuestionCount: Int
     let onComplete: () -> Void
     let onBack: () -> Void
+    var isPaused = false
 
     @State private var selectedIndex = 0
-    @State private var narrationEnabled = true
+    @AppStorage("astro.narrationEnabled") private var narrationEnabled = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
+    @Environment(\.scenePhase) private var scenePhase
     @State private var narrator = AVSpeechSynthesizer()
     @FocusState private var focusedControl: StoryControl?
 
@@ -47,7 +51,10 @@ struct DiscoveryStoryView: View {
                             .frame(width: proxy.size.width, height: proxy.size.height)
                             .clipped()
                             .id(slide.id)
-                            .transition(.opacity.combined(with: .scale(scale: 1.025)))
+                            .transition(
+                                reduceMotion
+                                    ? .identity : .opacity.combined(with: .scale(scale: 1.025))
+                            )
                             .accessibilityHidden(true)
                     } else {
                         Color.black
@@ -82,7 +89,7 @@ struct DiscoveryStoryView: View {
                     .padding(.horizontal, compact ? 44 : 64)
                     .padding(.vertical, compact ? 12 : 46)
                 }
-                .animation(.easeInOut(duration: 0.45), value: selectedIndex)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.45), value: selectedIndex)
                 .onAppear {
                     focusedControl = .next
                     speakCurrentSlide()
@@ -97,6 +104,9 @@ struct DiscoveryStoryView: View {
                         narrator.stopSpeaking(at: .immediate)
                     }
                 }
+                .onChange(of: voiceOverEnabled) {
+                    speakCurrentSlide()
+                }
                 .onDisappear {
                     narrator.stopSpeaking(at: .immediate)
                 }
@@ -107,6 +117,12 @@ struct DiscoveryStoryView: View {
                 )
             }
         }
+        .onChange(of: isPaused) {
+            speakCurrentSlide()
+        }
+        .onChange(of: scenePhase) {
+            speakCurrentSlide()
+        }
         .preferredColorScheme(.dark)
     }
 
@@ -114,7 +130,7 @@ struct DiscoveryStoryView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: compact ? 2 : 8) {
                 Label(
-                    "SPACE FLASHCARD · \(destinationName.uppercased())",
+                    "DISCOVERY SCAN · \(destinationName.uppercased())",
                     systemImage: "rectangle.stack.fill"
                 )
                 .font((compact ? Font.caption : Font.headline).weight(.black))
@@ -264,13 +280,14 @@ struct DiscoveryStoryView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(compact ? .small : .large)
             .focused($focusedControl, equals: .next)
+            .accessibilityIdentifier("story.next")
         }
     }
 
     private func showPreviousSlide() {
         guard selectedIndex > 0 else { return }
         selectedIndex -= 1
-        focusedControl = .previous
+        focusedControl = selectedIndex == 0 ? .next : .previous
     }
 
     private func showNextSlideOrComplete() {
@@ -284,8 +301,12 @@ struct DiscoveryStoryView: View {
     }
 
     private func speakCurrentSlide() {
-        guard narrationEnabled, let slide = selectedSlide else { return }
         narrator.stopSpeaking(at: .immediate)
+        guard scenePhase == .active, narrationEnabled, !isPaused, !voiceOverEnabled,
+            let slide = selectedSlide
+        else {
+            return
+        }
 
         let utterance = AVSpeechUtterance(string: slide.narration)
         utterance.rate = ageBand == .ages4To6 ? 0.43 : 0.48

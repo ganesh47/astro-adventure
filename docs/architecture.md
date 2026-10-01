@@ -25,6 +25,10 @@ Gameplay rules must remain testable without launching a simulator or rendering R
 5. A `ProgressStoring` implementation saves versioned `GameProgress`.
 6. Future iCloud synchronization wraps the offline save rather than becoming a gameplay dependency.
 
+Rounds capture their Explorer Mode and question set when they start. The final correct answer commits completion, points retained for save compatibility, and the passport reward together, exactly once. Continue presents the celebration and suggests another unexplored destination; Back cannot discard an earned stamp. Destination selection is a bounded semantic action so stale focus events cannot loop or change an active round.
+
+Apple TV uses `PreferencesProgressStore`, with an encoded log capped at 256 KiB and the latest 20 legacy history entries. It migrates an existing Application Support log when available. iPhone/iPad retain atomic JSON storage. `ProgressSaveQueue` serializes writes, coalesces pending changes to the newest snapshot, retains failed snapshots for retry, and drains on scene inactivity. Preference disk writes remain managed by the operating system. Recovery controls distinguish unreadable logs from an empty log; beginning a new log writes the reset immediately. Local saves are not cloud backup and do not survive app deletion.
+
 ## Platform strategy
 
 - iOS/iPadOS deployment target: 18 or later.
@@ -32,6 +36,7 @@ Gameplay rules must remain testable without launching a simulator or rendering R
 - Xcode 26 and the Swift 6 language mode are the reproducible build baseline.
 - Touch is the default input on iPhone and iPad.
 - Siri Remote focus/select is the default fallback on Apple TV.
+- Play/Pause opens a mission pause panel with Resume and Return to Worlds. An unfinished round restarts when entered again; completed discoveries remain saved.
 - Game Controller support augments, but does not replace, platform-default input.
 
 ## Content and privacy
@@ -53,5 +58,6 @@ Gameplay rules must remain testable without launching a simulator or rendering R
 - Unsigned simulator builds validate the iOS and tvOS applications.
 - The public repository validator checks required structure, manifest values, generated artifacts, accidental secrets, workflow privileges, and immutable action references.
 - Guardrail unit tests prove that representative secrets, signing artifacts, privileged pull-request triggers, and unpinned actions are rejected.
+- Apple TV UI smoke tests exercise the default remote flow, retries and hints, pause/resume, passport completion, and progress after relaunch using an isolated debug-only preference suite.
 - CodeQL, dependency review, and full-history Gitleaks scanning run through GitHub Actions.
 - Signed device, TestFlight, and App Store builds remain intentional release operations.
