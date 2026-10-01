@@ -125,6 +125,28 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             test
 
+      - name: iPhone touch gameplay smoke test
+        if: matrix.scheme == 'AstroAdventure-iOS'
+        run: |
+          device_id="$(
+            xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          candidates = [device["udid"] for runtime, entries in devices.items()
+                        if "iOS" in runtime for device in entries
+                        if device.get("isAvailable") and "iPhone" in device["name"]]
+          if not candidates:
+              raise SystemExit("No available iPhone simulator")
+          print(candidates[0])'
+          )"
+          xcodebuild \
+            -project AstroAdventure.xcodeproj \
+            -scheme AstroAdventure-iOS \
+            -destination "platform=iOS Simulator,id=$device_id" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData-iOS-UI" \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
       - name: Upload Apple TV gameplay test results
         if: always() && matrix.scheme == 'AstroAdventure-tvOS'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

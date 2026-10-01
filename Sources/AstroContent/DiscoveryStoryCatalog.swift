@@ -488,7 +488,7 @@ public enum DiscoveryStoryCatalog {
             explorer:
                 "Sunlight races at almost 300,000 kilometres each second. It still takes \(details.lightTime) to reach \(details.name).",
             scientist:
-                "At 299,792 kilometres per second, light crosses \(details.name)’s average solar distance in \(details.lightTime)—also the minimum one-way radio delay."
+                "At 299,792 kilometres per second, sunlight crosses \(details.name)’s average solar distance in \(details.lightTime). A radio message to Earth follows the changing spacecraft-to-Earth distance instead."
         )
 
         return [

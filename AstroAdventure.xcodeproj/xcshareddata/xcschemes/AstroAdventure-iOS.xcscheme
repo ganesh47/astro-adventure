@@ -39,7 +39,20 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1B035B4CE8AB146EE07DB849"
+               BuildableName = "AstroAdventure-iOS-UITests.xctest"
+               BlueprintName = "AstroAdventure-iOS-UITests"
+               ReferencedContainer = "container:AstroAdventure.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

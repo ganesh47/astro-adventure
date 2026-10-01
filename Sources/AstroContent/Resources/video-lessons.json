@@ -1,0 +1,3034 @@
+[
+  {
+    "id": "mercury-video",
+    "destinationID": "mercury",
+    "revision": 1,
+    "title": "Mercury's Rocky Secrets",
+    "resourceName": "mercury-lesson",
+    "duration": 60,
+    "credit": "NASA's Goddard Space Flight Center; NASA/Johns Hopkins APL/Carnegie Institution of Washington · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Mercury's Rocky Secrets",
+      "url": "https://svs.gsfc.nasa.gov/14110/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "mercury-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Mercury is a small, rocky planet covered in craters. This spinning view is made from spacecraft pictures. Some special color pictures help us see different rocks.",
+          "ages7To9": "Mercury is the smallest planet and the closest to the Sun. MESSENGER photographs reveal a rocky surface full of impact craters. Enhanced colors help scientists compare rocks.",
+          "ages10To12": "Mercury is a terrestrial planet with an ancient cratered surface. This globe is reconstructed from MESSENGER observations; enhanced-color photographs reveal compositional differences, not the colors our eyes would see."
+        },
+        "imageName": "mercury-color"
+      },
+      {
+        "id": "mercury-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "Mercury can be very hot, but some deep craters never see sunlight. Ice can hide in those cold shadows!",
+          "ages7To9": "Near Mercury's poles, some crater floors stay in permanent shadow. These cold traps can preserve water ice even on a planet so close to the Sun.",
+          "ages10To12": "Mercury's small axial tilt keeps some polar crater floors permanently shaded. The resulting cold traps preserve water ice; proximity to the Sun alone does not determine every surface temperature."
+        },
+        "imageName": "mercury-polar-ice"
+      },
+      {
+        "id": "mercury-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Look at the bright, shallow pits called hollows. Scientists are still solving the mystery of how they form.",
+          "ages7To9": "MESSENGER discovered bright hollows in Mercury's rocks. Scientists think material may escape from the surface, leaving shallow pits.",
+          "ages10To12": "Mercury's hollows are bright, shallow depressions. Loss of volatile material is a leading explanation, but details remain under investigation. Learning science means noticing what is known and what is still uncertain."
+        },
+        "imageName": "mercury-hollows"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "mercury-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "mercury-video-question-1",
+          "conceptID": "mercury-video-concept-1",
+          "source": {
+            "title": "NASA Science: Mercury facts",
+            "url": "https://science.nasa.gov/mercury/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What kind of world is Mercury?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A ball of water"
+                },
+                {
+                  "id": "correct",
+                  "text": "A rocky planet"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Mercury is a rocky, or terrestrial, planet. Spacecraft pictures show its cratered surface.",
+              "retryFeedback": "Good exploring! Look for Mercury's rocky ground and round impact marks.",
+              "hint": "Look for Mercury's rocky ground and round impact marks."
+            },
+            "ages7To9": {
+              "prompt": "Which description fits Mercury's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A planet covered by an ocean"
+                },
+                {
+                  "id": "two",
+                  "text": "A gas giant with rings"
+                },
+                {
+                  "id": "correct",
+                  "text": "A small rocky planet with craters"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Mercury is a rocky, or terrestrial, planet. Spacecraft pictures show its cratered surface.",
+              "retryFeedback": "Good exploring! Look for Mercury's rocky ground and round impact marks.",
+              "hint": "Look for Mercury's rocky ground and round impact marks."
+            },
+            "ages10To12": {
+              "prompt": "What evidence supports classifying Mercury as terrestrial?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A global liquid-water ocean"
+                },
+                {
+                  "id": "two",
+                  "text": "A deep gas atmosphere without a rocky exterior"
+                },
+                {
+                  "id": "correct",
+                  "text": "A solid, cratered rocky surface"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Mercury is a rocky, or terrestrial, planet. Spacecraft pictures show its cratered surface.",
+              "retryFeedback": "Good exploring! Look for Mercury's rocky ground and round impact marks.",
+              "hint": "Look for Mercury's rocky ground and round impact marks."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What kind of world is Mercury?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A ball of water"
+                },
+                {
+                  "id": "correct",
+                  "text": "A rocky planet"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Mercury is a rocky, or terrestrial, planet. Spacecraft pictures show its cratered surface.",
+              "retryFeedback": "Good exploring! Look for Mercury's rocky ground and round impact marks.",
+              "hint": "Look for Mercury's rocky ground and round impact marks."
+            },
+            "ages7To9": {
+              "prompt": "Which description fits Mercury's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A planet covered by an ocean"
+                },
+                {
+                  "id": "two",
+                  "text": "A gas giant with rings"
+                },
+                {
+                  "id": "correct",
+                  "text": "A small rocky planet with craters"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Mercury is a rocky, or terrestrial, planet. Spacecraft pictures show its cratered surface.",
+              "retryFeedback": "Good exploring! Look for Mercury's rocky ground and round impact marks.",
+              "hint": "Look for Mercury's rocky ground and round impact marks."
+            },
+            "ages10To12": {
+              "prompt": "What evidence supports classifying Mercury as terrestrial?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A global liquid-water ocean"
+                },
+                {
+                  "id": "two",
+                  "text": "A deep gas atmosphere without a rocky exterior"
+                },
+                {
+                  "id": "correct",
+                  "text": "A solid, cratered rocky surface"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Mercury is a rocky, or terrestrial, planet. Spacecraft pictures show its cratered surface.",
+              "retryFeedback": "Good exploring! Look for Mercury's rocky ground and round impact marks.",
+              "hint": "Look for Mercury's rocky ground and round impact marks."
+            }
+          }
+        }
+      },
+      {
+        "id": "mercury-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "mercury-video-question-2",
+          "conceptID": "mercury-video-concept-2",
+          "source": {
+            "title": "NASA Science: Mercury facts",
+            "url": "https://science.nasa.gov/mercury/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "Where can ice hide on Mercury?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "In cold shadows"
+                },
+                {
+                  "id": "one",
+                  "text": "In bright sunshine"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Ice can survive in permanently shaded polar craters, even while other parts of Mercury are very hot.",
+              "retryFeedback": "Good exploring! Some deep crater floors never receive direct sunlight.",
+              "hint": "Some deep crater floors never receive direct sunlight."
+            },
+            "ages7To9": {
+              "prompt": "Why can ice survive near Mercury's poles?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Ice grows in hot sunlight"
+                },
+                {
+                  "id": "correct",
+                  "text": "Deep craters remain in shadow"
+                },
+                {
+                  "id": "one",
+                  "text": "Every part of Mercury stays frozen"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Ice can survive in permanently shaded polar craters, even while other parts of Mercury are very hot.",
+              "retryFeedback": "Good exploring! Some deep crater floors never receive direct sunlight.",
+              "hint": "Some deep crater floors never receive direct sunlight."
+            },
+            "ages10To12": {
+              "prompt": "Which process preserves water ice in Mercury's polar cold traps?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Strong daylight continuously cools the ice"
+                },
+                {
+                  "id": "correct",
+                  "text": "Permanent shade limits solar heating"
+                },
+                {
+                  "id": "one",
+                  "text": "The entire planet has low temperatures"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Ice can survive in permanently shaded polar craters, even while other parts of Mercury are very hot.",
+              "retryFeedback": "Good exploring! Some deep crater floors never receive direct sunlight.",
+              "hint": "Some deep crater floors never receive direct sunlight."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "Where can ice hide on Mercury?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "In cold shadows"
+                },
+                {
+                  "id": "one",
+                  "text": "In bright sunshine"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Ice can survive in permanently shaded polar craters, even while other parts of Mercury are very hot.",
+              "retryFeedback": "Good exploring! Some deep crater floors never receive direct sunlight.",
+              "hint": "Some deep crater floors never receive direct sunlight."
+            },
+            "ages7To9": {
+              "prompt": "Why can ice survive near Mercury's poles?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Ice grows in hot sunlight"
+                },
+                {
+                  "id": "correct",
+                  "text": "Deep craters remain in shadow"
+                },
+                {
+                  "id": "one",
+                  "text": "Every part of Mercury stays frozen"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Ice can survive in permanently shaded polar craters, even while other parts of Mercury are very hot.",
+              "retryFeedback": "Good exploring! Some deep crater floors never receive direct sunlight.",
+              "hint": "Some deep crater floors never receive direct sunlight."
+            },
+            "ages10To12": {
+              "prompt": "Which process preserves water ice in Mercury's polar cold traps?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Strong daylight continuously cools the ice"
+                },
+                {
+                  "id": "correct",
+                  "text": "Permanent shade limits solar heating"
+                },
+                {
+                  "id": "one",
+                  "text": "The entire planet has low temperatures"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Ice can survive in permanently shaded polar craters, even while other parts of Mercury are very hot.",
+              "retryFeedback": "Good exploring! Some deep crater floors never receive direct sunlight.",
+              "hint": "Some deep crater floors never receive direct sunlight."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "mercury-video-card-1",
+        "conceptID": "mercury-video-concept-1",
+        "title": "A rocky little world",
+        "body": {
+          "ages4To6": "Mercury is a small, rocky planet covered in craters. This spinning view is made from spacecraft pictures. Some special color pictures help us see different rocks.",
+          "ages7To9": "Mercury is the smallest planet and the closest to the Sun. MESSENGER photographs reveal a rocky surface full of impact craters. Enhanced colors help scientists compare rocks.",
+          "ages10To12": "Mercury is a terrestrial planet with an ancient cratered surface. This globe is reconstructed from MESSENGER observations; enhanced-color photographs reveal compositional differences, not the colors our eyes would see."
+        },
+        "imageName": "mercury-color",
+        "imageCredit": "NASA's Goddard Space Flight Center; NASA/Johns Hopkins APL/Carnegie Institution of Washington",
+        "imageSourceID": "PIA12842",
+        "source": {
+          "title": "NASA Science: Mercury facts",
+          "url": "https://science.nasa.gov/mercury/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "mercury-video-card-2",
+        "conceptID": "mercury-video-concept-2",
+        "title": "Ice hiding in shadow",
+        "body": {
+          "ages4To6": "Mercury can be very hot, but some deep craters never see sunlight. Ice can hide in those cold shadows!",
+          "ages7To9": "Near Mercury's poles, some crater floors stay in permanent shadow. These cold traps can preserve water ice even on a planet so close to the Sun.",
+          "ages10To12": "Mercury's small axial tilt keeps some polar crater floors permanently shaded. The resulting cold traps preserve water ice; proximity to the Sun alone does not determine every surface temperature."
+        },
+        "imageName": "mercury-polar-ice",
+        "imageCredit": "NASA's Goddard Space Flight Center; NASA/Johns Hopkins APL/Carnegie Institution of Washington",
+        "imageSourceID": "PIA19247",
+        "source": {
+          "title": "NASA Science: Mercury facts",
+          "url": "https://science.nasa.gov/mercury/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "mercury-video-card-3",
+        "conceptID": "mercury-video-concept-3",
+        "title": "Bright, mysterious hollows",
+        "body": {
+          "ages4To6": "Look at the bright, shallow pits called hollows. Scientists are still solving the mystery of how they form.",
+          "ages7To9": "MESSENGER discovered bright hollows in Mercury's rocks. Scientists think material may escape from the surface, leaving shallow pits.",
+          "ages10To12": "Mercury's hollows are bright, shallow depressions. Loss of volatile material is a leading explanation, but details remain under investigation. Learning science means noticing what is known and what is still uncertain."
+        },
+        "imageName": "mercury-hollows",
+        "imageCredit": "NASA's Goddard Space Flight Center; NASA/Johns Hopkins APL/Carnegie Institution of Washington",
+        "imageSourceID": "PIA19425",
+        "source": {
+          "title": "NASA Science: Mercury facts",
+          "url": "https://science.nasa.gov/mercury/facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "venus-video",
+    "destinationID": "venus",
+    "revision": 1,
+    "title": "Venus: Peek Behind the Clouds",
+    "resourceName": "venus-lesson",
+    "duration": 60,
+    "credit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Venus: Peek Behind the Clouds",
+      "url": "https://svs.gsfc.nasa.gov/20308/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "venus-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Venus wears thick clouds that hide its rocky ground. This landscape is an artist's idea, not a camera picture. Venus is the hottest planet.",
+          "ages7To9": "Venus is a rocky planet hidden by thick clouds. This NASA landscape is an artist's concept. Its dense atmosphere traps so much heat that Venus is hotter than Mercury.",
+          "ages10To12": "Venus has a dense carbon-dioxide atmosphere and an extreme greenhouse effect. The landscape is a NASA artist's concept, not direct footage. Surface temperatures average about 465 degrees Celsius."
+        },
+        "imageName": "venus-global"
+      },
+      {
+        "id": "venus-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "How can we peek through the clouds? Spacecraft use radar! This color picture made with radar shows a volcano.",
+          "ages7To9": "Magellan sent radar through Venus's clouds and mapped mountains and volcanoes. Colors in this radar map were added to help us study the terrain.",
+          "ages10To12": "Magellan mapped Venus with radar, which penetrates the cloud deck. This assigned-color radar visualization shows volcanic landforms; its displayed colors do not represent a visible-light photograph."
+        },
+        "imageName": "venus-volcano"
+      },
+      {
+        "id": "venus-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Venus is almost as wide as Earth, but it is a very different home. Its thick, hot air would not be safe for us.",
+          "ages7To9": "Venus is nearly Earth-sized, yet its atmosphere and surface conditions are very different. It also spins slowly in the opposite direction from most planets.",
+          "ages10To12": "Similar size does not guarantee similar environments. Venus's slow retrograde rotation, dense atmosphere and greenhouse heating distinguish it from Earth. Comparing planets helps scientists test explanations for their histories."
+        },
+        "imageName": "venus-global"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "venus-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "venus-video-question-1",
+          "conceptID": "venus-video-concept-1",
+          "source": {
+            "title": "NASA Science: Venus facts",
+            "url": "https://science.nasa.gov/venus/venus-facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What hides Venus's ground?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A blanket of snow"
+                },
+                {
+                  "id": "correct",
+                  "text": "Thick clouds"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Venus's thick clouds hide its rocky surface from ordinary visible-light views.",
+              "retryFeedback": "Good exploring! Look for the thick cloud blanket.",
+              "hint": "Look for the thick cloud blanket."
+            },
+            "ages7To9": {
+              "prompt": "Why do ordinary cameras struggle to see Venus's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A layer of solid ice"
+                },
+                {
+                  "id": "two",
+                  "text": "Its forests"
+                },
+                {
+                  "id": "correct",
+                  "text": "Its thick cloud deck"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Venus's thick clouds hide its rocky surface from ordinary visible-light views.",
+              "retryFeedback": "Good exploring! Look for the thick cloud blanket.",
+              "hint": "Look for the thick cloud blanket."
+            },
+            "ages10To12": {
+              "prompt": "What prevents visible-light cameras from seeing most of Venus's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A global layer of frozen water"
+                },
+                {
+                  "id": "two",
+                  "text": "A dense global forest"
+                },
+                {
+                  "id": "correct",
+                  "text": "An opaque global cloud deck"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Venus's thick clouds hide its rocky surface from ordinary visible-light views.",
+              "retryFeedback": "Good exploring! Look for the thick cloud blanket.",
+              "hint": "Look for the thick cloud blanket."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What hides Venus's ground?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A blanket of snow"
+                },
+                {
+                  "id": "correct",
+                  "text": "Thick clouds"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Venus's thick clouds hide its rocky surface from ordinary visible-light views.",
+              "retryFeedback": "Good exploring! Look for the thick cloud blanket.",
+              "hint": "Look for the thick cloud blanket."
+            },
+            "ages7To9": {
+              "prompt": "Why do ordinary cameras struggle to see Venus's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A layer of solid ice"
+                },
+                {
+                  "id": "two",
+                  "text": "Its forests"
+                },
+                {
+                  "id": "correct",
+                  "text": "Its thick cloud deck"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Venus's thick clouds hide its rocky surface from ordinary visible-light views.",
+              "retryFeedback": "Good exploring! Look for the thick cloud blanket.",
+              "hint": "Look for the thick cloud blanket."
+            },
+            "ages10To12": {
+              "prompt": "What prevents visible-light cameras from seeing most of Venus's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A global layer of frozen water"
+                },
+                {
+                  "id": "two",
+                  "text": "A dense global forest"
+                },
+                {
+                  "id": "correct",
+                  "text": "An opaque global cloud deck"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Venus's thick clouds hide its rocky surface from ordinary visible-light views.",
+              "retryFeedback": "Good exploring! Look for the thick cloud blanket.",
+              "hint": "Look for the thick cloud blanket."
+            }
+          }
+        }
+      },
+      {
+        "id": "venus-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "venus-video-question-2",
+          "conceptID": "venus-video-concept-2",
+          "source": {
+            "title": "NASA Science: Venus facts",
+            "url": "https://science.nasa.gov/venus/venus-facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What helps a spacecraft peek through the clouds?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Radar"
+                },
+                {
+                  "id": "one",
+                  "text": "A flashlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Magellan used radar echoes to map Venus's mountains and volcanoes. The map's colors are assigned for study.",
+              "retryFeedback": "Good exploring! Radar waves can travel through the clouds and bounce off the ground.",
+              "hint": "Radar waves can travel through the clouds and bounce off the ground."
+            },
+            "ages7To9": {
+              "prompt": "How did Magellan map Venus beneath its clouds?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "A digging tool"
+                },
+                {
+                  "id": "correct",
+                  "text": "Radar"
+                },
+                {
+                  "id": "one",
+                  "text": "A normal flashlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Magellan used radar echoes to map Venus's mountains and volcanoes. The map's colors are assigned for study.",
+              "retryFeedback": "Good exploring! Radar waves can travel through the clouds and bounce off the ground.",
+              "hint": "Radar waves can travel through the clouds and bounce off the ground."
+            },
+            "ages10To12": {
+              "prompt": "Which instrument can map surface landforms through Venus's cloud deck?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "A mechanical digging tool"
+                },
+                {
+                  "id": "correct",
+                  "text": "Radar"
+                },
+                {
+                  "id": "one",
+                  "text": "A visible-light flashlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Magellan used radar echoes to map Venus's mountains and volcanoes. The map's colors are assigned for study.",
+              "retryFeedback": "Good exploring! Radar waves can travel through the clouds and bounce off the ground.",
+              "hint": "Radar waves can travel through the clouds and bounce off the ground."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What helps a spacecraft peek through the clouds?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Radar"
+                },
+                {
+                  "id": "one",
+                  "text": "A flashlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Magellan used radar echoes to map Venus's mountains and volcanoes. The map's colors are assigned for study.",
+              "retryFeedback": "Good exploring! Radar waves can travel through the clouds and bounce off the ground.",
+              "hint": "Radar waves can travel through the clouds and bounce off the ground."
+            },
+            "ages7To9": {
+              "prompt": "How did Magellan map Venus beneath its clouds?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "A digging tool"
+                },
+                {
+                  "id": "correct",
+                  "text": "Radar"
+                },
+                {
+                  "id": "one",
+                  "text": "A normal flashlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Magellan used radar echoes to map Venus's mountains and volcanoes. The map's colors are assigned for study.",
+              "retryFeedback": "Good exploring! Radar waves can travel through the clouds and bounce off the ground.",
+              "hint": "Radar waves can travel through the clouds and bounce off the ground."
+            },
+            "ages10To12": {
+              "prompt": "Which instrument can map surface landforms through Venus's cloud deck?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "A mechanical digging tool"
+                },
+                {
+                  "id": "correct",
+                  "text": "Radar"
+                },
+                {
+                  "id": "one",
+                  "text": "A visible-light flashlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Magellan used radar echoes to map Venus's mountains and volcanoes. The map's colors are assigned for study.",
+              "retryFeedback": "Good exploring! Radar waves can travel through the clouds and bounce off the ground.",
+              "hint": "Radar waves can travel through the clouds and bounce off the ground."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "venus-video-card-1",
+        "conceptID": "venus-video-concept-1",
+        "title": "A hidden, hot world",
+        "body": {
+          "ages4To6": "Venus wears thick clouds that hide its rocky ground. This landscape is an artist's idea, not a camera picture. Venus is the hottest planet.",
+          "ages7To9": "Venus is a rocky planet hidden by thick clouds. This NASA landscape is an artist's concept. Its dense atmosphere traps so much heat that Venus is hotter than Mercury.",
+          "ages10To12": "Venus has a dense carbon-dioxide atmosphere and an extreme greenhouse effect. The landscape is a NASA artist's concept, not direct footage. Surface temperatures average about 465 degrees Celsius."
+        },
+        "imageName": "venus-global",
+        "imageCredit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL",
+        "imageSourceID": "PIA00271",
+        "source": {
+          "title": "NASA Science: Venus facts",
+          "url": "https://science.nasa.gov/venus/venus-facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "venus-video-card-2",
+        "conceptID": "venus-video-concept-2",
+        "title": "Radar finds volcanoes",
+        "body": {
+          "ages4To6": "How can we peek through the clouds? Spacecraft use radar! This color picture made with radar shows a volcano.",
+          "ages7To9": "Magellan sent radar through Venus's clouds and mapped mountains and volcanoes. Colors in this radar map were added to help us study the terrain.",
+          "ages10To12": "Magellan mapped Venus with radar, which penetrates the cloud deck. This assigned-color radar visualization shows volcanic landforms; its displayed colors do not represent a visible-light photograph."
+        },
+        "imageName": "venus-volcano",
+        "imageCredit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL",
+        "imageSourceID": "PIA00272",
+        "source": {
+          "title": "NASA Science: Venus facts",
+          "url": "https://science.nasa.gov/venus/venus-facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "venus-video-card-3",
+        "conceptID": "venus-video-concept-3",
+        "title": "Earth's surprising neighbor",
+        "body": {
+          "ages4To6": "Venus is almost as wide as Earth, but it is a very different home. Its thick, hot air would not be safe for us.",
+          "ages7To9": "Venus is nearly Earth-sized, yet its atmosphere and surface conditions are very different. It also spins slowly in the opposite direction from most planets.",
+          "ages10To12": "Similar size does not guarantee similar environments. Venus's slow retrograde rotation, dense atmosphere and greenhouse heating distinguish it from Earth. Comparing planets helps scientists test explanations for their histories."
+        },
+        "imageName": "venus-global",
+        "imageCredit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL",
+        "imageSourceID": "PIA00271",
+        "source": {
+          "title": "NASA Science: Venus facts",
+          "url": "https://science.nasa.gov/venus/venus-facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "earth-video",
+    "destinationID": "earth",
+    "revision": 1,
+    "title": "Earth: Our Moving Blue Home",
+    "resourceName": "earth-lesson",
+    "duration": 60,
+    "credit": "NASA's Scientific Visualization Studio; NASA/NOAA/GSFC/Suomi NPP; NASA · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Earth: Our Moving Blue Home",
+      "url": "https://svs.gsfc.nasa.gov/5570/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "earth-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Earth turns like a spinning ball. The side facing the Sun has day, and the other side has night. This moving globe is a model made with real Earth pictures.",
+          "ages7To9": "Earth rotates about once every day. As places turn toward or away from sunlight, they move between day and night. This globe is a visualization, not a live camera.",
+          "ages10To12": "Earth's rotation changes which hemisphere receives sunlight, producing day and night. This NASA visualization combines surface imagery, clouds, atmosphere and city lights; motion is sped up for learning."
+        },
+        "imageName": "earth-blue-marble"
+      },
+      {
+        "id": "earth-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "Earth has blue oceans, white clouds, and land. More of its surface is ocean than land. Earth is the only world where we know life lives.",
+          "ages7To9": "Oceans cover about 71 percent of Earth's surface. Liquid water, an atmosphere and many other conditions support life. Earth remains the only planet with confirmed life.",
+          "ages10To12": "About 71 percent of Earth's surface is covered by ocean. Interactions among water, air, rocks and living organisms shape our planet. Liquid water is important for life as we know it, but is not proof of life on another world."
+        },
+        "imageName": "earth-blue-marble"
+      },
+      {
+        "id": "earth-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Those glowing ribbons are auroras! Tiny bits from space meet Earth's upper air and make beautiful lights.",
+          "ages7To9": "Auroras appear when energetic particles interact with gases high in Earth's atmosphere. Earth's magnetic field helps guide particles toward polar regions.",
+          "ages10To12": "Energetic particles excite gases in the upper atmosphere, which release light as auroras. Earth's magnetic field influences where particles arrive, connecting visible polar lights with the Sun-Earth space environment."
+        },
+        "imageName": "earth-aurora"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "earth-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "earth-video-question-1",
+          "conceptID": "earth-video-concept-1",
+          "source": {
+            "title": "NASA Science: Earth facts",
+            "url": "https://science.nasa.gov/earth/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What makes day and night?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "The Sun turns off"
+                },
+                {
+                  "id": "correct",
+                  "text": "Earth spins"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Earth's rotation carries places into sunlight and then away from it, creating day and night.",
+              "retryFeedback": "Good exploring! Think about which side of the spinning globe faces the Sun.",
+              "hint": "Think about which side of the spinning globe faces the Sun."
+            },
+            "ages7To9": {
+              "prompt": "Why does your town move between day and night?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "The Sun switches off every night"
+                },
+                {
+                  "id": "two",
+                  "text": "Clouds create every night"
+                },
+                {
+                  "id": "correct",
+                  "text": "Earth rotates"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Earth's rotation carries places into sunlight and then away from it, creating day and night.",
+              "retryFeedback": "Good exploring! Think about which side of the spinning globe faces the Sun.",
+              "hint": "Think about which side of the spinning globe faces the Sun."
+            },
+            "ages10To12": {
+              "prompt": "What directly causes the daily cycle of daylight and darkness?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "The Sun stops producing light at night"
+                },
+                {
+                  "id": "two",
+                  "text": "The atmosphere blocks all sunlight at regular intervals"
+                },
+                {
+                  "id": "correct",
+                  "text": "Earth's rotation changes exposure to sunlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Earth's rotation carries places into sunlight and then away from it, creating day and night.",
+              "retryFeedback": "Good exploring! Think about which side of the spinning globe faces the Sun.",
+              "hint": "Think about which side of the spinning globe faces the Sun."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What makes day and night?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "The Sun turns off"
+                },
+                {
+                  "id": "correct",
+                  "text": "Earth spins"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Earth's rotation carries places into sunlight and then away from it, creating day and night.",
+              "retryFeedback": "Good exploring! Think about which side of the spinning globe faces the Sun.",
+              "hint": "Think about which side of the spinning globe faces the Sun."
+            },
+            "ages7To9": {
+              "prompt": "Why does your town move between day and night?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "The Sun switches off every night"
+                },
+                {
+                  "id": "two",
+                  "text": "Clouds create every night"
+                },
+                {
+                  "id": "correct",
+                  "text": "Earth rotates"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Earth's rotation carries places into sunlight and then away from it, creating day and night.",
+              "retryFeedback": "Good exploring! Think about which side of the spinning globe faces the Sun.",
+              "hint": "Think about which side of the spinning globe faces the Sun."
+            },
+            "ages10To12": {
+              "prompt": "What directly causes the daily cycle of daylight and darkness?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "The Sun stops producing light at night"
+                },
+                {
+                  "id": "two",
+                  "text": "The atmosphere blocks all sunlight at regular intervals"
+                },
+                {
+                  "id": "correct",
+                  "text": "Earth's rotation changes exposure to sunlight"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Earth's rotation carries places into sunlight and then away from it, creating day and night.",
+              "retryFeedback": "Good exploring! Think about which side of the spinning globe faces the Sun.",
+              "hint": "Think about which side of the spinning globe faces the Sun."
+            }
+          }
+        }
+      },
+      {
+        "id": "earth-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "earth-video-question-2",
+          "conceptID": "earth-video-concept-2",
+          "source": {
+            "title": "NASA Science: Earth facts",
+            "url": "https://science.nasa.gov/earth/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What covers more of Earth: ocean or land?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Ocean"
+                },
+                {
+                  "id": "one",
+                  "text": "Land"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Oceans cover about 71 percent of Earth's surface, more than land does.",
+              "retryFeedback": "Good exploring! Look at how much blue you can see.",
+              "hint": "Look at how much blue you can see."
+            },
+            "ages7To9": {
+              "prompt": "About how much of Earth's surface is ocean?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "No ocean at all"
+                },
+                {
+                  "id": "correct",
+                  "text": "About 71 percent"
+                },
+                {
+                  "id": "one",
+                  "text": "About 10 percent"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Oceans cover about 71 percent of Earth's surface, more than land does.",
+              "retryFeedback": "Good exploring! Look at how much blue you can see.",
+              "hint": "Look at how much blue you can see."
+            },
+            "ages10To12": {
+              "prompt": "Which statement correctly describes Earth's surface water?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Earth has no liquid-water oceans"
+                },
+                {
+                  "id": "correct",
+                  "text": "Oceans cover about 71 percent of the surface"
+                },
+                {
+                  "id": "one",
+                  "text": "Oceans cover only about 10 percent"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Oceans cover about 71 percent of Earth's surface, more than land does.",
+              "retryFeedback": "Good exploring! Look at how much blue you can see.",
+              "hint": "Look at how much blue you can see."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What covers more of Earth: ocean or land?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Ocean"
+                },
+                {
+                  "id": "one",
+                  "text": "Land"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Oceans cover about 71 percent of Earth's surface, more than land does.",
+              "retryFeedback": "Good exploring! Look at how much blue you can see.",
+              "hint": "Look at how much blue you can see."
+            },
+            "ages7To9": {
+              "prompt": "About how much of Earth's surface is ocean?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "No ocean at all"
+                },
+                {
+                  "id": "correct",
+                  "text": "About 71 percent"
+                },
+                {
+                  "id": "one",
+                  "text": "About 10 percent"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Oceans cover about 71 percent of Earth's surface, more than land does.",
+              "retryFeedback": "Good exploring! Look at how much blue you can see.",
+              "hint": "Look at how much blue you can see."
+            },
+            "ages10To12": {
+              "prompt": "Which statement correctly describes Earth's surface water?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Earth has no liquid-water oceans"
+                },
+                {
+                  "id": "correct",
+                  "text": "Oceans cover about 71 percent of the surface"
+                },
+                {
+                  "id": "one",
+                  "text": "Oceans cover only about 10 percent"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Oceans cover about 71 percent of Earth's surface, more than land does.",
+              "retryFeedback": "Good exploring! Look at how much blue you can see.",
+              "hint": "Look at how much blue you can see."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "earth-video-card-1",
+        "conceptID": "earth-video-concept-1",
+        "title": "A spin makes day and night",
+        "body": {
+          "ages4To6": "Earth turns like a spinning ball. The side facing the Sun has day, and the other side has night. This moving globe is a model made with real Earth pictures.",
+          "ages7To9": "Earth rotates about once every day. As places turn toward or away from sunlight, they move between day and night. This globe is a visualization, not a live camera.",
+          "ages10To12": "Earth's rotation changes which hemisphere receives sunlight, producing day and night. This NASA visualization combines surface imagery, clouds, atmosphere and city lights; motion is sped up for learning."
+        },
+        "imageName": "earth-blue-marble",
+        "imageCredit": "NASA's Scientific Visualization Studio; NASA/NOAA/GSFC/Suomi NPP; NASA",
+        "imageSourceID": "GSFC_20171208_Archive_e001386",
+        "source": {
+          "title": "NASA Science: Earth facts",
+          "url": "https://science.nasa.gov/earth/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "earth-video-card-2",
+        "conceptID": "earth-video-concept-2",
+        "title": "A world of oceans",
+        "body": {
+          "ages4To6": "Earth has blue oceans, white clouds, and land. More of its surface is ocean than land. Earth is the only world where we know life lives.",
+          "ages7To9": "Oceans cover about 71 percent of Earth's surface. Liquid water, an atmosphere and many other conditions support life. Earth remains the only planet with confirmed life.",
+          "ages10To12": "About 71 percent of Earth's surface is covered by ocean. Interactions among water, air, rocks and living organisms shape our planet. Liquid water is important for life as we know it, but is not proof of life on another world."
+        },
+        "imageName": "earth-blue-marble",
+        "imageCredit": "NASA's Scientific Visualization Studio; NASA/NOAA/GSFC/Suomi NPP; NASA",
+        "imageSourceID": "GSFC_20171208_Archive_e001386",
+        "source": {
+          "title": "NASA Science: Earth facts",
+          "url": "https://science.nasa.gov/earth/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "earth-video-card-3",
+        "conceptID": "earth-video-concept-3",
+        "title": "Lights above our home",
+        "body": {
+          "ages4To6": "Those glowing ribbons are auroras! Tiny bits from space meet Earth's upper air and make beautiful lights.",
+          "ages7To9": "Auroras appear when energetic particles interact with gases high in Earth's atmosphere. Earth's magnetic field helps guide particles toward polar regions.",
+          "ages10To12": "Energetic particles excite gases in the upper atmosphere, which release light as auroras. Earth's magnetic field influences where particles arrive, connecting visible polar lights with the Sun-Earth space environment."
+        },
+        "imageName": "earth-aurora",
+        "imageCredit": "NASA's Scientific Visualization Studio; NASA/NOAA/GSFC/Suomi NPP; NASA",
+        "imageSourceID": "STS047-20-015",
+        "source": {
+          "title": "NASA Science: Earth facts",
+          "url": "https://science.nasa.gov/earth/facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "mars-video",
+    "destinationID": "mars",
+    "revision": 1,
+    "title": "Mars: Mountains and Robot Explorers",
+    "resourceName": "mars-lesson",
+    "duration": 60,
+    "credit": "NASA/Goddard Space Flight Center Scientific Visualization Studio; NASA/JPL; NASA/JPL-Caltech · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Mars: Mountains and Robot Explorers",
+      "url": "https://svs.gsfc.nasa.gov/0659/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "mars-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Mars is a rocky planet. Rusty minerals give it a reddish color. This spinning model makes hills five times taller so we can notice them.",
+          "ages7To9": "Mars is a rocky planet whose iron-bearing surface minerals create a rusty red appearance. This rotating model exaggerates terrain heights five times; real hills look less steep.",
+          "ages10To12": "Mars is terrestrial, with oxidized iron minerals contributing to its red appearance. This visualization combines Viking imagery and elevation data; terrain height is exaggerated by a factor of five for visibility."
+        },
+        "imageName": "mars-comparison"
+      },
+      {
+        "id": "mars-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "Olympus Mons is a huge volcano on Mars. It is much taller than Mount Everest on Earth!",
+          "ages7To9": "Olympus Mons is an enormous shield volcano. Its height is roughly 22 kilometres above the surrounding reference level, far higher than Mount Everest.",
+          "ages10To12": "Olympus Mons is a vast shield volcano built by repeated lava flows. Its summit is roughly 22 kilometres above the Martian reference datum; measurements depend on the chosen elevation baseline."
+        },
+        "imageName": "mars-olympus"
+      },
+      {
+        "id": "mars-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Robots called rovers travel over Mars and study rocks. They help us look for clues about water long ago.",
+          "ages7To9": "Rovers photograph rocks, measure minerals and investigate ancient water environments. Finding water clues is different from finding living things.",
+          "ages10To12": "Robotic rovers test mineralogy and geological evidence for past environments. Some Martian landforms and rocks record ancient water; no life on Mars has been confirmed."
+        },
+        "imageName": "mars-landscape"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "mars-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "mars-video-question-1",
+          "conceptID": "mars-video-concept-1",
+          "source": {
+            "title": "NASA Science: Mars facts",
+            "url": "https://science.nasa.gov/mars/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "Why does Mars look red?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Red trees"
+                },
+                {
+                  "id": "correct",
+                  "text": "Rusty minerals"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Iron-bearing minerals that have oxidized, like rust, help give Mars its reddish appearance.",
+              "retryFeedback": "Good exploring! Think of the rusty minerals in Mars's rocks and dust.",
+              "hint": "Think of the rusty minerals in Mars's rocks and dust."
+            },
+            "ages7To9": {
+              "prompt": "What helps give Mars its rusty color?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Red forests"
+                },
+                {
+                  "id": "two",
+                  "text": "A red liquid ocean"
+                },
+                {
+                  "id": "correct",
+                  "text": "Iron-bearing rusty minerals"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Iron-bearing minerals that have oxidized, like rust, help give Mars its reddish appearance.",
+              "retryFeedback": "Good exploring! Think of the rusty minerals in Mars's rocks and dust.",
+              "hint": "Think of the rusty minerals in Mars's rocks and dust."
+            },
+            "ages10To12": {
+              "prompt": "What contributes to the reddish appearance of Mars's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A global red forest"
+                },
+                {
+                  "id": "two",
+                  "text": "A global red-water ocean"
+                },
+                {
+                  "id": "correct",
+                  "text": "Oxidized iron minerals"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Iron-bearing minerals that have oxidized, like rust, help give Mars its reddish appearance.",
+              "retryFeedback": "Good exploring! Think of the rusty minerals in Mars's rocks and dust.",
+              "hint": "Think of the rusty minerals in Mars's rocks and dust."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "Why does Mars look red?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Red trees"
+                },
+                {
+                  "id": "correct",
+                  "text": "Rusty minerals"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Iron-bearing minerals that have oxidized, like rust, help give Mars its reddish appearance.",
+              "retryFeedback": "Good exploring! Think of the rusty minerals in Mars's rocks and dust.",
+              "hint": "Think of the rusty minerals in Mars's rocks and dust."
+            },
+            "ages7To9": {
+              "prompt": "What helps give Mars its rusty color?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Red forests"
+                },
+                {
+                  "id": "two",
+                  "text": "A red liquid ocean"
+                },
+                {
+                  "id": "correct",
+                  "text": "Iron-bearing rusty minerals"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Iron-bearing minerals that have oxidized, like rust, help give Mars its reddish appearance.",
+              "retryFeedback": "Good exploring! Think of the rusty minerals in Mars's rocks and dust.",
+              "hint": "Think of the rusty minerals in Mars's rocks and dust."
+            },
+            "ages10To12": {
+              "prompt": "What contributes to the reddish appearance of Mars's surface?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A global red forest"
+                },
+                {
+                  "id": "two",
+                  "text": "A global red-water ocean"
+                },
+                {
+                  "id": "correct",
+                  "text": "Oxidized iron minerals"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Iron-bearing minerals that have oxidized, like rust, help give Mars its reddish appearance.",
+              "retryFeedback": "Good exploring! Think of the rusty minerals in Mars's rocks and dust.",
+              "hint": "Think of the rusty minerals in Mars's rocks and dust."
+            }
+          }
+        }
+      },
+      {
+        "id": "mars-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "mars-video-question-2",
+          "conceptID": "mars-video-concept-2",
+          "source": {
+            "title": "NASA Science: Mars facts",
+            "url": "https://science.nasa.gov/mars/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What is Olympus Mons?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "A huge volcano"
+                },
+                {
+                  "id": "one",
+                  "text": "A tiny lake"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Olympus Mons is a huge shield volcano on Mars, built from many lava flows.",
+              "retryFeedback": "Good exploring! Look for the giant volcanic mountain.",
+              "hint": "Look for the giant volcanic mountain."
+            },
+            "ages7To9": {
+              "prompt": "Which Martian feature is an enormous shield volcano?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "A rover's wheel"
+                },
+                {
+                  "id": "correct",
+                  "text": "Olympus Mons"
+                },
+                {
+                  "id": "one",
+                  "text": "A tiny pond"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Olympus Mons is a huge shield volcano on Mars, built from many lava flows.",
+              "retryFeedback": "Good exploring! Look for the giant volcanic mountain.",
+              "hint": "Look for the giant volcanic mountain."
+            },
+            "ages10To12": {
+              "prompt": "Which description matches Olympus Mons?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "An orbiting spacecraft"
+                },
+                {
+                  "id": "correct",
+                  "text": "A vast shield volcano"
+                },
+                {
+                  "id": "one",
+                  "text": "A small liquid-water lake"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Olympus Mons is a huge shield volcano on Mars, built from many lava flows.",
+              "retryFeedback": "Good exploring! Look for the giant volcanic mountain.",
+              "hint": "Look for the giant volcanic mountain."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What is Olympus Mons?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "A huge volcano"
+                },
+                {
+                  "id": "one",
+                  "text": "A tiny lake"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Olympus Mons is a huge shield volcano on Mars, built from many lava flows.",
+              "retryFeedback": "Good exploring! Look for the giant volcanic mountain.",
+              "hint": "Look for the giant volcanic mountain."
+            },
+            "ages7To9": {
+              "prompt": "Which Martian feature is an enormous shield volcano?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "A rover's wheel"
+                },
+                {
+                  "id": "correct",
+                  "text": "Olympus Mons"
+                },
+                {
+                  "id": "one",
+                  "text": "A tiny pond"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Olympus Mons is a huge shield volcano on Mars, built from many lava flows.",
+              "retryFeedback": "Good exploring! Look for the giant volcanic mountain.",
+              "hint": "Look for the giant volcanic mountain."
+            },
+            "ages10To12": {
+              "prompt": "Which description matches Olympus Mons?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "An orbiting spacecraft"
+                },
+                {
+                  "id": "correct",
+                  "text": "A vast shield volcano"
+                },
+                {
+                  "id": "one",
+                  "text": "A small liquid-water lake"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Olympus Mons is a huge shield volcano on Mars, built from many lava flows.",
+              "retryFeedback": "Good exploring! Look for the giant volcanic mountain.",
+              "hint": "Look for the giant volcanic mountain."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "mars-video-card-1",
+        "conceptID": "mars-video-concept-1",
+        "title": "A rusty, rocky planet",
+        "body": {
+          "ages4To6": "Mars is a rocky planet. Rusty minerals give it a reddish color. This spinning model makes hills five times taller so we can notice them.",
+          "ages7To9": "Mars is a rocky planet whose iron-bearing surface minerals create a rusty red appearance. This rotating model exaggerates terrain heights five times; real hills look less steep.",
+          "ages10To12": "Mars is terrestrial, with oxidized iron minerals contributing to its red appearance. This visualization combines Viking imagery and elevation data; terrain height is exaggerated by a factor of five for visibility."
+        },
+        "imageName": "mars-comparison",
+        "imageCredit": "NASA/Goddard Space Flight Center Scientific Visualization Studio; NASA/JPL; NASA/JPL-Caltech",
+        "imageSourceID": "PIA02570",
+        "source": {
+          "title": "NASA Science: Mars facts",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "mars-video-card-2",
+        "conceptID": "mars-video-concept-2",
+        "title": "An enormous volcano",
+        "body": {
+          "ages4To6": "Olympus Mons is a huge volcano on Mars. It is much taller than Mount Everest on Earth!",
+          "ages7To9": "Olympus Mons is an enormous shield volcano. Its height is roughly 22 kilometres above the surrounding reference level, far higher than Mount Everest.",
+          "ages10To12": "Olympus Mons is a vast shield volcano built by repeated lava flows. Its summit is roughly 22 kilometres above the Martian reference datum; measurements depend on the chosen elevation baseline."
+        },
+        "imageName": "mars-olympus",
+        "imageCredit": "NASA/Goddard Space Flight Center Scientific Visualization Studio; NASA/JPL; NASA/JPL-Caltech",
+        "imageSourceID": "PIA02982",
+        "source": {
+          "title": "NASA Science: Mars facts",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "mars-video-card-3",
+        "conceptID": "mars-video-concept-3",
+        "title": "Robots look for clues",
+        "body": {
+          "ages4To6": "Robots called rovers travel over Mars and study rocks. They help us look for clues about water long ago.",
+          "ages7To9": "Rovers photograph rocks, measure minerals and investigate ancient water environments. Finding water clues is different from finding living things.",
+          "ages10To12": "Robotic rovers test mineralogy and geological evidence for past environments. Some Martian landforms and rocks record ancient water; no life on Mars has been confirmed."
+        },
+        "imageName": "mars-landscape",
+        "imageCredit": "NASA/Goddard Space Flight Center Scientific Visualization Studio; NASA/JPL; NASA/JPL-Caltech",
+        "imageSourceID": "PIA18409",
+        "source": {
+          "title": "NASA Science: Mars facts",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "jupiter-video",
+    "destinationID": "jupiter",
+    "revision": 1,
+    "title": "Jupiter: A Giant Weather World",
+    "resourceName": "jupiter-lesson",
+    "duration": 60,
+    "credit": "NASA's Goddard Space Flight Center/Space Telescope Science Institute; Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+    "source": {
+      "title": "NASA SVS: Jupiter: A Giant Weather World",
+      "url": "https://svs.gsfc.nasa.gov/12021/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "jupiter-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Jupiter is the biggest planet. Light and dark cloud stripes wrap around it. This spinning view was made from telescope pictures.",
+          "ages7To9": "Jupiter is a gas giant, made mostly of hydrogen and helium. Fast winds stretch clouds into bands. This globe uses Hubble images, with rotation sped up.",
+          "ages10To12": "Jupiter is a hydrogen-helium gas giant. Belts and zones mark different cloud regions and winds. This globe is reconstructed from Hubble observations; it is a visualization with accelerated rotation."
+        },
+        "imageName": "jupiter-global"
+      },
+      {
+        "id": "jupiter-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "That big red spot is a giant storm! It swirls in Jupiter's clouds.",
+          "ages7To9": "The Great Red Spot is a long-lived storm in Jupiter's atmosphere. Its winds circle a region that changes in size and color over time.",
+          "ages10To12": "The Great Red Spot is an anticyclonic atmospheric vortex. Its dimensions and appearance change over time, so an older photograph is evidence of a particular observation, not a permanent unchanging size."
+        },
+        "imageName": "jupiter-red-spot"
+      },
+      {
+        "id": "jupiter-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Jupiter spins very quickly. One day there lasts about ten hours. But it takes many Earth years to travel around the Sun!",
+          "ages7To9": "A Jupiter day is about 10 hours, the shortest day of any planet. A Jupiter year lasts about 12 Earth years. A day measures a spin; a year measures an orbit.",
+          "ages10To12": "Jupiter rotates in about 9.9 hours and orbits the Sun in about 11.9 Earth years. Rotation and orbital revolution are different motions, so a planet can have both a short day and a long year."
+        },
+        "imageName": "jupiter-global"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "jupiter-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "jupiter-video-question-1",
+          "conceptID": "jupiter-video-concept-1",
+          "source": {
+            "title": "NASA Science: Jupiter facts",
+            "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What makes Jupiter's stripes?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Paint"
+                },
+                {
+                  "id": "correct",
+                  "text": "Clouds"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Jupiter's stripes are atmospheric cloud regions stretched into bands by winds.",
+              "retryFeedback": "Good exploring! Jupiter is a giant weather world with cloud bands.",
+              "hint": "Jupiter is a giant weather world with cloud bands."
+            },
+            "ages7To9": {
+              "prompt": "What are Jupiter's light and dark bands made of?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Painted rock walls"
+                },
+                {
+                  "id": "two",
+                  "text": "Forests"
+                },
+                {
+                  "id": "correct",
+                  "text": "Different cloud regions"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Jupiter's stripes are atmospheric cloud regions stretched into bands by winds.",
+              "retryFeedback": "Good exploring! Jupiter is a giant weather world with cloud bands.",
+              "hint": "Jupiter is a giant weather world with cloud bands."
+            },
+            "ages10To12": {
+              "prompt": "Which features create Jupiter's visible belts and zones?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Painted patterns on a solid surface"
+                },
+                {
+                  "id": "two",
+                  "text": "Parallel forests"
+                },
+                {
+                  "id": "correct",
+                  "text": "Cloud regions shaped by atmospheric winds"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Jupiter's stripes are atmospheric cloud regions stretched into bands by winds.",
+              "retryFeedback": "Good exploring! Jupiter is a giant weather world with cloud bands.",
+              "hint": "Jupiter is a giant weather world with cloud bands."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What makes Jupiter's stripes?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Paint"
+                },
+                {
+                  "id": "correct",
+                  "text": "Clouds"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Jupiter's stripes are atmospheric cloud regions stretched into bands by winds.",
+              "retryFeedback": "Good exploring! Jupiter is a giant weather world with cloud bands.",
+              "hint": "Jupiter is a giant weather world with cloud bands."
+            },
+            "ages7To9": {
+              "prompt": "What are Jupiter's light and dark bands made of?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Painted rock walls"
+                },
+                {
+                  "id": "two",
+                  "text": "Forests"
+                },
+                {
+                  "id": "correct",
+                  "text": "Different cloud regions"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Jupiter's stripes are atmospheric cloud regions stretched into bands by winds.",
+              "retryFeedback": "Good exploring! Jupiter is a giant weather world with cloud bands.",
+              "hint": "Jupiter is a giant weather world with cloud bands."
+            },
+            "ages10To12": {
+              "prompt": "Which features create Jupiter's visible belts and zones?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Painted patterns on a solid surface"
+                },
+                {
+                  "id": "two",
+                  "text": "Parallel forests"
+                },
+                {
+                  "id": "correct",
+                  "text": "Cloud regions shaped by atmospheric winds"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Jupiter's stripes are atmospheric cloud regions stretched into bands by winds.",
+              "retryFeedback": "Good exploring! Jupiter is a giant weather world with cloud bands.",
+              "hint": "Jupiter is a giant weather world with cloud bands."
+            }
+          }
+        }
+      },
+      {
+        "id": "jupiter-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "jupiter-video-question-2",
+          "conceptID": "jupiter-video-concept-2",
+          "source": {
+            "title": "NASA Science: Jupiter facts",
+            "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What is the Great Red Spot?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "A huge storm"
+                },
+                {
+                  "id": "one",
+                  "text": "A red mountain"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "The Great Red Spot is a large atmospheric storm. Scientists watch how its size and appearance change.",
+              "retryFeedback": "Good exploring! Look for the swirling spot in Jupiter's clouds.",
+              "hint": "Look for the swirling spot in Jupiter's clouds."
+            },
+            "ages7To9": {
+              "prompt": "Which description fits Jupiter's Great Red Spot?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "An enormous city"
+                },
+                {
+                  "id": "correct",
+                  "text": "A long-lived atmospheric storm"
+                },
+                {
+                  "id": "one",
+                  "text": "A mountain made of red rock"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "The Great Red Spot is a large atmospheric storm. Scientists watch how its size and appearance change.",
+              "retryFeedback": "Good exploring! Look for the swirling spot in Jupiter's clouds.",
+              "hint": "Look for the swirling spot in Jupiter's clouds."
+            },
+            "ages10To12": {
+              "prompt": "What kind of feature is the Great Red Spot?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "An artificial settlement"
+                },
+                {
+                  "id": "correct",
+                  "text": "An atmospheric vortex"
+                },
+                {
+                  "id": "one",
+                  "text": "A mountain on a solid exterior"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "The Great Red Spot is a large atmospheric storm. Scientists watch how its size and appearance change.",
+              "retryFeedback": "Good exploring! Look for the swirling spot in Jupiter's clouds.",
+              "hint": "Look for the swirling spot in Jupiter's clouds."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What is the Great Red Spot?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "A huge storm"
+                },
+                {
+                  "id": "one",
+                  "text": "A red mountain"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "The Great Red Spot is a large atmospheric storm. Scientists watch how its size and appearance change.",
+              "retryFeedback": "Good exploring! Look for the swirling spot in Jupiter's clouds.",
+              "hint": "Look for the swirling spot in Jupiter's clouds."
+            },
+            "ages7To9": {
+              "prompt": "Which description fits Jupiter's Great Red Spot?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "An enormous city"
+                },
+                {
+                  "id": "correct",
+                  "text": "A long-lived atmospheric storm"
+                },
+                {
+                  "id": "one",
+                  "text": "A mountain made of red rock"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "The Great Red Spot is a large atmospheric storm. Scientists watch how its size and appearance change.",
+              "retryFeedback": "Good exploring! Look for the swirling spot in Jupiter's clouds.",
+              "hint": "Look for the swirling spot in Jupiter's clouds."
+            },
+            "ages10To12": {
+              "prompt": "What kind of feature is the Great Red Spot?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "An artificial settlement"
+                },
+                {
+                  "id": "correct",
+                  "text": "An atmospheric vortex"
+                },
+                {
+                  "id": "one",
+                  "text": "A mountain on a solid exterior"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "The Great Red Spot is a large atmospheric storm. Scientists watch how its size and appearance change.",
+              "retryFeedback": "Good exploring! Look for the swirling spot in Jupiter's clouds.",
+              "hint": "Look for the swirling spot in Jupiter's clouds."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "jupiter-video-card-1",
+        "conceptID": "jupiter-video-concept-1",
+        "title": "Cloud bands around a giant",
+        "body": {
+          "ages4To6": "Jupiter is the biggest planet. Light and dark cloud stripes wrap around it. This spinning view was made from telescope pictures.",
+          "ages7To9": "Jupiter is a gas giant, made mostly of hydrogen and helium. Fast winds stretch clouds into bands. This globe uses Hubble images, with rotation sped up.",
+          "ages10To12": "Jupiter is a hydrogen-helium gas giant. Belts and zones mark different cloud regions and winds. This globe is reconstructed from Hubble observations; it is a visualization with accelerated rotation."
+        },
+        "imageName": "jupiter-global",
+        "imageCredit": "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+        "imageSourceID": "PIA22946",
+        "source": {
+          "title": "NASA Science: Jupiter facts",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "jupiter-video-card-2",
+        "conceptID": "jupiter-video-concept-2",
+        "title": "A famous swirling storm",
+        "body": {
+          "ages4To6": "That big red spot is a giant storm! It swirls in Jupiter's clouds.",
+          "ages7To9": "The Great Red Spot is a long-lived storm in Jupiter's atmosphere. Its winds circle a region that changes in size and color over time.",
+          "ages10To12": "The Great Red Spot is an anticyclonic atmospheric vortex. Its dimensions and appearance change over time, so an older photograph is evidence of a particular observation, not a permanent unchanging size."
+        },
+        "imageName": "jupiter-red-spot",
+        "imageCredit": "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+        "imageSourceID": "PIA21395",
+        "source": {
+          "title": "NASA Science: Jupiter facts",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "jupiter-video-card-3",
+        "conceptID": "jupiter-video-concept-3",
+        "title": "A short day, a long year",
+        "body": {
+          "ages4To6": "Jupiter spins very quickly. One day there lasts about ten hours. But it takes many Earth years to travel around the Sun!",
+          "ages7To9": "A Jupiter day is about 10 hours, the shortest day of any planet. A Jupiter year lasts about 12 Earth years. A day measures a spin; a year measures an orbit.",
+          "ages10To12": "Jupiter rotates in about 9.9 hours and orbits the Sun in about 11.9 Earth years. Rotation and orbital revolution are different motions, so a planet can have both a short day and a long year."
+        },
+        "imageName": "jupiter-global",
+        "imageCredit": "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+        "imageSourceID": "PIA22946",
+        "source": {
+          "title": "NASA Science: Jupiter facts",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "saturn-video",
+    "destinationID": "saturn",
+    "revision": 1,
+    "title": "Saturn: Rings and a Six-Sided Surprise",
+    "resourceName": "saturn-lesson",
+    "duration": 60,
+    "credit": "NASA/JPL-Caltech/Space Science Institute/Hampton University; NASA/JPL/Space Science Institute · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Saturn: Rings and a Six-Sided Surprise",
+      "url": "https://svs.gsfc.nasa.gov/30883/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "saturn-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Saturn is a giant planet with clouds. Near its north pole, clouds make a six-sided pattern! These old spacecraft pictures show its colors changing.",
+          "ages7To9": "Saturn has a six-sided cloud pattern near its north pole, called the hexagon. These Cassini observations compare 2013 with 2017; the polar colors changed with the seasons.",
+          "ages10To12": "Saturn's north-polar hexagon is an atmospheric pattern. This comparison uses Cassini observations from 2013 and 2017. Seasonal illumination and atmospheric haze can alter the polar region's color."
+        },
+        "imageName": "saturn-portrait"
+      },
+      {
+        "id": "saturn-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "Saturn's bright rings are not one big solid hoop. They are made of countless little pieces of ice and rock going around the planet.",
+          "ages7To9": "Saturn's rings contain many separate orbiting particles, mostly water ice with rocky material. The particles range from tiny grains to large chunks.",
+          "ages10To12": "Saturn's rings are a disk of independently orbiting particles, dominated by water ice. Their structure includes ringlets, gaps and waves influenced by gravity and interactions with moons."
+        },
+        "imageName": "saturn-portrait"
+      },
+      {
+        "id": "saturn-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Cassini sent home wonderful pictures of Saturn. Far away in one picture, Earth looks like a tiny dot!",
+          "ages7To9": "Cassini explored Saturn, its rings and moons from 2004 to 2017. In the Day the Earth Smiled image, our home is a tiny distant point.",
+          "ages10To12": "Cassini's 2004–2017 orbital mission transformed knowledge of Saturn's atmosphere, rings and satellites. The Day the Earth Smiled mosaic illustrates perspective: apparent size changes with viewing distance."
+        },
+        "imageName": "saturn-earth-smiled"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "saturn-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "saturn-video-question-1",
+          "conceptID": "saturn-video-concept-1",
+          "source": {
+            "title": "NASA Science: Saturn facts",
+            "url": "https://science.nasa.gov/saturn/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "How many sides does Saturn's hexagon have?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Three"
+                },
+                {
+                  "id": "correct",
+                  "text": "Six"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's hexagon is a six-sided cloud pattern near its north pole.",
+              "retryFeedback": "Good exploring! A hexagon is a shape with six sides.",
+              "hint": "A hexagon is a shape with six sides."
+            },
+            "ages7To9": {
+              "prompt": "What shape is Saturn's north-polar cloud pattern?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A three-sided triangle"
+                },
+                {
+                  "id": "two",
+                  "text": "A straight two-ended line"
+                },
+                {
+                  "id": "correct",
+                  "text": "A six-sided pattern"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's hexagon is a six-sided cloud pattern near its north pole.",
+              "retryFeedback": "Good exploring! A hexagon is a shape with six sides.",
+              "hint": "A hexagon is a shape with six sides."
+            },
+            "ages10To12": {
+              "prompt": "Which description matches Saturn's polar hexagon?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A three-sided solid mountain"
+                },
+                {
+                  "id": "two",
+                  "text": "A two-ended straight surface groove"
+                },
+                {
+                  "id": "correct",
+                  "text": "A six-sided atmospheric pattern"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's hexagon is a six-sided cloud pattern near its north pole.",
+              "retryFeedback": "Good exploring! A hexagon is a shape with six sides.",
+              "hint": "A hexagon is a shape with six sides."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "How many sides does Saturn's hexagon have?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Three"
+                },
+                {
+                  "id": "correct",
+                  "text": "Six"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's hexagon is a six-sided cloud pattern near its north pole.",
+              "retryFeedback": "Good exploring! A hexagon is a shape with six sides.",
+              "hint": "A hexagon is a shape with six sides."
+            },
+            "ages7To9": {
+              "prompt": "What shape is Saturn's north-polar cloud pattern?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A three-sided triangle"
+                },
+                {
+                  "id": "two",
+                  "text": "A straight two-ended line"
+                },
+                {
+                  "id": "correct",
+                  "text": "A six-sided pattern"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's hexagon is a six-sided cloud pattern near its north pole.",
+              "retryFeedback": "Good exploring! A hexagon is a shape with six sides.",
+              "hint": "A hexagon is a shape with six sides."
+            },
+            "ages10To12": {
+              "prompt": "Which description matches Saturn's polar hexagon?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "A three-sided solid mountain"
+                },
+                {
+                  "id": "two",
+                  "text": "A two-ended straight surface groove"
+                },
+                {
+                  "id": "correct",
+                  "text": "A six-sided atmospheric pattern"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's hexagon is a six-sided cloud pattern near its north pole.",
+              "retryFeedback": "Good exploring! A hexagon is a shape with six sides.",
+              "hint": "A hexagon is a shape with six sides."
+            }
+          }
+        }
+      },
+      {
+        "id": "saturn-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "saturn-video-question-2",
+          "conceptID": "saturn-video-concept-2",
+          "source": {
+            "title": "NASA Science: Saturn facts",
+            "url": "https://science.nasa.gov/saturn/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "Are Saturn's rings one solid hoop or many pieces?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Many pieces"
+                },
+                {
+                  "id": "one",
+                  "text": "One solid hoop"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's rings contain countless separate particles, mostly water ice, that orbit the planet.",
+              "retryFeedback": "Good exploring! Imagine many tiny ice-and-rock travelers orbiting together.",
+              "hint": "Imagine many tiny ice-and-rock travelers orbiting together."
+            },
+            "ages7To9": {
+              "prompt": "What are Saturn's rings made of?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Paint on the planet's clouds"
+                },
+                {
+                  "id": "correct",
+                  "text": "Many orbiting ice and rock particles"
+                },
+                {
+                  "id": "one",
+                  "text": "One solid sheet of metal"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's rings contain countless separate particles, mostly water ice, that orbit the planet.",
+              "retryFeedback": "Good exploring! Imagine many tiny ice-and-rock travelers orbiting together.",
+              "hint": "Imagine many tiny ice-and-rock travelers orbiting together."
+            },
+            "ages10To12": {
+              "prompt": "Which physical description fits Saturn's rings?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Colored paint attached to the atmosphere"
+                },
+                {
+                  "id": "correct",
+                  "text": "Countless independently orbiting particles, mostly ice"
+                },
+                {
+                  "id": "one",
+                  "text": "A single rigid metal hoop"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's rings contain countless separate particles, mostly water ice, that orbit the planet.",
+              "retryFeedback": "Good exploring! Imagine many tiny ice-and-rock travelers orbiting together.",
+              "hint": "Imagine many tiny ice-and-rock travelers orbiting together."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "Are Saturn's rings one solid hoop or many pieces?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Many pieces"
+                },
+                {
+                  "id": "one",
+                  "text": "One solid hoop"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's rings contain countless separate particles, mostly water ice, that orbit the planet.",
+              "retryFeedback": "Good exploring! Imagine many tiny ice-and-rock travelers orbiting together.",
+              "hint": "Imagine many tiny ice-and-rock travelers orbiting together."
+            },
+            "ages7To9": {
+              "prompt": "What are Saturn's rings made of?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Paint on the planet's clouds"
+                },
+                {
+                  "id": "correct",
+                  "text": "Many orbiting ice and rock particles"
+                },
+                {
+                  "id": "one",
+                  "text": "One solid sheet of metal"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's rings contain countless separate particles, mostly water ice, that orbit the planet.",
+              "retryFeedback": "Good exploring! Imagine many tiny ice-and-rock travelers orbiting together.",
+              "hint": "Imagine many tiny ice-and-rock travelers orbiting together."
+            },
+            "ages10To12": {
+              "prompt": "Which physical description fits Saturn's rings?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Colored paint attached to the atmosphere"
+                },
+                {
+                  "id": "correct",
+                  "text": "Countless independently orbiting particles, mostly ice"
+                },
+                {
+                  "id": "one",
+                  "text": "A single rigid metal hoop"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Saturn's rings contain countless separate particles, mostly water ice, that orbit the planet.",
+              "retryFeedback": "Good exploring! Imagine many tiny ice-and-rock travelers orbiting together.",
+              "hint": "Imagine many tiny ice-and-rock travelers orbiting together."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "saturn-video-card-1",
+        "conceptID": "saturn-video-concept-1",
+        "title": "A six-sided cloud pattern",
+        "body": {
+          "ages4To6": "Saturn is a giant planet with clouds. Near its north pole, clouds make a six-sided pattern! These old spacecraft pictures show its colors changing.",
+          "ages7To9": "Saturn has a six-sided cloud pattern near its north pole, called the hexagon. These Cassini observations compare 2013 with 2017; the polar colors changed with the seasons.",
+          "ages10To12": "Saturn's north-polar hexagon is an atmospheric pattern. This comparison uses Cassini observations from 2013 and 2017. Seasonal illumination and atmospheric haze can alter the polar region's color."
+        },
+        "imageName": "saturn-portrait",
+        "imageCredit": "NASA/JPL-Caltech/Space Science Institute/Hampton University; NASA/JPL/Space Science Institute",
+        "imageSourceID": "PIA06193",
+        "source": {
+          "title": "NASA Science: Saturn facts",
+          "url": "https://science.nasa.gov/saturn/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "saturn-video-card-2",
+        "conceptID": "saturn-video-concept-2",
+        "title": "Countless ring pieces",
+        "body": {
+          "ages4To6": "Saturn's bright rings are not one big solid hoop. They are made of countless little pieces of ice and rock going around the planet.",
+          "ages7To9": "Saturn's rings contain many separate orbiting particles, mostly water ice with rocky material. The particles range from tiny grains to large chunks.",
+          "ages10To12": "Saturn's rings are a disk of independently orbiting particles, dominated by water ice. Their structure includes ringlets, gaps and waves influenced by gravity and interactions with moons."
+        },
+        "imageName": "saturn-portrait",
+        "imageCredit": "NASA/JPL-Caltech/Space Science Institute/Hampton University; NASA/JPL/Space Science Institute",
+        "imageSourceID": "PIA06193",
+        "source": {
+          "title": "NASA Science: Saturn facts",
+          "url": "https://science.nasa.gov/saturn/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "saturn-video-card-3",
+        "conceptID": "saturn-video-concept-3",
+        "title": "Cassini's big picture",
+        "body": {
+          "ages4To6": "Cassini sent home wonderful pictures of Saturn. Far away in one picture, Earth looks like a tiny dot!",
+          "ages7To9": "Cassini explored Saturn, its rings and moons from 2004 to 2017. In the Day the Earth Smiled image, our home is a tiny distant point.",
+          "ages10To12": "Cassini's 2004–2017 orbital mission transformed knowledge of Saturn's atmosphere, rings and satellites. The Day the Earth Smiled mosaic illustrates perspective: apparent size changes with viewing distance."
+        },
+        "imageName": "saturn-earth-smiled",
+        "imageCredit": "NASA/JPL-Caltech/Space Science Institute/Hampton University; NASA/JPL/Space Science Institute",
+        "imageSourceID": "PIA17172",
+        "source": {
+          "title": "NASA Science: Saturn facts",
+          "url": "https://science.nasa.gov/saturn/facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "uranus-video",
+    "destinationID": "uranus",
+    "revision": 1,
+    "title": "Uranus: The Planet on Its Side",
+    "resourceName": "uranus-lesson",
+    "duration": 60,
+    "credit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL-Caltech; NASA/JPL/STScI · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Uranus: The Planet on Its Side",
+      "url": "https://svs.gsfc.nasa.gov/20390/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "uranus-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Uranus is a blue-green giant tipped almost onto its side! This moving view is a NASA animation, not a camera movie.",
+          "ages7To9": "Uranus is an ice giant with an axis tilted about 98 degrees. This NASA animation shows a model of the planet; it is not live spacecraft footage.",
+          "ages10To12": "Uranus is an ice giant with an axial tilt of about 98 degrees. The NASA conceptual animation is a model, not direct footage. Extreme tilt creates unusual seasonal illumination."
+        },
+        "imageName": "uranus-global"
+      },
+      {
+        "id": "uranus-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "Methane gas in Uranus's air takes away some red light. More blue-green light reaches our eyes. Special camera colors can show clouds more clearly.",
+          "ages7To9": "Methane absorbs some red sunlight in Uranus's atmosphere, helping it look blue-green. The cloud picture uses enhanced colors to reveal details, rather than the colors our eyes would see.",
+          "ages10To12": "Methane absorption and atmospheric aerosols contribute to Uranus's blue-green appearance. Assigned or enhanced colors reveal faint cloud structure; they must not be confused with a natural-color view."
+        },
+        "imageName": "uranus-clouds"
+      },
+      {
+        "id": "uranus-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Voyager 2 flew past Uranus in 1986. It sent pictures of this faraway planet, its rings, and its moons.",
+          "ages7To9": "Voyager 2 visited Uranus in January 1986. It remains the only spacecraft to have flown past Uranus. Its observations revealed rings, moons and an unusual magnetic field.",
+          "ages10To12": "Voyager 2's 1986 flyby provided the only close spacecraft encounter with Uranus. Combining those measurements with telescopic observations helps scientists investigate its atmosphere, ring system, moons and magnetic environment."
+        },
+        "imageName": "uranus-global"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "uranus-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "uranus-video-question-1",
+          "conceptID": "uranus-video-concept-1",
+          "source": {
+            "title": "NASA Science: Uranus facts",
+            "url": "https://science.nasa.gov/uranus/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What is special about Uranus's tilt?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "It has no tilt at all"
+                },
+                {
+                  "id": "correct",
+                  "text": "It is almost on its side"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Uranus's axis is tilted about 98 degrees, so it is often described as rotating on its side.",
+              "retryFeedback": "Good exploring! Look at the way the planet's axis is tipped.",
+              "hint": "Look at the way the planet's axis is tipped."
+            },
+            "ages7To9": {
+              "prompt": "How is Uranus's spin axis unusual?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "It is perfectly upright"
+                },
+                {
+                  "id": "two",
+                  "text": "It has square corners"
+                },
+                {
+                  "id": "correct",
+                  "text": "It is tilted almost sideways"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Uranus's axis is tilted about 98 degrees, so it is often described as rotating on its side.",
+              "retryFeedback": "Good exploring! Look at the way the planet's axis is tipped.",
+              "hint": "Look at the way the planet's axis is tipped."
+            },
+            "ages10To12": {
+              "prompt": "Which axial orientation distinguishes Uranus from most planets?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "An axial tilt of exactly zero"
+                },
+                {
+                  "id": "two",
+                  "text": "A cube-shaped planet has no axis"
+                },
+                {
+                  "id": "correct",
+                  "text": "An axial tilt near 98 degrees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Uranus's axis is tilted about 98 degrees, so it is often described as rotating on its side.",
+              "retryFeedback": "Good exploring! Look at the way the planet's axis is tipped.",
+              "hint": "Look at the way the planet's axis is tipped."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What is special about Uranus's tilt?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "It has no tilt at all"
+                },
+                {
+                  "id": "correct",
+                  "text": "It is almost on its side"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Uranus's axis is tilted about 98 degrees, so it is often described as rotating on its side.",
+              "retryFeedback": "Good exploring! Look at the way the planet's axis is tipped.",
+              "hint": "Look at the way the planet's axis is tipped."
+            },
+            "ages7To9": {
+              "prompt": "How is Uranus's spin axis unusual?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "It is perfectly upright"
+                },
+                {
+                  "id": "two",
+                  "text": "It has square corners"
+                },
+                {
+                  "id": "correct",
+                  "text": "It is tilted almost sideways"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Uranus's axis is tilted about 98 degrees, so it is often described as rotating on its side.",
+              "retryFeedback": "Good exploring! Look at the way the planet's axis is tipped.",
+              "hint": "Look at the way the planet's axis is tipped."
+            },
+            "ages10To12": {
+              "prompt": "Which axial orientation distinguishes Uranus from most planets?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "An axial tilt of exactly zero"
+                },
+                {
+                  "id": "two",
+                  "text": "A cube-shaped planet has no axis"
+                },
+                {
+                  "id": "correct",
+                  "text": "An axial tilt near 98 degrees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Uranus's axis is tilted about 98 degrees, so it is often described as rotating on its side.",
+              "retryFeedback": "Good exploring! Look at the way the planet's axis is tipped.",
+              "hint": "Look at the way the planet's axis is tipped."
+            }
+          }
+        }
+      },
+      {
+        "id": "uranus-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "uranus-video-question-2",
+          "conceptID": "uranus-video-concept-2",
+          "source": {
+            "title": "NASA Science: Uranus facts",
+            "url": "https://science.nasa.gov/uranus/facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "Which gas helps Uranus look blue-green?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Methane"
+                },
+                {
+                  "id": "one",
+                  "text": "Smoke from cars"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Methane absorbs some red light. Aerosols and clouds also influence Uranus's appearance.",
+              "retryFeedback": "Good exploring! The gas we named takes away some of the red light.",
+              "hint": "The gas we named takes away some of the red light."
+            },
+            "ages7To9": {
+              "prompt": "Which gas absorbs red light in Uranus's atmosphere?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Pink paint"
+                },
+                {
+                  "id": "correct",
+                  "text": "Methane"
+                },
+                {
+                  "id": "one",
+                  "text": "Car exhaust"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Methane absorbs some red light. Aerosols and clouds also influence Uranus's appearance.",
+              "retryFeedback": "Good exploring! The gas we named takes away some of the red light.",
+              "hint": "The gas we named takes away some of the red light."
+            },
+            "ages10To12": {
+              "prompt": "Which atmospheric component contributes to the blue-green hue by absorbing red light?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Paint pigments"
+                },
+                {
+                  "id": "correct",
+                  "text": "Methane"
+                },
+                {
+                  "id": "one",
+                  "text": "Vehicle exhaust"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Methane absorbs some red light. Aerosols and clouds also influence Uranus's appearance.",
+              "retryFeedback": "Good exploring! The gas we named takes away some of the red light.",
+              "hint": "The gas we named takes away some of the red light."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "Which gas helps Uranus look blue-green?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Methane"
+                },
+                {
+                  "id": "one",
+                  "text": "Smoke from cars"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Methane absorbs some red light. Aerosols and clouds also influence Uranus's appearance.",
+              "retryFeedback": "Good exploring! The gas we named takes away some of the red light.",
+              "hint": "The gas we named takes away some of the red light."
+            },
+            "ages7To9": {
+              "prompt": "Which gas absorbs red light in Uranus's atmosphere?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Pink paint"
+                },
+                {
+                  "id": "correct",
+                  "text": "Methane"
+                },
+                {
+                  "id": "one",
+                  "text": "Car exhaust"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Methane absorbs some red light. Aerosols and clouds also influence Uranus's appearance.",
+              "retryFeedback": "Good exploring! The gas we named takes away some of the red light.",
+              "hint": "The gas we named takes away some of the red light."
+            },
+            "ages10To12": {
+              "prompt": "Which atmospheric component contributes to the blue-green hue by absorbing red light?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Paint pigments"
+                },
+                {
+                  "id": "correct",
+                  "text": "Methane"
+                },
+                {
+                  "id": "one",
+                  "text": "Vehicle exhaust"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Methane absorbs some red light. Aerosols and clouds also influence Uranus's appearance.",
+              "retryFeedback": "Good exploring! The gas we named takes away some of the red light.",
+              "hint": "The gas we named takes away some of the red light."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "uranus-video-card-1",
+        "conceptID": "uranus-video-concept-1",
+        "title": "A giant with a big tilt",
+        "body": {
+          "ages4To6": "Uranus is a blue-green giant tipped almost onto its side! This moving view is a NASA animation, not a camera movie.",
+          "ages7To9": "Uranus is an ice giant with an axis tilted about 98 degrees. This NASA animation shows a model of the planet; it is not live spacecraft footage.",
+          "ages10To12": "Uranus is an ice giant with an axial tilt of about 98 degrees. The NASA conceptual animation is a model, not direct footage. Extreme tilt creates unusual seasonal illumination."
+        },
+        "imageName": "uranus-global",
+        "imageCredit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL-Caltech; NASA/JPL/STScI",
+        "imageSourceID": "PIA18182",
+        "source": {
+          "title": "NASA Science: Uranus facts",
+          "url": "https://science.nasa.gov/uranus/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "uranus-video-card-2",
+        "conceptID": "uranus-video-concept-2",
+        "title": "A blue-green mystery",
+        "body": {
+          "ages4To6": "Methane gas in Uranus's air takes away some red light. More blue-green light reaches our eyes. Special camera colors can show clouds more clearly.",
+          "ages7To9": "Methane absorbs some red sunlight in Uranus's atmosphere, helping it look blue-green. The cloud picture uses enhanced colors to reveal details, rather than the colors our eyes would see.",
+          "ages10To12": "Methane absorption and atmospheric aerosols contribute to Uranus's blue-green appearance. Assigned or enhanced colors reveal faint cloud structure; they must not be confused with a natural-color view."
+        },
+        "imageName": "uranus-clouds",
+        "imageCredit": "NASA/JPL/STScI",
+        "imageSourceID": "PIA02963",
+        "source": {
+          "title": "NASA Science: Uranus facts",
+          "url": "https://science.nasa.gov/uranus/facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "uranus-video-card-3",
+        "conceptID": "uranus-video-concept-3",
+        "title": "Voyager's distant visit",
+        "body": {
+          "ages4To6": "Voyager 2 flew past Uranus in 1986. It sent pictures of this faraway planet, its rings, and its moons.",
+          "ages7To9": "Voyager 2 visited Uranus in January 1986. It remains the only spacecraft to have flown past Uranus. Its observations revealed rings, moons and an unusual magnetic field.",
+          "ages10To12": "Voyager 2's 1986 flyby provided the only close spacecraft encounter with Uranus. Combining those measurements with telescopic observations helps scientists investigate its atmosphere, ring system, moons and magnetic environment."
+        },
+        "imageName": "uranus-global",
+        "imageCredit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL-Caltech; NASA/JPL/STScI",
+        "imageSourceID": "PIA18182",
+        "source": {
+          "title": "NASA Science: Uranus facts",
+          "url": "https://science.nasa.gov/uranus/facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "neptune-video",
+    "destinationID": "neptune",
+    "revision": 1,
+    "title": "Neptune: A Faraway Weather Adventure",
+    "resourceName": "neptune-lesson",
+    "duration": 60,
+    "credit": "NASA's Goddard Space Flight Center; NASA/JPL · Astro Adventure educational edit",
+    "source": {
+      "title": "NASA SVS: Neptune: A Faraway Weather Adventure",
+      "url": "https://svs.gsfc.nasa.gov/30710/",
+      "reviewStatus": "reviewed"
+    },
+    "segments": [
+      {
+        "id": "neptune-segment-1",
+        "startTime": 0,
+        "endTime": 20,
+        "narration": {
+          "ages4To6": "Neptune is the eighth planet and the farthest planet from the Sun. This spinning view is a model made from spacecraft pictures.",
+          "ages7To9": "Neptune is the eighth planet, about 30 times farther from the Sun than Earth. This rotation-and-tilt visualization is sped up; the planets are not shown at their real distances.",
+          "ages10To12": "Neptune is the outermost of the eight planets, averaging about 30 astronomical units from the Sun. This reconstructed globe illustrates rotation and tilt; its scale and motion are simplified for presentation."
+        },
+        "imageName": "neptune-global"
+      },
+      {
+        "id": "neptune-segment-2",
+        "startTime": 20,
+        "endTime": 40,
+        "narration": {
+          "ages4To6": "Neptune has clouds, storms, and very fast winds! This old Voyager picture shows a storm that later went away. Pictures can use stronger colors to help us see details.",
+          "ages7To9": "Neptune's winds can exceed 2,000 kilometres per hour. The Great Dark Spot in this 1989 Voyager photograph later disappeared. Processed color can make clouds and storms easier to compare.",
+          "ages10To12": "Neptune's atmosphere supports powerful zonal winds and transient dark vortices. The 1989 Great Dark Spot later disappeared. Displayed hue depends on atmospheric haze and image processing as well as methane absorption."
+        },
+        "imageName": "neptune-storm"
+      },
+      {
+        "id": "neptune-segment-3",
+        "startTime": 40,
+        "endTime": 60,
+        "narration": {
+          "ages4To6": "Neptune takes a very long trip around the Sun. One Neptune year lasts about 165 Earth years!",
+          "ages7To9": "Neptune orbits the Sun in about 165 Earth years. Light from the Sun takes about four hours to reach it. A faraway planet can still have busy weather.",
+          "ages10To12": "Neptune's orbital period is about 165 Earth years. Sunlight takes roughly four hours to cross its average solar distance. Its dynamic atmosphere shows that distance from the Sun is not a complete explanation of weather."
+        },
+        "imageName": "neptune-global"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "neptune-checkpoint-1",
+        "time": 20,
+        "replayStartTime": 0,
+        "question": {
+          "id": "neptune-video-question-1",
+          "conceptID": "neptune-video-concept-1",
+          "source": {
+            "title": "NASA Science: Neptune facts",
+            "url": "https://science.nasa.gov/neptune/neptune-facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "Which planet is farthest from the Sun?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Earth"
+                },
+                {
+                  "id": "correct",
+                  "text": "Neptune"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune is the eighth and farthest planet from the Sun. Pluto is a dwarf planet.",
+              "retryFeedback": "Good exploring! Think of the eighth planet at the edge of the planet collection.",
+              "hint": "Think of the eighth planet at the edge of the planet collection."
+            },
+            "ages7To9": {
+              "prompt": "Which of the eight planets is farthest from the Sun?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Earth"
+                },
+                {
+                  "id": "two",
+                  "text": "Mercury"
+                },
+                {
+                  "id": "correct",
+                  "text": "Neptune"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune is the eighth and farthest planet from the Sun. Pluto is a dwarf planet.",
+              "retryFeedback": "Good exploring! Think of the eighth planet at the edge of the planet collection.",
+              "hint": "Think of the eighth planet at the edge of the planet collection."
+            },
+            "ages10To12": {
+              "prompt": "Which planet has the largest average orbital distance among the eight planets?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Earth"
+                },
+                {
+                  "id": "two",
+                  "text": "Mercury"
+                },
+                {
+                  "id": "correct",
+                  "text": "Neptune"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune is the eighth and farthest planet from the Sun. Pluto is a dwarf planet.",
+              "retryFeedback": "Good exploring! Think of the eighth planet at the edge of the planet collection.",
+              "hint": "Think of the eighth planet at the edge of the planet collection."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "Which planet is farthest from the Sun?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Earth"
+                },
+                {
+                  "id": "correct",
+                  "text": "Neptune"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune is the eighth and farthest planet from the Sun. Pluto is a dwarf planet.",
+              "retryFeedback": "Good exploring! Think of the eighth planet at the edge of the planet collection.",
+              "hint": "Think of the eighth planet at the edge of the planet collection."
+            },
+            "ages7To9": {
+              "prompt": "Which of the eight planets is farthest from the Sun?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Earth"
+                },
+                {
+                  "id": "two",
+                  "text": "Mercury"
+                },
+                {
+                  "id": "correct",
+                  "text": "Neptune"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune is the eighth and farthest planet from the Sun. Pluto is a dwarf planet.",
+              "retryFeedback": "Good exploring! Think of the eighth planet at the edge of the planet collection.",
+              "hint": "Think of the eighth planet at the edge of the planet collection."
+            },
+            "ages10To12": {
+              "prompt": "Which planet has the largest average orbital distance among the eight planets?",
+              "choices": [
+                {
+                  "id": "one",
+                  "text": "Earth"
+                },
+                {
+                  "id": "two",
+                  "text": "Mercury"
+                },
+                {
+                  "id": "correct",
+                  "text": "Neptune"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune is the eighth and farthest planet from the Sun. Pluto is a dwarf planet.",
+              "retryFeedback": "Good exploring! Think of the eighth planet at the edge of the planet collection.",
+              "hint": "Think of the eighth planet at the edge of the planet collection."
+            }
+          }
+        }
+      },
+      {
+        "id": "neptune-checkpoint-2",
+        "time": 40,
+        "replayStartTime": 20,
+        "question": {
+          "id": "neptune-video-question-2",
+          "conceptID": "neptune-video-concept-2",
+          "source": {
+            "title": "NASA Science: Neptune facts",
+            "url": "https://science.nasa.gov/neptune/neptune-facts/",
+            "reviewStatus": "reviewed"
+          },
+          "content": {
+            "ages4To6": {
+              "prompt": "What can move very fast on Neptune?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Winds and clouds"
+                },
+                {
+                  "id": "one",
+                  "text": "Trees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune has extremely fast winds and changing atmospheric storms.",
+              "retryFeedback": "Good exploring! Look at the clouds and storm in the atmosphere.",
+              "hint": "Look at the clouds and storm in the atmosphere."
+            },
+            "ages7To9": {
+              "prompt": "Which Neptune feature can reach over 2,000 kilometres per hour?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Traffic on roads"
+                },
+                {
+                  "id": "correct",
+                  "text": "Its winds"
+                },
+                {
+                  "id": "one",
+                  "text": "Growing trees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune has extremely fast winds and changing atmospheric storms.",
+              "retryFeedback": "Good exploring! Look at the clouds and storm in the atmosphere.",
+              "hint": "Look at the clouds and storm in the atmosphere."
+            },
+            "ages10To12": {
+              "prompt": "Which phenomenon makes Neptune's atmosphere especially dynamic?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Fast road traffic"
+                },
+                {
+                  "id": "correct",
+                  "text": "Powerful zonal winds and changing vortices"
+                },
+                {
+                  "id": "one",
+                  "text": "Rapidly growing trees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune has extremely fast winds and changing atmospheric storms.",
+              "retryFeedback": "Good exploring! Look at the clouds and storm in the atmosphere.",
+              "hint": "Look at the clouds and storm in the atmosphere."
+            }
+          },
+          "reviewContent": {
+            "ages4To6": {
+              "prompt": "What can move very fast on Neptune?",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "Winds and clouds"
+                },
+                {
+                  "id": "one",
+                  "text": "Trees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune has extremely fast winds and changing atmospheric storms.",
+              "retryFeedback": "Good exploring! Look at the clouds and storm in the atmosphere.",
+              "hint": "Look at the clouds and storm in the atmosphere."
+            },
+            "ages7To9": {
+              "prompt": "Which Neptune feature can reach over 2,000 kilometres per hour?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Traffic on roads"
+                },
+                {
+                  "id": "correct",
+                  "text": "Its winds"
+                },
+                {
+                  "id": "one",
+                  "text": "Growing trees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune has extremely fast winds and changing atmospheric storms.",
+              "retryFeedback": "Good exploring! Look at the clouds and storm in the atmosphere.",
+              "hint": "Look at the clouds and storm in the atmosphere."
+            },
+            "ages10To12": {
+              "prompt": "Which phenomenon makes Neptune's atmosphere especially dynamic?",
+              "choices": [
+                {
+                  "id": "two",
+                  "text": "Fast road traffic"
+                },
+                {
+                  "id": "correct",
+                  "text": "Powerful zonal winds and changing vortices"
+                },
+                {
+                  "id": "one",
+                  "text": "Rapidly growing trees"
+                }
+              ],
+              "correctChoiceID": "correct",
+              "correctFeedback": "Neptune has extremely fast winds and changing atmospheric storms.",
+              "retryFeedback": "Good exploring! Look at the clouds and storm in the atmosphere.",
+              "hint": "Look at the clouds and storm in the atmosphere."
+            }
+          }
+        }
+      }
+    ],
+    "fallbackCards": [
+      {
+        "id": "neptune-video-card-1",
+        "conceptID": "neptune-video-concept-1",
+        "title": "The farthest planet",
+        "body": {
+          "ages4To6": "Neptune is the eighth planet and the farthest planet from the Sun. This spinning view is a model made from spacecraft pictures.",
+          "ages7To9": "Neptune is the eighth planet, about 30 times farther from the Sun than Earth. This rotation-and-tilt visualization is sped up; the planets are not shown at their real distances.",
+          "ages10To12": "Neptune is the outermost of the eight planets, averaging about 30 astronomical units from the Sun. This reconstructed globe illustrates rotation and tilt; its scale and motion are simplified for presentation."
+        },
+        "imageName": "neptune-global",
+        "imageCredit": "NASA's Goddard Space Flight Center; NASA/JPL",
+        "imageSourceID": "PIA00046",
+        "source": {
+          "title": "NASA Science: Neptune facts",
+          "url": "https://science.nasa.gov/neptune/neptune-facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "neptune-video-card-2",
+        "conceptID": "neptune-video-concept-2",
+        "title": "Fast clouds and changing storms",
+        "body": {
+          "ages4To6": "Neptune has clouds, storms, and very fast winds! This old Voyager picture shows a storm that later went away. Pictures can use stronger colors to help us see details.",
+          "ages7To9": "Neptune's winds can exceed 2,000 kilometres per hour. The Great Dark Spot in this 1989 Voyager photograph later disappeared. Processed color can make clouds and storms easier to compare.",
+          "ages10To12": "Neptune's atmosphere supports powerful zonal winds and transient dark vortices. The 1989 Great Dark Spot later disappeared. Displayed hue depends on atmospheric haze and image processing as well as methane absorption."
+        },
+        "imageName": "neptune-storm",
+        "imageCredit": "NASA's Goddard Space Flight Center; NASA/JPL",
+        "imageSourceID": "ARC-1989-AC89-7044",
+        "source": {
+          "title": "NASA Science: Neptune facts",
+          "url": "https://science.nasa.gov/neptune/neptune-facts/",
+          "reviewStatus": "reviewed"
+        }
+      },
+      {
+        "id": "neptune-video-card-3",
+        "conceptID": "neptune-video-concept-3",
+        "title": "A long journey around the Sun",
+        "body": {
+          "ages4To6": "Neptune takes a very long trip around the Sun. One Neptune year lasts about 165 Earth years!",
+          "ages7To9": "Neptune orbits the Sun in about 165 Earth years. Light from the Sun takes about four hours to reach it. A faraway planet can still have busy weather.",
+          "ages10To12": "Neptune's orbital period is about 165 Earth years. Sunlight takes roughly four hours to cross its average solar distance. Its dynamic atmosphere shows that distance from the Sun is not a complete explanation of weather."
+        },
+        "imageName": "neptune-global",
+        "imageCredit": "NASA's Goddard Space Flight Center; NASA/JPL",
+        "imageSourceID": "PIA00046",
+        "source": {
+          "title": "NASA Science: Neptune facts",
+          "url": "https://science.nasa.gov/neptune/neptune-facts/",
+          "reviewStatus": "reviewed"
+        }
+      }
+    ]
+  }
+]

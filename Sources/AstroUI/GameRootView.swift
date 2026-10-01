@@ -1,3 +1,4 @@
+import AVFoundation
 import AstroContent
 import AstroGameCore
 import AstroWorld
@@ -26,6 +27,7 @@ public struct GameRootView: View {
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
     @State private var session: MissionSession
     @State private var isPaused = false
     @FocusState private var resumeFocused: Bool
@@ -37,19 +39,49 @@ public struct GameRootView: View {
     public init(
         lessons: [DestinationLesson],
         progress: GameProgress? = nil,
+        planetMissions: [PlanetMission] = [],
+        videoLessons: [VideoLesson] = [],
         onProgressChanged: @escaping (GameProgress) -> Void = { _ in }
     ) {
         _session = State(
             initialValue: MissionSession(
                 lessons: lessons,
                 progress: progress,
-                quizProvider: QuizRoundCatalog.quizzes
+                quizProvider: QuizRoundCatalog.quizzes,
+                planetMissions: planetMissions,
+                videoLessons: videoLessons
             )
         )
         self.onProgressChanged = onProgressChanged
     }
 
     public var body: some View {
+        lifecycleManagedGame
+            .onChange(of: scenePhase) {
+                if scenePhase != .active, session.phase != .missionPrompt {
+                    session.pauseVideo()
+                    isPaused = true
+                }
+            }
+            #if canImport(UIKit)
+                .onReceive(
+                    NotificationCenter.default.publisher(
+                        for: AVAudioSession.interruptionNotification)
+                ) { notification in
+                    guard
+                        let type = notification.userInfo?[AVAudioSessionInterruptionTypeKey]
+                            as? UInt,
+                        type == AVAudioSession.InterruptionType.began.rawValue,
+                        session.phase != .missionPrompt
+                    else { return }
+                    session.pauseVideo()
+                    isPaused = true
+                }
+            #endif
+    }
+
+    @ViewBuilder
+    private var lifecycleManagedGame: some View {
         #if os(tvOS)
             if session.phase == .missionPrompt {
                 game
@@ -63,6 +95,24 @@ public struct GameRootView: View {
             }
         #else
             game
+                .safeAreaInset(edge: .bottom) {
+                    if session.phase != .missionPrompt {
+                        HStack {
+                            Spacer()
+                            Button {
+                                isPaused = true
+                            } label: {
+                                Label("Pause", systemImage: "pause.circle.fill")
+                            }
+                            .buttonStyle(.bordered)
+                            .accessibilityIdentifier("adventure.pause")
+                        }
+                        .padding(.horizontal, 28)
+                        .padding(.vertical, 4)
+                        .background(.black.opacity(0.7))
+                    }
+                }
+                .sheet(isPresented: $isPaused) { pausePanel }
         #endif
     }
 
@@ -83,7 +133,11 @@ public struct GameRootView: View {
             .ignoresSafeArea()
             .accessibilityHidden(true)
 
-            if session.phase == .quizRoundComplete,
+            if isVideoPhase {
+                VideoLessonView(session: session, isPaused: isPaused)
+            } else if isPlanetAdventurePhase {
+                PlanetAdventureView(session: session, isPaused: isPaused)
+            } else if session.phase == .quizRoundComplete,
                 let lesson = session.focusedLesson
             {
                 QuizRoundResultsView(
@@ -171,12 +225,29 @@ public struct GameRootView: View {
             switch phase {
             case .missionPrompt, .navigation, .quizFeedback, .missionComplete:
                 primaryActionFocused = true
-            case .discoveryCard, .quiz, .quizRoundComplete:
+            default:
                 primaryActionFocused = false
             }
         }
         .onAppear {
             primaryActionFocused = true
+        }
+    }
+
+    private var isVideoPhase: Bool {
+        switch session.phase {
+        case .videoPlayback, .videoCheckpoint, .videoFeedback, .videoComplete: true
+        default: false
+        }
+    }
+
+    private var isPlanetAdventurePhase: Bool {
+        switch session.phase {
+        case .missionSelection, .missionBriefing, .missionClue, .missionQuestion,
+            .missionActivity, .missionStepFeedback, .planetMissionComplete, .deepDive,
+            .reviewQuestion, .reviewFeedback, .reviewComplete:
+            true
+        default: false
         }
     }
 
@@ -209,7 +280,7 @@ public struct GameRootView: View {
             } label: {
                 Label(session.ageBand.modeName, systemImage: "person.2.fill")
             }
-            .disabled(session.isRoundInProgress)
+            .disabled(session.isRoundInProgress || isPlanetAdventurePhase || isVideoPhase)
             .accessibilityLabel(
                 "Explorer mode, \(session.ageBand.modeName), \(session.ageBand.displayName)"
             )
@@ -232,7 +303,7 @@ public struct GameRootView: View {
                 Text(
                     session.completedDestinationCount > 0
                         ? "Mission Control is ready! Collect discovery stamps by exploring new worlds."
-                        : "Pick a world or technology lab, see real space photos, then play a picture quiz."
+                        : "Choose a world, investigate space clues, and play a science adventure."
                 )
                 .font(compact ? .subheadline : .title3)
                 .multilineTextAlignment(.center)
@@ -248,6 +319,15 @@ public struct GameRootView: View {
                     session.confirm()
                 }
                 .accessibilityIdentifier("adventure.begin")
+                if session.hasSavedAdventure {
+                    secondaryButton(
+                        "Resume \(session.savedAdventureTitle ?? "Adventure")",
+                        systemImage: "play.fill"
+                    ) {
+                        session.resumeSavedAdventure()
+                    }
+                    .accessibilityIdentifier("adventure.resume")
+                }
                 #if os(tvOS)
                     Label(
                         "Press Back on the Siri Remote to leave",
@@ -278,6 +358,12 @@ public struct GameRootView: View {
                     session.confirm()
                 }
                 .accessibilityIdentifier("adventure.explore")
+                if !session.dueReviewQuestions.isEmpty {
+                    secondaryButton("Play a Memory Adventure", systemImage: "brain.head.profile") {
+                        session.startReview()
+                    }
+                    .accessibilityIdentifier("review.start")
+                }
 
             case .discoveryCard:
                 Text("\(session.focusedLesson?.displayName ?? "World") discovered!")
@@ -348,6 +434,8 @@ public struct GameRootView: View {
                 primaryButton("Explore Again", systemImage: "arrow.clockwise") {
                     session.confirm()
                 }
+            default:
+                EmptyView()
             }
 
             Text(progressSummary)
@@ -369,14 +457,16 @@ public struct GameRootView: View {
                 missionStep(
                     "Pick an adventure", systemImage: "globe.americas.fill", compact: compact)
                 missionStep("See NASA photos", systemImage: "photo.fill", compact: compact)
-                missionStep("Play a quiz", systemImage: "gamecontroller.fill", compact: compact)
+                missionStep(
+                    "Investigate clues", systemImage: "gamecontroller.fill", compact: compact)
             }
 
             VStack(spacing: 8) {
                 missionStep(
                     "Pick an adventure", systemImage: "globe.americas.fill", compact: compact)
                 missionStep("See NASA photos", systemImage: "photo.fill", compact: compact)
-                missionStep("Play a quiz", systemImage: "gamecontroller.fill", compact: compact)
+                missionStep(
+                    "Investigate clues", systemImage: "gamecontroller.fill", compact: compact)
             }
         }
     }
@@ -437,6 +527,15 @@ public struct GameRootView: View {
                                 Text("Explore")
                                     .font(compact ? .caption2 : .caption)
                             }
+                            let missions = session.planetMissions.filter {
+                                $0.destinationID == lesson.id
+                            }
+                            if !missions.isEmpty {
+                                Text(
+                                    "\(missions.filter { session.progress.completedMissionIDs.contains($0.id) }.count)/3 missions"
+                                )
+                                .font(.caption2.bold())
+                            }
                         }
                         .foregroundStyle(selected ? Color.black : Color.white)
                         .padding(compact ? 8 : 16)
@@ -490,14 +589,22 @@ public struct GameRootView: View {
 
         return switch selectedSection {
         case .solarSystem:
-            "Discovery Passport · \(completed) of \(lessons.count) world stamps"
+            "Discovery Passport · \(completed) of \(lessons.count) world stamps · \(session.completedPlanetMissionCount)/24 missions"
         case .technologyLab:
             "Discovery Passport · \(completed) of \(lessons.count) lab stamps"
         }
     }
 
     private var recommendedLesson: DestinationLesson? {
-        sectionLessons.first {
+        if let unfinished = sectionLessons.first(where: { _, lesson in
+            session.planetMissions.contains {
+                $0.destinationID == lesson.id
+                    && !session.progress.completedMissionIDs.contains($0.id)
+            }
+        }) {
+            return unfinished.element
+        }
+        return sectionLessons.first {
             session.progress.destinations[$0.element.id]?.isQuizCompleted != true
         }?.element
     }

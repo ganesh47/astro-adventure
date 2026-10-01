@@ -15,6 +15,15 @@ fi
 
 cd "$REPOSITORY_PATH"
 
+# Fetch the tracked movie and image binaries before validation and archiving.
+if ! command -v git-lfs >/dev/null 2>&1; then
+  brew install git-lfs
+fi
+git lfs install --local
+git lfs pull
+
+python3 scripts/validate_repository.py
+
 if [ -n "${CI_BUILD_NUMBER:-}" ]; then
   echo "--- Setting CURRENT_PROJECT_VERSION=${CI_BUILD_NUMBER} ---"
   sed -i '' \

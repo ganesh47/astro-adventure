@@ -98,6 +98,19 @@ targets:
       - package: AstroAdventureKit
         product: AstroUI
 
+  AstroAdventure-iOS-UITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: Tests/AstroIOSUITests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ganesh47.astroadventure.ios-uitests
+        GENERATE_INFOPLIST_FILE: true
+    dependencies:
+      - target: AstroAdventure-iOS
+
   AstroAdventure-tvOS-UITests:
     type: bundle.ui-testing
     platform: tvOS
@@ -120,6 +133,10 @@ schemes:
       config: Debug
     archive:
       config: Release
+    test:
+      config: Debug
+      targets:
+        - AstroAdventure-iOS-UITests
 
   AstroAdventure-tvOS:
     build:

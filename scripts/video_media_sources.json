@@ -1,0 +1,231 @@
+{
+  "formatVersion": 1,
+  "reviewedAt": "2026-10-02",
+  "frameRate": 30,
+  "width": 1280,
+  "height": 720,
+  "duration": 60,
+  "records": [
+    {
+      "destinationID": "mercury",
+      "sourcePage": "https://svs.gsfc.nasa.gov/14110/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a010000/a014100/a014110/Mercury_Globe_MESSENGER_Small.mp4",
+      "sourceSHA256": "da3ebd23c2236940d8d0630e5165334016d854c5dd0892b0c239bda2ef1088d9",
+      "credit": "NASA's Goddard Space Flight Center; NASA/Johns Hopkins APL/Carnegie Institution of Washington",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/mercury-polar-ice.jpg",
+          "sourceID": "PIA19247",
+          "sha256": "40cbd8fefb526dbdad91300c12ca6440e28569ef1221a9dc9f06e9d167d06a8f",
+          "license": "public-domain"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/mercury-hollows.jpg",
+          "sourceID": "PIA19425",
+          "sha256": "122f3c66fc7ab0ecfceaf67d495157e61c61013db0069393502ff8d80a14ce3d",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "NASA observational-data visualization; accelerated motion disclosed; source audio excluded",
+      "outputSHA256": "ac5a39ef50d5cb6b7de51d18d678b6ea54bc970e37fb7a534f231cd88576c500",
+      "outputBytes": 1738310
+    },
+    {
+      "destinationID": "venus",
+      "sourcePage": "https://svs.gsfc.nasa.gov/20308/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a020000/a020300/a020308/VenusEvoSequence03_1080p60.mp4",
+      "sourceSHA256": "e8b8051d1b3f7ba4c05fd3326a536684f699cbcda0ed06118cc7eb6ca424cf48",
+      "credit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/venus-volcano.jpg",
+          "sourceID": "PIA00272",
+          "sha256": "de8a18fd4a134463947eb606ab79f44bda0b31f66056aa127d214b0788929fbc",
+          "license": "public-domain"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/venus-global.jpg",
+          "sourceID": "PIA00271",
+          "sha256": "f619ee8e8057346cafa7a8b3f47797d8581049771a242a9a2d00ca0b16c3e5fe",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "Current-day landscape artist concept; no hypothetical early-ocean sequence",
+      "outputSHA256": "fa737324cb6890ee300014f73508760069f243d90aa7f7d9c729d485321474d6",
+      "outputBytes": 1198068
+    },
+    {
+      "destinationID": "earth",
+      "sourcePage": "https://svs.gsfc.nasa.gov/5570/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a000000/a005500/a005570/Earth_wAtmos_spin_02_1080p60.mp4",
+      "sourceSHA256": "a9d75037ff87d600639b064c16dbfa2f6862b18e2d6e8c117c0b23827fa79b4b",
+      "credit": "NASA's Scientific Visualization Studio; NASA/NOAA/GSFC/Suomi NPP; NASA",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/earth-blue-marble.jpg",
+          "sourceID": "GSFC_20171208_Archive_e001386",
+          "sha256": "26af7da03fff9c8ad865cc894330186661e60b683e532d2b0529f24adb960278",
+          "license": "public-domain"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/earth-aurora.jpg",
+          "sourceID": "STS047-20-015",
+          "sha256": "1b11debc1ca1b10717905b281ff8a00d83b954bf8b1a16100f2a809923c0d73a",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "NASA observational-data visualization; accelerated motion disclosed; source audio excluded",
+      "outputSHA256": "74c5c5859d6bd131b04a18bcabd5fd449ea77a295c46f5e760d7d45b1cfd88f4",
+      "outputBytes": 1604122
+    },
+    {
+      "destinationID": "mars",
+      "sourcePage": "https://svs.gsfc.nasa.gov/0659/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a000000/a000600/a000659/a000659.mp4",
+      "sourceSHA256": "7d06745e4ec82e2af66b626b17a9e3d41e2bb47ebf822ea3ff6620f3847fb471",
+      "credit": "NASA/Goddard Space Flight Center Scientific Visualization Studio; NASA/JPL; NASA/JPL-Caltech",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/mars-olympus.jpg",
+          "sourceID": "PIA02982",
+          "sha256": "f8486eef1bfbe8cd9a514d15eaddc7e648584741ad1e9a760654778df74a61e4",
+          "license": "public-domain"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/mars-landscape.jpg",
+          "sourceID": "PIA18409",
+          "sha256": "a08a04a7bf1f19b148d72f2fbc871aaf964f3df41e06b88b46f223c73d0e11d7",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "Viking imagery/MOLA model; terrain height exaggerated 5x; disclosed in age-band captions",
+      "outputSHA256": "639ea98275c88fedeae9f6dcbc0496c86ec539a2dc9a5504f72942274cdc1de2",
+      "outputBytes": 1141762
+    },
+    {
+      "destinationID": "jupiter",
+      "sourcePage": "https://svs.gsfc.nasa.gov/12021/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a010000/a012000/a012021/Jupiter01-H264_1280x720.mp4",
+      "sourceSHA256": "61b97d152004fdae60c6a75fa56407bf1f5f8d6e05206c66ea7cdd762a88bf47",
+      "credit": "NASA's Goddard Space Flight Center/Space Telescope Science Institute; Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/jupiter-red-spot.jpg",
+          "sourceID": "PIA21395",
+          "sha256": "6f20a9d94d0f344705bd258de75512f3ec47f90ff65049fc200a065cf78a8eb1",
+          "license": "cc-by",
+          "credit": "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+          "sourcePage": "https://science.nasa.gov/photojournal/jupiters-great-red-spot-revealed/"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/jupiter-global.jpg",
+          "sourceID": "PIA22946",
+          "sha256": "e8c0fe6d1642c805c5fe82d3424f225351047c2c987e150b13f18a7a837ecc79",
+          "license": "cc-by",
+          "credit": "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS",
+          "sourcePage": "https://science.nasa.gov/photojournal/jupiter-marble/"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "NASA observational-data visualization; accelerated motion disclosed; source audio excluded",
+      "outputSHA256": "6495f4e53be1aedba977e9fa7a6ad253f0b5fc0235b95a8c8e8aab3163874f72",
+      "outputBytes": 1053172
+    },
+    {
+      "destinationID": "saturn",
+      "sourcePage": "https://svs.gsfc.nasa.gov/30883/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a030000/a030800/a030883/saturn_hex_color_720p.mp4",
+      "sourceSHA256": "fa2895b2de04c225b3d0263bfaa3ddce3c423ab888f9ba69b95268f086348e02",
+      "credit": "NASA/JPL-Caltech/Space Science Institute/Hampton University; NASA/JPL/Space Science Institute",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/saturn-portrait.jpg",
+          "sourceID": "PIA06193",
+          "sha256": "100468ee3f7af84d550f8c365a5f79bbe0f92ef7233b765e9980cc810cdd22f8",
+          "license": "public-domain"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/saturn-earth-smiled.jpg",
+          "sourceID": "PIA17172",
+          "sha256": "5975a86f2ee93b50a7787abf9d9d114d900a5f1a802e1c21b7af77bf0d6c2b49",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "Historical 2013/2017 polar comparison; captions explain epoch and changing colors",
+      "outputSHA256": "d775ef984272188ba1919a4c25525940df7fe60d81701acb61da93b5957816be",
+      "outputBytes": 568243
+    },
+    {
+      "destinationID": "uranus",
+      "sourcePage": "https://svs.gsfc.nasa.gov/20390/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a020000/a020300/a020390/Shot4_1k_mp4.mp4",
+      "sourceSHA256": "32370afa93cb69570ec05ee9abd1e9670171deb2ab33ceed6807d63dde716526",
+      "credit": "NASA's Goddard Space Flight Center Conceptual Image Lab; NASA/JPL-Caltech; NASA/JPL/STScI",
+      "sourceStartTime": 0,
+      "crop": null,
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/uranus-clouds.jpg",
+          "sourceID": "PIA02963",
+          "sha256": "db436ed0ab2ec8ece81a7db980044a94bd918326d3dc762bb53ecc879371321f",
+          "license": "public-domain"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/uranus-global.jpg",
+          "sourceID": "PIA18182",
+          "sha256": "e4afc213f860da75b6783ec9d1cfadb50b6c84f9c381518be0576e5f2b485e40",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "NASA conceptual visualization; not recorded spacecraft footage",
+      "outputSHA256": "805b05b427e111cb0c4cb5ca2fb14b5145dc3641ed73398ed353dd68e343da9e",
+      "outputBytes": 495060
+    },
+    {
+      "destinationID": "neptune",
+      "sourcePage": "https://svs.gsfc.nasa.gov/30710/",
+      "sourceURL": "https://svs.gsfc.nasa.gov/vis/a030000/a030700/a030710/planets3x3_pluto_colorMercury_axis_tilt_NOLABELS_2160p.mp4",
+      "sourceSHA256": "1261f0f320fd5ede70ceaf87ab48d85f3a3b098ba6c8c0fb99b438df6036db93",
+      "credit": "NASA's Goddard Space Flight Center; NASA/JPL",
+      "sourceStartTime": 0,
+      "crop": "iw/3:ih/3:iw/3:ih*2/3",
+      "images": [
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/neptune-storm.jpg",
+          "sourceID": "ARC-1989-AC89-7044",
+          "sha256": "3eca4daee812e2f6d0c2779260faf72dd1139e94b02653f0ab25615cdc28d914",
+          "license": "public-domain",
+          "crop": "1500:1480:110:495"
+        },
+        {
+          "path": "Sources/AstroUI/Resources/DiscoveryImages/neptune-global.jpg",
+          "sourceID": "PIA00046",
+          "sha256": "1157868fd277654e3662a32f04c10eb7af0e1f752816960d1edddf68e89e941c",
+          "license": "public-domain"
+        }
+      ],
+      "reviewStatus": "accepted",
+      "notes": "Neptune tile cropped from name-free 3x3 rotation/tilt visualization; source page outdated moon counts not reused; 1989 storm photograph cropped to remove its archival print border",
+      "outputSHA256": "dab6657a79a6f5063a2f257a59cacd0dba259bc8f637177a7f9e77bb26e2818e",
+      "outputBytes": 341014
+    }
+  ]
+}
