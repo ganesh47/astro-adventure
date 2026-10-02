@@ -30,7 +30,8 @@ let package = Package(
         ),
         .target(
             name: "AstroWorld",
-            dependencies: ["AstroGameCore"]
+            dependencies: ["AstroGameCore"],
+            resources: [.process("Resources")]
         ),
         .target(
             name: "AstroUI",

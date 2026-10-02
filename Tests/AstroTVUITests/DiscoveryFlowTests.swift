@@ -8,7 +8,9 @@ final class DiscoveryFlowTests: XCTestCase {
     override func setUp() async throws {
         continueAfterFailure = false
         await MainActor.run {
-            app.launchArguments = ["--ui-testing", "--reset-ui-testing-progress"]
+            app.launchArguments = [
+                "--ui-testing", "--reset-ui-testing-progress", "--legacy-learning",
+            ]
             app.launch()
         }
     }
@@ -107,7 +109,7 @@ final class DiscoveryFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["adventure.explore"].waitForExistence(timeout: 5))
 
         app.terminate()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "--legacy-learning"]
         app.launch()
         XCTAssertTrue(app.buttons["adventure.begin"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.buttons["adventure.begin"].label, "Continue Adventure")
@@ -131,7 +133,7 @@ final class DiscoveryFlowTests: XCTestCase {
         remote.press(.playPause)
         select("adventure.pause.worlds")
         app.terminate()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "--legacy-learning"]
         app.launch()
         select("adventure.resume")
         XCTAssertTrue(app.buttons["quiz.answer.0"].waitForExistence(timeout: 10))
@@ -185,7 +187,7 @@ final class DiscoveryFlowTests: XCTestCase {
         seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         app.terminate()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "--legacy-learning"]
         app.launch()
         select("adventure.resume")
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))

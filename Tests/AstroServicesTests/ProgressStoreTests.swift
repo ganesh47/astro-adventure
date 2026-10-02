@@ -68,7 +68,7 @@ final class ProgressStoreTests: XCTestCase {
             """.utf8
         )
         let restored = try JSONDecoder().decode(GameProgress.self, from: data)
-        XCTAssertEqual(restored.schemaVersion, 3)
+        XCTAssertEqual(restored.schemaVersion, GameProgress.currentSchemaVersion)
         XCTAssertEqual(restored.totalScore, 700)
         XCTAssertEqual(restored.destinations["mercury"]?.bestRoundStars, 3)
         XCTAssertTrue(restored.destinations["mercury"]?.isQuizCompleted == true)

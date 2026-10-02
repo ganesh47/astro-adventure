@@ -162,7 +162,7 @@ public struct AdventureRunCursor: Codable, Equatable, Sendable {
 }
 
 public struct GameProgress: Codable, Equatable, Sendable {
-    public static let currentSchemaVersion = 3
+    public static let currentSchemaVersion = 4
 
     public var schemaVersion: Int
     public var missionID: String
@@ -175,6 +175,8 @@ public struct GameProgress: Codable, Equatable, Sendable {
     public var videoCompletions: [String: MissionCompletion]
     public var concepts: [String: ConceptProgress]
     public var activeRun: AdventureRunCursor?
+    public var explorationCompletions: [String: ExplorationCompletion]
+    public var explorationCursor: ExplorationCursor?
 
     public var completedMissionIDs: Set<String> { Set(missionCompletions.keys) }
 
@@ -189,7 +191,9 @@ public struct GameProgress: Codable, Equatable, Sendable {
         missionCompletions: [String: MissionCompletion] = [:],
         videoCompletions: [String: MissionCompletion] = [:],
         concepts: [String: ConceptProgress] = [:],
-        activeRun: AdventureRunCursor? = nil
+        activeRun: AdventureRunCursor? = nil,
+        explorationCompletions: [String: ExplorationCompletion] = [:],
+        explorationCursor: ExplorationCursor? = nil
     ) {
         self.schemaVersion = schemaVersion
         self.missionID = missionID
@@ -202,12 +206,15 @@ public struct GameProgress: Codable, Equatable, Sendable {
         self.videoCompletions = videoCompletions
         self.concepts = concepts
         self.activeRun = activeRun
+        self.explorationCompletions = explorationCompletions
+        self.explorationCursor = explorationCursor
     }
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, missionID, selectedAgeBand, destinations
         case totalScore, bestStreak, leaderboard
         case missionCompletions, videoCompletions, concepts, activeRun
+        case explorationCompletions, explorationCursor
     }
 
     public init(from decoder: Decoder) throws {
@@ -233,5 +240,11 @@ public struct GameProgress: Codable, Equatable, Sendable {
         concepts =
             try values.decodeIfPresent([String: ConceptProgress].self, forKey: .concepts) ?? [:]
         activeRun = try values.decodeIfPresent(AdventureRunCursor.self, forKey: .activeRun)
+        explorationCompletions =
+            try values.decodeIfPresent(
+                [String: ExplorationCompletion].self, forKey: .explorationCompletions)
+            ?? [:]
+        explorationCursor = try values.decodeIfPresent(
+            ExplorationCursor.self, forKey: .explorationCursor)
     }
 }

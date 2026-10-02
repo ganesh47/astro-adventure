@@ -17,6 +17,7 @@ The active targets are iPhone, iPad, and Apple TV. The game uses Swift 6, SwiftU
 
 `M0: Native Apple Parity` rebuilds the Mercury, Mars, and Europa proof as a native Apple game:
 
+- Three living playgrounds on Mercury, Mars, and Saturn, with nine connected environmental goals, expressive companion feedback, and optional offline NASA observations.
 - Three age modes: Junior Explorer (4–6), Space Explorer (7–9), and Mission Scientist (10–12).
 - Shared mission flow: Mission Control welcome, destination selection, narrated discovery cards, picture quizzes, encouraging feedback, and Discovery Passport stamps.
 - Twenty-four interactive planet missions with 96 discovery cards, 216 age-specific core questions, and 24 evidence, classification, and experiment activities.
@@ -27,7 +28,7 @@ The active targets are iPhone, iPad, and Apple TV. The game uses Swift 6, SwiftU
 - RealityKit scene rendered from source-controlled primitives.
 - SwiftUI interface for iOS, iPadOS, and tvOS.
 - Penalty-free hints and retries, a suggestion for the next unexplored adventure, and Siri Remote pause/resume controls.
-- Local, versioned progress with an offline-first service boundary: bounded preferences on Apple TV and an Application Support JSON log on iPhone/iPad.
+- Schema-4 local, versioned progress with an offline-first service boundary: bounded preferences on Apple TV and an Application Support JSON log on iPhone/iPad.
 - Resumable mission and video steps, three passport badges per planet, and optional concept reviews with separate comparison questions.
 - Persistent narration preferences, spoken Junior Explorer quiz choices, VoiceOver coordination, and reduced-motion presentation.
 - Unit-tested learning rules and validated lesson data.
@@ -91,7 +92,7 @@ xcodebuild -project AstroAdventure.xcodeproj -scheme AstroAdventure-iOS \
 
 The Apple TV UI test uses an isolated Debug-only space log and Siri Remote actions. Pick an available tvOS simulator name or ID from `xcrun simctl list devices available` if your installed runtime uses a different device name. CI runs this gameplay test before allowing a main-branch build to reach TestFlight.
 
-Planet expeditions and movies work offline. See the [expedition spec](docs/specs/planet-expeditions.md) for curriculum, recovery, and review behavior. Movie source records and regeneration instructions live in `scripts/video_media_sources.json` and `scripts/generate_learning_videos.py`; bundled outputs use Git LFS.
+Living playgrounds, planet expeditions, and movies work offline. See the [playground spec](docs/specs/living-playgrounds.md) for action-based goals and recovery. See the [expedition spec](docs/specs/planet-expeditions.md) for curriculum, recovery, and review behavior. Movie source records and regeneration instructions live in `scripts/video_media_sources.json` and `scripts/generate_learning_videos.py`; bundled outputs use Git LFS.
 
 After changing `project.yml`, regenerate the committed project:
 

@@ -11,10 +11,12 @@
 		146E87751AAABFC382E068A2 /* AstroAdventureTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */; };
 		3778C5FE61C1CA2B4C6139D6 /* AstroAdventureIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F6F81C93F4ADDB7373A2F1 /* AstroAdventureIOSApp.swift */; };
 		3952C134EFC36CEC317F449D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
+		54A1C09B703A573566394828 /* ExplorationPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BCC5028E7A1CE09A015BF /* ExplorationPlaygroundTests.swift */; };
 		54BD1498BAE310010D3FB407 /* AstroUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5A7EE07D38D75EACEB60D83 /* AstroUI */; };
 		8A3DBF10A3173073256CC310 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
 		A9F1C4257F6DD96942649B9B /* PlanetAdventureFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */; };
 		D1AAFA1A295A9E336E2D39FC /* DiscoveryFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */; };
+		D74D8CCBC79C547E9D6349D4 /* ExplorationPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */; };
 		E4397B7C60491C22A8337191 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
 		F650018B6F28409BC32EC2C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -40,11 +42,13 @@
 		0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryFlowTests.swift; sourceTree = "<group>"; };
 		0C6F53AEA0E024CF5883507B /* Astro Adventure.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Astro Adventure.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D654AEADE4132F3F788534D /* AstroAdventure-tvOS-UITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "AstroAdventure-tvOS-UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorationPlaygroundTests.swift; sourceTree = "<group>"; };
 		8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureTVApp.swift; sourceTree = "<group>"; };
 		86F6F81C93F4ADDB7373A2F1 /* AstroAdventureIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureIOSApp.swift; sourceTree = "<group>"; };
 		C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		CCC708F16C44B44A9F0DB726 /* Astro-Adventure 2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Astro-Adventure 2"; path = .; sourceTree = SOURCE_ROOT; };
 		D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetAdventureFlowTests.swift; sourceTree = "<group>"; };
+		DC3BCC5028E7A1CE09A015BF /* ExplorationPlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorationPlaygroundTests.swift; sourceTree = "<group>"; };
 		EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F748344C2CF42FF69231B134 /* Astro Adventure.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Astro Adventure.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFC89062A13B0560ACE4A2C1 /* AstroAdventure-iOS-UITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "AstroAdventure-iOS-UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */,
+				7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */,
 			);
 			path = AstroTVUITests;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 		B5C6EA7EC9DFABC901872DF5 /* AstroIOSUITests */ = {
 			isa = PBXGroup;
 			children = (
+				DC3BCC5028E7A1CE09A015BF /* ExplorationPlaygroundTests.swift */,
 				D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */,
 			);
 			path = AstroIOSUITests;
@@ -327,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1AAFA1A295A9E336E2D39FC /* DiscoveryFlowTests.swift in Sources */,
+				D74D8CCBC79C547E9D6349D4 /* ExplorationPlaygroundTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +341,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54A1C09B703A573566394828 /* ExplorationPlaygroundTests.swift in Sources */,
 				A9F1C4257F6DD96942649B9B /* PlanetAdventureFlowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
