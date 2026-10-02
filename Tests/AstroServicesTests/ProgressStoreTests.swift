@@ -54,6 +54,60 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(decoded.destinations["mars"]?.isQuizCompleted == true)
         XCTAssertEqual(decoded.totalScore, 0)
         XCTAssertTrue(decoded.leaderboard.isEmpty)
+        XCTAssertTrue(decoded.completedMissionIDs.isEmpty)
+        XCTAssertTrue(decoded.concepts.isEmpty)
+        XCTAssertNil(decoded.activeRun)
+    }
+
+    func testVersionTwoKeepsEarnedStampsWithoutInventingNewMissionBadges() throws {
+        let data = Data(
+            """
+            {"schemaVersion":2,"selectedAgeBand":"ages10To12","totalScore":700,
+             "destinations":{"mercury":{"isScanned":true,"isQuizCompleted":true,
+             "bestRoundStars":3,"bestRoundScore":700}}}
+            """.utf8
+        )
+        let restored = try JSONDecoder().decode(GameProgress.self, from: data)
+        XCTAssertEqual(restored.schemaVersion, 3)
+        XCTAssertEqual(restored.totalScore, 700)
+        XCTAssertEqual(restored.destinations["mercury"]?.bestRoundStars, 3)
+        XCTAssertTrue(restored.destinations["mercury"]?.isQuizCompleted == true)
+        XCTAssertTrue(restored.completedMissionIDs.isEmpty)
+        XCTAssertTrue(restored.videoCompletions.isEmpty)
+        XCTAssertNil(restored.activeRun)
+    }
+
+    func testSchemaThreeRoundTripsMissionRewardConceptsAndPendingCheckpoint() async throws {
+        let suite = "AstroProgressTests-\(UUID().uuidString)"
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let completedAt = Date(timeIntervalSince1970: 100)
+        var cursor = AdventureRunCursor(
+            kind: .video, contentID: "mercury-video", destinationID: "mercury", revision: 1,
+            ageBand: .ages7To9, phase: .videoCheckpoint, stepID: "checkpoint-1"
+        )
+        cursor.questionIndex = 1
+        cursor.completedCheckpointIDs = ["checkpoint-0"]
+        cursor.videoSeconds = 20
+        cursor.assistedConceptIDs = ["mercury-shadow"]
+        let expected = GameProgress(
+            totalScore: 300,
+            missionCompletions: [
+                "mercury-observe": MissionCompletion(completedAt: completedAt, ageBand: .ages7To9)
+            ],
+            concepts: [
+                "ages7To9:mercury-shadow": ConceptProgress(
+                    conceptID: "mercury-shadow", ageBand: .ages7To9, reviewBox: 1,
+                    lastPracticedAt: completedAt,
+                    nextReviewAt: completedAt.addingTimeInterval(86_400)
+                )
+            ], activeRun: cursor
+        )
+        let store = try PreferencesProgressStore(suiteName: suite)
+        try await store.save(expected)
+        let restored = try await store.load()
+        XCTAssertEqual(restored, expected)
+        XCTAssertEqual(restored?.completedMissionIDs, ["mercury-observe"])
+        XCTAssertEqual(restored?.activeRun?.phase, .videoCheckpoint)
     }
 
     func testPreferencesMigratesLegacyLogAndUsesPreferencesAfterwards() async throws {

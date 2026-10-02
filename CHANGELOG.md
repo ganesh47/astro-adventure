@@ -4,6 +4,10 @@ All notable public changes to Astro Adventure are tracked here.
 
 ## Unreleased
 
+- Added three interactive missions for every planet: 96 age-banded discovery cards, 216 core question variants, 24 science activities, and separately authored transfer questions.
+- Added eight bundled native NASA video lessons with captions, transcripts, narration, replayable pause-and-quiz checkpoints, and illustrated offline recovery.
+- Added mission passport badges, resumable learning steps, concept-based review, and schema 3 migration that preserves existing stamps.
+- Added touch and Siri Remote expedition checks, media provenance, and explicit Git LFS hydration before Xcode Cloud archives.
 - Reframed adventures around a Discovery Passport, with a stamp for each completed world or technology lab and suggestions for the next unexplored destination.
 - Added a responsive explorer ship and destination beacon to the stylized training map.
 - Made hints and retries penalty-free, replacing competitive rankings and streak pressure with discovery celebrations.

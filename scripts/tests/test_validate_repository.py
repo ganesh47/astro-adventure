@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import plistlib
 import tempfile
 import unittest
@@ -12,6 +13,45 @@ SPEC = importlib.util.spec_from_file_location("validate_repository", MODULE_PATH
 assert SPEC and SPEC.loader
 VALIDATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(VALIDATOR)
+
+
+class ExpeditionResourceTests(unittest.TestCase):
+    def test_missing_offline_movie_and_planet_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            resources = root / "Sources/AstroContent/Resources"
+            resources.mkdir(parents=True)
+            images = root / "Sources/AstroUI/Resources/DiscoveryImages"
+            images.mkdir(parents=True)
+            (images / "example.jpg").write_bytes(b"test image")
+            planets = ["mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"]
+            missions = [
+                {"id": f"{planet}-{index}", "destinationID": planet,
+                 "cards": [{"imageName": "example"}],
+                 "deepDive": {"imageName": "example"}}
+                for planet in planets for index in range(3)
+            ]
+            movies = [
+                {"id": planet, "destinationID": planet,
+                 "resourceName": f"{planet}-lesson", "segments": [], "fallbackCards": []}
+                for planet in planets
+            ]
+            movie_directory = root / "Sources/AstroUI/Resources/LearningVideos"
+            movie_directory.mkdir(parents=True)
+            for planet in planets[:-1]:
+                (movie_directory / f"{planet}-lesson.mp4").write_bytes(b"test movie")
+            (resources / "planet-missions.json").write_text(json.dumps(missions), encoding="utf-8")
+            (resources / "video-lessons.json").write_text(json.dumps(movies), encoding="utf-8")
+            errors: list[str] = []
+            with patch.object(VALIDATOR, "ROOT", root):
+                VALIDATOR.validate_expedition_resources(errors)
+            self.assertEqual(errors, ["Video lesson neptune requires a bundled offline MP4"])
+            (movie_directory / "neptune-lesson.mp4").write_bytes(b"test movie")
+            (resources / "planet-missions.json").write_text(json.dumps(missions[:-1]), encoding="utf-8")
+            errors = []
+            with patch.object(VALIDATOR, "ROOT", root):
+                VALIDATOR.validate_expedition_resources(errors)
+            self.assertEqual(errors, ["Planet expeditions require three missions for each of the eight planets"])
 
 
 class RepositorySecurityControlTests(unittest.TestCase):

@@ -83,8 +83,86 @@ public struct LeaderboardEntry: Codable, Equatable, Identifiable, Sendable {
     }
 }
 
+public struct MissionCompletion: Codable, Equatable, Sendable {
+    public let completedAt: Date
+    public let ageBand: AgeBand
+
+    public init(completedAt: Date, ageBand: AgeBand) {
+        self.completedAt = completedAt
+        self.ageBand = ageBand
+    }
+}
+
+public struct ConceptProgress: Codable, Equatable, Sendable {
+    public let conceptID: String
+    public let ageBand: AgeBand
+    public var reviewBox: Int
+    public var lastPracticedAt: Date
+    public var nextReviewAt: Date
+
+    public init(
+        conceptID: String, ageBand: AgeBand, reviewBox: Int,
+        lastPracticedAt: Date, nextReviewAt: Date
+    ) {
+        self.conceptID = conceptID
+        self.ageBand = ageBand
+        self.reviewBox = reviewBox
+        self.lastPracticedAt = lastPracticedAt
+        self.nextReviewAt = nextReviewAt
+    }
+
+    public static func key(conceptID: String, ageBand: AgeBand) -> String {
+        "\(ageBand.rawValue):\(conceptID)"
+    }
+}
+
+public enum AdventureRunKind: String, Codable, Sendable {
+    case planetMission
+    case video
+    case review
+}
+
+/// One bounded resume record. Player objects and playback tick histories are never persisted.
+public struct AdventureRunCursor: Codable, Equatable, Sendable {
+    public var kind: AdventureRunKind
+    public var contentID: String
+    public var destinationID: String
+    public var revision: Int
+    public var ageBand: AgeBand
+    public var phase: MissionPhase
+    public var stepID: String
+    public var cardIndex: Int = 0
+    public var questionIndex: Int = 0
+    public var activityTaskIndex: Int = 0
+    public var selectedActivityOptionID: String?
+    public var completedQuestionIDs: Set<String> = []
+    public var completedActivityTaskIDs: Set<String> = []
+    public var completedCheckpointIDs: Set<String> = []
+    public var reviewQuestionIDs: [String] = []
+    public var assistedConceptIDs: Set<String> = []
+    public var videoSeconds: Double = 0
+    public var isVideoFallback: Bool = false
+    public var questionAttemptCount: Int = 0
+    public var isShowingHint: Bool = false
+    public var feedbackWasCorrect: Bool = false
+    public var feedbackText: String = ""
+
+    public init(
+        kind: AdventureRunKind, contentID: String, destinationID: String,
+        revision: Int, ageBand: AgeBand, phase: MissionPhase, stepID: String = ""
+    ) {
+        self.kind = kind
+        self.contentID = contentID
+        self.destinationID = destinationID
+        self.revision = revision
+        self.ageBand = ageBand
+        self.phase = phase
+        self.stepID = stepID
+    }
+}
+
 public struct GameProgress: Codable, Equatable, Sendable {
-    public static let currentSchemaVersion = 2
+    public static let currentSchemaVersion = 3
 
     public var schemaVersion: Int
     public var missionID: String
@@ -93,6 +171,12 @@ public struct GameProgress: Codable, Equatable, Sendable {
     public var totalScore: Int
     public var bestStreak: Int
     public var leaderboard: [LeaderboardEntry]
+    public var missionCompletions: [String: MissionCompletion]
+    public var videoCompletions: [String: MissionCompletion]
+    public var concepts: [String: ConceptProgress]
+    public var activeRun: AdventureRunCursor?
+
+    public var completedMissionIDs: Set<String> { Set(missionCompletions.keys) }
 
     public init(
         schemaVersion: Int = currentSchemaVersion,
@@ -101,7 +185,11 @@ public struct GameProgress: Codable, Equatable, Sendable {
         destinations: [String: DestinationProgress] = [:],
         totalScore: Int = 0,
         bestStreak: Int = 0,
-        leaderboard: [LeaderboardEntry] = []
+        leaderboard: [LeaderboardEntry] = [],
+        missionCompletions: [String: MissionCompletion] = [:],
+        videoCompletions: [String: MissionCompletion] = [:],
+        concepts: [String: ConceptProgress] = [:],
+        activeRun: AdventureRunCursor? = nil
     ) {
         self.schemaVersion = schemaVersion
         self.missionID = missionID
@@ -110,11 +198,16 @@ public struct GameProgress: Codable, Equatable, Sendable {
         self.totalScore = totalScore
         self.bestStreak = bestStreak
         self.leaderboard = leaderboard
+        self.missionCompletions = missionCompletions
+        self.videoCompletions = videoCompletions
+        self.concepts = concepts
+        self.activeRun = activeRun
     }
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, missionID, selectedAgeBand, destinations
         case totalScore, bestStreak, leaderboard
+        case missionCompletions, videoCompletions, concepts, activeRun
     }
 
     public init(from decoder: Decoder) throws {
@@ -130,5 +223,15 @@ public struct GameProgress: Codable, Equatable, Sendable {
         bestStreak = try values.decodeIfPresent(Int.self, forKey: .bestStreak) ?? 0
         leaderboard =
             try values.decodeIfPresent([LeaderboardEntry].self, forKey: .leaderboard) ?? []
+        missionCompletions =
+            try values.decodeIfPresent(
+                [String: MissionCompletion].self, forKey: .missionCompletions)
+            ?? [:]
+        videoCompletions =
+            try values.decodeIfPresent([String: MissionCompletion].self, forKey: .videoCompletions)
+            ?? [:]
+        concepts =
+            try values.decodeIfPresent([String: ConceptProgress].self, forKey: .concepts) ?? [:]
+        activeRun = try values.decodeIfPresent(AdventureRunCursor.self, forKey: .activeRun)
     }
 }

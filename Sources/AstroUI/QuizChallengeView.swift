@@ -238,7 +238,7 @@ struct QuizChallengeView: View {
             Text(
                 compact && isShowingHint
                     ? quiz.hint
-                    : (compact ? "Tap an answer" : "Move, focus, and press to answer")
+                    : answerInstruction
             )
             .font((compact ? Font.caption : Font.subheadline).weight(.medium))
             .foregroundStyle(isShowingHint ? .yellow : .white.opacity(0.55))
@@ -278,6 +278,14 @@ struct QuizChallengeView: View {
             .focused($focusedUtility, equals: .hint)
             .accessibilityIdentifier("quiz.hint")
         }
+    }
+
+    private var answerInstruction: String {
+        #if os(tvOS)
+            "Choose a clue and press to answer"
+        #else
+            "Tap a clue to answer"
+        #endif
     }
 
     private func focusAnswerAfterHint() {

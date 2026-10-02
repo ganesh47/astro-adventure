@@ -108,12 +108,12 @@ enum SolarSystemExpansionCatalog {
                 profile: profile,
                 id: "motion",
                 imageName: profile.feature.imageName,
-                title: "Days and years",
+                title: "Spins and orbits",
                 body: motionCopy(for: profile, ageBand: ageBand),
                 image: profile.feature,
                 facts: [
-                    .init(value: profile.day, label: "one day"),
-                    .init(value: profile.year, label: "one year or orbit"),
+                    .init(value: profile.day, label: "one rotation"),
+                    .init(value: profile.year, label: "one orbit"),
                 ]
             ),
             card(
@@ -203,13 +203,13 @@ enum SolarSystemExpansionCatalog {
                 profile: profile,
                 concept: "motion",
                 ageBand: ageBand,
-                prompt: "Which day-and-year clue matches \(profile.name)?",
+                prompt: "Which rotation-and-orbit clue matches \(profile.name)?",
                 correct: profile.motionAnswer,
                 wrong: differentValues(
                     from: otherProfiles.map(\.motionAnswer),
                     excluding: profile.motionAnswer
                 ),
-                hint: "A day is one spin; a year is one orbit."
+                hint: "Rotation means turning; an orbit is one trip around another body."
             ),
             quiz(
                 profile: profile,
@@ -282,7 +282,17 @@ enum SolarSystemExpansionCatalog {
     }
 
     private static func colorCopy(for profile: DestinationProfile, ageBand: AgeBand) -> String {
-        switch ageBand {
+        if profile.id == "venus" {
+            return switch ageBand {
+            case .ages4To6:
+                "This Venus map uses added golden colors. Radar helped scientists find the ground under its clouds."
+            case .ages7To9:
+                "Magellan's radar map uses assigned colors to show Venus's terrain. These are not the natural colors of its clouds or rocky surface."
+            case .ages10To12:
+                "The displayed Venus mosaic is a radar-derived map with assigned colors. Echo measurements reveal terrain hidden by the opaque cloud deck; the golden rendering is not a natural-color photograph."
+            }
+        }
+        return switch ageBand {
         case .ages4To6:
             "\(profile.name) looks \(profile.colorShort). \(profile.colorCause)"
         case .ages7To9:
@@ -304,7 +314,17 @@ enum SolarSystemExpansionCatalog {
     }
 
     private static func distanceCopy(for profile: DestinationProfile, ageBand: AgeBand) -> String {
-        switch ageBand {
+        if profile.id == "sun" {
+            return switch ageBand {
+            case .ages4To6:
+                "The Sun is our Solar System's star. Earth is about one AU away from it."
+            case .ages7To9:
+                "We measure planetary solar distances outward from the Sun. One AU is the average Sun-to-Earth distance."
+            case .ages10To12:
+                "For these distance comparisons, the Sun is the reference star. One astronomical unit is about 150 million kilometres; this card is not a Sun-to-Sun light journey."
+            }
+        }
+        return switch ageBand {
         case .ages4To6:
             "One AU is the distance from the Sun to Earth. \(profile.name)’s clue is \(profile.au)."
         case .ages7To9:
@@ -315,20 +335,30 @@ enum SolarSystemExpansionCatalog {
     }
 
     private static func lightCopy(for profile: DestinationProfile, ageBand: AgeBand) -> String {
-        switch ageBand {
+        if profile.id == "sun" {
+            return switch ageBand {
+            case .ages4To6:
+                "Sunlight takes about eight minutes to reach Earth. The trip starts at the Sun."
+            case .ages7To9:
+                "Sunlight crosses the average Sun-to-Earth distance in about 8.3 minutes."
+            case .ages10To12:
+                "Light travels at 299,792 kilometres per second in vacuum. The average Sun-to-Earth journey takes about 8.3 minutes; its endpoints are the Sun and Earth."
+            }
+        }
+        return switch ageBand {
         case .ages4To6:
             "Light is the fastest traveller we know, but space is huge. The trip takes \(profile.lightTime)."
         case .ages7To9:
             "Sunlight races at almost 300,000 kilometres each second. It still needs \(profile.lightTime) to cover this distance."
         case .ages10To12:
-            "At 299,792 kilometres per second, light crosses \(profile.name)’s average Sun-distance in \(profile.lightTime). This is also the minimum one-way radio delay."
+            "At 299,792 kilometres per second, sunlight crosses \(profile.name)’s average Sun-distance in \(profile.lightTime). A spacecraft's radio delay to Earth uses the changing Earth-spacecraft distance instead."
         }
     }
 
     private static func motionCopy(for profile: DestinationProfile, ageBand: AgeBand) -> String {
         switch ageBand {
         case .ages4To6:
-            "One spin makes a day. One trip around its partner makes a year or orbit. Here: \(profile.day) and \(profile.year)."
+            "A spin and a trip around another world are different motions. \(profile.name) spins in \(profile.day); its orbit takes \(profile.year)."
         case .ages7To9:
             "\(profile.name) spins once in \(profile.day). Its full orbit takes \(profile.year)."
         case .ages10To12:
@@ -405,7 +435,7 @@ enum SolarSystemExpansionCatalog {
             diameter: "12,104 km", au: "0.72 AU", distance: "108 million km",
             lightTime: "6 min", day: "243 Earth days", year: "225 Earth days",
             motionNote:
-                "Venus rotates backward compared with most planets, so its day is longer than its year.",
+                "Venus rotates backward compared with most planets. One full rotation lasts longer than its year; sunrise-to-sunrise takes about 117 Earth days.",
             motionAnswer: "A 243-day backward spin; a 225-day year",
             wonderTitle: "A hidden volcanic world",
             wonder: .init(
@@ -446,7 +476,7 @@ enum SolarSystemExpansionCatalog {
             diameter: "12,756 km", au: "1 AU", distance: "150 million km",
             lightTime: "8.3 min", day: "23.9 hours", year: "365.25 days",
             motionNote: "Earth’s 23.5-degree tilt creates the seasons.",
-            motionAnswer: "A 23.9-hour day; a 365.25-day year",
+            motionAnswer: "A 23.9-hour rotation; a 365.25-day orbit",
             wonderTitle: "A living water world",
             wonder: .init(
                 junior:
@@ -502,11 +532,13 @@ enum SolarSystemExpansionCatalog {
             sourceURL: URL(string: "https://science.nasa.gov/jupiter/jupiter-facts/")!,
             portrait: .init(
                 imageName: "jupiter-global", sourceID: "PIA22946",
-                credit: "NASA/JPL-Caltech/SwRI/MSSS"
+                credit:
+                    "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS"
             ),
             feature: .init(
                 imageName: "jupiter-red-spot", sourceID: "PIA21395",
-                credit: "NASA/JPL-Caltech/SwRI/MSSS"
+                credit:
+                    "Enhanced image: Kevin M. Gill (CC BY); image data: NASA/JPL-Caltech/SwRI/MSSS"
             ),
             summary: .init(
                 junior: "Jupiter is the biggest planet—a giant ball of gas with colorful stripes.",
@@ -525,7 +557,7 @@ enum SolarSystemExpansionCatalog {
             diameter: "139,820 km", au: "5.2 AU", distance: "778 million km",
             lightTime: "43 min", day: "9.9 hours", year: "11.9 Earth years",
             motionNote: "Jupiter has the shortest day of any planet.",
-            motionAnswer: "A 9.9-hour day; an 11.9-year orbit",
+            motionAnswer: "A 9.9-hour rotation; an 11.9-year orbit",
             wonderTitle: "The Great Red Spot",
             wonder: .init(
                 junior: "Jupiter has a giant swirling storm called the Great Red Spot.",
@@ -567,7 +599,7 @@ enum SolarSystemExpansionCatalog {
             diameter: "120,500 km", au: "9.5 AU", distance: "1.4 billion km",
             lightTime: "80 min", day: "10.7 hours", year: "29.4 Earth years",
             motionNote: "Its 26.7-degree tilt gives Saturn seasons.",
-            motionAnswer: "A 10.7-hour day; a 29.4-year orbit",
+            motionAnswer: "A 10.7-hour rotation; a 29.4-year orbit",
             wonderTitle: "Billions of ring pieces",
             wonder: .init(
                 junior: "Saturn’s rings are made of countless pieces of ice and rock.",
@@ -585,7 +617,8 @@ enum SolarSystemExpansionCatalog {
             sourceURL: URL(string: "https://science.nasa.gov/uranus/facts/")!,
             portrait: .init(
                 imageName: "uranus-global", sourceID: "PIA18182", credit: "NASA/JPL-Caltech"),
-            feature: .init(imageName: "uranus-clouds", sourceID: "PIA02963", credit: "NASA/STScI"),
+            feature: .init(
+                imageName: "uranus-clouds", sourceID: "PIA02963", credit: "NASA/JPL/STScI"),
             summary: .init(
                 junior: "Uranus is a blue-green ice giant that rolls around the Sun on its side.",
                 explorer:
@@ -603,7 +636,7 @@ enum SolarSystemExpansionCatalog {
             diameter: "50,724 km", au: "19.2 AU", distance: "2.9 billion km",
             lightTime: "2 hr 40 min", day: "17.2 hours", year: "84 Earth years",
             motionNote: "Its extreme tilt creates seasons unlike those on any other planet.",
-            motionAnswer: "A 17.2-hour day; an 84-year orbit",
+            motionAnswer: "A 17.2-hour rotation; an 84-year orbit",
             wonderTitle: "The planet on its side",
             wonder: .init(
                 junior: "Uranus is tipped so far over that it seems to roll around the Sun.",
@@ -639,7 +672,7 @@ enum SolarSystemExpansionCatalog {
             diameter: "49,244 km", au: "30 AU", distance: "4.5 billion km",
             lightTime: "4 hr 10 min", day: "16.1 hours", year: "165 Earth years",
             motionNote: "Neptune has completed only one full orbit since its 1846 discovery.",
-            motionAnswer: "A 16.1-hour day; a 165-year orbit",
+            motionAnswer: "A 16.1-hour rotation; a 165-year orbit",
             wonderTitle: "The fastest planetary winds",
             wonder: .init(
                 junior: "Neptune’s clouds can race faster than a jet airplane.",
@@ -678,14 +711,16 @@ enum SolarSystemExpansionCatalog {
                 "Nitrogen, methane and carbon-monoxide ices contrast with radiation-processed organic tholins.",
             colorAnswer: "Tan, white and rusty red",
             shapeValue: "Nearly spherical",
-            shapeNote: "Pluto is round enough for gravity to classify it as a dwarf planet.",
+            shapeNote:
+                "Pluto orbits the Sun and is rounded by gravity, but has not cleared its orbital neighborhood; it is a dwarf planet.",
             diameter: "2,377 km", au: "≈39 AU", distance: "5.9 billion km",
             lightTime: "≈5.5 hours", day: "6.4 Earth days", year: "248 Earth years",
             motionNote: "Its orbit is more tilted and stretched than the eight planets’ orbits.",
             motionAnswer: "A 6.4-day spin; a 248-year orbit",
             wonderTitle: "A heart made of ice",
             wonder: .init(
-                junior: "Pluto’s bright heart is a huge plain of frozen nitrogen.",
+                junior:
+                    "The western half of Pluto’s bright heart contains a huge plain of frozen nitrogen.",
                 explorer:
                     "Sputnik Planitia, the heart’s western half, is a slowly moving nitrogen-ice glacier.",
                 scientist:
@@ -721,7 +756,8 @@ enum SolarSystemExpansionCatalog {
                 "Hydrated minerals and sodium-carbonate-rich deposits create subtle colors and bright faculae.",
             colorAnswer: "Dark gray with brilliant white spots",
             shapeValue: "Nearly spherical",
-            shapeNote: "Gravity made Ceres round, but it never grew into a full-sized planet.",
+            shapeNote:
+                "Ceres orbits the Sun and is rounded by gravity, but has not cleared its orbital neighborhood; it is a dwarf planet.",
             diameter: "≈940 km", au: "2.8 AU", distance: "414 million km",
             lightTime: "22 min", day: "9 hours", year: "4.6 Earth years",
             motionNote: "Its small four-degree tilt means Ceres has only mild seasons.",

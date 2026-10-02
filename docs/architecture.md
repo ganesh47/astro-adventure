@@ -18,9 +18,9 @@ Gameplay rules must remain testable without launching a simulator or rendering R
 
 ## Data flow
 
-1. `AstroContent` decodes and validates bundled lesson JSON.
-2. `MissionSession` owns the active mission state and age band.
-3. `AstroUI` sends semantic actions such as focus, scan, answer, hint, and back.
+1. `AstroContent` decodes and validates bundled lesson, planet mission, and video catalogs.
+2. `MissionSession` owns the active mission, concept reviews, checkpoints, and captured age band.
+3. `AstroUI` sends semantic actions such as focus, scan, answer, hint, playback time, and back. AVFoundation stays in this presentation layer.
 4. `AstroWorld` renders the current world without changing learning progress directly.
 5. A `ProgressStoring` implementation saves versioned `GameProgress`.
 6. Future iCloud synchronization wraps the offline save rather than becoming a gameplay dependency.
@@ -29,6 +29,8 @@ Rounds capture their Explorer Mode and question set when they start. The final c
 
 Apple TV uses `PreferencesProgressStore`, with an encoded log capped at 256 KiB and the latest 20 legacy history entries. It migrates an existing Application Support log when available. iPhone/iPad retain atomic JSON storage. `ProgressSaveQueue` serializes writes, coalesces pending changes to the newest snapshot, retains failed snapshots for retry, and drains on scene inactivity. Preference disk writes remain managed by the operating system. Recovery controls distinguish unreadable logs from an empty log; beginning a new log writes the reset immediately. Local saves are not cloud backup and do not survive app deletion.
 
+Schema 3 preserves legacy stamps and adds mission/video completion ledgers, review records keyed by concept and age mode, and one resumable learning cursor. New mission badges remain available on older saves. A changed content revision or retired step restarts that adventure while retaining earned discoveries. The [expedition specification](specs/planet-expeditions.md) describes ordering and checkpoint invariants.
+
 ## Platform strategy
 
 - iOS/iPadOS deployment target: 18 or later.
@@ -36,7 +38,7 @@ Apple TV uses `PreferencesProgressStore`, with an encoded log capped at 256 KiB 
 - Xcode 26 and the Swift 6 language mode are the reproducible build baseline.
 - Touch is the default input on iPhone and iPad.
 - Siri Remote focus/select is the default fallback on Apple TV.
-- Play/Pause opens a mission pause panel with Resume and Return to Worlds. An unfinished round restarts when entered again; completed discoveries remain saved.
+- Play/Pause opens a mission pause panel with Resume and Return to Worlds. Planet missions, videos, and concept reviews can resume their saved step; legacy bonus rounds retain their earlier restart behavior. Backgrounding and audio interruptions pause learning, with explicit actions to resume.
 - Game Controller support augments, but does not replace, platform-default input.
 
 ## Content and privacy
@@ -58,6 +60,6 @@ Apple TV uses `PreferencesProgressStore`, with an encoded log capped at 256 KiB 
 - Unsigned simulator builds validate the iOS and tvOS applications.
 - The public repository validator checks required structure, manifest values, generated artifacts, accidental secrets, workflow privileges, and immutable action references.
 - Guardrail unit tests prove that representative secrets, signing artifacts, privileged pull-request triggers, and unpinned actions are rejected.
-- Apple TV UI smoke tests exercise the default remote flow, retries and hints, pause/resume, passport completion, and progress after relaunch using an isolated debug-only preference suite.
+- Touch and Apple TV UI tests exercise all activity families, native seeking/replay and checkpoint restoration, retries and hints, pause/resume, passport completion, and relaunch using an isolated debug-only preference suite. iPad checks cover portrait and landscape learning layouts.
 - CodeQL, dependency review, and full-history Gitleaks scanning run through GitHub Actions.
 - Signed device, TestFlight, and App Store builds remain intentional release operations.

@@ -44,6 +44,8 @@ REQUIRED_PATHS = (
     ),
     "Sources/AstroGameCore/MissionSession.swift",
     "Sources/AstroContent/Resources/lessons.json",
+    "Sources/AstroContent/Resources/planet-missions.json",
+    "Sources/AstroContent/Resources/video-lessons.json",
     "assets/manifest/assets.csv",
     "docs/architecture.md",
     "docs/ROADMAP.md",
@@ -114,7 +116,9 @@ ASSET_TYPES = {
 LICENSES = {
     "public-domain",
     "cc0",
+    "cc-by",
     "cc-by-4.0",
+    "cc-by-3.0",
     "mit",
     "apache-2.0",
     "bsd-3-clause",
@@ -316,6 +320,50 @@ def validate_lessons(errors: list[str]) -> None:
                 )
 
 
+def validate_expedition_resources(errors: list[str]) -> None:
+    """Keep the offline curriculum and its bundled media buildable from a public clone."""
+    planets = {"mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"}
+    resources = ROOT / "Sources/AstroContent/Resources"
+    images = ROOT / "Sources/AstroUI/Resources/DiscoveryImages"
+    videos = ROOT / "Sources/AstroUI/Resources/LearningVideos"
+    try:
+        missions = json.loads((resources / "planet-missions.json").read_text(encoding="utf-8"))
+        lessons = json.loads((resources / "video-lessons.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        errors.append(f"Expedition catalogs cannot be read: {error}")
+        return
+    if not isinstance(missions, list) or not isinstance(lessons, list):
+        errors.append("Expedition catalogs must be arrays")
+        return
+    if len(missions) != 24 or any(
+        sum(mission.get("destinationID") == planet for mission in missions) != 3
+        for planet in planets
+    ):
+        errors.append("Planet expeditions require three missions for each of the eight planets")
+    if len(lessons) != 8 or {lesson.get("destinationID") for lesson in lessons} != planets:
+        errors.append("Offline video lessons must cover the eight planets exactly once")
+
+    def check_image(name: object, owner: str) -> None:
+        if not isinstance(name, str) or not (images / f"{name}.jpg").is_file():
+            errors.append(f"Expedition {owner} references a missing discovery image: {name}")
+
+    for mission in missions:
+        owner = mission.get("id", "missing-id")
+        for card in mission.get("cards", []) + [mission.get("deepDive", {})]:
+            check_image(card.get("imageName"), owner)
+        for task in mission.get("activity", {}).get("tasks", []):
+            check_image(task.get("imageName"), owner)
+    for lesson in lessons:
+        owner = lesson.get("id", "missing-id")
+        name = lesson.get("resourceName", "")
+        if not name or not (videos / f"{name}.mp4").is_file():
+            errors.append(f"Video lesson {owner} requires a bundled offline MP4")
+        for segment in lesson.get("segments", []):
+            check_image(segment.get("imageName"), owner)
+        for card in lesson.get("fallbackCards", []):
+            check_image(card.get("imageName"), owner)
+
+
 def validate_privacy_manifest(errors: list[str]) -> None:
     path = ROOT / "Apps/Shared/PrivacyInfo.xcprivacy"
     try:
@@ -444,6 +492,7 @@ def main() -> int:
     validate_workflows(errors)
     validate_manifest(errors)
     validate_lessons(errors)
+    validate_expedition_resources(errors)
     validate_privacy_manifest(errors)
     validate_apple_metadata(errors)
     validate_markdown_links(errors)

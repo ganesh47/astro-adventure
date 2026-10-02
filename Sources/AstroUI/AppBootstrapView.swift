@@ -5,7 +5,13 @@ import Foundation
 import SwiftUI
 
 public struct AppBootstrapView: View {
-    private let catalogResult: Result<[DestinationLesson], Error>
+    private struct BundledGameContent {
+        let lessons: [DestinationLesson]
+        let missions: [PlanetMission]
+        let videos: [VideoLesson]
+    }
+
+    private let catalogResult: Result<BundledGameContent, Error>
     @State private var progressStore: (any ProgressStoring)?
     @Environment(\.scenePhase) private var scenePhase
     @FocusState private var retryFocused: Bool
@@ -15,7 +21,13 @@ public struct AppBootstrapView: View {
     @State private var saveQueue: ProgressSaveQueue?
 
     public init() {
-        catalogResult = Result { try LessonCatalog.bundled() }
+        catalogResult = Result {
+            try BundledGameContent(
+                lessons: LessonCatalog.bundled(),
+                missions: PlanetMissionCatalog.bundled(),
+                videos: VideoLessonCatalog.bundled()
+            )
+        }
     }
 
     #if DEBUG
@@ -49,11 +61,13 @@ public struct AppBootstrapView: View {
 
     public var body: some View {
         switch catalogResult {
-        case .success(let lessons):
+        case .success(let content):
             if hasLoadedProgress {
                 GameRootView(
-                    lessons: lessons,
+                    lessons: content.lessons,
                     progress: savedProgress,
+                    planetMissions: content.missions,
+                    videoLessons: content.videos,
                     onProgressChanged: saveProgress
                 )
                 .overlay(alignment: .bottom) {
