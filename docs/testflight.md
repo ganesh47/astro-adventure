@@ -18,6 +18,10 @@ the Apple signing, archive, and TestFlight delivery service.
    Ad Hoc tvOS export fails because the team has no registered Apple TV, the
    job publishes the successful signed App Store export through the Build
    Uploads API and assigns the same internal group.
+7. A read-only verification step waits for both platform builds with the exact
+   Xcode Cloud build number to be `VALID` in App Store Connect and assigned to
+   `Astro Adventure Internal`. A successful Cloud archive alone does not
+   complete this delivery check.
 
 The workflow can also be started manually from GitHub Actions. Manual runs
 default to the `main` branch.
@@ -73,6 +77,13 @@ failed commit from being promoted to TestFlight.
 The GitHub credentials, repository access, CI gate, App Store Connect API
 trigger, Xcode Cloud checkout, build, analysis, signing configuration, and
 internal testing group have all been verified.
+
+The delivery job now confirms iOS and tvOS processing and group assignment
+after the archive or tvOS fallback. It prints only build and release metadata,
+and does not trigger another build, upload an app, or change group membership.
+Missing builds or group assignment remain pending until the bounded check
+expires; rejected processing fails the check. The examples below record
+earlier delivery repairs, rather than the latest release number.
 
 Xcode Cloud build 8 successfully archived and exported the app for App Store
 distribution. App Store Connect then rejected the uploaded bundle with two
@@ -137,7 +148,11 @@ Apple references:
 - [Configure an Xcode Cloud workflow][workflow-setup]
 - [Distribute Xcode Cloud builds through TestFlight][testflight-distribution]
 - [Automate Xcode Cloud workflows and builds][api-automation]
+- [Read the Cloud build number and source revision][cloud-build-api]
+- [Inspect TestFlight builds and their related metadata][builds-api]
 
 [workflow-setup]: https://developer.apple.com/documentation/xcode/configuring-your-first-xcode-cloud-workflow/
 [testflight-distribution]: https://developer.apple.com/documentation/xcode/distributing-your-xcode-cloud-builds-through-testflight
 [api-automation]: https://developer.apple.com/documentation/appstoreconnectapi/xcode-cloud-workflows-and-builds
+[cloud-build-api]: https://developer.apple.com/documentation/appstoreconnectapi/get-v1-cibuildruns-_id_
+[builds-api]: https://developer.apple.com/documentation/appstoreconnectapi/get-v1-builds

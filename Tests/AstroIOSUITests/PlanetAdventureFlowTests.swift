@@ -9,7 +9,9 @@ final class PlanetAdventureFlowTests: XCTestCase {
         continueAfterFailure = false
         await MainActor.run {
             XCUIDevice.shared.orientation = .landscapeLeft
-            app.launchArguments = ["--ui-testing", "--reset-ui-testing-progress"]
+            app.launchArguments = [
+                "--ui-testing", "--reset-ui-testing-progress", "--legacy-learning",
+            ]
             app.launch()
         }
     }
@@ -88,7 +90,7 @@ final class PlanetAdventureFlowTests: XCTestCase {
         seekToVideoQuestion()
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
         app.terminate()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "--legacy-learning"]
         app.launch()
         tap("adventure.resume")
         XCTAssertTrue(app.buttons["video.answer.0"].waitForExistence(timeout: 10))
@@ -161,7 +163,7 @@ final class PlanetAdventureFlowTests: XCTestCase {
         tap("story.next")
         tap("quiz.hint")
         app.terminate()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "--legacy-learning"]
         app.launch()
         tap("adventure.resume")
         XCTAssertTrue(app.buttons["quiz.answer.0"].waitForExistence(timeout: 10))

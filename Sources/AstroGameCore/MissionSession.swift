@@ -191,6 +191,11 @@ public final class MissionSession {
         resetTransientState()
     }
 
+    /// Exploration publishes a complete save snapshot through the existing persistence owner.
+    public func applyExplorationProgress(_ updated: GameProgress) {
+        progress = updated
+    }
+
     public func focusNext() {
         guard !lessons.isEmpty else { return }
         if phase == .quiz || phase == .missionQuestion || phase == .videoCheckpoint

@@ -679,7 +679,7 @@ private final class VideoPlaybackDriver {
 }
 
 #if canImport(UIKit)
-    private struct NativeVideoSurface: UIViewRepresentable {
+    struct NativeVideoSurface: UIViewRepresentable {
         let player: AVPlayer
         func makeUIView(context: Context) -> NativeVideoLayerView {
             let view = NativeVideoLayerView()
@@ -694,12 +694,12 @@ private final class VideoPlaybackDriver {
         }
     }
 
-    private final class NativeVideoLayerView: UIView {
+    final class NativeVideoLayerView: UIView {
         override class var layerClass: AnyClass { AVPlayerLayer.self }
         var videoLayer: AVPlayerLayer { layer as! AVPlayerLayer }
     }
 #elseif canImport(AppKit)
-    private struct NativeVideoSurface: NSViewRepresentable {
+    struct NativeVideoSurface: NSViewRepresentable {
         let player: AVPlayer
         func makeNSView(context: Context) -> NSView {
             let view = NSView()
