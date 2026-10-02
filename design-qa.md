@@ -55,7 +55,7 @@ TV and concept have approximately matching 16:9 aspect ratios. Phone and tablet 
 5. Celebrate and collect — completed worlds remain visible during celebration. Stamp/postcard/cursor commit together. Full saved creation illustrations render for all three worlds in the passport, which retains old stamps and keeps Back reachable while scrolling. The final all-three journey passes in 97.744 seconds.
 6. Earlier learning flows — iPhone legacy missions, models, retries and videos pass. Full Apple TV suite passes all six tests, including all nine new goals; the final layout-only clip check also passes.
 
-Package acceptance: 98 tests pass, including all ages, linked concepts/sources, goal prerequisites, migrations, invalid cursors, once-only rewards, clip state, bounded 256 KiB TV progress, and save failures. Python repository checks (18 tests), strict formatting, validation and both Release simulator builds pass. Latest targeted iPhone all-three and film tests pass; portrait iPad semantic action test passes.
+Package acceptance: 98 tests pass, including all ages, linked concepts/sources, goal prerequisites, migrations, invalid cursors, once-only rewards, clip state, bounded 256 KiB TV progress, and save failures. Python repository and release-verifier checks (26 tests), strict formatting, validation and both Release simulator builds pass. The read-only release verifier checks the validated source, exact build number, both platforms, processing, internal testing state and group assignment. Latest targeted iPhone all-three and film tests pass; portrait iPad semantic action test passes.
 
 Accessibility evidence is limited to labeled semantic controls, focus/button completion, captions, code coordination that suppresses app narration with VoiceOver, and reduced-motion alternatives. No physical iPhone or Apple TV was connected, so physical VoiceOver operation, remote comfort and device rendering performance are not claimed. AVPlayer error UI is tested by missing media; reordered native status/seek/end callbacks are guarded but not deterministically injected.
 
@@ -67,7 +67,7 @@ Accessibility evidence is limited to labeled semantic controls, focus/button com
 - [x] Save migration, atomic postcards/stamps, duplicate prevention and bounded TV payloads.
 - [x] Fresh TV transport capture and full remote regression.
 - [x] Fresh nonblank passport illustration capture.
-- [ ] Green public CI, merge, signed archives and TestFlight verification.
+- Delivery is tracked in [PR #92](https://github.com/ganesh47/astro-adventure/pull/92): green public CI precedes merge, signed archives and read-only TestFlight verification.
 
 ## Follow-up polish
 

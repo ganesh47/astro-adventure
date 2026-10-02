@@ -24,6 +24,8 @@ from typing import Any
 API_BASE_URL = "https://api.appstoreconnect.apple.com/v1"
 TERMINAL_PROGRESS = {"COMPLETE"}
 SUCCESS_COMPLETION = {"SUCCEEDED"}
+TESTFLIGHT_PLATFORMS = {"IOS", "TV_OS"}
+USABLE_INTERNAL_STATES = {"READY_FOR_BETA_TESTING", "IN_BETA_TESTING"}
 
 
 class AppStoreConnectError(RuntimeError):
@@ -385,6 +387,166 @@ def _assign_beta_group(
     )
 
 
+def _testflight_records(
+    response: dict[str, Any], app_id: str, build_number: str, beta_group_id: str
+) -> tuple[dict[str, dict[str, Any]], list[str]]:
+    included = {
+        (resource["type"], str(resource["id"])): resource
+        for resource in response.get("included", [])
+    }
+    records: dict[str, dict[str, Any]] = {}
+    pending: list[str] = []
+    for build in response.get("data", []):
+        attributes = build.get("attributes", {})
+        relationships = build.get("relationships", {})
+        if str(attributes.get("version")) != build_number:
+            raise AppStoreConnectError("Apple returned a different build number")
+        app = relationships.get("app", {}).get("data")
+        if not app:
+            pending.append("app identity")
+            continue
+        if str(app.get("id")) != app_id:
+            raise AppStoreConnectError("Apple returned a build for a different app")
+        prerelease_id = relationships.get("preReleaseVersion", {}).get("data")
+        prerelease = included.get(
+            ("preReleaseVersions", str((prerelease_id or {}).get("id"))), {}
+        ).get("attributes", {})
+        platform = prerelease.get("platform")
+        if platform not in TESTFLIGHT_PLATFORMS:
+            pending.append("platform metadata")
+            continue
+        if platform in records:
+            raise AppStoreConnectError(f"Multiple {platform} builds match the Cloud number")
+        state = attributes.get("processingState")
+        if state in {"FAILED", "INVALID"}:
+            raise AppStoreConnectError(f"{platform} build processing is {state}")
+        if attributes.get("expired") is True:
+            raise AppStoreConnectError(f"{platform} build is expired")
+        detail_id = relationships.get("buildBetaDetail", {}).get("data")
+        detail = included.get(
+            ("buildBetaDetails", str((detail_id or {}).get("id"))), {}
+        ).get("attributes", {})
+        internal_state = detail.get("internalBuildState")
+        if internal_state in {"MISSING_EXPORT_COMPLIANCE", "PROCESSING_EXCEPTION", "EXPIRED"}:
+            raise AppStoreConnectError(f"{platform} internal testing is {internal_state}")
+        group = included.get(("betaGroups", beta_group_id), {}).get("attributes", {})
+        group_ids = {
+            str(item.get("id"))
+            for item in (relationships.get("betaGroups", {}).get("data") or [])
+        }
+        if beta_group_id in group_ids and group.get("isInternalGroup") is False:
+            raise AppStoreConnectError("The requested testing group is not internal")
+        if (
+            state != "VALID"
+            or attributes.get("expired") is not False
+            or not prerelease.get("version")
+            or internal_state not in USABLE_INTERNAL_STATES
+            or beta_group_id not in group_ids
+            or group.get("isInternalGroup") is not True
+        ):
+            pending.append(f"{platform} processing/testing/group metadata")
+        records[platform] = {
+            "id": str(build.get("id", ""))[:80],
+            "version": str(prerelease.get("version") or "")[:40],
+            "internalState": str(internal_state or "PENDING")[:40],
+        }
+    pending.extend(sorted(TESTFLIGHT_PLATFORMS - records.keys()))
+    if len({record["version"] for record in records.values() if record["version"]}) > 1:
+        raise AppStoreConnectError("iOS and tvOS marketing versions differ")
+    return records, pending
+
+
+def verify_testflight(
+    client: AppStoreConnectClient,
+    build_run_id: str,
+    app_id: str,
+    beta_group_id: str,
+    timeout_seconds: int,
+    poll_seconds: int,
+    expected_source_sha: str | None = None,
+) -> int:
+    """Read actual processed builds and group links; never upload or assign anything."""
+    if timeout_seconds < 0 or poll_seconds <= 0:
+        raise AppStoreConnectError(
+            "Verification timeout must be nonnegative and poll positive"
+        )
+    deadline = time.monotonic() + timeout_seconds
+    while True:
+        run_query = urllib.parse.urlencode(
+            {"fields[ciBuildRuns]": "number,sourceCommit"}
+        )
+        run_id = urllib.parse.quote(build_run_id, safe="")
+        run = client.request("GET", f"/ciBuildRuns/{run_id}?{run_query}")
+        run_attributes = run.get("data", {}).get("attributes", {})
+        number = str(run_attributes.get("number") or "")
+        source_sha = str(
+            (run_attributes.get("sourceCommit") or {}).get("commitSha") or ""
+        )
+        if (
+            expected_source_sha and source_sha
+            and source_sha.lower() != expected_source_sha.lower()
+        ):
+            raise AppStoreConnectError(
+                "Xcode Cloud built a different source commit than validated CI"
+            )
+        pending = []
+        records: dict[str, dict[str, Any]] = {}
+        if not number.isdecimal() or (expected_source_sha and not source_sha):
+            pending.append("Cloud build/source metadata")
+        else:
+            query = urllib.parse.urlencode(
+                {
+                    "filter[app]": app_id,
+                    "filter[version]": number,
+                    "include": "app,preReleaseVersion,betaGroups,buildBetaDetail",
+                    "fields[builds]": (
+                        "version,processingState,expired,app,"
+                        "preReleaseVersion,betaGroups,buildBetaDetail"
+                    ),
+                    "fields[apps]": "bundleId",
+                    "fields[preReleaseVersions]": "version,platform",
+                    "fields[betaGroups]": "name,isInternalGroup",
+                    "fields[buildBetaDetails]": "internalBuildState",
+                    "limit": "200",
+                }
+            )
+            response = client.request("GET", f"/builds?{query}")
+            if response.get("links", {}).get("next"):
+                raise AppStoreConnectError(
+                    "Build query is ambiguous; additional result pages exist"
+                )
+            records, pending = _testflight_records(
+                response, app_id, number, beta_group_id
+            )
+        if not pending:
+            print(
+                f"Verified TestFlight Cloud build {number}; "
+                f"source={source_sha[:12] or 'unavailable'}."
+            )
+            for platform in sorted(TESTFLIGHT_PLATFORMS):
+                record = records[platform]
+                print(
+                    f"{platform}: version={record['version']}, build={number}, "
+                    f"id={record['id']}, processing=VALID, internal={record['internalState']}, "
+                    f"group={beta_group_id[:80]} (internal)."
+                )
+            print(
+                "Both platform builds are processed and assigned "
+                "to the requested internal group."
+            )
+            return 0
+        print(
+            f"TestFlight verification pending: {', '.join(sorted(set(pending)))}.",
+            flush=True,
+        )
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise AppStoreConnectError(
+                "Timed out verifying both platform builds and internal group assignment"
+            )
+        time.sleep(min(poll_seconds, remaining))
+
+
 def _download_tvos_ipa(
     client: AppStoreConnectClient, build_run_id: str, work_dir: Path
 ) -> Path:
@@ -665,6 +827,16 @@ def _parser() -> argparse.ArgumentParser:
         "--timeout-seconds", type=int, default=1200
     )
     publish_parser.add_argument("--poll-seconds", type=int, default=15)
+    verify_parser = subparsers.add_parser(
+        "verify-testflight",
+        help="Read and verify processed iOS/tvOS internal TestFlight builds",
+    )
+    verify_parser.add_argument("--build-run-id", required=True)
+    verify_parser.add_argument("--app-id", required=True)
+    verify_parser.add_argument("--beta-group-id", required=True)
+    verify_parser.add_argument("--expected-source-sha")
+    verify_parser.add_argument("--timeout-seconds", type=int, default=600)
+    verify_parser.add_argument("--poll-seconds", type=int, default=15)
     return parser
 
 
@@ -680,6 +852,16 @@ def main() -> int:
             arguments.build_run_id,
             arguments.timeout_seconds,
             arguments.poll_seconds,
+        )
+    if arguments.command == "verify-testflight":
+        return verify_testflight(
+            client,
+            arguments.build_run_id,
+            arguments.app_id,
+            arguments.beta_group_id,
+            arguments.timeout_seconds,
+            arguments.poll_seconds,
+            arguments.expected_source_sha,
         )
     return publish_tvos(
         client,
