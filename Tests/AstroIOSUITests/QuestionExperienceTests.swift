@@ -224,8 +224,18 @@ final class QuestionExperienceTests: XCTestCase {
                 if let previousTitle, title.label == previousTitle { return false }
                 return true
             }, object: progress)
+        let result = XCTWaiter.wait(for: [settled], timeout: 5)
+        if result != .completed {
+            capture("Unsettled Story \(expectedProgress)")
+            let geometry = XCTAttachment(
+                string: "Progress: \(progress.value ?? "missing"), \(progress.frame)\n"
+                    + "Title: \(title.label), \(title.frame)\n\(app.debugDescription)")
+            geometry.name = "Unsettled Story card geometry and hierarchy"
+            geometry.lifetime = .keepAlways
+            add(geometry)
+        }
         XCTAssertEqual(
-            XCTWaiter.wait(for: [settled], timeout: 5), .completed,
+            result, .completed,
             "The changed Story card must settle with its own title and restored header")
     }
 
@@ -406,7 +416,11 @@ final class QuestionExperienceTests: XCTestCase {
 
     private func tap(_ identifier: String) {
         let element = button(identifier)
-        guard isReachable(element) else {
+        let proposal =
+            identifier.hasPrefix("quiz.answer.")
+            || identifier.hasPrefix("mission.quiz.answer.")
+        if !proposal { reveal(element, fully: true) }
+        guard proposal ? isReachable(element) : isFullyVisible(element) else {
             capture("Unreachable \(identifier)")
             XCTFail("Unreachable \(identifier)")
             return
@@ -440,14 +454,10 @@ final class QuestionExperienceTests: XCTestCase {
                 CGVector(
                     dx: frame.midX - app.frame.minX,
                     dy: frame.midY - direction * distance / 2 - app.frame.minY))
-            if fully {
-                // Stop momentum before comparing both edges of a complete card or heading.
-                start.press(
-                    forDuration: 0.1, thenDragTo: end, withVelocity: .slow,
-                    thenHoldForDuration: 0.25)
-            } else {
-                start.press(forDuration: 0.1, thenDragTo: end)
-            }
+            // Stop momentum before checking visibility or activating a revealed control.
+            start.press(
+                forDuration: 0.1, thenDragTo: end, withVelocity: .slow,
+                thenHoldForDuration: 0.25)
         }
         capture("Unreachable \(element.identifier)")
         let geometry = XCTAttachment(

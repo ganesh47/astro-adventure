@@ -196,7 +196,8 @@ struct QuizChallengeView: View {
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(compact ? 12 : 22)
+                    .padding(.horizontal, compact ? 12 : 22)
+                    .padding(.vertical, compact ? 8 : 22)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     .foregroundStyle(.white)
                     .background(
