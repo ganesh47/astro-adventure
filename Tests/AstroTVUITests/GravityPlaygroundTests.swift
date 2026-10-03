@@ -221,6 +221,12 @@ final class GravityPlaygroundTests: XCTestCase {
 
     private func assertFocusedControlFits(_ identifier: String) {
         let control = app.buttons[identifier]
+        XCTAssertEqual(
+            XCTWaiter.wait(
+                for: [
+                    XCTNSPredicateExpectation(
+                        predicate: NSPredicate(format: "hasFocus == true"), object: control)
+                ], timeout: 3), .completed, "Native focus must settle on \(identifier)")
         XCTAssertTrue(control.hasFocus)
         let viewport = app.scrollViews["gravity.playground"].frame.intersection(app.frame)
         XCTAssertGreaterThanOrEqual(control.frame.minY, viewport.minY - 0.5)
@@ -245,9 +251,14 @@ final class GravityPlaygroundTests: XCTestCase {
             }
             let deltaX = target.frame.midX - focused.frame.midX
             let deltaY = target.frame.midY - focused.frame.midY
+            let overlap = max(
+                0,
+                min(target.frame.maxY, focused.frame.maxY)
+                    - max(target.frame.minY, focused.frame.minY))
+            let sharesRow = overlap > min(target.frame.height, focused.frame.height) * 0.5
             var horizontal =
-                target.frame.minX > focused.frame.maxX
-                || target.frame.maxX < focused.frame.minX || abs(deltaY) <= 40
+                target.frame.minX > focused.frame.maxX || target.frame.maxX < focused.frame.minX
+                || abs(deltaY) <= 40 || (sharesRow && abs(deltaX) > abs(deltaY))
             if previousFrame == focused.frame { horizontal = !previousHorizontal }
             previousFrame = focused.frame
             previousHorizontal = horizontal

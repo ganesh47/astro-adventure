@@ -218,9 +218,14 @@ final class QuestionExperienceTests: XCTestCase {
             }
             let deltaX = target.frame.midX - focused.frame.midX
             let deltaY = target.frame.midY - focused.frame.midY
+            let overlap = max(
+                0,
+                min(target.frame.maxY, focused.frame.maxY)
+                    - max(target.frame.minY, focused.frame.minY))
+            let sharesRow = overlap > min(target.frame.height, focused.frame.height) * 0.5
             var horizontal =
                 target.frame.minX > focused.frame.maxX || target.frame.maxX < focused.frame.minX
-                || abs(deltaY) <= 40
+                || abs(deltaY) <= 40 || (sharesRow && abs(deltaX) > abs(deltaY))
             if previousFrame == focused.frame { horizontal = !previousHorizontal }
             previousFrame = focused.frame
             previousHorizontal = horizontal
