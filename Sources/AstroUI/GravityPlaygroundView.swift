@@ -173,6 +173,7 @@ public struct GravityPlaygroundView: View {
             }
         }
         .modifier(GravityFocusSection())
+
     }
 
     private var worldButtons: some View {
@@ -420,6 +421,16 @@ public struct GravityPlaygroundView: View {
             }
         }
         .modifier(GravityFocusSection())
+        .task(id: clock.phase.rawValue) {
+            guard television, clock.phase == .landed else { return }
+            let generation = clock.generation
+            // Request TV focus after Try Again replaces Pause in the focus graph.
+            await Task.yield()
+            guard isVisible, scenePhase == .active, clock.phase == .landed,
+                clock.generation == generation
+            else { return }
+            focusedControl = "relaunch"
+        }
     }
 
     private var comparison: some View {
@@ -609,7 +620,7 @@ public struct GravityPlaygroundView: View {
     }
 
     private func landed() {
-        focusedControl = "relaunch"
+        if !television { focusedControl = "relaunch" }
         #if canImport(UIKit)
             if voiceOverEnabled, scenePhase == .active {
                 UIAccessibility.post(notification: .announcement, argument: fieldDescription)

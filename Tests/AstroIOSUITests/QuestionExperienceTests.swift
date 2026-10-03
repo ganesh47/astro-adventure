@@ -253,9 +253,15 @@ final class QuestionExperienceTests: XCTestCase {
     ) {
         let value = enabled ? "1" : "0"
         guard toggle.value as? String != value else { return }
-        // Settings exposes the entire row as a switch. Hit its trailing toggle,
-        // rather than the row's text at the accessibility element midpoint.
-        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+        // Settings can expose both a named row and its native switch child.
+        // Activate the native switch when available, then verify the named row.
+        let nativeSwitch = toggle.children(matching: .switch).firstMatch
+        if nativeSwitch.exists {
+            XCTAssertTrue(nativeSwitch.isHittable)
+            nativeSwitch.tap()
+        } else {
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+        }
         let changed = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", value), object: toggle)
         let result = XCTWaiter.wait(for: [changed], timeout: 5)

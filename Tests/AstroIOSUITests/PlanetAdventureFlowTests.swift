@@ -203,12 +203,24 @@ final class PlanetAdventureFlowTests: XCTestCase {
         for index in 0..<3 {
             let answer = app.buttons["quiz.answer.\(index)"]
             if !answer.exists { continue }
+            let isFinalQuestion = app.staticTexts["quiz.progress"].label.contains("3 of 3")
+            reveal(answer)
+            XCTAssertTrue(isReachable(answer), "The proposal must be in the uncovered viewport")
+            if isFinalQuestion {
+                capture("Final mission question before proposal \(index + 1)")
+                captureHierarchy("Final mission question before proposal \(index + 1)")
+            }
             answer.tap()
+            XCTAssertEqual(answer.value as? String, "Selected")
+            XCTAssertTrue(app.buttons["quiz.check"].isEnabled)
+            if isFinalQuestion {
+                captureHierarchy("Final mission question after selection \(index + 1)")
+            }
             tap("quiz.check")
             let feedback = app.buttons["feedback.continue"]
             XCTAssertTrue(feedback.waitForExistence(timeout: 5))
             let correct = feedback.label == "Continue"
-            feedback.tap()
+            tap("feedback.continue")
             if correct { return }
         }
         XCTFail("Every question must be solvable with its visible choices")
@@ -221,7 +233,7 @@ final class PlanetAdventureFlowTests: XCTestCase {
             let feedback = app.buttons["feedback.continue"]
             XCTAssertTrue(feedback.waitForExistence(timeout: 5))
             let correct = feedback.label == "Continue"
-            feedback.tap()
+            tap("feedback.continue")
             if correct { return }
         }
         XCTFail("The science activity must be solvable")
@@ -230,19 +242,80 @@ final class PlanetAdventureFlowTests: XCTestCase {
     private func tap(_ id: String) {
         let button = app.buttons[id]
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Missing action: \(id)")
-        if !button.isHittable { app.swipeUp() }
         reveal(button)
+        guard isReachable(button) else {
+            capture("Unreachable \(id)")
+            captureHierarchy("Unreachable \(id)")
+            XCTFail("The action must be in the uncovered viewport: \(id)")
+            return
+        }
+        XCTAssertTrue(button.isEnabled, "The action must be enabled: \(id)")
+        if id == "quiz.check", app.staticTexts["quiz.progress"].label.contains("3 of 3") {
+            capture("Final mission Check in uncovered viewport")
+            captureHierarchy("Final mission Check in uncovered viewport")
+        }
         button.tap()
         if id.hasPrefix("quiz.answer.") { tap("quiz.check") }
         if id.hasPrefix("video.answer.") { tap("video.check") }
     }
 
     private func reveal(_ button: XCUIElement) {
-        for _ in 0..<8 {
-            if button.isHittable { return }
-            app.swipeUp()
+        for _ in 0..<18 {
+            if isReachable(button) { return }
+            let viewport = visibleFrame(for: button)
+            guard !viewport.isEmpty, !viewport.isNull, viewport.height > 40 else { break }
+            let gap = button.frame.midY - viewport.midY
+            let distance = min(viewport.height * 0.55, max(40, abs(gap)))
+            let direction: CGFloat = gap < 0 ? -1 : 1
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(
+                CGVector(
+                    dx: viewport.midX - app.frame.minX,
+                    dy: viewport.midY + direction * distance / 2 - app.frame.minY))
+            let end = origin.withOffset(
+                CGVector(
+                    dx: viewport.midX - app.frame.minX,
+                    dy: viewport.midY - direction * distance / 2 - app.frame.minY))
+            start.press(forDuration: 0.1, thenDragTo: end)
         }
-        XCTAssertTrue(button.isHittable)
+        capture("Unable to reveal \(button.identifier)")
+        captureHierarchy("Unable to reveal \(button.identifier)")
+        XCTAssertTrue(isReachable(button))
+    }
+
+    private func visibleFrame(for element: XCUIElement) -> CGRect {
+        var viewport = app.frame.insetBy(dx: 18, dy: 18)
+        if element.identifier == "adventure.pause" { return viewport }
+        for identifier in [
+            "adventure.pause.scroll", "story.scroll", "quiz.scroll", "video.scroll",
+            "feedback.scroll", "adventure.menu",
+        ] {
+            let scroll = app.scrollViews[identifier]
+            if scroll.exists, hasVisibleGeometry(scroll), scroll.isHittable {
+                viewport = viewport.intersection(scroll.frame.insetBy(dx: 4, dy: 8))
+                break
+            }
+        }
+        let pause = app.buttons["adventure.pause"]
+        if pause.exists, hasVisibleGeometry(pause), pause.isHittable {
+            viewport.size.height = max(0, min(viewport.maxY, pause.frame.minY - 8) - viewport.minY)
+        }
+        return viewport
+    }
+
+    private func isReachable(_ element: XCUIElement) -> Bool {
+        guard element.exists, hasVisibleGeometry(element) else { return false }
+        guard
+            visibleFrame(for: element).contains(
+                CGPoint(x: element.frame.midX, y: element.frame.midY))
+        else { return false }
+        return element.isHittable
+    }
+
+    private func hasVisibleGeometry(_ element: XCUIElement) -> Bool {
+        let frame = element.frame
+        return !frame.isEmpty && !frame.isNull && !frame.isInfinite
+            && app.frame.contains(CGPoint(x: frame.midX, y: frame.midY))
     }
 
     private func selectMission(_ id: String) {
