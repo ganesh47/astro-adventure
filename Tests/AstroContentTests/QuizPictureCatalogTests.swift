@@ -230,6 +230,12 @@ final class QuizPictureCatalogTests: XCTestCase {
             "tech_empty_tank": .emptyTank,
             "tech_telescope_near": .movingStars,
             "tech_dsn_rotation": .spin,
+            "tech_dsn_weather": .sameWeather,
+            "tech_dsn_gravity": .noGravity,
+            "tech_solar_pull": .sunlightLift,
+            "tech_cloud_bounce": .cloudBounce,
+            "tech_launch_smoke": .launchCloud,
+            "tech_radio_rocks": .fallingRocks,
         ]
         for (id, scene) in expected {
             let choice = try XCTUnwrap(choices.first { $0.id == id })
@@ -645,13 +651,248 @@ final class QuizPictureCatalogTests: XCTestCase {
         XCTAssertEqual(choiceInstances, 158)
     }
 
+    func testAuthoredActionMaterialHostAndObservationMeaningsAreLiteral() throws {
+        // Exact reviewed meanings, including intentional counterfactual proposals.
+        // Matching an answer label alone is not evidence that its action is depicted.
+        let expected: [String: [String: QuizPicture.Scene]] = [
+            "mercury-crater-detective-impacts": [
+                "Clouds landing": .landingCloud
+            ],
+            "mercury-heat-and-shadow-air": [
+                "Thick warm clouds": .sunWarmCloud,
+                "A thick atmosphere that traps heat": .greenhouseWarming,
+                "An efficient heat-trapping atmosphere": .greenhouseWarming,
+            ],
+            "mercury-heat-and-shadow-shadow-ice": [
+                "A hot sunny plain": .sunlitPlain,
+                "A sunlit equatorial plain": .sunlitPlain,
+                "Inside hot rain clouds": .warmRainCloud,
+                "A persistently illuminated equatorial plain": .sunlitPlain,
+                "A thick cloud deck warmed by the Sun": .sunWarmCloud,
+            ],
+            "mercury-heat-and-shadow-not-hottest": [
+                "Mercury": .rockyWorld,
+                "Venus": .clouds,
+            ],
+            "mercury-speedy-year-solar-day": [
+                "Only the planet’s surface color": .rockyWorld
+            ],
+            "venus-radar-explorer-hidden-surface": [
+                "Thick clouds": .clouds,
+                "The thick cloud layer": .clouds,
+                "All of Venus is hidden behind its moon": .moonEclipse,
+                "A permanent eclipse by a natural moon": .moonEclipse,
+                "The opaque atmosphere in visible wavelengths": .clouds,
+            ],
+            "venus-heat-trap-detective-carbon-dioxide": [
+                "Very thick air": .denseCarbonDioxideAir,
+                "Air just like Earth’s": .earthAir,
+                "Mostly carbon dioxide": .denseCarbonDioxideAir,
+                "Dense CO₂ with very high surface pressure": .denseCarbonDioxideAir,
+                "Earth-like surface pressure and composition": .earthAir,
+            ],
+            "earth-our-water-world-atmosphere": [
+                "Solid stone": .solidRock,
+                "Air": .earthAir,
+                "Mostly solid rock": .solidRock,
+                "A layer of solid silicate rock": .solidRock,
+            ],
+            "earth-our-water-world-known-life": [
+                "No life has ever been found": .lifelessWorlds,
+                "No planet has evidence of living organisms": .lifelessWorlds,
+            ],
+            "earth-eyes-in-orbit-cloud-observe": [
+                "Clouds moving": .cloudMovement,
+                "Clouds made of rock": .rockCloud,
+                "Movement of clouds and storms": .cloudMovement,
+                "Rocks growing in the atmosphere": .growingSkyRocks,
+                "Proof that clouds are solid rock": .rockCloud,
+                "Change and motion over time": .cloudMovement,
+            ],
+            "earth-eyes-in-orbit-measurements": [
+                "Cloud pictures at two times": .cloudObservations,
+                "Repeated pictures of the clouds": .cloudObservations,
+                "Time-separated cloud-position measurements": .cloudObservations,
+            ],
+            "mars-rover-rock-hunt-rover-tools": [
+                "A cloud": .skyCloud,
+                "A cloud floating above Mars": .skyCloud,
+                "Only watching unrelated clouds": .skyCloud,
+            ],
+            "mars-ancient-water-detective-deltas": [
+                "A cloud turning to stone": .cloudToStone,
+                "A cloud becoming solid stone": .cloudToStone,
+                "A moon drawing shapes on the ground": .moonDrawing,
+                "Clouds transforming directly into bedrock": .cloudToStone,
+                "Orbital motion drawing surface fans": .moonDrawing,
+            ],
+            "mars-landforms-and-seasons-volcano": [
+                "A cloud tower": .cloudTower,
+                "Clouds stacked into a mountain": .cloudTower,
+                "Atmospheric clouds becoming permanent mountains": .cloudToMountain,
+            ],
+            "jupiter-storm-scout-bands": [
+                "Cloud bands": .jupiterCloudBands,
+                "Cloud bands moved by winds": .jupiterCloudBands,
+                "Atmospheric bands and circulation": .jupiterCloudBands,
+            ],
+            "jupiter-storm-scout-repeat-images": [
+                "More pictures later": .stormObservations,
+                "Images of the same region at several times": .stormObservations,
+                "Time-separated observations with known geometry": .stormObservations,
+            ],
+            "jupiter-moon-match-io": [
+                "Earth’s only moon": .earthMoon,
+                "The lunar near-side maria only": .earthMoon,
+            ],
+            "jupiter-moon-match-ganymede": [
+                "A moon": .jupiterMoon,
+                "It orbits Jupiter": .jupiterMoon,
+                "All large moons become planets": .moonToPlanet,
+                "Diameter alone makes it a planet": .diameterPlanet,
+                "Its primary orbit is around Jupiter": .jupiterMoon,
+            ],
+            "jupiter-giant-planet-expedition-gravity-evidence": [
+                "Gravity clues": .jupiterGravity,
+                "Gravity measurements": .jupiterGravity,
+                "The gravity field responds to mass distribution": .jupiterGravity,
+            ],
+            "saturn-ring-builder-gaps": [
+                "A moon’s gravity": .ringMoonGravity,
+                "Gravity changing particle paths": .ringMoonGravity,
+                "Gravitational interactions and resonances": .ringMoonGravity,
+            ],
+            "saturn-cassini-detective-ring-measure": [
+                "Pictures of the rings": .ringObservations,
+                "Repeated ring images": .ringObservations,
+                "Ring images with times and viewing geometry": .ringObservations,
+            ],
+            "uranus-sideways-seasons-polar-light": [
+                "Both always get the same light": .equalPolarLight,
+                "Both poles always have identical daylight": .equalPolarLight,
+                "Identical illumination at both poles at all phases": .equalPolarLight,
+            ],
+            "uranus-blue-green-clues-methane": [
+                "Methane": .methaneAbsorption,
+                "Methane absorbing red light": .methaneAbsorption,
+                "Selective absorption of red wavelengths by methane": .methaneAbsorption,
+            ],
+            "uranus-hidden-rings-moons-versus-rings": [
+                "One moon only": .uranusMoon,
+                "A ring is one large moon": .uranusMoon,
+                "A ring is a single satellite body": .uranusMoon,
+            ],
+            "neptune-wind-and-weather-cloud-tracking": [
+                "Pictures at different times": .neptuneCloudObservations,
+                "Times and comparable views": .neptuneCloudObservations,
+                "Time interval, rotation, and viewing geometry": .neptuneCloudObservations,
+            ],
+            "neptune-the-distant-sun-radio-route": [
+                "Only to the Sun": .solarRoute,
+                "Only Sun-to-planet distance": .solarRoute,
+                "The solar orbital distance is always the complete route": .solarRoute,
+            ],
+            "neptune-tritons-backward-orbit-capture": [
+                "We watched it happen yesterday": .witnessedCapture,
+                "The capture was watched yesterday": .witnessedCapture,
+                "A directly witnessed ancient event": .witnessedAncientCapture,
+            ],
+            "mercury-video-concept-1": [
+                "A rocky planet": .rockyWorld,
+                "A small rocky planet with craters": .rockyWorld,
+                "A solid, cratered rocky surface": .rockyWorld,
+            ],
+            "mercury-video-concept-2": [
+                "In bright sunshine": .sunlitPlain,
+                "Ice grows in hot sunlight": .sunlightGrowsIce,
+                "Strong daylight continuously cools the ice": .sunlightCoolsIce,
+            ],
+            "venus-video-concept-1": [
+                "Thick clouds": .clouds,
+                "Its thick cloud deck": .clouds,
+                "An opaque global cloud deck": .clouds,
+            ],
+            "earth-video-concept-1": [
+                "Clouds create every night": .cloudNight,
+                "The atmosphere blocks all sunlight at regular intervals": .cloudNight,
+            ],
+            "earth-video-concept-2": [
+                "Land": .land
+            ],
+            "jupiter-video-concept-1": [
+                "Clouds": .jupiterCloudBands,
+                "Different cloud regions": .jupiterCloudBands,
+                "Cloud regions shaped by atmospheric winds": .jupiterCloudBands,
+            ],
+            "uranus-video-concept-2": [
+                "Methane": .methaneAbsorption
+            ],
+            "neptune-video-concept-1": [
+                "Mercury": .rockyWorld
+            ],
+            "earth-eyes-in-orbit-aurora": [
+                "Molten lava falling from the Sun": .lavaFromSun
+            ],
+            "saturn-two-moon-mysteries-titan-lakes": [
+                "Molten iron across the surface": .moltenIronFlow,
+                "A global surface ocean of molten iron": .moltenIronFlow,
+            ],
+        ]
+        var questions: [LearningQuestion] = []
+        for mission in try PlanetMissionCatalog.bundled() { questions += mission.questions }
+        for video in try VideoLessonCatalog.bundled() {
+            questions += video.checkpoints.map(\.question)
+        }
+        var found: [String: Set<String>] = [:]
+        var instances = 0
+        for question in questions {
+            guard let proposals = expected[question.conceptID] else { continue }
+            for band in AgeBand.allCases {
+                for quiz in [question.content[band], question.reviewContent[band]] {
+                    for choice in quiz.choices {
+                        guard let scene = proposals[choice.text] else { continue }
+                        XCTAssertEqual(choice.picture?.scene, scene, choice.text)
+                        found[question.conceptID, default: []].insert(choice.text)
+                        instances += 1
+                    }
+                }
+            }
+        }
+        for (concept, proposals) in expected {
+            XCTAssertEqual(found[concept], Set(proposals.keys), concept)
+        }
+        XCTAssertEqual(found.values.reduce(0) { $0 + $1.count }, 108)
+        XCTAssertEqual(instances, 222)
+        let lessonMoons: [String: QuizPicture.Scene] = [
+            "It is an icy moon.": .jupiterMoon,
+            "It is an icy moon of Jupiter.": .jupiterMoon,
+            "It is an ice-covered moon orbiting Jupiter.": .jupiterMoon,
+            "An icy moon": .jupiterMoon,
+            "An icy moon of Jupiter": .jupiterMoon,
+        ]
+        var lessonMeanings = Set<String>()
+        for lesson in try LessonCatalog.bundled() {
+            for band in AgeBand.allCases {
+                for choice in lesson.content[band].quiz.choices {
+                    if let scene = lessonMoons[choice.text] {
+                        XCTAssertEqual(choice.picture?.scene, scene)
+                        XCTAssertEqual(choice.picture?.tone, .blueWhite)
+                        lessonMeanings.insert(choice.text)
+                    }
+                }
+            }
+        }
+        XCTAssertEqual(lessonMeanings, Set(lessonMoons.keys))
+    }
+
     private func renderedSignature(_ picture: QuizPicture) -> String {
         // Only metadata consumed by the drawing counts. Detail and unused tone
         // cannot disguise two visually identical qualitative proposals.
         let tone: String
         switch picture.scene {
         case .rockyWorld, .moon, .gasWorld, .icyWorld, .dwarfWorld, .rust, .clouds, .forest,
-            .rings, .solidRing, .sidewaysSpin, .uprightSpin, .tiltedSpin, .stillWorld, .storm:
+            .rings, .solidRing, .sidewaysSpin, .uprightSpin, .tiltedSpin, .stillWorld, .storm,
+            .jupiterMoon, .earthMoon, .uranusMoon:
             tone = picture.tone?.rawValue ?? ""
         case .ocean:
             tone = picture.tone == .blueWhite ? "blueWhite" : ""

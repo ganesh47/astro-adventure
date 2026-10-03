@@ -299,7 +299,7 @@
                   "id": "one",
                   "text": "In bright sunshine",
                   "picture": {
-                    "scene": "sunlight",
+                    "scene": "sunlitPlain",
                     "label": "In bright sunshine",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -317,7 +317,7 @@
                   "id": "two",
                   "text": "Ice grows in hot sunlight",
                   "picture": {
-                    "scene": "sunlight",
+                    "scene": "sunlightGrowsIce",
                     "label": "Ice grows in hot sunlight",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -353,7 +353,7 @@
                   "id": "two",
                   "text": "Strong daylight continuously cools the ice",
                   "picture": {
-                    "scene": "sunlight",
+                    "scene": "sunlightCoolsIce",
                     "label": "Strong daylight continuously cools the ice",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -400,7 +400,7 @@
                   "id": "one",
                   "text": "In bright sunshine",
                   "picture": {
-                    "scene": "sunlight",
+                    "scene": "sunlitPlain",
                     "label": "In bright sunshine",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -418,7 +418,7 @@
                   "id": "two",
                   "text": "Ice grows in hot sunlight",
                   "picture": {
-                    "scene": "sunlight",
+                    "scene": "sunlightGrowsIce",
                     "label": "Ice grows in hot sunlight",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -454,7 +454,7 @@
                   "id": "two",
                   "text": "Strong daylight continuously cools the ice",
                   "picture": {
-                    "scene": "sunlight",
+                    "scene": "sunlightCoolsIce",
                     "label": "Strong daylight continuously cools the ice",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -1195,7 +1195,7 @@
                   "id": "two",
                   "text": "Clouds create every night",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "cloudNight",
                     "label": "Clouds create every night",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1232,7 +1232,7 @@
                   "id": "two",
                   "text": "The atmosphere blocks all sunlight at regular intervals",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "cloudNight",
                     "label": "The atmosphere blocks all sunlight at regular intervals",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1299,7 +1299,7 @@
                   "id": "two",
                   "text": "Clouds create every night",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "cloudNight",
                     "label": "Clouds create every night",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1336,7 +1336,7 @@
                   "id": "two",
                   "text": "The atmosphere blocks all sunlight at regular intervals",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "cloudNight",
                     "label": "The atmosphere blocks all sunlight at regular intervals",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1389,7 +1389,7 @@
                   "id": "one",
                   "text": "Land",
                   "picture": {
-                    "scene": "rockyWorld",
+                    "scene": "land",
                     "label": "Land",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1502,7 +1502,7 @@
                   "id": "one",
                   "text": "Land",
                   "picture": {
-                    "scene": "rockyWorld",
+                    "scene": "land",
                     "label": "Land",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -2291,7 +2291,7 @@
                   "id": "correct",
                   "text": "Clouds",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "jupiterCloudBands",
                     "label": "Clouds",
                     "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
                   }
@@ -2327,7 +2327,7 @@
                   "id": "correct",
                   "text": "Different cloud regions",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "jupiterCloudBands",
                     "label": "Different cloud regions",
                     "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
                   }
@@ -2363,7 +2363,7 @@
                   "id": "correct",
                   "text": "Cloud regions shaped by atmospheric winds",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "jupiterCloudBands",
                     "label": "Cloud regions shaped by atmospheric winds",
                     "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
                   }
@@ -2392,7 +2392,7 @@
                   "id": "correct",
                   "text": "Clouds",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "jupiterCloudBands",
                     "label": "Clouds",
                     "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
                   }
@@ -2428,7 +2428,7 @@
                   "id": "correct",
                   "text": "Different cloud regions",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "jupiterCloudBands",
                     "label": "Different cloud regions",
                     "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
                   }
@@ -2464,7 +2464,7 @@
                   "id": "correct",
                   "text": "Cloud regions shaped by atmospheric winds",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "jupiterCloudBands",
                     "label": "Cloud regions shaped by atmospheric winds",
                     "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
                   }
@@ -3588,7 +3588,7 @@
                   "id": "correct",
                   "text": "Methane",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "methaneAbsorption",
                     "label": "Methane",
                     "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
                     "tone": "blueGreen"
@@ -3625,7 +3625,7 @@
                   "id": "correct",
                   "text": "Methane",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "methaneAbsorption",
                     "label": "Methane",
                     "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
                     "tone": "blueGreen"
@@ -3662,7 +3662,7 @@
                   "id": "correct",
                   "text": "Methane",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "methaneAbsorption",
                     "label": "Methane",
                     "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
                     "tone": "blueGreen"
@@ -3692,7 +3692,7 @@
                   "id": "correct",
                   "text": "Methane",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "methaneAbsorption",
                     "label": "Methane",
                     "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
                     "tone": "blueGreen"
@@ -3729,7 +3729,7 @@
                   "id": "correct",
                   "text": "Methane",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "methaneAbsorption",
                     "label": "Methane",
                     "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
                     "tone": "blueGreen"
@@ -3766,7 +3766,7 @@
                   "id": "correct",
                   "text": "Methane",
                   "picture": {
-                    "scene": "clouds",
+                    "scene": "methaneAbsorption",
                     "label": "Methane",
                     "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
                     "tone": "blueGreen"
@@ -3956,7 +3956,8 @@
                   "picture": {
                     "scene": "rockyWorld",
                     "label": "Mercury",
-                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
                   }
                 },
                 {
@@ -3993,7 +3994,8 @@
                   "picture": {
                     "scene": "rockyWorld",
                     "label": "Mercury",
-                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
                   }
                 },
                 {
@@ -4060,7 +4062,8 @@
                   "picture": {
                     "scene": "rockyWorld",
                     "label": "Mercury",
-                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
                   }
                 },
                 {
@@ -4097,7 +4100,8 @@
                   "picture": {
                     "scene": "rockyWorld",
                     "label": "Mercury",
-                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
                   }
                 },
                 {

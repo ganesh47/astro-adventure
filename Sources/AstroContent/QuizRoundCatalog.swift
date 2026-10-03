@@ -94,7 +94,7 @@ public enum QuizRoundCatalog {
                     .init(
                         id: "icy_moon", text: "An icy moon of Jupiter",
                         picture: .init(
-                            scene: .moon, label: "An icy moon of Jupiter",
+                            scene: .jupiterMoon, label: "An icy moon of Jupiter",
                             detail: "Schematic answer idea for Mercury", tone: .blueWhite
                         )
                     ),
@@ -212,7 +212,7 @@ public enum QuizRoundCatalog {
                     .init(
                         id: "sunny_plain", text: "Across the hottest sunny plains",
                         picture: .init(
-                            scene: .sunlight, label: "Across the hottest sunny plains",
+                            scene: .sunlitPlain, label: "Across the hottest sunny plains",
                             detail: "Schematic answer idea for Mercury"
                         )
                     ),
@@ -401,7 +401,7 @@ public enum QuizRoundCatalog {
                     .init(
                         id: "icy_moon", text: "An icy moon of Jupiter",
                         picture: .init(
-                            scene: .moon, label: "An icy moon of Jupiter",
+                            scene: .jupiterMoon, label: "An icy moon of Jupiter",
                             detail: "Schematic answer idea for Europa", tone: .blueWhite
                         )
                     ),

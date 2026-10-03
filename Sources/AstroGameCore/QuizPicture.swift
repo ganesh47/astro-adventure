@@ -33,6 +33,18 @@ public struct QuizPicture: Codable, Equatable, Sendable {
         case noSunlight, stoppedLight, redLiquidOcean, rockWave, liquidWave
         case pond, riverFlow, ancientRiver, riverDelta, waterSphere, earthWorld
         case oceanBasin, oceanCirculation, craterWaterFlow, hiddenLakeFlow, waterBeach
+        case equalPolarLight, cloudToStone, moonDrawing, noGravity, witnessedCapture, sameWeather
+        case moltenIronFlow, lavaFromSun, sunlitPlain, sunlightGrowsIce, sunlightCoolsIce,
+            solarRoute
+        case jupiterMoon, earthMoon, uranusMoon, moonEclipse
+        case solidRock, land, lifelessWorlds, rockCloud, growingSkyRocks, moonToPlanet,
+            diameterPlanet
+        case cloudMovement, cloudObservations, stormObservations, ringObservations
+        case neptuneCloudObservations, cloudTower, cloudToMountain, sunWarmCloud, warmRainCloud
+        case landingCloud, denseCarbonDioxideAir, earthAir, jupiterCloudBands, methaneAbsorption
+        case cloudNight, jupiterGravity, ringMoonGravity
+        case sunlightLift, cloudBounce, launchCloud, fallingRocks, skyCloud
+        case witnessedAncientCapture
     }
 
     public enum Tone: String, Codable, Sendable {

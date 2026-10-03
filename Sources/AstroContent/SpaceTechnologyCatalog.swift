@@ -264,14 +264,14 @@ enum SpaceTechnologyCatalog {
                     .init(
                         id: "tech_solar_pull", text: "Sunlight pulls it upward",
                         picture: .init(
-                            scene: .sunlight, label: "Sunlight pulls it upward",
+                            scene: .sunlightLift, label: "Sunlight pulls it upward",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),
                     .init(
                         id: "tech_cloud_bounce", text: "Clouds bounce it into space",
                         picture: .init(
-                            scene: .clouds, label: "Clouds bounce it into space",
+                            scene: .cloudBounce, label: "Clouds bounce it into space",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),
@@ -295,7 +295,7 @@ enum SpaceTechnologyCatalog {
                     .init(
                         id: "tech_launch_smoke", text: "The cloud beside the launch pad",
                         picture: .init(
-                            scene: .clouds, label: "The cloud beside the launch pad",
+                            scene: .launchCloud, label: "The cloud beside the launch pad",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),
@@ -460,7 +460,7 @@ enum SpaceTechnologyCatalog {
                     .init(
                         id: "tech_radio_rocks", text: "Rocks that fall beside the dish",
                         picture: .init(
-                            scene: .rockyWorld, label: "Rocks that fall beside the dish",
+                            scene: .fallingRocks, label: "Rocks that fall beside the dish",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),
@@ -485,14 +485,14 @@ enum SpaceTechnologyCatalog {
                     .init(
                         id: "tech_dsn_weather", text: "To make identical weather everywhere",
                         picture: .init(
-                            scene: .clouds, label: "To make identical weather everywhere",
+                            scene: .sameWeather, label: "To make identical weather everywhere",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),
                     .init(
                         id: "tech_dsn_gravity", text: "To turn off Earth’s gravity",
                         picture: .init(
-                            scene: .gravity, label: "To turn off Earth’s gravity",
+                            scene: .noGravity, label: "To turn off Earth’s gravity",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),

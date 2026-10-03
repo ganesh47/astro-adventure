@@ -140,10 +140,11 @@ final class QuestionExperienceTests: XCTestCase {
             for (index, choice) in fixture.quiz.choices.enumerated() {
                 let answer = button("\(prefix).answer.\(index)")
                 XCTAssertEqual(answer.label, "Answer \(index + 1): \(choice.text)")
-                XCTAssertTrue(isReachable(answer))
+                reveal(answer, fully: true)
+                XCTAssertTrue(isFullyVisible(answer), "The entire proposal must be visible")
+                capture("Reviewed \(fixture.name) proposal \(index + 1): \(choice.text)")
             }
             XCTAssertFalse(app.buttons["\(prefix).check"].isEnabled)
-            capture("Reviewed scientific proposals \(fixture.name)")
             app.terminate()
         }
     }
@@ -356,15 +357,22 @@ final class QuestionExperienceTests: XCTestCase {
         element.tap()
     }
 
-    private func reveal(_ element: XCUIElement) {
+    private func reveal(_ element: XCUIElement, fully: Bool = false) {
         for _ in 0..<18 {
-            if isReachable(element) { return }
+            if fully ? isFullyVisible(element) : isReachable(element) { return }
             let frame = visibleFrame(for: element)
             guard !frame.isEmpty, !frame.isNull, !frame.isInfinite, frame.height > 40 else { break }
             // The ScrollView's AX frame includes the bottom safe-area inset.
             // Start and end the real drag inside the uncovered content viewport.
-            let gap = element.frame.midY - frame.midY
-            let distance = min(frame.height * 0.55, max(40, abs(gap)))
+            let gap: CGFloat
+            if fully, element.frame.minY < frame.minY {
+                gap = element.frame.minY - frame.minY
+            } else if fully, element.frame.maxY > frame.maxY {
+                gap = element.frame.maxY - frame.maxY
+            } else {
+                gap = element.frame.midY - frame.midY
+            }
+            let distance = min(frame.height * 0.55, max(fully ? 2 : 40, abs(gap)))
             let direction: CGFloat = gap < 0 ? -1 : 1
             let origin = app.coordinate(withNormalizedOffset: .zero)
             let start = origin.withOffset(
@@ -414,6 +422,11 @@ final class QuestionExperienceTests: XCTestCase {
         }
         // XCTest can fail the method while querying an offscreen activation point.
         return element.isHittable
+    }
+
+    private func isFullyVisible(_ element: XCUIElement) -> Bool {
+        guard element.exists, hasVisibleGeometry(element) else { return false }
+        return visibleFrame(for: element).contains(element.frame) && element.isHittable
     }
 
     private func hasVisibleGeometry(_ element: XCUIElement) -> Bool {

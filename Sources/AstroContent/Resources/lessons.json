@@ -28,7 +28,7 @@
               "id": "ice",
               "text": "It is an icy moon.",
               "picture": {
-                "scene": "moon",
+                "scene": "jupiterMoon",
                 "label": "It is an icy moon.",
                 "detail": "Illustrated answer idea for Mercury",
                 "tone": "blueWhite"
@@ -68,7 +68,7 @@
               "id": "ice",
               "text": "It is an icy moon of Jupiter.",
               "picture": {
-                "scene": "moon",
+                "scene": "jupiterMoon",
                 "label": "It is an icy moon of Jupiter.",
                 "detail": "Illustrated answer idea for Mercury",
                 "tone": "blueWhite"
@@ -108,7 +108,7 @@
               "id": "jupiter_moon",
               "text": "It is an ice-covered moon orbiting Jupiter.",
               "picture": {
-                "scene": "moon",
+                "scene": "jupiterMoon",
                 "label": "It is an ice-covered moon orbiting Jupiter.",
                 "detail": "Illustrated answer idea for Mercury",
                 "tone": "blueWhite"
@@ -269,7 +269,7 @@
               "id": "icy_moon",
               "text": "An icy moon",
               "picture": {
-                "scene": "moon",
+                "scene": "jupiterMoon",
                 "label": "An icy moon",
                 "detail": "Illustrated answer idea for Europa",
                 "tone": "blueWhite"
@@ -300,7 +300,7 @@
               "id": "icy_moon",
               "text": "An icy moon of Jupiter",
               "picture": {
-                "scene": "moon",
+                "scene": "jupiterMoon",
                 "label": "An icy moon of Jupiter",
                 "detail": "Illustrated answer idea for Europa",
                 "tone": "blueWhite"

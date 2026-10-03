@@ -100,9 +100,55 @@ final class QuestionExperienceTests: XCTestCase {
                 focus(identifier)
                 XCTAssertEqual(app.buttons[identifier].label, "Answer \(index + 1): \(choice.text)")
                 XCTAssertTrue(app.buttons[identifier].hasFocus)
+                XCTAssertTrue(
+                    visibleFrame(for: identifier).contains(app.buttons[identifier].frame),
+                    "The entire focused proposal must be visible")
+                capture("Television reviewed \(fixture.name) proposal \(index + 1): \(choice.text)")
             }
             XCTAssertFalse(app.buttons["\(prefix).check"].isEnabled)
-            capture("Television reviewed scientific proposals \(fixture.name)")
+            app.terminate()
+        }
+    }
+
+    func testStoryCardChangesResetHeaderWithBottomControlFocusAndPauseResume() {
+        for category in ["UICTContentSizeCategoryL", "UICTContentSizeCategoryAccessibilityXXXL"] {
+            launch(category: category)
+            select("adventure.begin")
+            select("destination.sun")
+            let progress = app.descendants(matching: .any).matching(identifier: "story.progress")
+                .firstMatch
+            let title = app.staticTexts["story.title"]
+            XCTAssertTrue(progress.waitForExistence(timeout: 10))
+            XCTAssertTrue(title.waitForExistence(timeout: 5))
+            XCTAssertFalse(title.frame.isEmpty)
+            let firstProgress = progress.value as? String
+            XCTAssertTrue(firstProgress?.hasPrefix("Card 1 of ") == true)
+            focus("story.next")
+            XCTAssertTrue(app.buttons["story.next"].hasFocus)
+            capture("\(category) Story bottom Next has native focus")
+            remote.press(.select)
+            XCTAssertTrue((progress.value as? String)?.hasPrefix("Card 2 of ") == true)
+            XCTAssertTrue(
+                visibleFrame(for: "story.progress").contains(progress.frame),
+                "Next must restore the new header")
+            XCTAssertTrue(
+                visibleFrame(for: "story.title").contains(title.frame),
+                "The new card title must be visible")
+            capture("\(category) Story Next resets header after bottom focus")
+            select("story.previous")
+            XCTAssertEqual(progress.value as? String, firstProgress)
+            XCTAssertTrue(
+                visibleFrame(for: "story.progress").contains(progress.frame),
+                "Previous must restore the header")
+            XCTAssertTrue(visibleFrame(for: "story.title").contains(title.frame))
+            remote.press(.playPause)
+            XCTAssertTrue(app.buttons["adventure.pause.resume"].waitForExistence(timeout: 5))
+            select("adventure.pause.resume")
+            XCTAssertTrue(progress.waitForExistence(timeout: 5))
+            XCTAssertEqual(progress.value as? String, firstProgress)
+            focus("story.next")
+            XCTAssertTrue(app.buttons["story.next"].hasFocus)
+            capture("\(category) Story Resume restores reachable native controls")
             app.terminate()
         }
     }
@@ -187,6 +233,23 @@ final class QuestionExperienceTests: XCTestCase {
         }
         capture("Unreachable remote control \(identifier)")
         XCTFail("Remote could not focus \(identifier)", file: file, line: line)
+    }
+
+    private func visibleFrame(for identifier: String) -> CGRect {
+        var frame = app.frame.insetBy(dx: 24, dy: 24)
+        let scrollIdentifier =
+            identifier.hasPrefix("video.")
+            ? "video.scroll"
+            : identifier.hasPrefix("story.") ? "story.scroll" : "quiz.scroll"
+        let scroll = app.scrollViews[scrollIdentifier]
+        if scroll.exists {
+            frame = frame.intersection(scroll.frame.insetBy(dx: 8, dy: 8))
+        }
+        let pause = app.buttons["adventure.pause"]
+        if pause.exists, !pause.frame.isEmpty, frame.intersects(pause.frame) {
+            frame.size.height = max(0, min(frame.maxY, pause.frame.minY - 8) - frame.minY)
+        }
+        return frame
     }
 
     private func capture(_ name: String) {

@@ -196,6 +196,8 @@ struct DiscoveryStoryView: View {
     private func storyCopy(slide: DiscoverySlide, compact: Bool) -> some View {
         VStack(alignment: .leading, spacing: compact ? 6 : 14) {
             Text(slide.title)
+                .accessibilityIdentifier("story.title")
+                .accessibilityAddTraits(.isHeader)
                 .font(
                     .system(
                         size: titleSize * (compact ? 30.0 / 52 : 1), weight: .bold,
@@ -203,6 +205,14 @@ struct DiscoveryStoryView: View {
                 )
                 .fixedSize(horizontal: false, vertical: true)
 
+            storyDetails(slide: slide, compact: compact)
+        }
+        .shadow(color: .black.opacity(0.8), radius: 12, y: 4)
+        .padding(.bottom, compact ? 4 : 28)
+    }
+
+    private func storyDetails(slide: DiscoverySlide, compact: Bool) -> some View {
+        VStack(alignment: .leading, spacing: compact ? 6 : 14) {
             Text(slide.body)
                 .font(
                     .system(
@@ -249,8 +259,6 @@ struct DiscoveryStoryView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, compact ? 0 : 4)
         }
-        .shadow(color: .black.opacity(0.8), radius: 12, y: 4)
-        .padding(.bottom, compact ? 4 : 28)
         .accessibilityElement(children: .combine)
     }
 

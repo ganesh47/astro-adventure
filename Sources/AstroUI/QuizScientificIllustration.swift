@@ -79,9 +79,16 @@ private struct ScientificQuizCanvas {
         case .cube:
             iceCube()
         case .sunlight:
-            sun(25, 30, radius: 13)
-            arrow(from: (40, 35), to: (74, 70), color: .yellow)
-            sphere(77, 70, radius: 16, color: .brown, rocky: true)
+            // The remaining authored use proposes sunlight carving a round world.
+            sun(23, 23, radius: 10)
+            rock(33, 63, scale: 1.4)
+            arrow(from: (30, 38), to: (35, 48), color: .yellow)
+            for (x, y) in [(49.0, 44.0), (47, 79), (25, 83)] {
+                rock(x, y, scale: 0.18)
+            }
+            arrow(from: (52, 63), to: (61, 63))
+            sphere(80, 63, radius: 14, color: .gray)
+            label("Sunlight shapes world", 50, 97, size: 6)
         case .reflection:
             reflection()
         case .distance:
@@ -240,6 +247,63 @@ private struct ScientificQuizCanvas {
             craterWater(hidden: picture.scene == .hiddenLakeFlow)
         case .waterBeach:
             waterBeach()
+        case .equalPolarLight:
+            equalPolarLight()
+        case .cloudToStone, .cloudToMountain:
+            cloudTransformation(mountain: picture.scene == .cloudToMountain)
+        case .moonDrawing:
+            moonDrawing()
+        case .noGravity:
+            noGravity()
+        case .witnessedCapture, .witnessedAncientCapture:
+            witnessedCapture(ancient: picture.scene == .witnessedAncientCapture)
+        case .sameWeather:
+            sameWeather()
+        case .moltenIronFlow, .lavaFromSun:
+            hotMaterial(iron: picture.scene == .moltenIronFlow)
+        case .sunlitPlain, .sunlightGrowsIce, .sunlightCoolsIce:
+            sunlitSurface(picture.scene)
+        case .solarRoute:
+            solarRoute()
+        case .jupiterMoon, .earthMoon, .uranusMoon:
+            hostedMoon(picture.scene, tone: picture.tone)
+        case .moonEclipse:
+            moonEclipse()
+        case .solidRock, .land:
+            rockyMaterial(land: picture.scene == .land)
+        case .lifelessWorlds:
+            lifelessWorlds()
+        case .rockCloud, .growingSkyRocks:
+            skyRocks(growing: picture.scene == .growingSkyRocks)
+        case .moonToPlanet, .diameterPlanet:
+            moonClassification(diameter: picture.scene == .diameterPlanet)
+        case .cloudMovement:
+            cloudMovement()
+        case .cloudObservations, .stormObservations, .ringObservations, .neptuneCloudObservations:
+            subjectObservations(picture.scene)
+        case .cloudTower:
+            cloudTower()
+        case .sunWarmCloud, .warmRainCloud:
+            warmCloud(rain: picture.scene == .warmRainCloud)
+        case .landingCloud:
+            landingCloud()
+        case .denseCarbonDioxideAir, .earthAir:
+            airComposition(dense: picture.scene == .denseCarbonDioxideAir)
+        case .jupiterCloudBands:
+            jupiterCloudBands()
+        case .methaneAbsorption:
+            methaneAbsorption()
+        case .cloudNight:
+            cloudNight()
+        case .jupiterGravity, .ringMoonGravity:
+            contextualGravity(rings: picture.scene == .ringMoonGravity)
+        case .sunlightLift, .cloudBounce, .launchCloud:
+            launchProposal(picture.scene)
+        case .fallingRocks:
+            fallingRocks()
+        case .skyCloud:
+            cloud(50, 39, color: .white)
+            line([(10, 83), (90, 83)], color: .brown, width: 4)
         }
     }
 
@@ -1762,5 +1826,403 @@ private struct ScientificQuizCanvas {
         polygon([(41, 30), (91, 23), (91, 66), (55, 53)], color: .blue)
         line([(41, 30), (47, 43), (55, 53), (72, 58), (91, 66)], color: .cyan, width: 3)
         label("Water + shore", 50, 96, size: 6)
+    }
+
+    private func smallCloud(_ x: Double, _ y: Double, scale: Double = 1, color: Color = .white) {
+        circle(x - 7 * scale, y, radius: 5 * scale, color: color)
+        circle(x, y - 3 * scale, radius: 7 * scale, color: color)
+        circle(x + 8 * scale, y, radius: 5 * scale, color: color)
+        line(
+            [(x - 8 * scale, y + 4 * scale), (x + 8 * scale, y + 4 * scale)], color: color,
+            width: 4 * scale)
+    }
+
+    private func rock(_ x: Double, _ y: Double, scale: Double = 1) {
+        polygon(
+            [
+                (x - 11 * scale, y + 6 * scale), (x - 7 * scale, y - 7 * scale),
+                (x + 4 * scale, y - 10 * scale), (x + 12 * scale, y + 3 * scale),
+                (x + 7 * scale, y + 11 * scale),
+            ], color: .gray)
+        line(
+            [(x - 7 * scale, y - 7 * scale), (x + 2 * scale, y), (x + 12 * scale, y + 3 * scale)],
+            color: .white.opacity(0.6), width: 1)
+    }
+
+    private func tinyCraft(_ x: Double, _ y: Double, scale: Double = 1) {
+        fill(Path(box(x - 5 * scale, y - 6 * scale, 10 * scale, 12 * scale)), color: .gray)
+        fill(Path(box(x - 16 * scale, y - 4 * scale, 10 * scale, 8 * scale)), color: .blue)
+        fill(Path(box(x + 6 * scale, y - 4 * scale, 10 * scale, 8 * scale)), color: .blue)
+        line([(x, y - 6 * scale), (x, y - 13 * scale)], color: .white, width: 1)
+    }
+
+    private func equalPolarLight() {
+        circle(50, 59, radius: 25, color: tone(.blueGreen, fallback: .cyan))
+        line([(14, 54), (86, 64)], color: .white, width: 2)
+        label("S", 14, 46, size: 6)
+        label("N", 85, 55, size: 6)
+        sun(50, 14, radius: 7)
+        arrow(from: (40, 25), to: (26, 50), color: .yellow)
+        arrow(from: (60, 25), to: (74, 60), color: .yellow)
+        label("Equal polar light", 50, 96, size: 6)
+    }
+
+    private func cloudTransformation(mountain: Bool) {
+        smallCloud(23, 34, scale: 1.2)
+        arrow(from: (40, 48), to: (58, 48))
+        if mountain {
+            polygon([(61, 76), (75, 41), (92, 76)], color: .gray)
+            polygon([(75, 41), (70, 53), (76, 51), (80, 55)], color: .white)
+        } else {
+            rock(77, 56, scale: 1.15)
+        }
+        line([(8, 80), (94, 80)], color: .brown, width: 3)
+        label(mountain ? "Cloud → mountain" : "Cloud → stone", 50, 96, size: 6)
+    }
+
+    private func moonDrawing() {
+        sphere(69, 23, radius: 10, color: .gray, rocky: true)
+        ellipse(49, 11, 42, 24, color: .white.opacity(0.3), dashed: true)
+        line([(64, 32), (46, 64)], color: .white, width: 3)
+        polygon([(43, 70), (45, 59), (50, 63)], color: .cyan)
+        fill(Path(box(8, 73, 84, 11)), color: .brown)
+        for x in [24.0, 42, 63, 80] {
+            line([(46, 68), (x, 80)], color: .cyan, width: 1.5)
+        }
+        label("Moon draws ground", 50, 96, size: 6)
+    }
+
+    private func noGravity() {
+        earth(50, 50, radius: 24)
+        for (x, y) in [(16.0, 28.0), (84, 29), (19, 77), (80, 79)] {
+            rock(x, y, scale: 0.4)
+        }
+        // Deliberately no inward force vectors: the proposed gravity is absent.
+        label("Gravity off", 50, 96, size: 6)
+    }
+
+    private func witnessedCapture(ancient: Bool) {
+        sphere(66, 34, radius: 17, color: tone(.blueWhite, fallback: .blue), bands: true)
+        ellipse(43, 14, 47, 39, color: .white.opacity(0.5), dashed: true)
+        sphere(25, 30, radius: 6, color: .cyan)
+        arrow(from: (30, 30), to: (42, 34))
+        symbol("eye", at: box(12, 62, 29, 18), color: .white)
+        stroke(Path(box(60, 61, 28, 25)), color: .white)
+        line([(60, 67), (88, 67)], color: .white)
+        for x in [66.0, 73, 80] { circle(x, 75, radius: 1.2, color: .cyan) }
+        label(ancient ? "Ancient" : "Yesterday", 65, 96, size: 6)
+    }
+
+    private func sameWeather() {
+        earth(35, 50, radius: 25)
+        for (x, y, targetY) in [(28.0, 32.0, 25.0), (23, 50, 50), (39, 65, 75)] {
+            circle(x, y, radius: 2, color: .white)
+            line([(x + 3, y), (69, targetY)], color: .white.opacity(0.5), width: 1)
+            stroke(Path(box(71, targetY - 10, 23, 20)), color: .white.opacity(0.6))
+            smallCloud(82, targetY, scale: 0.6)
+        }
+        label("Same regional weather", 50, 96, size: 6)
+    }
+
+    private func hotMaterial(iron: Bool) {
+        if iron {
+            polygon([(14, 26), (32, 20), (38, 32), (23, 39)], color: .gray)
+            label("Fe", 25, 28, size: 8)
+            arrow(from: (36, 39), to: (48, 55), color: .orange)
+            fill(Path(box(14, 61, 73, 20)), color: .orange)
+            curve(
+                from: (14, 61), to: (87, 61), control1: (37, 52), control2: (60, 70),
+                color: .yellow, width: 2)
+            label("Fe", 50, 72, size: 8)
+            thermometer(81, 33, level: 0.9)
+            label("Molten iron", 50, 96, size: 6)
+        } else {
+            sun(50, 18, radius: 10)
+            for (x, y) in [(35.0, 46.0), (60, 48), (48, 64)] {
+                polygon([(x, y - 7), (x - 4, y + 2), (x, y + 6), (x + 4, y + 2)], color: .orange)
+            }
+            arrow(from: (73, 34), to: (73, 69), color: .orange)
+            line([(11, 85), (91, 85)], color: .brown, width: 5)
+            label("Lava from Sun", 50, 96, size: 6)
+        }
+    }
+
+    private func sunlitSurface(_ scene: QuizPicture.Scene) {
+        sun(23, 18, radius: 8)
+        if scene == .sunlitPlain {
+            fill(Path(box(10, 68, 81, 16)), color: .brown)
+            for x in [46.0, 65, 83] { arrow(from: (30, 32), to: (x, 68), color: .yellow) }
+            label("Sunlit plain", 50, 96, size: 6)
+        } else if scene == .sunlightGrowsIce {
+            polygon([(15, 66), (24, 56), (34, 61), (34, 76), (15, 76)], color: .cyan)
+            polygon([(61, 46), (76, 36), (91, 44), (91, 77), (61, 77)], color: .cyan)
+            arrow(from: (37, 67), to: (56, 67))
+            arrow(from: (34, 28), to: (68, 42), color: .yellow)
+            label("Ice grows", 50, 96, size: 6)
+        } else {
+            polygon([(35, 47), (70, 40), (81, 71), (43, 81)], color: .cyan.opacity(0.8))
+            arrow(from: (30, 29), to: (48, 47), color: .yellow)
+            thermometer(85, 28, level: 0.15)
+            arrow(from: (85, 49), to: (85, 73), color: .cyan)
+            label("Sunlight cools ice", 50, 96, size: 6)
+        }
+    }
+
+    private func solarRoute() {
+        sun(18, 39, radius: 9)
+        sphere(82, 39, radius: 15, color: tone(.blueWhite, fallback: .blue), bands: true)
+        arrow(from: (35, 39), to: (60, 39), color: .yellow)
+        label("Sun", 18, 78, size: 6)
+        label("Planet", 82, 78, size: 6)
+    }
+
+    private func hostedMoon(_ scene: QuizPicture.Scene, tone value: QuizPicture.Tone?) {
+        ellipse(9, 24, 82, 52)
+        switch scene {
+        case .jupiterMoon:
+            sphere(36, 50, radius: 23, color: tone(.gold, fallback: .orange), bands: true)
+            label("Jupiter", 35, 91, size: 6)
+        case .earthMoon:
+            earth(36, 50, radius: 23)
+            label("Earth", 35, 91, size: 6)
+        default:
+            sphere(36, 50, radius: 23, color: tone(.blueGreen, fallback: .cyan), bands: true)
+            label("Uranus", 35, 91, size: 6)
+        }
+        sphere(81, 47, radius: 9, color: tone(value, fallback: .gray), rocky: value != .blueWhite)
+        if value == .blueWhite {
+            line([(76, 40), (81, 46), (78, 50), (85, 53)], color: .white, width: 1)
+        } else if scene == .earthMoon {
+            fill(Path(ellipseIn: box(76, 42, 7, 5)), color: .black.opacity(0.35))
+        }
+        label("Moon", 81, 82, size: 6)
+    }
+
+    private func moonEclipse() {
+        sun(13, 44, radius: 7)
+        polygon([(36, 37), (88, 20), (88, 78), (36, 52)], color: .black.opacity(0.5))
+        sphere(76, 50, radius: 19, color: tone(.cream, fallback: .orange))
+        sphere(36, 45, radius: 7, color: .gray, rocky: true)
+        line([(25, 37), (31, 39)], color: .yellow)
+        line([(25, 51), (31, 49)], color: .yellow)
+        label("Moon eclipse", 50, 96, size: 6)
+    }
+
+    private func rockyMaterial(land: Bool) {
+        if land {
+            polygon(
+                [(8, 56), (31, 36), (58, 51), (77, 39), (92, 55), (92, 83), (8, 83)], color: .brown)
+            line([(8, 55), (31, 36), (58, 50), (77, 39), (92, 55)], color: .green, width: 4)
+            label("Land", 50, 96)
+        } else {
+            rock(50, 47, scale: 2.5)
+            label("Solid rock", 50, 96, size: 6)
+        }
+    }
+
+    private func lifelessWorlds() {
+        sphere(21, 48, radius: 14, color: .gray, rocky: true)
+        sphere(50, 48, radius: 14, color: .blue)
+        polygon([(41, 40), (49, 41), (52, 49), (47, 54), (42, 50)], color: .brown)
+        sphere(79, 48, radius: 14, color: .orange, bands: true)
+        label("No life proposal", 50, 91, size: 6)
+    }
+
+    private func skyRocks(growing: Bool) {
+        if growing {
+            for (x, scale) in [(19.0, 0.45), (47, 0.8), (81, 1.1)] { rock(x, 45, scale: scale) }
+            arrow(from: (26, 68), to: (72, 68))
+            label("Rocks grow in air", 50, 96, size: 6)
+        } else {
+            for (x, y) in [(23.0, 43.0), (39, 30), (54, 27), (72, 38), (56, 48), (38, 51)] {
+                rock(x, y, scale: 0.75)
+            }
+            label("Rock cloud", 50, 96, size: 6)
+        }
+        line([(8, 83), (92, 83)], color: .brown, width: 3)
+    }
+
+    private func moonClassification(diameter: Bool) {
+        if diameter {
+            sphere(26, 43, radius: 20, color: .gray, rocky: true)
+            bracket(6, 46, y: 72)
+        } else {
+            sphere(20, 41, radius: 12, color: .orange, bands: true)
+            sphere(37, 40, radius: 5, color: .gray, rocky: true)
+            ellipse(4, 23, 41, 36)
+        }
+        arrow(from: (48, 43), to: (61, 43))
+        sun(76, 18, radius: 5)
+        sphere(79, 48, radius: 15, color: .gray, rocky: true)
+        ellipse(62, 29, 34, 38, color: .white.opacity(0.5))
+        label(diameter ? "Size → planet" : "Moon → planet", 50, 96, size: 6)
+    }
+
+    private func cloudMovement() {
+        smallCloud(27, 41, scale: 1.1, color: .white.opacity(0.3))
+        smallCloud(75, 41, scale: 1.1)
+        arrow(from: (36, 66), to: (64, 66))
+        line([(8, 83), (93, 83)], color: .brown, width: 3)
+        label("Cloud movement", 50, 96, size: 6)
+    }
+
+    private func subjectObservations(_ scene: QuizPicture.Scene) {
+        for (stage, x) in [(0, 7.0), (1, 54.0)] {
+            stroke(Path(box(x, 19, 39, 58)), color: .white)
+            let center = x + 20
+            switch scene {
+            case .stormObservations:
+                sphere(center, 46, radius: 14, color: tone(.gold, fallback: .orange), bands: true)
+                fill(
+                    Path(ellipseIn: box(center - 10 + Double(stage) * 6, 46, 9, 5)), color: .orange)
+            case .ringObservations:
+                sphere(center, 46, radius: 10, color: tone(.gold, fallback: .orange), bands: true)
+                for index in 0..<28 {
+                    let a = Double(index) * .pi / 14
+                    circle(
+                        center + cos(a) * 17, 46 + sin(a) * Double(6 + stage * 2), radius: 0.8,
+                        color: .white)
+                }
+            case .neptuneCloudObservations:
+                sphere(
+                    center, 46, radius: 14, color: tone(.blueWhite, fallback: .blue), bands: true)
+                smallCloud(center - 6 + Double(stage) * 8, 44, scale: 0.38)
+            default:
+                smallCloud(center - 7 + Double(stage) * 10, 44, scale: 0.85)
+            }
+            label(stage == 0 ? "t₁" : "t₂", center, 89, size: 7)
+        }
+        arrow(from: (42, 10), to: (58, 10))
+    }
+
+    private func cloudTower() {
+        for (y, scale) in [(68.0, 1.7), (48, 1.4), (29, 1.1)] {
+            smallCloud(50, y, scale: scale)
+        }
+        line([(9, 84), (91, 84)], color: .brown, width: 3)
+        label("Cloud tower", 50, 96, size: 6)
+    }
+
+    private func warmCloud(rain: Bool) {
+        sun(18, 18, radius: 7)
+        smallCloud(54, 44, scale: 1.8)
+        arrow(from: (29, 29), to: (41, 38), color: .yellow)
+        thermometer(83, 58, level: 0.85)
+        if rain {
+            for x in [36.0, 49, 63] { line([(x, 62), (x - 4, 76)], color: .cyan, width: 2.5) }
+        }
+        label(rain ? "Warm rain cloud" : "Sun-warmed cloud", 50, 96, size: 6)
+    }
+
+    private func landingCloud() {
+        smallCloud(50, 24, scale: 1.6)
+        arrow(from: (50, 43), to: (50, 60))
+        polygon(
+            [(9, 72), (30, 65), (42, 79), (60, 79), (73, 65), (91, 72), (91, 88), (9, 88)],
+            color: .brown)
+        label("Cloud lands", 50, 97, size: 6)
+    }
+
+    private func airComposition(dense: Bool) {
+        let centers: [(Double, Double)] =
+            dense
+            ? [(18, 24), (43, 24), (68, 24), (84, 42), (69, 59), (44, 59), (18, 58), (16, 41)]
+            : [(26, 30), (72, 31), (27, 64), (72, 63)]
+        for (index, center) in centers.enumerated() {
+            let (x, y) = center
+            if dense {
+                line([(x - 6, y - 1), (x + 6, y - 1)], color: .white, width: 0.8)
+                line([(x - 6, y + 1), (x + 6, y + 1)], color: .white, width: 0.8)
+                circle(x, y, radius: 2.5, color: .gray)
+                circle(x - 7, y, radius: 2.5, color: .orange)
+                circle(x + 7, y, radius: 2.5, color: .orange)
+            } else {
+                line([(x - 4, y), (x + 4, y)], color: .white, width: 1.3)
+                let color: Color = index == 3 ? .orange : .cyan
+                circle(x - 5, y, radius: 4, color: color)
+                circle(x + 5, y, radius: 4, color: color)
+            }
+        }
+        label(dense ? "Dense CO₂ air" : "Earth-like air", 50, 90, size: 6)
+    }
+
+    private func jupiterCloudBands() {
+        sphere(50, 48, radius: 31, color: tone(.gold, fallback: .orange), bands: true)
+        arrow(from: (31, 37), to: (67, 37), color: .white)
+        arrow(from: (69, 58), to: (30, 58), color: .white)
+        label("Cloud bands + winds", 50, 96, size: 6)
+    }
+
+    private func methaneAbsorption() {
+        sun(14, 19, radius: 6)
+        sphere(62, 53, radius: 25, color: tone(.blueGreen, fallback: .cyan), bands: true)
+        arrow(from: (26, 27), to: (45, 42), color: .red)
+        arrow(from: (43, 49), to: (20, 56), color: .cyan)
+        arrow(from: (44, 59), to: (24, 74), color: .green)
+        label("CH₄", 65, 55, size: 10)
+        label("Red absorbed", 50, 96, size: 6)
+    }
+
+    private func cloudNight() {
+        sun(13, 30, radius: 7)
+        polygon([(42, 24), (91, 47), (91, 90), (42, 46)], color: .black.opacity(0.6))
+        earth(74, 66, radius: 18)
+        smallCloud(43, 33, scale: 1.2, color: .gray)
+        arrow(from: (24, 30), to: (30, 32), color: .yellow)
+        label("Cloud blocks sunlight", 50, 97, size: 6)
+    }
+
+    private func contextualGravity(rings: Bool) {
+        sphere(46, 50, radius: 23, color: tone(.gold, fallback: .orange), bands: true)
+        if rings {
+            for index in 0..<42 {
+                let a = Double(index) * .pi / 21
+                if index != 3 && index != 4 && index != 5 {
+                    circle(46 + cos(a) * 36, 50 + sin(a) * 13, radius: 1.1, color: .white)
+                }
+            }
+            sphere(84, 38, radius: 6, color: .gray, rocky: true)
+            arrow(from: (74, 52), to: (82, 44))
+            curve(
+                from: (69, 62), to: (86, 47), control1: (86, 63), control2: (90, 56), color: .cyan,
+                width: 1.5)
+            label("Moon changes paths", 50, 97, size: 6)
+        } else {
+            tinyCraft(85, 21, scale: 0.45)
+            curve(
+                from: (86, 30), to: (77, 76), control1: (85, 44), control2: (69, 57), color: .cyan)
+            arrow(from: (78, 53), to: (65, 51))
+            arrow(from: (22, 27), to: (31, 36))
+            label("Jupiter gravity clues", 50, 97, size: 6)
+        }
+    }
+
+    private func launchProposal(_ scene: QuizPicture.Scene) {
+        if scene == .sunlightLift {
+            sun(20, 18, radius: 8)
+            tinyCraft(65, 60, scale: 1)
+            arrow(from: (52, 50), to: (35, 30), color: .yellow)
+            label("Sunlight pulls up", 50, 97, size: 6)
+        } else if scene == .cloudBounce {
+            smallCloud(49, 72, scale: 1.8)
+            tinyCraft(49, 32, scale: 0.8)
+            arrow(from: (49, 57), to: (49, 45))
+            label("Cloud bounces craft", 50, 97, size: 6)
+        } else {
+            polygon(
+                [(20, 66), (25, 55), (25, 31), (32, 20), (39, 31), (39, 55), (45, 66)],
+                color: .white)
+            circle(32, 39, radius: 4, color: .blue)
+            smallCloud(72, 62, scale: 1.3)
+            line([(7, 83), (94, 83)], color: .gray, width: 4)
+            label("Cloud beside launch", 50, 97, size: 6)
+        }
+    }
+
+    private func fallingRocks() {
+        antenna(withSignal: false)
+        rock(12, 17, scale: 0.45)
+        rock(15, 55, scale: 0.35)
+        arrow(from: (12, 28), to: (14, 45))
     }
 }

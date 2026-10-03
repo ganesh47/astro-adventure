@@ -96,7 +96,7 @@
                 "id": "mercury-crater-detective-impacts-option-1",
                 "text": "Clouds landing",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "landingCloud",
                   "label": "Clouds landing",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -188,7 +188,7 @@
                 "id": "mercury-crater-detective-impacts-option-1",
                 "text": "Clouds landing",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "landingCloud",
                   "label": "Clouds landing",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -920,7 +920,7 @@
                 "id": "mercury-heat-and-shadow-air-option-1",
                 "text": "Thick warm clouds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "sunWarmCloud",
                   "label": "Thick warm clouds",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -947,7 +947,7 @@
                 "id": "mercury-heat-and-shadow-air-option-1",
                 "text": "A thick atmosphere that traps heat",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "greenhouseWarming",
                   "label": "A thick atmosphere that traps heat",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -992,7 +992,7 @@
                 "id": "mercury-heat-and-shadow-air-option-1",
                 "text": "An efficient heat-trapping atmosphere",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "greenhouseWarming",
                   "label": "An efficient heat-trapping atmosphere",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1030,7 +1030,7 @@
                 "id": "mercury-heat-and-shadow-air-option-1",
                 "text": "Thick warm clouds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "sunWarmCloud",
                   "label": "Thick warm clouds",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1057,7 +1057,7 @@
                 "id": "mercury-heat-and-shadow-air-option-1",
                 "text": "A thick atmosphere that traps heat",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "greenhouseWarming",
                   "label": "A thick atmosphere that traps heat",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1084,7 +1084,7 @@
                 "id": "mercury-heat-and-shadow-air-option-1",
                 "text": "An efficient heat-trapping atmosphere",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "greenhouseWarming",
                   "label": "An efficient heat-trapping atmosphere",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1140,7 +1140,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-1",
                 "text": "A hot sunny plain",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "sunlitPlain",
                   "label": "A hot sunny plain",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1167,7 +1167,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-1",
                 "text": "A sunlit equatorial plain",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "sunlitPlain",
                   "label": "A sunlit equatorial plain",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1176,7 +1176,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-2",
                 "text": "Inside hot rain clouds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "warmRainCloud",
                   "label": "Inside hot rain clouds",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1194,7 +1194,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-1",
                 "text": "A persistently illuminated equatorial plain",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "sunlitPlain",
                   "label": "A persistently illuminated equatorial plain",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1212,7 +1212,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-2",
                 "text": "A thick cloud deck warmed by the Sun",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "sunWarmCloud",
                   "label": "A thick cloud deck warmed by the Sun",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1232,7 +1232,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-1",
                 "text": "A hot sunny plain",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "sunlitPlain",
                   "label": "A hot sunny plain",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1259,7 +1259,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-1",
                 "text": "A sunlit equatorial plain",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "sunlitPlain",
                   "label": "A sunlit equatorial plain",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1277,7 +1277,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-2",
                 "text": "Inside hot rain clouds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "warmRainCloud",
                   "label": "Inside hot rain clouds",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1295,7 +1295,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-1",
                 "text": "A persistently illuminated equatorial plain",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "sunlitPlain",
                   "label": "A persistently illuminated equatorial plain",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1304,7 +1304,7 @@
                 "id": "mercury-heat-and-shadow-shadow-ice-option-2",
                 "text": "A thick cloud deck warmed by the Sun",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "sunWarmCloud",
                   "label": "A thick cloud deck warmed by the Sun",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1344,7 +1344,8 @@
                 "picture": {
                   "scene": "rockyWorld",
                   "label": "Mercury",
-                  "detail": "Schematic answer idea; Heat and Shadow"
+                  "detail": "Schematic answer idea; Heat and Shadow",
+                  "tone": "gray"
                 }
               },
               {
@@ -1456,7 +1457,8 @@
                 "picture": {
                   "scene": "rockyWorld",
                   "label": "Mercury",
-                  "detail": "Schematic answer idea; Heat and Shadow"
+                  "detail": "Schematic answer idea; Heat and Shadow",
+                  "tone": "gray"
                 }
               }
             ],
@@ -2635,7 +2637,7 @@
                 "id": "venus-radar-explorer-hidden-surface-option-2",
                 "text": "All of Venus is hidden behind its moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonEclipse",
                   "label": "All of Venus is hidden behind its moon",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -2662,7 +2664,7 @@
                 "id": "venus-radar-explorer-hidden-surface-option-2",
                 "text": "A permanent eclipse by a natural moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonEclipse",
                   "label": "A permanent eclipse by a natural moon",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -2729,7 +2731,7 @@
                 "id": "venus-radar-explorer-hidden-surface-option-2",
                 "text": "All of Venus is hidden behind its moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonEclipse",
                   "label": "All of Venus is hidden behind its moon",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -2776,7 +2778,7 @@
                 "id": "venus-radar-explorer-hidden-surface-option-2",
                 "text": "A permanent eclipse by a natural moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonEclipse",
                   "label": "A permanent eclipse by a natural moon",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -3427,7 +3429,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-0",
                 "text": "Very thick air",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "denseCarbonDioxideAir",
                   "label": "Very thick air",
                   "detail": "Schematic answer idea; Heat-Trap Detective",
                   "tone": "cream"
@@ -3464,7 +3466,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-2",
                 "text": "Air just like Earth’s",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "earthAir",
                   "label": "Air just like Earth’s",
                   "detail": "Schematic answer idea; Heat-Trap Detective"
                 }
@@ -3473,7 +3475,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-0",
                 "text": "Mostly carbon dioxide",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "denseCarbonDioxideAir",
                   "label": "Mostly carbon dioxide",
                   "detail": "Schematic answer idea; Heat-Trap Detective",
                   "tone": "cream"
@@ -3492,7 +3494,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-0",
                 "text": "Dense CO₂ with very high surface pressure",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "denseCarbonDioxideAir",
                   "label": "Dense CO₂ with very high surface pressure",
                   "detail": "Schematic answer idea; Heat-Trap Detective",
                   "tone": "cream"
@@ -3511,7 +3513,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-2",
                 "text": "Earth-like surface pressure and composition",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "earthAir",
                   "label": "Earth-like surface pressure and composition",
                   "detail": "Schematic answer idea; Heat-Trap Detective"
                 }
@@ -3540,7 +3542,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-0",
                 "text": "Very thick air",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "denseCarbonDioxideAir",
                   "label": "Very thick air",
                   "detail": "Schematic answer idea; Heat-Trap Detective",
                   "tone": "cream"
@@ -3559,7 +3561,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-0",
                 "text": "Mostly carbon dioxide",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "denseCarbonDioxideAir",
                   "label": "Mostly carbon dioxide",
                   "detail": "Schematic answer idea; Heat-Trap Detective",
                   "tone": "cream"
@@ -3578,7 +3580,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-2",
                 "text": "Air just like Earth’s",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "earthAir",
                   "label": "Air just like Earth’s",
                   "detail": "Schematic answer idea; Heat-Trap Detective"
                 }
@@ -3605,7 +3607,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-0",
                 "text": "Dense CO₂ with very high surface pressure",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "denseCarbonDioxideAir",
                   "label": "Dense CO₂ with very high surface pressure",
                   "detail": "Schematic answer idea; Heat-Trap Detective",
                   "tone": "cream"
@@ -3615,7 +3617,7 @@
                 "id": "venus-heat-trap-detective-carbon-dioxide-option-2",
                 "text": "Earth-like surface pressure and composition",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "earthAir",
                   "label": "Earth-like surface pressure and composition",
                   "detail": "Schematic answer idea; Heat-Trap Detective"
                 }
@@ -5310,7 +5312,7 @@
                 "id": "earth-our-water-world-atmosphere-option-1",
                 "text": "Solid stone",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "solidRock",
                   "label": "Solid stone",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5319,7 +5321,7 @@
                 "id": "earth-our-water-world-atmosphere-option-0",
                 "text": "Air",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "earthAir",
                   "label": "Air",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5337,7 +5339,7 @@
                 "id": "earth-our-water-world-atmosphere-option-1",
                 "text": "Mostly solid rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "solidRock",
                   "label": "Mostly solid rock",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5382,7 +5384,7 @@
                 "id": "earth-our-water-world-atmosphere-option-1",
                 "text": "A layer of solid silicate rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "solidRock",
                   "label": "A layer of solid silicate rock",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5411,7 +5413,7 @@
                 "id": "earth-our-water-world-atmosphere-option-0",
                 "text": "Air",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "earthAir",
                   "label": "Air",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5420,7 +5422,7 @@
                 "id": "earth-our-water-world-atmosphere-option-1",
                 "text": "Solid stone",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "solidRock",
                   "label": "Solid stone",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5447,7 +5449,7 @@
                 "id": "earth-our-water-world-atmosphere-option-1",
                 "text": "Mostly solid rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "solidRock",
                   "label": "Mostly solid rock",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5474,7 +5476,7 @@
                 "id": "earth-our-water-world-atmosphere-option-1",
                 "text": "A layer of solid silicate rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "solidRock",
                   "label": "A layer of solid silicate rock",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5570,7 +5572,7 @@
                 "id": "earth-our-water-world-known-life-option-2",
                 "text": "No life has ever been found",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "lifelessWorlds",
                   "label": "No life has ever been found",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5608,7 +5610,7 @@
                 "id": "earth-our-water-world-known-life-option-2",
                 "text": "No planet has evidence of living organisms",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "lifelessWorlds",
                   "label": "No planet has evidence of living organisms",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5677,7 +5679,7 @@
                 "id": "earth-our-water-world-known-life-option-2",
                 "text": "No life has ever been found",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "lifelessWorlds",
                   "label": "No life has ever been found",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5705,7 +5707,7 @@
                 "id": "earth-our-water-world-known-life-option-2",
                 "text": "No planet has evidence of living organisms",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "lifelessWorlds",
                   "label": "No planet has evidence of living organisms",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -6777,7 +6779,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-0",
                 "text": "Clouds moving",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudMovement",
                   "label": "Clouds moving",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6786,7 +6788,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-1",
                 "text": "Clouds made of rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "rockCloud",
                   "label": "Clouds made of rock",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6804,7 +6806,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-0",
                 "text": "Movement of clouds and storms",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudMovement",
                   "label": "Movement of clouds and storms",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6813,7 +6815,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-1",
                 "text": "Rocks growing in the atmosphere",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "growingSkyRocks",
                   "label": "Rocks growing in the atmosphere",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6840,7 +6842,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-1",
                 "text": "Proof that clouds are solid rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "rockCloud",
                   "label": "Proof that clouds are solid rock",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6849,7 +6851,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-0",
                 "text": "Change and motion over time",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudMovement",
                   "label": "Change and motion over time",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6878,7 +6880,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-1",
                 "text": "Clouds made of rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "rockCloud",
                   "label": "Clouds made of rock",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6887,7 +6889,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-0",
                 "text": "Clouds moving",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudMovement",
                   "label": "Clouds moving",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6905,7 +6907,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-1",
                 "text": "Rocks growing in the atmosphere",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "growingSkyRocks",
                   "label": "Rocks growing in the atmosphere",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6914,7 +6916,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-0",
                 "text": "Movement of clouds and storms",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudMovement",
                   "label": "Movement of clouds and storms",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6941,7 +6943,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-1",
                 "text": "Proof that clouds are solid rock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "rockCloud",
                   "label": "Proof that clouds are solid rock",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -6959,7 +6961,7 @@
                 "id": "earth-eyes-in-orbit-cloud-observe-option-0",
                 "text": "Change and motion over time",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudMovement",
                   "label": "Change and motion over time",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7060,7 +7062,7 @@
                 "id": "earth-eyes-in-orbit-aurora-option-2",
                 "text": "Molten lava falling from the Sun",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "lavaFromSun",
                   "label": "Molten lava falling from the Sun",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7170,7 +7172,7 @@
                 "id": "earth-eyes-in-orbit-aurora-option-2",
                 "text": "Molten lava falling from the Sun",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "lavaFromSun",
                   "label": "Molten lava falling from the Sun",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7199,7 +7201,7 @@
                 "id": "earth-eyes-in-orbit-measurements-option-0",
                 "text": "Cloud pictures at two times",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "cloudObservations",
                   "label": "Cloud pictures at two times",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7244,7 +7246,7 @@
                 "id": "earth-eyes-in-orbit-measurements-option-0",
                 "text": "Repeated pictures of the clouds",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "cloudObservations",
                   "label": "Repeated pictures of the clouds",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7262,7 +7264,7 @@
                 "id": "earth-eyes-in-orbit-measurements-option-0",
                 "text": "Time-separated cloud-position measurements",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "cloudObservations",
                   "label": "Time-separated cloud-position measurements",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7309,7 +7311,7 @@
                 "id": "earth-eyes-in-orbit-measurements-option-0",
                 "text": "Cloud pictures at two times",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "cloudObservations",
                   "label": "Cloud pictures at two times",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7327,7 +7329,7 @@
                 "id": "earth-eyes-in-orbit-measurements-option-0",
                 "text": "Repeated pictures of the clouds",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "cloudObservations",
                   "label": "Repeated pictures of the clouds",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -7372,7 +7374,7 @@
                 "id": "earth-eyes-in-orbit-measurements-option-0",
                 "text": "Time-separated cloud-position measurements",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "cloudObservations",
                   "label": "Time-separated cloud-position measurements",
                   "detail": "Schematic answer idea; Eyes in Orbit"
                 }
@@ -8044,7 +8046,7 @@
                 "id": "mars-rover-rock-hunt-rover-tools-option-1",
                 "text": "A cloud",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "skyCloud",
                   "label": "A cloud",
                   "detail": "Schematic answer idea; Rover Rock Hunt"
                 }
@@ -8080,7 +8082,7 @@
                 "id": "mars-rover-rock-hunt-rover-tools-option-1",
                 "text": "A cloud floating above Mars",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "skyCloud",
                   "label": "A cloud floating above Mars",
                   "detail": "Schematic answer idea; Rover Rock Hunt"
                 }
@@ -8107,7 +8109,7 @@
                 "id": "mars-rover-rock-hunt-rover-tools-option-1",
                 "text": "Only watching unrelated clouds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "skyCloud",
                   "label": "Only watching unrelated clouds",
                   "detail": "Schematic answer idea; Rover Rock Hunt"
                 }
@@ -8154,7 +8156,7 @@
                 "id": "mars-rover-rock-hunt-rover-tools-option-1",
                 "text": "A cloud",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "skyCloud",
                   "label": "A cloud",
                   "detail": "Schematic answer idea; Rover Rock Hunt"
                 }
@@ -8172,7 +8174,7 @@
                 "id": "mars-rover-rock-hunt-rover-tools-option-1",
                 "text": "A cloud floating above Mars",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "skyCloud",
                   "label": "A cloud floating above Mars",
                   "detail": "Schematic answer idea; Rover Rock Hunt"
                 }
@@ -8208,7 +8210,7 @@
                 "id": "mars-rover-rock-hunt-rover-tools-option-1",
                 "text": "Only watching unrelated clouds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "skyCloud",
                   "label": "Only watching unrelated clouds",
                   "detail": "Schematic answer idea; Rover Rock Hunt"
                 }
@@ -8666,7 +8668,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-1",
                 "text": "A cloud turning to stone",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudToStone",
                   "label": "A cloud turning to stone",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8702,7 +8704,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-1",
                 "text": "A cloud becoming solid stone",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "cloudToStone",
                   "label": "A cloud becoming solid stone",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8711,7 +8713,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-2",
                 "text": "A moon drawing shapes on the ground",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonDrawing",
                   "label": "A moon drawing shapes on the ground",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8729,7 +8731,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-1",
                 "text": "Clouds transforming directly into bedrock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "cloudToStone",
                   "label": "Clouds transforming directly into bedrock",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8747,7 +8749,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-2",
                 "text": "Orbital motion drawing surface fans",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonDrawing",
                   "label": "Orbital motion drawing surface fans",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8776,7 +8778,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-1",
                 "text": "A cloud turning to stone",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudToStone",
                   "label": "A cloud turning to stone",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8794,7 +8796,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-1",
                 "text": "A cloud becoming solid stone",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "cloudToStone",
                   "label": "A cloud becoming solid stone",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8812,7 +8814,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-2",
                 "text": "A moon drawing shapes on the ground",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonDrawing",
                   "label": "A moon drawing shapes on the ground",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8830,7 +8832,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-1",
                 "text": "Clouds transforming directly into bedrock",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "cloudToStone",
                   "label": "Clouds transforming directly into bedrock",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8839,7 +8841,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-2",
                 "text": "Orbital motion drawing surface fans",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "moonDrawing",
                   "label": "Orbital motion drawing surface fans",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -9288,7 +9290,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-1",
                 "text": "A cloud tower",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudTower",
                   "label": "A cloud tower",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9324,7 +9326,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-1",
                 "text": "Clouds stacked into a mountain",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudTower",
                   "label": "Clouds stacked into a mountain",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9351,7 +9353,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-1",
                 "text": "Atmospheric clouds becoming permanent mountains",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudToMountain",
                   "label": "Atmospheric clouds becoming permanent mountains",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9398,7 +9400,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-1",
                 "text": "A cloud tower",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudTower",
                   "label": "A cloud tower",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9416,7 +9418,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-1",
                 "text": "Clouds stacked into a mountain",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudTower",
                   "label": "Clouds stacked into a mountain",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9452,7 +9454,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-1",
                 "text": "Atmospheric clouds becoming permanent mountains",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "cloudToMountain",
                   "label": "Atmospheric clouds becoming permanent mountains",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -10121,7 +10123,7 @@
                 "id": "jupiter-storm-scout-bands-option-0",
                 "text": "Cloud bands",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "jupiterCloudBands",
                   "label": "Cloud bands",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10157,7 +10159,7 @@
                 "id": "jupiter-storm-scout-bands-option-0",
                 "text": "Cloud bands moved by winds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "jupiterCloudBands",
                   "label": "Cloud bands moved by winds",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10202,7 +10204,7 @@
                 "id": "jupiter-storm-scout-bands-option-0",
                 "text": "Atmospheric bands and circulation",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "jupiterCloudBands",
                   "label": "Atmospheric bands and circulation",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10231,7 +10233,7 @@
                 "id": "jupiter-storm-scout-bands-option-0",
                 "text": "Cloud bands",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "jupiterCloudBands",
                   "label": "Cloud bands",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10267,7 +10269,7 @@
                 "id": "jupiter-storm-scout-bands-option-0",
                 "text": "Cloud bands moved by winds",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "jupiterCloudBands",
                   "label": "Cloud bands moved by winds",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10285,7 +10287,7 @@
                 "id": "jupiter-storm-scout-bands-option-0",
                 "text": "Atmospheric bands and circulation",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "jupiterCloudBands",
                   "label": "Atmospheric bands and circulation",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10547,7 +10549,7 @@
                 "id": "jupiter-storm-scout-repeat-images-option-0",
                 "text": "More pictures later",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "stormObservations",
                   "label": "More pictures later",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10574,7 +10576,7 @@
                 "id": "jupiter-storm-scout-repeat-images-option-0",
                 "text": "Images of the same region at several times",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "stormObservations",
                   "label": "Images of the same region at several times",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10619,7 +10621,7 @@
                 "id": "jupiter-storm-scout-repeat-images-option-0",
                 "text": "Time-separated observations with known geometry",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "stormObservations",
                   "label": "Time-separated observations with known geometry",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10657,7 +10659,7 @@
                 "id": "jupiter-storm-scout-repeat-images-option-0",
                 "text": "More pictures later",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "stormObservations",
                   "label": "More pictures later",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10684,7 +10686,7 @@
                 "id": "jupiter-storm-scout-repeat-images-option-0",
                 "text": "Images of the same region at several times",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "stormObservations",
                   "label": "Images of the same region at several times",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10729,7 +10731,7 @@
                 "id": "jupiter-storm-scout-repeat-images-option-0",
                 "text": "Time-separated observations with known geometry",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "stormObservations",
                   "label": "Time-separated observations with known geometry",
                   "detail": "Schematic answer idea; Storm Scout"
                 }
@@ -10994,7 +10996,7 @@
                 "id": "jupiter-moon-match-io-option-2",
                 "text": "Earth’s only moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "earthMoon",
                   "label": "Earth’s only moon",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11039,7 +11041,7 @@
                 "id": "jupiter-moon-match-io-option-2",
                 "text": "The lunar near-side maria only",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "earthMoon",
                   "label": "The lunar near-side maria only",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11104,7 +11106,7 @@
                 "id": "jupiter-moon-match-io-option-2",
                 "text": "Earth’s only moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "earthMoon",
                   "label": "Earth’s only moon",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11140,7 +11142,7 @@
                 "id": "jupiter-moon-match-io-option-2",
                 "text": "The lunar near-side maria only",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "earthMoon",
                   "label": "The lunar near-side maria only",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11395,9 +11397,10 @@
                 "id": "jupiter-moon-match-ganymede-option-0",
                 "text": "A moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "jupiterMoon",
                   "label": "A moon",
-                  "detail": "Schematic answer idea; Moon Match"
+                  "detail": "Schematic answer idea; Moon Match",
+                  "tone": "blueWhite"
                 }
               }
             ],
@@ -11422,16 +11425,17 @@
                 "id": "jupiter-moon-match-ganymede-option-0",
                 "text": "It orbits Jupiter",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "jupiterMoon",
                   "label": "It orbits Jupiter",
-                  "detail": "Schematic answer idea; Moon Match"
+                  "detail": "Schematic answer idea; Moon Match",
+                  "tone": "blueWhite"
                 }
               },
               {
                 "id": "jupiter-moon-match-ganymede-option-2",
                 "text": "All large moons become planets",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "moonToPlanet",
                   "label": "All large moons become planets",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11458,7 +11462,7 @@
                 "id": "jupiter-moon-match-ganymede-option-2",
                 "text": "Diameter alone makes it a planet",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "diameterPlanet",
                   "label": "Diameter alone makes it a planet",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11467,9 +11471,10 @@
                 "id": "jupiter-moon-match-ganymede-option-0",
                 "text": "Its primary orbit is around Jupiter",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "jupiterMoon",
                   "label": "Its primary orbit is around Jupiter",
-                  "detail": "Schematic answer idea; Moon Match"
+                  "detail": "Schematic answer idea; Moon Match",
+                  "tone": "blueWhite"
                 }
               }
             ],
@@ -11487,9 +11492,10 @@
                 "id": "jupiter-moon-match-ganymede-option-0",
                 "text": "A moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "jupiterMoon",
                   "label": "A moon",
-                  "detail": "Schematic answer idea; Moon Match"
+                  "detail": "Schematic answer idea; Moon Match",
+                  "tone": "blueWhite"
                 }
               },
               {
@@ -11523,7 +11529,7 @@
                 "id": "jupiter-moon-match-ganymede-option-2",
                 "text": "All large moons become planets",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "moonToPlanet",
                   "label": "All large moons become planets",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -11532,9 +11538,10 @@
                 "id": "jupiter-moon-match-ganymede-option-0",
                 "text": "It orbits Jupiter",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "jupiterMoon",
                   "label": "It orbits Jupiter",
-                  "detail": "Schematic answer idea; Moon Match"
+                  "detail": "Schematic answer idea; Moon Match",
+                  "tone": "blueWhite"
                 }
               }
             ],
@@ -11550,9 +11557,10 @@
                 "id": "jupiter-moon-match-ganymede-option-0",
                 "text": "Its primary orbit is around Jupiter",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "jupiterMoon",
                   "label": "Its primary orbit is around Jupiter",
-                  "detail": "Schematic answer idea; Moon Match"
+                  "detail": "Schematic answer idea; Moon Match",
+                  "tone": "blueWhite"
                 }
               },
               {
@@ -11568,7 +11576,7 @@
                 "id": "jupiter-moon-match-ganymede-option-2",
                 "text": "Diameter alone makes it a planet",
                 "picture": {
-                  "scene": "rockyWorld",
+                  "scene": "diameterPlanet",
                   "label": "Diameter alone makes it a planet",
                   "detail": "Schematic answer idea; Moon Match"
                 }
@@ -12017,7 +12025,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-0",
                 "text": "Gravity clues",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "jupiterGravity",
                   "label": "Gravity clues",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12044,7 +12052,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-0",
                 "text": "Gravity measurements",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "jupiterGravity",
                   "label": "Gravity measurements",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12089,7 +12097,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-0",
                 "text": "The gravity field responds to mass distribution",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "jupiterGravity",
                   "label": "The gravity field responds to mass distribution",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12109,7 +12117,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-0",
                 "text": "Gravity clues",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "jupiterGravity",
                   "label": "Gravity clues",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12154,7 +12162,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-0",
                 "text": "Gravity measurements",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "jupiterGravity",
                   "label": "Gravity measurements",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12172,7 +12180,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-0",
                 "text": "The gravity field responds to mass distribution",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "jupiterGravity",
                   "label": "The gravity field responds to mass distribution",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -13061,7 +13069,7 @@
                 "id": "saturn-ring-builder-gaps-option-0",
                 "text": "A moon’s gravity",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "ringMoonGravity",
                   "label": "A moon’s gravity",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13079,7 +13087,7 @@
                 "id": "saturn-ring-builder-gaps-option-0",
                 "text": "Gravity changing particle paths",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "ringMoonGravity",
                   "label": "Gravity changing particle paths",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13124,7 +13132,7 @@
                 "id": "saturn-ring-builder-gaps-option-0",
                 "text": "Gravitational interactions and resonances",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "ringMoonGravity",
                   "label": "Gravitational interactions and resonances",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13153,7 +13161,7 @@
                 "id": "saturn-ring-builder-gaps-option-0",
                 "text": "A moon’s gravity",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "ringMoonGravity",
                   "label": "A moon’s gravity",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13189,7 +13197,7 @@
                 "id": "saturn-ring-builder-gaps-option-0",
                 "text": "Gravity changing particle paths",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "ringMoonGravity",
                   "label": "Gravity changing particle paths",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13234,7 +13242,7 @@
                 "id": "saturn-ring-builder-gaps-option-0",
                 "text": "Gravitational interactions and resonances",
                 "picture": {
-                  "scene": "gravity",
+                  "scene": "ringMoonGravity",
                   "label": "Gravitational interactions and resonances",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13499,7 +13507,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-2",
                 "text": "Molten iron across the surface",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "moltenIronFlow",
                   "label": "Molten iron across the surface",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13544,7 +13552,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-2",
                 "text": "A global surface ocean of molten iron",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "moltenIronFlow",
                   "label": "A global surface ocean of molten iron",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13609,7 +13617,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-2",
                 "text": "Molten iron across the surface",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "moltenIronFlow",
                   "label": "Molten iron across the surface",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13645,7 +13653,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-2",
                 "text": "A global surface ocean of molten iron",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "moltenIronFlow",
                   "label": "A global surface ocean of molten iron",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -14513,7 +14521,7 @@
                 "id": "saturn-cassini-detective-ring-measure-option-0",
                 "text": "Pictures of the rings",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "ringObservations",
                   "label": "Pictures of the rings",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14549,7 +14557,7 @@
                 "id": "saturn-cassini-detective-ring-measure-option-0",
                 "text": "Repeated ring images",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "ringObservations",
                   "label": "Repeated ring images",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14594,7 +14602,7 @@
                 "id": "saturn-cassini-detective-ring-measure-option-0",
                 "text": "Ring images with times and viewing geometry",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "ringObservations",
                   "label": "Ring images with times and viewing geometry",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14623,7 +14631,7 @@
                 "id": "saturn-cassini-detective-ring-measure-option-0",
                 "text": "Pictures of the rings",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "ringObservations",
                   "label": "Pictures of the rings",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14659,7 +14667,7 @@
                 "id": "saturn-cassini-detective-ring-measure-option-0",
                 "text": "Repeated ring images",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "ringObservations",
                   "label": "Repeated ring images",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14677,7 +14685,7 @@
                 "id": "saturn-cassini-detective-ring-measure-option-0",
                 "text": "Ring images with times and viewing geometry",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "ringObservations",
                   "label": "Ring images with times and viewing geometry",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -15358,7 +15366,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-1",
                 "text": "Both always get the same light",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "equalPolarLight",
                   "label": "Both always get the same light",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15385,7 +15393,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-1",
                 "text": "Both poles always have identical daylight",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "equalPolarLight",
                   "label": "Both poles always have identical daylight",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15430,7 +15438,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-1",
                 "text": "Identical illumination at both poles at all phases",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "equalPolarLight",
                   "label": "Identical illumination at both poles at all phases",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15468,7 +15476,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-1",
                 "text": "Both always get the same light",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "equalPolarLight",
                   "label": "Both always get the same light",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15495,7 +15503,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-1",
                 "text": "Both poles always have identical daylight",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "equalPolarLight",
                   "label": "Both poles always have identical daylight",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15522,7 +15530,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-1",
                 "text": "Identical illumination at both poles at all phases",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "equalPolarLight",
                   "label": "Identical illumination at both poles at all phases",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15993,7 +16001,7 @@
                 "id": "uranus-blue-green-clues-methane-option-0",
                 "text": "Methane",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "methaneAbsorption",
                   "label": "Methane",
                   "detail": "Schematic answer idea; Blue-Green Clues",
                   "tone": "blueGreen"
@@ -16031,7 +16039,7 @@
                 "id": "uranus-blue-green-clues-methane-option-0",
                 "text": "Methane absorbing red light",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "methaneAbsorption",
                   "label": "Methane absorbing red light",
                   "detail": "Schematic answer idea; Blue-Green Clues",
                   "tone": "blueGreen"
@@ -16050,7 +16058,7 @@
                 "id": "uranus-blue-green-clues-methane-option-0",
                 "text": "Selective absorption of red wavelengths by methane",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "methaneAbsorption",
                   "label": "Selective absorption of red wavelengths by methane",
                   "detail": "Schematic answer idea; Blue-Green Clues",
                   "tone": "blueGreen"
@@ -16090,7 +16098,7 @@
                 "id": "uranus-blue-green-clues-methane-option-0",
                 "text": "Methane",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "methaneAbsorption",
                   "label": "Methane",
                   "detail": "Schematic answer idea; Blue-Green Clues",
                   "tone": "blueGreen"
@@ -16118,7 +16126,7 @@
                 "id": "uranus-blue-green-clues-methane-option-0",
                 "text": "Methane absorbing red light",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "methaneAbsorption",
                   "label": "Methane absorbing red light",
                   "detail": "Schematic answer idea; Blue-Green Clues",
                   "tone": "blueGreen"
@@ -16165,7 +16173,7 @@
                 "id": "uranus-blue-green-clues-methane-option-0",
                 "text": "Selective absorption of red wavelengths by methane",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "methaneAbsorption",
                   "label": "Selective absorption of red wavelengths by methane",
                   "detail": "Schematic answer idea; Blue-Green Clues",
                   "tone": "blueGreen"
@@ -17270,7 +17278,7 @@
                 "id": "uranus-hidden-rings-moons-versus-rings-option-1",
                 "text": "One moon only",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "uranusMoon",
                   "label": "One moon only",
                   "detail": "Schematic answer idea; Hidden Rings"
                 }
@@ -17288,7 +17296,7 @@
                 "id": "uranus-hidden-rings-moons-versus-rings-option-1",
                 "text": "A ring is one large moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "uranusMoon",
                   "label": "A ring is one large moon",
                   "detail": "Schematic answer idea; Hidden Rings"
                 }
@@ -17333,7 +17341,7 @@
                 "id": "uranus-hidden-rings-moons-versus-rings-option-1",
                 "text": "A ring is a single satellite body",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "uranusMoon",
                   "label": "A ring is a single satellite body",
                   "detail": "Schematic answer idea; Hidden Rings"
                 }
@@ -17362,7 +17370,7 @@
                 "id": "uranus-hidden-rings-moons-versus-rings-option-1",
                 "text": "One moon only",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "uranusMoon",
                   "label": "One moon only",
                   "detail": "Schematic answer idea; Hidden Rings"
                 }
@@ -17398,7 +17406,7 @@
                 "id": "uranus-hidden-rings-moons-versus-rings-option-1",
                 "text": "A ring is one large moon",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "uranusMoon",
                   "label": "A ring is one large moon",
                   "detail": "Schematic answer idea; Hidden Rings"
                 }
@@ -17425,7 +17433,7 @@
                 "id": "uranus-hidden-rings-moons-versus-rings-option-1",
                 "text": "A ring is a single satellite body",
                 "picture": {
-                  "scene": "moon",
+                  "scene": "uranusMoon",
                   "label": "A ring is a single satellite body",
                   "detail": "Schematic answer idea; Hidden Rings"
                 }
@@ -18103,7 +18111,7 @@
                 "id": "neptune-wind-and-weather-cloud-tracking-option-0",
                 "text": "Pictures at different times",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "neptuneCloudObservations",
                   "label": "Pictures at different times",
                   "detail": "Schematic answer idea; Wind and Weather"
                 }
@@ -18121,7 +18129,7 @@
                 "id": "neptune-wind-and-weather-cloud-tracking-option-0",
                 "text": "Times and comparable views",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "neptuneCloudObservations",
                   "label": "Times and comparable views",
                   "detail": "Schematic answer idea; Wind and Weather"
                 }
@@ -18166,7 +18174,7 @@
                 "id": "neptune-wind-and-weather-cloud-tracking-option-0",
                 "text": "Time interval, rotation, and viewing geometry",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "neptuneCloudObservations",
                   "label": "Time interval, rotation, and viewing geometry",
                   "detail": "Schematic answer idea; Wind and Weather"
                 }
@@ -18195,7 +18203,7 @@
                 "id": "neptune-wind-and-weather-cloud-tracking-option-0",
                 "text": "Pictures at different times",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "neptuneCloudObservations",
                   "label": "Pictures at different times",
                   "detail": "Schematic answer idea; Wind and Weather"
                 }
@@ -18231,7 +18239,7 @@
                 "id": "neptune-wind-and-weather-cloud-tracking-option-0",
                 "text": "Times and comparable views",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "neptuneCloudObservations",
                   "label": "Times and comparable views",
                   "detail": "Schematic answer idea; Wind and Weather"
                 }
@@ -18276,7 +18284,7 @@
                 "id": "neptune-wind-and-weather-cloud-tracking-option-0",
                 "text": "Time interval, rotation, and viewing geometry",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "neptuneCloudObservations",
                   "label": "Time interval, rotation, and viewing geometry",
                   "detail": "Schematic answer idea; Wind and Weather"
                 }
@@ -18940,7 +18948,7 @@
                 "id": "neptune-the-distant-sun-radio-route-option-1",
                 "text": "Only to the Sun",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "solarRoute",
                   "label": "Only to the Sun",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -18958,7 +18966,7 @@
                 "id": "neptune-the-distant-sun-radio-route-option-1",
                 "text": "Only Sun-to-planet distance",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "solarRoute",
                   "label": "Only Sun-to-planet distance",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -18994,7 +19002,7 @@
                 "id": "neptune-the-distant-sun-radio-route-option-1",
                 "text": "The solar orbital distance is always the complete route",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "solarRoute",
                   "label": "The solar orbital distance is always the complete route",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -19032,7 +19040,7 @@
                 "id": "neptune-the-distant-sun-radio-route-option-1",
                 "text": "Only to the Sun",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "solarRoute",
                   "label": "Only to the Sun",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -19059,7 +19067,7 @@
                 "id": "neptune-the-distant-sun-radio-route-option-1",
                 "text": "Only Sun-to-planet distance",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "solarRoute",
                   "label": "Only Sun-to-planet distance",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -19104,7 +19112,7 @@
                 "id": "neptune-the-distant-sun-radio-route-option-1",
                 "text": "The solar orbital distance is always the complete route",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "solarRoute",
                   "label": "The solar orbital distance is always the complete route",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -19570,7 +19578,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-1",
                 "text": "We watched it happen yesterday",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "witnessedCapture",
                   "label": "We watched it happen yesterday",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19588,7 +19596,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-1",
                 "text": "The capture was watched yesterday",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "witnessedCapture",
                   "label": "The capture was watched yesterday",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19624,7 +19632,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-1",
                 "text": "A directly witnessed ancient event",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "witnessedAncientCapture",
                   "label": "A directly witnessed ancient event",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19662,7 +19670,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-1",
                 "text": "We watched it happen yesterday",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "witnessedCapture",
                   "label": "We watched it happen yesterday",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19689,7 +19697,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-1",
                 "text": "The capture was watched yesterday",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "witnessedCapture",
                   "label": "The capture was watched yesterday",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19734,7 +19742,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-1",
                 "text": "A directly witnessed ancient event",
                 "picture": {
-                  "scene": "measurement",
+                  "scene": "witnessedAncientCapture",
                   "label": "A directly witnessed ancient event",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }

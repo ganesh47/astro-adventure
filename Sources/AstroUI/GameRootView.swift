@@ -786,6 +786,11 @@ public struct GameRootView: View {
             }
             .accessibilityIdentifier("adventure.pause.scroll")
         }
+        #if os(tvOS)
+            // A tvOS sheet sizes itself from its content. GeometryReader has no
+            // intrinsic content size, so provide the scroll panel's viewport.
+            .frame(width: 960, height: 820)
+        #endif
         .onAppear { resumeFocused = true }
     }
 
