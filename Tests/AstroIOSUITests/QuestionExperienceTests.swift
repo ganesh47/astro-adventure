@@ -116,16 +116,16 @@ final class QuestionExperienceTests: XCTestCase {
             for index in 0..<3 {
                 let answer = button("quiz.answer.\(index)")
                 reveal(answer)
-                XCTAssertTrue(answer.isHittable)
+                XCTAssertTrue(isReachable(answer))
                 capture("\(category) readable Sun proposal \(index + 1)")
             }
             tap("quiz.answer.0")
             tap("quiz.check")
             capture("\(category) readable explanatory feedback")
-            XCTAssertTrue(button("feedback.continue").isHittable)
+            XCTAssertTrue(isReachable(button("feedback.continue")))
             tap("feedback.hint")
             tap("quiz.hint.close")
-            XCTAssertTrue(button("quiz.back").isHittable)
+            XCTAssertTrue(isReachable(button("quiz.back")))
             app.terminate()
         }
     }
@@ -229,10 +229,8 @@ final class QuestionExperienceTests: XCTestCase {
         let field = app.otherElements["gravity.field"]
         XCTAssertTrue((field.value as? String ?? "").contains("Static flight paths"))
         tap("gravity.pause")
-        for _ in 0..<8 {
-            if field.isHittable { break }
-            app.swipeUp()
-        }
+        reveal(field)
+        XCTAssertTrue(isReachable(field))
         capture("Native Reduce Motion static Moon and Earth trajectories")
     }
 
@@ -362,8 +360,22 @@ final class QuestionExperienceTests: XCTestCase {
         for _ in 0..<18 {
             if isReachable(element) { return }
             let frame = visibleFrame(for: element)
-            let target = activeScroll() ?? app
-            if element.frame.midY < frame.midY { target.swipeDown() } else { target.swipeUp() }
+            guard !frame.isEmpty, !frame.isNull, !frame.isInfinite, frame.height > 40 else { break }
+            // The ScrollView's AX frame includes the bottom safe-area inset.
+            // Start and end the real drag inside the uncovered content viewport.
+            let gap = element.frame.midY - frame.midY
+            let distance = min(frame.height * 0.55, max(40, abs(gap)))
+            let direction: CGFloat = gap < 0 ? -1 : 1
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(
+                CGVector(
+                    dx: frame.midX - app.frame.minX,
+                    dy: frame.midY + direction * distance / 2 - app.frame.minY))
+            let end = origin.withOffset(
+                CGVector(
+                    dx: frame.midX - app.frame.minX,
+                    dy: frame.midY - direction * distance / 2 - app.frame.minY))
+            start.press(forDuration: 0.1, thenDragTo: end)
         }
         capture("Unreachable \(element.identifier)")
     }
@@ -375,7 +387,7 @@ final class QuestionExperienceTests: XCTestCase {
             "gravity.playground", "adventure.menu",
         ] {
             let scroll = app.scrollViews[identifier]
-            if scroll.exists, scroll.isHittable { return scroll }
+            if scroll.exists, hasVisibleGeometry(scroll), scroll.isHittable { return scroll }
         }
         return nil
     }
@@ -387,7 +399,7 @@ final class QuestionExperienceTests: XCTestCase {
             frame = frame.intersection(scroll.frame.insetBy(dx: 4, dy: 8))
         }
         let pause = app.buttons["adventure.pause"]
-        if pause.exists, pause.isHittable {
+        if pause.exists, hasVisibleGeometry(pause), pause.isHittable {
             let bottom = min(frame.maxY, pause.frame.minY - 8)
             frame.size.height = max(0, bottom - frame.minY)
         }
@@ -395,13 +407,23 @@ final class QuestionExperienceTests: XCTestCase {
     }
 
     private func isReachable(_ element: XCUIElement) -> Bool {
-        element.isHittable
-            && visibleFrame(for: element).contains(
-                CGPoint(x: element.frame.midX, y: element.frame.midY))
+        guard element.exists, hasVisibleGeometry(element) else { return false }
+        let frame = element.frame
+        guard visibleFrame(for: element).contains(CGPoint(x: frame.midX, y: frame.midY)) else {
+            return false
+        }
+        // XCTest can fail the method while querying an offscreen activation point.
+        return element.isHittable
+    }
+
+    private func hasVisibleGeometry(_ element: XCUIElement) -> Bool {
+        let frame = element.frame
+        return !frame.isEmpty && !frame.isNull && !frame.isInfinite
+            && app.frame.contains(CGPoint(x: frame.midX, y: frame.midY))
     }
 
     private func capture(_ name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
