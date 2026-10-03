@@ -141,6 +141,7 @@ final class PlanetAdventureFlowTests: XCTestCase {
             let answer = app.buttons["video.answer.\(index)"]
             if !answer.exists { continue }
             answer.tap()
+            tap("video.check")
             let feedback = app.buttons["video.continue"]
             XCTAssertTrue(feedback.waitForExistence(timeout: 5))
             let correct = feedback.label == "Continue"
@@ -203,6 +204,7 @@ final class PlanetAdventureFlowTests: XCTestCase {
             let answer = app.buttons["quiz.answer.\(index)"]
             if !answer.exists { continue }
             answer.tap()
+            tap("quiz.check")
             let feedback = app.buttons["feedback.continue"]
             XCTAssertTrue(feedback.waitForExistence(timeout: 5))
             let correct = feedback.label == "Continue"
@@ -229,7 +231,18 @@ final class PlanetAdventureFlowTests: XCTestCase {
         let button = app.buttons[id]
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Missing action: \(id)")
         if !button.isHittable { app.swipeUp() }
+        reveal(button)
         button.tap()
+        if id.hasPrefix("quiz.answer.") { tap("quiz.check") }
+        if id.hasPrefix("video.answer.") { tap("video.check") }
+    }
+
+    private func reveal(_ button: XCUIElement) {
+        for _ in 0..<8 {
+            if button.isHittable { return }
+            app.swipeUp()
+        }
+        XCTAssertTrue(button.isHittable)
     }
 
     private func selectMission(_ id: String) {

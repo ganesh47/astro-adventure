@@ -191,11 +191,13 @@ enum SolarSystemExpansionCatalog {
                 profile: profile,
                 concept: "light",
                 ageBand: ageBand,
-                prompt: "How long does sunlight take to make this trip?",
-                correct: profile.lightTime,
+                prompt: profile.id == "sun"
+                    ? "How long does sunlight take to reach Earth?"
+                    : "How long does sunlight take to reach \(profile.name)?",
+                correct: lightDuration(for: profile),
                 wrong: differentValues(
-                    from: otherProfiles.map(\.lightTime),
-                    excluding: profile.lightTime
+                    from: otherProfiles.map { lightDuration(for: $0) },
+                    excluding: lightDuration(for: profile)
                 ),
                 hint: "Farther worlds wait longer for the same ray of sunlight."
             ),
@@ -236,9 +238,21 @@ enum SolarSystemExpansionCatalog {
         hint: String
     ) -> QuizContent {
         let choices = [
-            QuizChoice(id: "\(profile.id)-\(concept)-correct", text: correct),
-            QuizChoice(id: "\(profile.id)-\(concept)-wrong-1", text: wrong[0]),
-            QuizChoice(id: "\(profile.id)-\(concept)-wrong-2", text: wrong[1]),
+            QuizChoice(
+                id: "\(profile.id)-\(concept)-correct", text: correct,
+                picture: QuizPictureCatalog.expansion(
+                    concept: concept, text: correct, destinationName: profile.name)
+            ),
+            QuizChoice(
+                id: "\(profile.id)-\(concept)-wrong-1", text: wrong[0],
+                picture: QuizPictureCatalog.expansion(
+                    concept: concept, text: wrong[0], destinationName: profile.name)
+            ),
+            QuizChoice(
+                id: "\(profile.id)-\(concept)-wrong-2", text: wrong[1],
+                picture: QuizPictureCatalog.expansion(
+                    concept: concept, text: wrong[1], destinationName: profile.name)
+            ),
         ]
         return QuizContent(
             prompt: prompt,
@@ -248,6 +262,15 @@ enum SolarSystemExpansionCatalog {
             retryFeedback: "Good try, explorer. Revisit the matching flashcard clue.",
             hint: hint
         )
+    }
+
+    /// These choices all describe the named Sun-to-world journey. Endpoint words
+    /// are not distinct durations: Sun-to-Earth and Sun-to-Moon both round to 8.3 min.
+    private static func lightDuration(for profile: DestinationProfile) -> String {
+        switch profile.id {
+        case "sun", "earth", "moon": "8.3 min"
+        default: profile.lightTime
+        }
     }
 
     private static func differentValues(from values: [String], excluding value: String) -> [String]

@@ -68,7 +68,8 @@ jobs:
   apple-builds:
     name: ${{ matrix.name }}
     runs-on: macos-26
-    timeout-minutes: 40
+    # Full serial gameplay and scientific capture suites exceed 40 minutes on TV.
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:

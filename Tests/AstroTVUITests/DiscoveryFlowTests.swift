@@ -255,6 +255,8 @@ final class DiscoveryFlowTests: XCTestCase {
     private func select(_ identifier: String, file: StaticString = #filePath, line: UInt = #line) {
         focus(identifier, file: file, line: line)
         remote.press(.select)
+        if identifier.hasPrefix("quiz.answer.") { select("quiz.check") }
+        if identifier.hasPrefix("video.answer.") { select("video.check") }
     }
 
     private func focus(_ identifier: String, file: StaticString = #filePath, line: UInt = #line) {
