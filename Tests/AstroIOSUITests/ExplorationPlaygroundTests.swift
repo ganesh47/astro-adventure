@@ -176,7 +176,40 @@ final class ExplorationPlaygroundTests: XCTestCase {
         }
         XCTAssertTrue(button.isEnabled, "Disabled \(id)")
         XCTAssertTrue(button.isHittable, "Unreachable \(id): \(button.frame)")
-        button.tap()
+        // The first RealityKit launch on a cold simulator has dropped short synthesized taps. Keep the touch down briefly, then require its effect before sending another.
+        button.press(forDuration: 0.15)
+        if id == "playground.begin" {
+            let started = XCTNSPredicateExpectation(
+                predicate: NSPredicate { _, _ in !button.exists }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [started], timeout: 10), .completed)
+        } else if id.hasPrefix("playground.target.") {
+            let changed = XCTNSPredicateExpectation(
+                predicate: NSPredicate { _, _ in
+                    self.app.staticTexts["playground.postcard"].exists
+                        || (button.exists && button.value as? String == "Aimed here")
+                }, object: nil)
+            XCTAssertEqual(
+                XCTWaiter.wait(for: [changed], timeout: 10), .completed,
+                "Target touch was not acknowledged: \(id)")
+            if let response = sensorResponses[id], !app.staticTexts["playground.postcard"].exists {
+                let feedback = app.staticTexts["playground.feedback"]
+                let responded = XCTNSPredicateExpectation(
+                    predicate: NSPredicate(format: "label == %@", response), object: feedback)
+                XCTAssertEqual(
+                    XCTWaiter.wait(for: [responded], timeout: 10), .completed,
+                    "Sensor action did not complete: \(id); feedback: \(feedback.label)")
+            }
+        }
+    }
+
+    private var sensorResponses: [String: String] {
+        [
+            "playground.target.mercury-sensor": "Your portable sensor is ready for another site.",
+            "playground.target.mercury-sunlit-sensor-site":
+                "Sunlit ground gives the warmer reading in our model.",
+            "playground.target.mercury-shadow-sensor-site":
+                "The permanently shadowed crater gives a colder model reading.",
+        ]
     }
 
     private func capture(_ name: String) {
