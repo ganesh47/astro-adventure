@@ -167,7 +167,7 @@ final class ExplorationPlaygroundTests: XCTestCase {
         if id.hasPrefix("destination.") {
             for _ in 0..<6 {
                 if button.exists && button.isHittable { break }
-                app.scrollViews.firstMatch.swipeLeft()
+                app.scrollViews["destination.selector"].swipeLeft()
             }
         }
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Missing \(id)")
