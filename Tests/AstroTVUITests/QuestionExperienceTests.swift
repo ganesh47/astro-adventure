@@ -146,7 +146,24 @@ final class QuestionExperienceTests: XCTestCase {
             XCTAssertTrue(visibleFrame(for: "story.title").contains(title.frame))
             capture("\(category) Story Previous restores settled first card header")
             remote.press(.playPause)
+            let pausedAt = ProcessInfo.processInfo.systemUptime
             XCTAssertTrue(app.buttons["adventure.pause.resume"].waitForExistence(timeout: 5))
+            focus("adventure.pause.resume")
+            let resume = app.buttons["adventure.pause.resume"]
+            let pauseScroll = app.scrollViews["adventure.pause.scroll"]
+            let settledPause = XCTNSPredicateExpectation(
+                predicate: NSPredicate { _, _ in
+                    guard ProcessInfo.processInfo.systemUptime - pausedAt >= 0.75,
+                        pauseScroll.exists, resume.exists, resume.hasFocus
+                    else { return false }
+                    let viewport = pauseScroll.frame.intersection(
+                        self.app.frame.insetBy(dx: 24, dy: 24))
+                    return viewport.contains(resume.frame)
+                }, object: resume)
+            XCTAssertEqual(
+                XCTWaiter.wait(for: [settledPause], timeout: 5), .completed,
+                "The settled Pause panel must contain the complete focused Resume action")
+            capture("\(category) Story settled Pause Resume action fully visible")
             select("adventure.pause.resume")
             XCTAssertTrue(progress.waitForExistence(timeout: 5))
             XCTAssertEqual(progress.value as? String, firstProgress)

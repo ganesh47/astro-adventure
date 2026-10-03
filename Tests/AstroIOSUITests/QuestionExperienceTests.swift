@@ -116,7 +116,10 @@ final class QuestionExperienceTests: XCTestCase {
             for index in 0..<3 {
                 let answer = button("quiz.answer.\(index)")
                 reveal(answer, fully: true)
-                XCTAssertTrue(isFullyVisible(answer), "The entire Sun proposal must be visible")
+                XCTAssertTrue(
+                    isFullyVisible(answer),
+                    "The entire Sun proposal must be visible: \(answer.frame) in \(visibleFrame(for: answer))"
+                )
                 capture("\(category) readable Sun proposal \(index + 1)")
             }
             tap("quiz.answer.0")
@@ -169,7 +172,10 @@ final class QuestionExperienceTests: XCTestCase {
         XCTAssertTrue(progress.isHittable, "Next must scroll the new card's header into view")
         capture("Largest text settled Story Next restores the new card top")
         reveal(title, fully: true)
-        XCTAssertTrue(isFullyVisible(title), "The complete new card title must be readable")
+        XCTAssertTrue(
+            isFullyVisible(title),
+            "The complete new card title must be readable: \(title.frame) in \(visibleFrame(for: title))"
+        )
         capture("Largest text settled Story Next complete title")
         tap("story.previous")
         waitForStoryCard("Card 1 of \(cardCount)", title: firstTitle)
@@ -423,7 +429,7 @@ final class QuestionExperienceTests: XCTestCase {
             } else {
                 gap = element.frame.midY - frame.midY
             }
-            let distance = min(frame.height * 0.55, max(fully ? 2 : 40, abs(gap)))
+            let distance = min(frame.height * 0.55, max(fully ? 12 : 40, abs(gap)))
             let direction: CGFloat = gap < 0 ? -1 : 1
             let origin = app.coordinate(withNormalizedOffset: .zero)
             let start = origin.withOffset(
@@ -434,9 +440,22 @@ final class QuestionExperienceTests: XCTestCase {
                 CGVector(
                     dx: frame.midX - app.frame.minX,
                     dy: frame.midY - direction * distance / 2 - app.frame.minY))
-            start.press(forDuration: 0.1, thenDragTo: end)
+            if fully {
+                // Stop momentum before comparing both edges of a complete card or heading.
+                start.press(
+                    forDuration: 0.1, thenDragTo: end, withVelocity: .slow,
+                    thenHoldForDuration: 0.25)
+            } else {
+                start.press(forDuration: 0.1, thenDragTo: end)
+            }
         }
         capture("Unreachable \(element.identifier)")
+        let geometry = XCTAttachment(
+            string: "Element: \(element.identifier)\nFrame: \(element.frame)\n"
+                + "Uncovered viewport: \(visibleFrame(for: element))\n\(app.debugDescription)")
+        geometry.name = "Unreachable \(element.identifier) geometry and hierarchy"
+        geometry.lifetime = .keepAlways
+        add(geometry)
     }
 
     private func activeScroll() -> XCUIElement? {
