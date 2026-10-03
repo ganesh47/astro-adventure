@@ -127,9 +127,8 @@ final class QuestionExperienceTests: XCTestCase {
             focus("story.next")
             XCTAssertTrue(app.buttons["story.next"].hasFocus)
             capture("\(category) Story bottom Next has native focus")
-            var changedAt = ProcessInfo.processInfo.systemUptime
             remote.press(.select)
-            waitForStoryCard("Card 2 of ", excludingTitle: firstTitle, changedAt: changedAt)
+            waitForStoryCard("Card 2 of ", excludingTitle: firstTitle)
             XCTAssertTrue((progress.value as? String)?.hasPrefix("Card 2 of ") == true)
             XCTAssertTrue(
                 visibleFrame(for: "story.progress").contains(progress.frame),
@@ -138,9 +137,8 @@ final class QuestionExperienceTests: XCTestCase {
                 visibleFrame(for: "story.title").contains(title.frame),
                 "The new card title must be visible")
             capture("\(category) Story Next resets header after bottom focus")
-            changedAt = ProcessInfo.processInfo.systemUptime
             select("story.previous")
-            waitForStoryCard("Card 1 of ", title: firstTitle, changedAt: changedAt)
+            waitForStoryCard("Card 1 of ", title: firstTitle)
             XCTAssertEqual(progress.value as? String, firstProgress)
             XCTAssertTrue(
                 visibleFrame(for: "story.progress").contains(progress.frame),
@@ -161,11 +159,12 @@ final class QuestionExperienceTests: XCTestCase {
 
     private func waitForStoryCard(
         _ progressPrefix: String, title expectedTitle: String? = nil,
-        excludingTitle previousTitle: String? = nil, changedAt: TimeInterval
+        excludingTitle previousTitle: String? = nil
     ) {
         let progress = app.descendants(matching: .any).matching(identifier: "story.progress")
             .firstMatch
         let title = app.staticTexts["story.title"]
+        let changedAt = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(
             predicate: NSPredicate { _, _ in
                 // Capture after the authored 0.45-second transition as well as the header reset.
