@@ -20,6 +20,8 @@ Astro Adventure should be playable, readable, and emotionally safe for kids ages
 - Avoid dense paragraphs during active play.
 - UI text must be large enough to read from couch distance and must not depend on tiny helper labels.
 - Parent/classroom-facing text can be more detailed, but should remain skimmable.
+- Destination menu cards wrap their complete titles and status labels and size vertically to their content. Their horizontal viewport reserves room for focused cards rather than cropping the top or bottom.
+- The containing menu scrolls vertically when larger text needs more space. Explorer controls and section tabs stack at accessibility sizes; actions below tall cards remain reachable.
 
 ## Controller and Focus
 
@@ -27,6 +29,7 @@ Astro Adventure should be playable, readable, and emotionally safe for kids ages
 - The focused element must be visually obvious without relying on color alone.
 - Focus movement should be predictable in menus, quiz answers, pause screens, and mission prompts.
 - Confirm, cancel/back, pause, and help behavior should match the controller-first UI baseline.
+- Down from a destination card reaches that world's Explore action, including cards near the horizontal viewport edges, without selecting a neighboring world first.
 - Avoid requiring simultaneous inputs for core learning interactions unless an accessible alternative exists.
 
 ## Feedback Alternatives
@@ -52,6 +55,7 @@ Run this checklist for first playable menus, mission prompts, and quiz loops.
 
 - Can the screen be completed with only a controller?
 - Is the current focus visible at a glance?
+- Are stamped, playground, mission-count, and long Technology Lab cards fully readable, including focused TV cards at 1080p/4K and portrait/landscape iPhone/iPad cards at the largest accessibility text size?
 - Can a player recover from a wrong answer without losing progress?
 - Is every vibration, color, and audio cue backed by another cue?
 - Can a parent or teacher understand the learning goal from the screen context?

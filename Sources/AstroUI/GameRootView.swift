@@ -27,7 +27,19 @@ public struct GameRootView: View {
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
+    #if os(tvOS)
+        @ScaledMetric(relativeTo: .headline) private var destinationCardWidth = 280.0
+        private let menuMaximumWidth = 1100.0
+        private let destinationFocusInset = 40.0
+        private let destinationVerticalInset = 24.0
+    #else
+        @ScaledMetric(relativeTo: .headline) private var destinationCardWidth = 176.0
+        private let menuMaximumWidth = 760.0
+        private let destinationFocusInset = 12.0
+        private let destinationVerticalInset = 12.0
+    #endif
     @State private var session: MissionSession
     @State private var playground: ExplorationSession?
     @State private var showingPassport = false
@@ -230,17 +242,29 @@ public struct GameRootView: View {
             } else {
                 GeometryReader { proxy in
                     let compact = proxy.size.height < 520
+                    let horizontalInset = compact ? 48.0 : 28.0
+                    let verticalInset = compact ? 10.0 : 28.0
+                    let panelInset = compact ? 14.0 : 26.0
+                    let panelWidth = min(menuMaximumWidth, proxy.size.width - 2 * horizontalInset)
 
-                    VStack(spacing: compact ? 8 : 20) {
-                        header(compact: compact)
-                        Spacer(minLength: compact ? 4 : 20)
-                        missionPanel(compact: compact)
-                        if compact {
-                            Spacer(minLength: 0)
+                    ScrollView {
+                        VStack(spacing: compact ? 8 : 20) {
+                            header(compact: compact)
+                            if session.phase != .navigation {
+                                Spacer(minLength: compact ? 4 : 20)
+                            }
+                            missionPanel(
+                                compact: compact, contentWidth: panelWidth - 2 * panelInset)
+                            if compact { Spacer(minLength: 0) }
                         }
+                        .frame(
+                            minHeight: max(0, proxy.size.height - 2 * verticalInset),
+                            alignment: .top
+                        )
+                        .padding(.horizontal, horizontalInset)
+                        .padding(.vertical, verticalInset)
                     }
-                    .padding(.horizontal, compact ? 48 : 28)
-                    .padding(.vertical, compact ? 10 : 28)
+                    .accessibilityIdentifier("adventure.menu")
                 }
             }
         }
@@ -279,20 +303,39 @@ public struct GameRootView: View {
     }
 
     private func header(compact: Bool) -> some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: compact ? 0 : 4) {
-                Text("ASTRO ADVENTURE")
-                    .font((compact ? Font.subheadline : Font.headline).weight(.black))
-                    .tracking(1.5)
-                if !compact {
-                    Text("Your Discovery Passport awaits")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .top) {
+                headerBrand(compact: compact).fixedSize()
+                Spacer(minLength: 16)
+                headerControls.fixedSize()
             }
+            VStack(alignment: .leading, spacing: 12) {
+                headerBrand(compact: compact)
+                headerControls
+            }
+        }
+    }
 
-            Spacer()
+    private func headerBrand(compact: Bool) -> some View {
+        VStack(alignment: .leading, spacing: compact ? 0 : 4) {
+            Text("ASTRO ADVENTURE")
+                .font((compact ? Font.subheadline : Font.headline).weight(.black))
+                .tracking(1.5)
+            if !compact {
+                Text("Your Discovery Passport awaits")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+    }
 
+    private var headerControls: some View {
+        let layout =
+            dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+            : AnyLayout(HStackLayout(spacing: 12))
+        return layout {
             Button("Passport", systemImage: "book.closed.fill") { showingPassport = true }
                 .accessibilityIdentifier("playground.passport")
 
@@ -309,6 +352,7 @@ public struct GameRootView: View {
                 }
             } label: {
                 Label(session.ageBand.modeName, systemImage: "person.2.fill")
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .disabled(session.isRoundInProgress || isPlanetAdventurePhase || isVideoPhase)
             .accessibilityLabel(
@@ -318,7 +362,7 @@ public struct GameRootView: View {
     }
 
     @ViewBuilder
-    private func missionPanel(compact: Bool) -> some View {
+    private func missionPanel(compact: Bool, contentWidth: Double) -> some View {
         VStack(spacing: compact ? 8 : 18) {
             switch session.phase {
             case .missionPrompt:
@@ -329,7 +373,6 @@ public struct GameRootView: View {
                 )
                 .font((compact ? Font.title2 : Font.largeTitle).bold())
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
                 Text(
                     session.completedDestinationCount > 0
                         ? "Mission Control is ready! Collect discovery stamps by exploring new worlds."
@@ -337,8 +380,6 @@ public struct GameRootView: View {
                 )
                 .font(compact ? .subheadline : .title3)
                 .multilineTextAlignment(.center)
-                .lineLimit(compact ? 1 : nil)
-                .minimumScaleFactor(0.8)
                 missionSteps(compact: compact)
                 primaryButton(
                     session.completedDestinationCount > 0
@@ -384,20 +425,15 @@ public struct GameRootView: View {
                         : "Enter the Space Technology Lab"
                 )
                 .font((compact ? Font.title3 : Font.title2).bold())
+                .multilineTextAlignment(.center)
                 sectionSelector(compact: compact)
                 if let recommendation = recommendedLesson {
                     Text("Mission Control suggests: \(recommendation.displayName)")
                         .font((compact ? Font.subheadline : Font.title3).bold())
                         .multilineTextAlignment(.center)
                 }
-                destinationSelector(compact: compact)
-                primaryButton(
-                    "Explore \(session.focusedLesson?.displayName ?? "Adventure")",
-                    systemImage: "sparkles"
-                ) {
-                    exploreFocusedDestination()
-                }
-                .accessibilityIdentifier("adventure.explore")
+                destinationSelector(compact: compact, contentWidth: contentWidth)
+                navigationPrimaryAction
                 if let destination = session.focusedLesson?.id,
                     ExplorationCatalog.adventure(destinationID: destination) != nil
                 {
@@ -419,7 +455,6 @@ public struct GameRootView: View {
                 Text(session.focusedContent?.discoveryText ?? "")
                     .font(compact ? .subheadline : .title3)
                     .multilineTextAlignment(.center)
-                    .lineLimit(compact ? 2 : nil)
                 primaryButton("Check the Clue", systemImage: "sparkles") {
                     session.confirm()
                 }
@@ -489,9 +524,11 @@ public struct GameRootView: View {
             Text(progressSummary)
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.white.opacity(0.7))
+                .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: 760)
         .padding(compact ? 14 : 26)
+        .frame(maxWidth: menuMaximumWidth)
+        .fixedSize(horizontal: false, vertical: true)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 28))
         .overlay {
             RoundedRectangle(cornerRadius: 28)
@@ -531,7 +568,12 @@ public struct GameRootView: View {
     }
 
     private func sectionSelector(compact: Bool) -> some View {
-        HStack(spacing: compact ? 8 : 12) {
+        let spacing = compact ? 8.0 : 12.0
+        let layout =
+            dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: spacing))
+            : AnyLayout(HStackLayout(spacing: spacing))
+        return layout {
             ForEach(ExplorerSection.allCases) { section in
                 Button {
                     selectSection(section)
@@ -539,18 +581,24 @@ public struct GameRootView: View {
                     Label(section.title, systemImage: section.systemImage)
                         .font((compact ? Font.caption : Font.subheadline).weight(.black))
                         .padding(.horizontal, compact ? 4 : 10)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(compact ? .small : .regular)
                 .tint(selectedSection == section ? .cyan : .gray.opacity(0.55))
                 .accessibilityHint("Shows \(section.title) adventures")
+                .accessibilityIdentifier("destination.section.\(section.rawValue)")
             }
         }
     }
 
-    private func destinationSelector(compact: Bool) -> some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: compact ? 8 : 12) {
+    private func destinationSelector(compact: Bool, contentWidth: Double) -> some View {
+        let cardWidth = min(
+            destinationCardWidth, max(1, contentWidth - 2 * destinationFocusInset))
+        return ScrollView(.horizontal) {
+            // These lightweight cards must report their full cross-axis height before scrolling.
+            HStack(spacing: compact ? 8 : 12) {
                 ForEach(sectionLessons, id: \.element.id) { index, lesson in
                     let selected = index == session.focusedDestinationIndex
                     let focused = focusedDestinationID == lesson.id
@@ -563,7 +611,6 @@ public struct GameRootView: View {
                         VStack(spacing: compact ? 2 : 4) {
                             Text(lesson.displayName)
                                 .font((compact ? Font.subheadline : Font.headline).weight(.bold))
-                                .lineLimit(1)
                             Text(lesson.kind.uppercased())
                                 .font(.caption2.weight(.black))
                                 .tracking(0.8)
@@ -595,12 +642,11 @@ public struct GameRootView: View {
                                 .font(.caption2.bold())
                             }
                         }
+                        .multilineTextAlignment(.center)
                         .foregroundStyle(selected ? Color.black : Color.white)
                         .padding(compact ? 8 : 16)
-                        .frame(
-                            minWidth: compact ? 112 : 138,
-                            minHeight: compact ? 56 : 84
-                        )
+                        .frame(width: cardWidth)
+                        .fixedSize(horizontal: false, vertical: true)
                         .background(
                             selected ? Color.cyan : Color(red: 0.11, green: 0.15, blue: 0.22),
                             in: RoundedRectangle(cornerRadius: compact ? 14 : 20)
@@ -618,11 +664,13 @@ public struct GameRootView: View {
                     .accessibilityIdentifier("destination.\(lesson.id)")
                 }
             }
-            .padding(.vertical, compact ? 4 : 10)
+            .padding(.horizontal, destinationFocusInset)
+            .padding(.vertical, destinationVerticalInset)
         }
         .scrollIndicators(.hidden)
-        .frame(maxWidth: 720)
-        .frame(height: compact ? 70 : nil)
+        .accessibilityIdentifier("destination.selector")
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity)
         .onChange(of: focusedDestinationID) { _, destinationID in
             guard
                 let destinationID,
@@ -630,6 +678,31 @@ public struct GameRootView: View {
             else { return }
             selectDestination(at: index)
         }
+    }
+
+    @ViewBuilder
+    private var navigationPrimaryAction: some View {
+        #if os(tvOS)
+            // Bridge the whole card row to its centered action without changing the chosen world.
+            HStack {
+                Spacer(minLength: 0)
+                exploreDestinationButton
+                Spacer(minLength: 0)
+            }
+            .focusSection()
+        #else
+            exploreDestinationButton
+        #endif
+    }
+
+    private var exploreDestinationButton: some View {
+        primaryButton(
+            "Explore \(session.focusedLesson?.displayName ?? "Adventure")",
+            systemImage: "sparkles"
+        ) {
+            exploreFocusedDestination()
+        }
+        .accessibilityIdentifier("adventure.explore")
     }
 
     private var sectionLessons: [(offset: Int, element: DestinationLesson)] {
@@ -781,6 +854,8 @@ public struct GameRootView: View {
                 Text(title)
             }
         }
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .focused($primaryActionFocused)
@@ -798,6 +873,8 @@ public struct GameRootView: View {
                 Text(title)
             }
         }
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
         .buttonStyle(.bordered)
     }
 }
