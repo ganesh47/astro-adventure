@@ -122,11 +122,14 @@ final class QuestionExperienceTests: XCTestCase {
             XCTAssertTrue(title.waitForExistence(timeout: 5))
             XCTAssertFalse(title.frame.isEmpty)
             let firstProgress = progress.value as? String
+            let firstTitle = title.label
             XCTAssertTrue(firstProgress?.hasPrefix("Card 1 of ") == true)
             focus("story.next")
             XCTAssertTrue(app.buttons["story.next"].hasFocus)
             capture("\(category) Story bottom Next has native focus")
+            var changedAt = ProcessInfo.processInfo.systemUptime
             remote.press(.select)
+            waitForStoryCard("Card 2 of ", excludingTitle: firstTitle, changedAt: changedAt)
             XCTAssertTrue((progress.value as? String)?.hasPrefix("Card 2 of ") == true)
             XCTAssertTrue(
                 visibleFrame(for: "story.progress").contains(progress.frame),
@@ -135,12 +138,15 @@ final class QuestionExperienceTests: XCTestCase {
                 visibleFrame(for: "story.title").contains(title.frame),
                 "The new card title must be visible")
             capture("\(category) Story Next resets header after bottom focus")
+            changedAt = ProcessInfo.processInfo.systemUptime
             select("story.previous")
+            waitForStoryCard("Card 1 of ", title: firstTitle, changedAt: changedAt)
             XCTAssertEqual(progress.value as? String, firstProgress)
             XCTAssertTrue(
                 visibleFrame(for: "story.progress").contains(progress.frame),
                 "Previous must restore the header")
             XCTAssertTrue(visibleFrame(for: "story.title").contains(title.frame))
+            capture("\(category) Story Previous restores settled first card header")
             remote.press(.playPause)
             XCTAssertTrue(app.buttons["adventure.pause.resume"].waitForExistence(timeout: 5))
             select("adventure.pause.resume")
@@ -151,6 +157,31 @@ final class QuestionExperienceTests: XCTestCase {
             capture("\(category) Story Resume restores reachable native controls")
             app.terminate()
         }
+    }
+
+    private func waitForStoryCard(
+        _ progressPrefix: String, title expectedTitle: String? = nil,
+        excludingTitle previousTitle: String? = nil, changedAt: TimeInterval
+    ) {
+        let progress = app.descendants(matching: .any).matching(identifier: "story.progress")
+            .firstMatch
+        let title = app.staticTexts["story.title"]
+        let settled = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                // Capture after the authored 0.45-second transition as well as the header reset.
+                guard ProcessInfo.processInfo.systemUptime - changedAt >= 0.75,
+                    progress.exists, title.exists,
+                    (progress.value as? String)?.hasPrefix(progressPrefix) == true,
+                    self.visibleFrame(for: "story.progress").contains(progress.frame),
+                    self.visibleFrame(for: "story.title").contains(title.frame)
+                else { return false }
+                if let expectedTitle, title.label != expectedTitle { return false }
+                if let previousTitle, title.label == previousTitle { return false }
+                return true
+            }, object: progress)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [settled], timeout: 5), .completed,
+            "The changed Story card must settle with its own title and complete header visible")
     }
 
     private func launch(

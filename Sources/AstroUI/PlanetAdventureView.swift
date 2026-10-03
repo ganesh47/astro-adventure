@@ -109,6 +109,7 @@ struct PlanetAdventureView: View {
                         .padding(.vertical, 8)
                     }
                     .scrollIndicators(.hidden)
+                    .accessibilityIdentifier("mission.scroll")
                     HStack {
                         Button {
                             narrator.stopSpeaking(at: .immediate)

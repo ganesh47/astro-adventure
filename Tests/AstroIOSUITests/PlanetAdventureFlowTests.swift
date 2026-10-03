@@ -288,9 +288,15 @@ final class PlanetAdventureFlowTests: XCTestCase {
         if element.identifier == "adventure.pause" { return viewport }
         for identifier in [
             "adventure.pause.scroll", "story.scroll", "quiz.scroll", "video.scroll",
-            "feedback.scroll", "adventure.menu",
+            "feedback.scroll", "adventure.menu", "mission.scroll",
         ] {
             let scroll = app.scrollViews[identifier]
+            if identifier == "mission.scroll",
+                !scroll.descendants(matching: .any).matching(identifier: element.identifier)
+                    .firstMatch.exists
+            {
+                continue
+            }
             if scroll.exists, hasVisibleGeometry(scroll), scroll.isHittable {
                 viewport = viewport.intersection(scroll.frame.insetBy(dx: 4, dy: 8))
                 break
