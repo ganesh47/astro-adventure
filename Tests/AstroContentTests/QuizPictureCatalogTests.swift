@@ -106,7 +106,7 @@ final class QuizPictureCatalogTests: XCTestCase {
             mercury[2].choices.first { $0.id == "deep_ocean" }?.picture)
         let subsurfaceOcean = try XCTUnwrap(
             europa[2].choices.first { $0.id == "deep_ocean" }?.picture)
-        XCTAssertEqual(surfaceOcean.scene, .ocean)
+        XCTAssertEqual(surfaceOcean.scene, .oceanCirculation)
         XCTAssertEqual(subsurfaceOcean.scene, .subsurfaceOcean)
         XCTAssertTrue(surfaceOcean.detail?.contains("surface ocean") == true)
         XCTAssertTrue(subsurfaceOcean.detail?.contains("beneath") == true)
@@ -429,8 +429,8 @@ final class QuizPictureCatalogTests: XCTestCase {
                 "Methane and ethane": .hydrocarbonLake,
                 "Liquid methane and ethane": .hydrocarbonLake,
                 "Surface hydrocarbon liquids rather than liquid water": .hydrocarbonLake,
-                "Warm water like home": .ocean,
-                "Warm liquid water like Earth’s": .ocean,
+                "Warm water like home": .pond,
+                "Warm liquid water like Earth’s": .pond,
                 "Earth-like warm surface water oceans": .ocean,
             ],
             "earth-season-tracker-sun-angle": [
@@ -474,6 +474,175 @@ final class QuizPictureCatalogTests: XCTestCase {
             XCTAssertEqual(found[concept], Set(proposals.keys), concept)
         }
         XCTAssertEqual(hydrocarbonInstances, 6)
+    }
+
+    func testOrbitShadowOceanAndHoopDrawingsMatchAuthoredScientificMeanings() throws {
+        // Explicit physical meanings: orbital centers, illuminated versus unlit surfaces,
+        // water states/flow geometry, and connected versus independently moving rings.
+        let expected: [String: [String: QuizPicture.Scene]] = [
+            "mercury-crater-detective-rays": [
+                "Water pours out": .craterWaterFlow,
+                "Water from a hidden lake": .hiddenLakeFlow,
+                "A permanent liquid-water river": .riverFlow,
+            ],
+            "mercury-crater-detective-caloris": [
+                "A deep blue ocean": .oceanBasin,
+                "A basin filled by an Earth-like ocean": .oceanBasin,
+            ],
+            "mercury-heat-and-shadow-air": [
+                "A global warm ocean": .oceanCirculation,
+                "Ocean circulation carrying warmth everywhere": .oceanCirculation,
+            ],
+            "mercury-heat-and-shadow-shadow-ice": [
+                "A dark polar crater": .shadow,
+                "A permanently shadowed polar crater": .shadow,
+                "A cold trap with no direct solar illumination": .shadow,
+            ],
+            "mercury-speedy-year-orbit": [
+                "One trip around the Sun": .orbit,
+                "One full orbit around the Sun": .orbit,
+            ],
+            "mercury-speedy-year-rotation": [
+                "Travel around the Sun": .orbit,
+                "Travel once around the Sun": .orbit,
+                "The orbital period": .orbit,
+            ],
+            "venus-radar-explorer-volcanoes": [
+                "Earth-like blue oceans": .ocean
+            ],
+            "venus-backward-spinner-rotation-orbit": [
+                "One Sun trip": .orbit,
+                "One full orbit": .orbit,
+                "The orbital period": .orbit,
+            ],
+            "earth-our-water-world-oceans": [
+                "Oceans": .ocean,
+                "Liquid-water oceans": .ocean,
+                "A global liquid-water ocean": .ocean,
+            ],
+            "earth-season-tracker-tilt": [
+                "The Sun switching off": .darkSun,
+                "The Sun switching off each winter": .darkSun,
+                "The Sun ceasing emission in winter": .darkSun,
+            ],
+            "earth-season-tracker-sun-angle": [
+                "A beam with no light at all": .noSunlight,
+                "No incoming radiation": .noSunlight,
+            ],
+            "mars-ancient-water-detective-valleys": [
+                "Water long ago": .ancientRiver,
+                "Liquid water flowed there in the past": .ancientRiver,
+                "Past surface flow shaped connected channels": .ancientRiver,
+            ],
+            "mars-ancient-water-detective-deltas": [
+                "A river leaving sand and mud": .riverDelta,
+                "A river depositing sediment near a lake": .riverDelta,
+                "Sediment deposited as flow enters quieter water": .riverDelta,
+            ],
+            "mars-landforms-and-seasons-volcano": [
+                "A wave frozen into rock": .rockWave,
+                "A single liquid-ocean wave": .liquidWave,
+            ],
+            "mars-landforms-and-seasons-canyon": [
+                "A tiny pond": .pond,
+                "A small shallow pond": .pond,
+                "A pond with no crustal deformation": .pond,
+            ],
+            "saturn-ring-builder-particles": [
+                "One solid hoop": .solidRing,
+                "One solid metal hoop": .solidRing,
+                "A rigid connected annulus": .solidRing,
+            ],
+            "saturn-ring-builder-orbits": [
+                "Saturn": .ringParticleOrbits,
+                "Our spaceship only": .spaceshipOrbit,
+                "They are glued into one wheel": .rigidRingRotation,
+                "They follow their own orbits": .ringParticleOrbits,
+                "Independent orbits with distance-dependent speeds": .ringParticleOrbits,
+                "Rigid-body rotation of a single solid structure": .rigidRingRotation,
+            ],
+            "saturn-two-moon-mysteries-titan-lakes": [
+                "Warm water like home": .pond,
+                "Warm liquid water like Earth’s": .pond,
+                "Earth-like warm surface water oceans": .ocean,
+            ],
+            "neptune-the-distant-sun-distance": [
+                "Earth": .earthWorld
+            ],
+            "neptune-the-distant-sun-sunlight": [
+                "Neptune turns light completely off": .stoppedLight,
+                "The planet switches the speed of light to zero": .stoppedLight,
+            ],
+            "neptune-tritons-backward-orbit-capture": [
+                "It may have been captured": .capturedMoon,
+                "Its orbit suggests an ancient capture": .capturedMoon,
+                "A hypothesis supported by orbital evidence": .capturedMoon,
+            ],
+            "neptune-tritons-backward-orbit-icy-jets": [
+                "Earth-like ocean beaches": .waterBeach,
+                "The moon must have Earth-like surface oceans": .ocean,
+            ],
+            "mercury-video-concept-1": [
+                "A ball of water": .waterSphere,
+                "A planet covered by an ocean": .waterSphere,
+                "A global liquid-water ocean": .waterSphere,
+            ],
+            "mercury-video-concept-2": [
+                "In cold shadows": .shadow,
+                "Deep craters remain in shadow": .shadow,
+                "Permanent shade limits solar heating": .shadow,
+            ],
+            "earth-video-concept-1": [
+                "The Sun turns off": .darkSun,
+                "The Sun switches off every night": .darkSun,
+                "The Sun stops producing light at night": .darkSun,
+            ],
+            "earth-video-concept-2": [
+                "Ocean": .ocean
+            ],
+            "mars-video-concept-1": [
+                "A red liquid ocean": .redLiquidOcean,
+                "A global red-water ocean": .redLiquidOcean,
+            ],
+            "mars-video-concept-2": [
+                "A tiny lake": .pond,
+                "A tiny pond": .pond,
+                "A small liquid-water lake": .pond,
+            ],
+            "saturn-video-concept-2": [
+                "One solid hoop": .solidRing,
+                "One solid sheet of metal": .solidRing,
+                "A single rigid metal hoop": .solidRing,
+            ],
+            "neptune-video-concept-1": [
+                "Earth": .earthWorld
+            ],
+        ]
+        var questions: [LearningQuestion] = []
+        for mission in try PlanetMissionCatalog.bundled() { questions += mission.questions }
+        for video in try VideoLessonCatalog.bundled() {
+            questions += video.checkpoints.map(\.question)
+        }
+        var found: [String: Set<String>] = [:]
+        var choiceInstances = 0
+        for question in questions {
+            guard let proposals = expected[question.conceptID] else { continue }
+            for band in AgeBand.allCases {
+                for quiz in [question.content[band], question.reviewContent[band]] {
+                    for choice in quiz.choices {
+                        guard let scene = proposals[choice.text] else { continue }
+                        XCTAssertEqual(choice.picture?.scene, scene, choice.text)
+                        found[question.conceptID, default: []].insert(choice.text)
+                        choiceInstances += 1
+                    }
+                }
+            }
+        }
+        for (concept, proposals) in expected {
+            XCTAssertEqual(found[concept], Set(proposals.keys), concept)
+        }
+        XCTAssertEqual(found.values.reduce(0) { $0 + $1.count }, 77)
+        XCTAssertEqual(choiceInstances, 158)
     }
 
     private func renderedSignature(_ picture: QuizPicture) -> String {

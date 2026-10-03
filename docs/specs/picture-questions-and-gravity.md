@@ -12,6 +12,8 @@ The reviewed catalogs fail on an unmapped authored proposal instead of assigning
 
 Select a proposal, then choose Check Answer. Selection and focus use marks and outlines. Correctness appears only after submission. Explanatory feedback offers retry, hint, Story, or film replay where the source supports it. Prompts, progress, answer cards, and controls scroll at large text sizes; text is not truncated or scaled down. Motion is limited to short entrances, selection, and focus; Reduce Motion removes these transitions. Narration is optional and VoiceOver reads the same proposals without duplicate speech.
 
+Background imagery does not determine foreground safe areas or intercept controls. The bottom Pause bar reserves its space. Story cards and the pause panel scroll when text grows, and Story returns to the new card's top on Next or Previous. Controls stack at accessibility text sizes.
+
 ## Optional challenge
 
 Practice is the default. Players may choose a 90-second challenge and return to calm practice at any point. This clock uses monotonic active time. Independent pause reasons cover inactivity, the pause panel, speech, visible help, Story, feedback, and restoration. Removing one reason cannot remove another. Spoken content pauses before speech begins and resumes only for the matching completed or cancelled utterance. Countdown changes do not repeatedly announce through VoiceOver or write a save every tick.
@@ -48,7 +50,8 @@ Launch settings are locked during a flight. Pausing or entering the background f
 
 - Full core, content, service, and Python regressions, including catalog coverage and generator preservation.
 - Schema 1–4 migration, future/corrupt byte preservation, complete schema 5 round trip below 256 KB, and atomic failed-save retry.
-- Question retry, hint, Story, Worlds, relaunch, selected-answer preservation, nested challenge pauses, expiry, and stale input tests.
+- Question retry, hint, Story, Worlds, Back through the start menu, relaunch, selected-answer preservation, nested challenge pauses, expiry, and stale input tests. Mission questions and video replay retain selection and elapsed challenge budget through menus and relaunch during replay.
 - Analytic physics, shared projection and clock, mass/weight distinction, bounds, pause, relaunch, and one-time landing tests.
 - Phone, iPad portrait/landscape, TV 1080p and 4K captures at normal and large text sizes; remote focus, touch, audio-off, Reduce Motion, and accessible labels reviewed from actual app output.
+- Reviewed scientific captures load the actual catalog's durable mission, film, and bonus cursors through the existing debug progress fixture. They cover Saturn's ring centers, Earth illumination and sunlight angle, Titan liquids, Uranus polar illumination, Triton capture, river deltas, Mars's red-liquid proposal, and DSN rotation.
 - Independent review and current checks on the exact candidate head before any authorized merge or release.

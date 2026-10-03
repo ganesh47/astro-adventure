@@ -210,6 +210,36 @@ private struct ScientificQuizCanvas {
             durationScale(long: picture.scene == .longDuration)
         case .instantLight:
             instantLight()
+        case .ringParticleOrbits, .spaceshipOrbit, .rigidRingRotation:
+            ringMotion(picture.scene)
+        case .capturedMoon:
+            capturedMoon()
+        case .noSunlight:
+            noSunlight()
+        case .stoppedLight:
+            stoppedLight()
+        case .redLiquidOcean:
+            redLiquidOcean()
+        case .rockWave, .liquidWave:
+            singleWave(rock: picture.scene == .rockWave)
+        case .pond:
+            pond()
+        case .riverFlow, .ancientRiver:
+            river(ancient: picture.scene == .ancientRiver)
+        case .riverDelta:
+            riverDelta()
+        case .waterSphere:
+            waterSphere()
+        case .earthWorld:
+            earth(50, 50, radius: 31)
+        case .oceanBasin:
+            oceanBasin()
+        case .oceanCirculation:
+            oceanCirculation()
+        case .craterWaterFlow, .hiddenLakeFlow:
+            craterWater(hidden: picture.scene == .hiddenLakeFlow)
+        case .waterBeach:
+            waterBeach()
         }
     }
 
@@ -1521,5 +1551,216 @@ private struct ScientificQuizCanvas {
         sphere(80, 36, radius: 16, color: .blue, bands: true)
         arrow(from: (38, 36), to: (61, 36), color: .yellow)
         label("0 time", 50, 78)
+    }
+
+    private func ellipseArrow(
+        _ x: Double, _ y: Double, major: Double, minor: Double,
+        start: Double, end: Double, color: Color = .cyan
+    ) {
+        let points = (0...24).map { index -> (Double, Double) in
+            let a = (start + (end - start) * Double(index) / 24) * .pi / 180
+            return (x + cos(a) * major, y + sin(a) * minor)
+        }
+        line(points, color: color, width: 1.8)
+        arrow(from: points[22], to: points[24], color: color)
+    }
+
+    private func ringMotion(_ scene: QuizPicture.Scene) {
+        if scene == .rigidRingRotation {
+            rings(particulate: false, tone: .gold)
+            ellipseArrow(50, 50, major: 40, minor: 15, start: 145, end: -120)
+            return
+        }
+        for radius in [27.0, 35, 43] {
+            ellipse(
+                50 - radius, 50 - radius * 0.4, radius * 2, radius * 0.8, color: .white.opacity(0.3)
+            )
+            for index in 0..<18 {
+                let a = Double(index) * .pi / 9
+                circle(50 + cos(a) * radius, 50 + sin(a) * radius * 0.4, radius: 1.3, color: .white)
+            }
+        }
+        if scene == .spaceshipOrbit {
+            fill(Path(box(40, 35, 20, 25)), color: .gray)
+            fill(Path(box(24, 39, 15, 14)), color: .blue)
+            fill(Path(box(61, 39, 15, 14)), color: .blue)
+            line([(50, 35), (50, 22)], color: .white)
+            label("Spaceship", 50, 94, size: 6)
+        } else {
+            sphere(50, 49, radius: 18, color: tone(.gold, fallback: .orange), bands: true)
+            label("Around Saturn", 50, 94, size: 6)
+        }
+        // In the same interval the inner particles traverse a larger angle.
+        for (major, angle) in [(27.0, 105.0), (35, 75), (43, 52)] {
+            ellipseArrow(50, 50, major: major, minor: major * 0.4, start: 135, end: 135 - angle)
+        }
+    }
+
+    private func capturedMoon() {
+        sphere(54, 52, radius: 20, color: tone(.blueWhite, fallback: .blue), bands: true)
+        ellipse(15, 22, 79, 61, color: .white.opacity(0.5), dashed: true)
+        curve(
+            from: (9, 10), to: (20, 60), control1: (34, 17), control2: (3, 29), color: .cyan,
+            width: 2)
+        arrow(from: (16, 53), to: (21, 66))
+        sphere(20, 63, radius: 6, color: .cyan)
+        line([(17, 59), (21, 63), (18, 66)], color: .white, width: 1)
+        label("Neptune", 58, 55, size: 6)
+        label("Capture proposal", 50, 96, size: 6)
+    }
+
+    private func noSunlight() {
+        fill(Path(box(12, 69, 76, 14)), color: .gray.opacity(0.65))
+        stroke(Path(box(27, 13, 46, 50)), color: .white.opacity(0.4), dashed: true)
+        label("No incoming light", 50, 94, size: 6)
+    }
+
+    private func stoppedLight() {
+        sun(17, 35, radius: 9)
+        sphere(79, 35, radius: 15, color: .blue, bands: true)
+        arrow(from: (33, 35), to: (50, 35), color: .yellow)
+        line([(55, 23), (55, 47)], color: .yellow, width: 3)
+        for x in [38.0, 44, 50] { circle(x, 57, radius: 2, color: .yellow) }
+        label("Light stopped", 50, 88, size: 6)
+    }
+
+    private func redLiquidOcean() {
+        fill(Path(box(12, 49, 76, 34)), color: tone(.rust, fallback: .red))
+        for y in [40.0, 54, 69] {
+            curve(
+                from: (12, y), to: (88, y), control1: (36, y - 9), control2: (64, y + 9),
+                color: .orange, width: 2)
+        }
+        label("Red liquid", 50, 95, size: 6)
+    }
+
+    private func singleWave(rock: Bool) {
+        var wave = Path()
+        wave.move(to: point(9, 82))
+        wave.addCurve(to: point(62, 22), control1: point(38, 80), control2: point(32, 30))
+        wave.addCurve(to: point(77, 45), control1: point(79, 14), control2: point(88, 35))
+        wave.addCurve(to: point(58, 40), control1: point(63, 27), control2: point(54, 28))
+        wave.addCurve(to: point(90, 83), control1: point(64, 65), control2: point(78, 75))
+        wave.closeSubpath()
+        fill(wave, color: rock ? .gray : .blue)
+        stroke(wave, color: .white.opacity(0.7))
+        if rock {
+            line([(25, 76), (41, 62), (47, 46)], color: .white.opacity(0.45))
+            line([(52, 62), (61, 74), (78, 82)], color: .white.opacity(0.45))
+        }
+        label(rock ? "Rock wave" : "Liquid wave", 50, 95, size: 6)
+    }
+
+    private func pond() {
+        polygon(
+            [
+                (8, 42), (28, 32), (54, 36), (81, 27), (94, 50), (91, 78), (62, 84), (28, 81),
+                (8, 67),
+            ], color: .brown)
+        fill(Path(ellipseIn: box(23, 43, 57, 29)), color: .blue)
+        ellipse(23, 43, 57, 29, color: .cyan)
+        line([(34, 54), (58, 54)], color: .cyan.opacity(0.6), width: 1)
+        line([(44, 63), (67, 63)], color: .cyan.opacity(0.6), width: 1)
+        label("Small lake", 50, 96, size: 6)
+    }
+
+    private func riverPath(_ x: Double, _ y: Double, scale: Double, wet: Bool) {
+        let points = [
+            (x + 10 * scale, y), (x + 23 * scale, y + 12 * scale),
+            (x + 15 * scale, y + 29 * scale), (x + 33 * scale, y + 43 * scale),
+        ]
+        line(points, color: wet ? .blue : .black.opacity(0.6), width: wet ? 7 * scale : 4 * scale)
+        line(
+            [(x, y + 19 * scale), (x + 15 * scale, y + 29 * scale)],
+            color: wet ? .blue : .black.opacity(0.6), width: 3 * scale)
+    }
+
+    private func river(ancient: Bool) {
+        if ancient {
+            for (x, wet) in [(7.0, true), (54.0, false)] {
+                fill(Path(box(x, 22, 40, 52)), color: .brown)
+                riverPath(x + 4, 26, scale: 0.8, wet: wet)
+                label(wet ? "Past flow" : "Dry channels", x + 20, 88, size: 6)
+            }
+            arrow(from: (43, 13), to: (58, 13))
+        } else {
+            fill(Path(box(12, 16, 76, 67)), color: .brown)
+            riverPath(25, 19, scale: 1.3, wet: true)
+            arrow(from: (55, 68), to: (63, 78), color: .cyan)
+            label("River flow", 50, 96, size: 6)
+        }
+    }
+
+    private func riverDelta() {
+        fill(Path(box(9, 14, 82, 72)), color: .brown)
+        fill(Path(box(10, 57, 80, 28)), color: .blue)
+        polygon([(50, 43), (25, 69), (76, 69)], color: .orange.opacity(0.8))
+        line([(45, 16), (57, 29), (50, 45)], color: .blue, width: 6)
+        for x in [31.0, 48, 68] {
+            line([(50, 45), (x, 70)], color: .cyan, width: 2)
+        }
+        for (x, y) in [(37.0, 68.0), (57, 70), (63, 65), (48, 61)] {
+            circle(x, y, radius: 1.3, color: .brown)
+        }
+        label("River deposits", 50, 96, size: 6)
+    }
+
+    private func waterSphere() {
+        circle(50, 48, radius: 30, color: .blue)
+        var clipped = context
+        clipped.clip(to: Path(ellipseIn: box(20, 18, 60, 60)))
+        for y in [32.0, 46, 60] {
+            var wave = Path()
+            wave.move(to: point(17, y))
+            wave.addCurve(to: point(83, y), control1: point(38, y - 9), control2: point(63, y + 9))
+            clipped.stroke(wave, with: .color(.cyan), lineWidth: max(1, frame.width / 80))
+        }
+        ellipse(20, 18, 60, 60)
+        label("Water world", 50, 96, size: 6)
+    }
+
+    private func oceanBasin() {
+        polygon(
+            [(8, 40), (24, 30), (36, 64), (66, 64), (79, 30), (92, 40), (92, 85), (8, 85)],
+            color: .brown)
+        polygon([(29, 43), (72, 43), (66, 64), (36, 64)], color: .blue)
+        line([(29, 43), (72, 43)], color: .cyan, width: 2)
+        label("Water-filled basin", 50, 96, size: 6)
+    }
+
+    private func oceanCirculation() {
+        sphere(50, 47, radius: 29, color: .blue)
+        curve(
+            from: (26, 40), to: (74, 40), control1: (40, 32), control2: (59, 48), color: .cyan,
+            width: 1.4)
+        curve(
+            from: (27, 55), to: (73, 55), control1: (42, 48), control2: (59, 62), color: .cyan,
+            width: 1.4)
+        ellipseArrow(50, 47, major: 38, minor: 20, start: 145, end: -100, color: .orange)
+        ellipseArrow(50, 47, major: 22, minor: 10, start: -25, end: -240, color: .cyan)
+        label("Ocean heat flow", 50, 96, size: 6)
+    }
+
+    private func craterWater(hidden: Bool) {
+        polygon(
+            [(8, 48), (28, 37), (38, 62), (60, 62), (73, 37), (92, 48), (92, 85), (8, 85)],
+            color: .brown)
+        if hidden {
+            fill(Path(ellipseIn: box(24, 67, 53, 13)), color: .blue)
+            arrow(from: (50, 67), to: (50, 45), color: .cyan)
+            label("Hidden lake", 50, 95, size: 6)
+        } else {
+            line([(50, 60), (35, 50), (24, 46), (9, 54)], color: .blue, width: 5)
+            line([(50, 60), (65, 50), (79, 46), (92, 54)], color: .blue, width: 5)
+            arrow(from: (66, 50), to: (83, 49), color: .cyan)
+            label("Water pours out", 50, 95, size: 6)
+        }
+    }
+
+    private func waterBeach() {
+        polygon([(9, 25), (40, 30), (55, 53), (91, 66), (91, 86), (9, 86)], color: .orange)
+        polygon([(41, 30), (91, 23), (91, 66), (55, 53)], color: .blue)
+        line([(41, 30), (47, 43), (55, 53), (72, 58), (91, 66)], color: .cyan, width: 3)
+        label("Water + shore", 50, 96, size: 6)
     }
 }

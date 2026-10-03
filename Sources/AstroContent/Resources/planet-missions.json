@@ -298,7 +298,7 @@
                 "id": "mercury-crater-detective-rays-option-1",
                 "text": "Water pours out",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "craterWaterFlow",
                   "label": "Water pours out",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -325,7 +325,7 @@
                 "id": "mercury-crater-detective-rays-option-1",
                 "text": "Water from a hidden lake",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hiddenLakeFlow",
                   "label": "Water from a hidden lake",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -370,7 +370,7 @@
                 "id": "mercury-crater-detective-rays-option-1",
                 "text": "A permanent liquid-water river",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverFlow",
                   "label": "A permanent liquid-water river",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -408,7 +408,7 @@
                 "id": "mercury-crater-detective-rays-option-1",
                 "text": "Water pours out",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "craterWaterFlow",
                   "label": "Water pours out",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -435,7 +435,7 @@
                 "id": "mercury-crater-detective-rays-option-1",
                 "text": "Water from a hidden lake",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hiddenLakeFlow",
                   "label": "Water from a hidden lake",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -462,7 +462,7 @@
                 "id": "mercury-crater-detective-rays-option-1",
                 "text": "A permanent liquid-water river",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverFlow",
                   "label": "A permanent liquid-water river",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -554,7 +554,7 @@
                 "id": "mercury-crater-detective-caloris-option-2",
                 "text": "A deep blue ocean",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanBasin",
                   "label": "A deep blue ocean",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -590,7 +590,7 @@
                 "id": "mercury-crater-detective-caloris-option-2",
                 "text": "A basin filled by an Earth-like ocean",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanBasin",
                   "label": "A basin filled by an Earth-like ocean",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -655,7 +655,7 @@
                 "id": "mercury-crater-detective-caloris-option-2",
                 "text": "A deep blue ocean",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanBasin",
                   "label": "A deep blue ocean",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -682,7 +682,7 @@
                 "id": "mercury-crater-detective-caloris-option-2",
                 "text": "A basin filled by an Earth-like ocean",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanBasin",
                   "label": "A basin filled by an Earth-like ocean",
                   "detail": "Schematic answer idea; Crater Detective"
                 }
@@ -956,7 +956,7 @@
                 "id": "mercury-heat-and-shadow-air-option-2",
                 "text": "A global warm ocean",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanCirculation",
                   "label": "A global warm ocean",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1001,7 +1001,7 @@
                 "id": "mercury-heat-and-shadow-air-option-2",
                 "text": "Ocean circulation carrying warmth everywhere",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanCirculation",
                   "label": "Ocean circulation carrying warmth everywhere",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1066,7 +1066,7 @@
                 "id": "mercury-heat-and-shadow-air-option-2",
                 "text": "A global warm ocean",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanCirculation",
                   "label": "A global warm ocean",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1102,7 +1102,7 @@
                 "id": "mercury-heat-and-shadow-air-option-2",
                 "text": "Ocean circulation carrying warmth everywhere",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "oceanCirculation",
                   "label": "Ocean circulation carrying warmth everywhere",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -5944,7 +5944,7 @@
                 "id": "earth-season-tracker-tilt-option-1",
                 "text": "The Sun switching off",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun switching off",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -5971,7 +5971,7 @@
                 "id": "earth-season-tracker-tilt-option-1",
                 "text": "The Sun switching off each winter",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun switching off each winter",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6016,7 +6016,7 @@
                 "id": "earth-season-tracker-tilt-option-1",
                 "text": "The Sun ceasing emission in winter",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun ceasing emission in winter",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6054,7 +6054,7 @@
                 "id": "earth-season-tracker-tilt-option-1",
                 "text": "The Sun switching off",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun switching off",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6081,7 +6081,7 @@
                 "id": "earth-season-tracker-tilt-option-1",
                 "text": "The Sun switching off each winter",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun switching off each winter",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6108,7 +6108,7 @@
                 "id": "earth-season-tracker-tilt-option-1",
                 "text": "The Sun ceasing emission in winter",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun ceasing emission in winter",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6411,7 +6411,7 @@
                 "id": "earth-season-tracker-sun-angle-option-2",
                 "text": "A beam with no light at all",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "noSunlight",
                   "label": "A beam with no light at all",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6438,7 +6438,7 @@
                 "id": "earth-season-tracker-sun-angle-option-2",
                 "text": "No incoming radiation",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "noSunlight",
                   "label": "No incoming radiation",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6503,7 +6503,7 @@
                 "id": "earth-season-tracker-sun-angle-option-2",
                 "text": "A beam with no light at all",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "noSunlight",
                   "label": "A beam with no light at all",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6548,7 +6548,7 @@
                 "id": "earth-season-tracker-sun-angle-option-2",
                 "text": "No incoming radiation",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "noSunlight",
                   "label": "No incoming radiation",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -8455,7 +8455,7 @@
                 "id": "mars-ancient-water-detective-valleys-option-0",
                 "text": "Water long ago",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "ancientRiver",
                   "label": "Water long ago",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8500,7 +8500,7 @@
                 "id": "mars-ancient-water-detective-valleys-option-0",
                 "text": "Liquid water flowed there in the past",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "ancientRiver",
                   "label": "Liquid water flowed there in the past",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8518,7 +8518,7 @@
                 "id": "mars-ancient-water-detective-valleys-option-0",
                 "text": "Past surface flow shaped connected channels",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "ancientRiver",
                   "label": "Past surface flow shaped connected channels",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8565,7 +8565,7 @@
                 "id": "mars-ancient-water-detective-valleys-option-0",
                 "text": "Water long ago",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "ancientRiver",
                   "label": "Water long ago",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8583,7 +8583,7 @@
                 "id": "mars-ancient-water-detective-valleys-option-0",
                 "text": "Liquid water flowed there in the past",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "ancientRiver",
                   "label": "Liquid water flowed there in the past",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8628,7 +8628,7 @@
                 "id": "mars-ancient-water-detective-valleys-option-0",
                 "text": "Past surface flow shaped connected channels",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "ancientRiver",
                   "label": "Past surface flow shaped connected channels",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8675,7 +8675,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-0",
                 "text": "A river leaving sand and mud",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverDelta",
                   "label": "A river leaving sand and mud",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8693,7 +8693,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-0",
                 "text": "A river depositing sediment near a lake",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverDelta",
                   "label": "A river depositing sediment near a lake",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8738,7 +8738,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-0",
                 "text": "Sediment deposited as flow enters quieter water",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverDelta",
                   "label": "Sediment deposited as flow enters quieter water",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8767,7 +8767,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-0",
                 "text": "A river leaving sand and mud",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverDelta",
                   "label": "A river leaving sand and mud",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8803,7 +8803,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-0",
                 "text": "A river depositing sediment near a lake",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverDelta",
                   "label": "A river depositing sediment near a lake",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -8848,7 +8848,7 @@
                 "id": "mars-ancient-water-detective-deltas-option-0",
                 "text": "Sediment deposited as flow enters quieter water",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "riverDelta",
                   "label": "Sediment deposited as flow enters quieter water",
                   "detail": "Schematic answer idea; Ancient Water Detective"
                 }
@@ -9333,7 +9333,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-2",
                 "text": "A wave frozen into rock",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "rockWave",
                   "label": "A wave frozen into rock",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9369,7 +9369,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-2",
                 "text": "A single liquid-ocean wave",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "liquidWave",
                   "label": "A single liquid-ocean wave",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9434,7 +9434,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-2",
                 "text": "A wave frozen into rock",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "rockWave",
                   "label": "A wave frozen into rock",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9461,7 +9461,7 @@
                 "id": "mars-landforms-and-seasons-volcano-option-2",
                 "text": "A single liquid-ocean wave",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "liquidWave",
                   "label": "A single liquid-ocean wave",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9508,7 +9508,7 @@
                 "id": "mars-landforms-and-seasons-canyon-option-1",
                 "text": "A tiny pond",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "A tiny pond",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9526,7 +9526,7 @@
                 "id": "mars-landforms-and-seasons-canyon-option-1",
                 "text": "A small shallow pond",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "A small shallow pond",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9562,7 +9562,7 @@
                 "id": "mars-landforms-and-seasons-canyon-option-1",
                 "text": "A pond with no crustal deformation",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "A pond with no crustal deformation",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9600,7 +9600,7 @@
                 "id": "mars-landforms-and-seasons-canyon-option-1",
                 "text": "A tiny pond",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "A tiny pond",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9627,7 +9627,7 @@
                 "id": "mars-landforms-and-seasons-canyon-option-1",
                 "text": "A small shallow pond",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "A small shallow pond",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -9672,7 +9672,7 @@
                 "id": "mars-landforms-and-seasons-canyon-option-1",
                 "text": "A pond with no crustal deformation",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "A pond with no crustal deformation",
                   "detail": "Schematic answer idea; Landforms and Seasons"
                 }
@@ -12841,7 +12841,7 @@
                 "id": "saturn-ring-builder-orbits-option-0",
                 "text": "Saturn",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "ringParticleOrbits",
                   "label": "Saturn",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12850,7 +12850,7 @@
                 "id": "saturn-ring-builder-orbits-option-1",
                 "text": "Our spaceship only",
                 "picture": {
-                  "scene": "solidRing",
+                  "scene": "spaceshipOrbit",
                   "label": "Our spaceship only",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12868,7 +12868,7 @@
                 "id": "saturn-ring-builder-orbits-option-1",
                 "text": "They are glued into one wheel",
                 "picture": {
-                  "scene": "solidRing",
+                  "scene": "rigidRingRotation",
                   "label": "They are glued into one wheel",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12886,7 +12886,7 @@
                 "id": "saturn-ring-builder-orbits-option-0",
                 "text": "They follow their own orbits",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "ringParticleOrbits",
                   "label": "They follow their own orbits",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12904,7 +12904,7 @@
                 "id": "saturn-ring-builder-orbits-option-0",
                 "text": "Independent orbits with distance-dependent speeds",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "ringParticleOrbits",
                   "label": "Independent orbits with distance-dependent speeds",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12913,7 +12913,7 @@
                 "id": "saturn-ring-builder-orbits-option-1",
                 "text": "Rigid-body rotation of a single solid structure",
                 "picture": {
-                  "scene": "solidRing",
+                  "scene": "rigidRingRotation",
                   "label": "Rigid-body rotation of a single solid structure",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12942,7 +12942,7 @@
                 "id": "saturn-ring-builder-orbits-option-1",
                 "text": "Our spaceship only",
                 "picture": {
-                  "scene": "solidRing",
+                  "scene": "spaceshipOrbit",
                   "label": "Our spaceship only",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12951,7 +12951,7 @@
                 "id": "saturn-ring-builder-orbits-option-0",
                 "text": "Saturn",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "ringParticleOrbits",
                   "label": "Saturn",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12969,7 +12969,7 @@
                 "id": "saturn-ring-builder-orbits-option-0",
                 "text": "They follow their own orbits",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "ringParticleOrbits",
                   "label": "They follow their own orbits",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -12978,7 +12978,7 @@
                 "id": "saturn-ring-builder-orbits-option-1",
                 "text": "They are glued into one wheel",
                 "picture": {
-                  "scene": "solidRing",
+                  "scene": "rigidRingRotation",
                   "label": "They are glued into one wheel",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13005,7 +13005,7 @@
                 "id": "saturn-ring-builder-orbits-option-1",
                 "text": "Rigid-body rotation of a single solid structure",
                 "picture": {
-                  "scene": "solidRing",
+                  "scene": "rigidRingRotation",
                   "label": "Rigid-body rotation of a single solid structure",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13014,7 +13014,7 @@
                 "id": "saturn-ring-builder-orbits-option-0",
                 "text": "Independent orbits with distance-dependent speeds",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "ringParticleOrbits",
                   "label": "Independent orbits with distance-dependent speeds",
                   "detail": "Schematic answer idea; Ring Builder"
                 }
@@ -13472,7 +13472,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-1",
                 "text": "Warm water like home",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "Warm water like home",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13490,7 +13490,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-1",
                 "text": "Warm liquid water like Earth’s",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "Warm liquid water like Earth’s",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13564,7 +13564,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-1",
                 "text": "Warm water like home",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "Warm water like home",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13600,7 +13600,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-1",
                 "text": "Warm liquid water like Earth’s",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "pond",
                   "label": "Warm liquid water like Earth’s",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -18515,7 +18515,7 @@
                 "id": "neptune-the-distant-sun-distance-option-1",
                 "text": "Earth",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "earthWorld",
                   "label": "Earth",
                   "detail": "Schematic answer idea; The Distant Sun",
                   "tone": "blueWhite"
@@ -18608,7 +18608,7 @@
                 "id": "neptune-the-distant-sun-distance-option-1",
                 "text": "Earth",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "earthWorld",
                   "label": "Earth",
                   "detail": "Schematic answer idea; The Distant Sun",
                   "tone": "blueWhite"
@@ -18756,7 +18756,7 @@
                 "id": "neptune-the-distant-sun-sunlight-option-1",
                 "text": "Neptune turns light completely off",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "stoppedLight",
                   "label": "Neptune turns light completely off",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -18783,7 +18783,7 @@
                 "id": "neptune-the-distant-sun-sunlight-option-1",
                 "text": "The planet switches the speed of light to zero",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "stoppedLight",
                   "label": "The planet switches the speed of light to zero",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -18848,7 +18848,7 @@
                 "id": "neptune-the-distant-sun-sunlight-option-1",
                 "text": "Neptune turns light completely off",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "stoppedLight",
                   "label": "Neptune turns light completely off",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -18884,7 +18884,7 @@
                 "id": "neptune-the-distant-sun-sunlight-option-1",
                 "text": "The planet switches the speed of light to zero",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "stoppedLight",
                   "label": "The planet switches the speed of light to zero",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -19561,7 +19561,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-0",
                 "text": "It may have been captured",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "capturedMoon",
                   "label": "It may have been captured",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19597,7 +19597,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-0",
                 "text": "Its orbit suggests an ancient capture",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "capturedMoon",
                   "label": "Its orbit suggests an ancient capture",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19642,7 +19642,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-0",
                 "text": "A hypothesis supported by orbital evidence",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "capturedMoon",
                   "label": "A hypothesis supported by orbital evidence",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19671,7 +19671,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-0",
                 "text": "It may have been captured",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "capturedMoon",
                   "label": "It may have been captured",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19707,7 +19707,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-0",
                 "text": "Its orbit suggests an ancient capture",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "capturedMoon",
                   "label": "Its orbit suggests an ancient capture",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19725,7 +19725,7 @@
                 "id": "neptune-tritons-backward-orbit-capture-option-0",
                 "text": "A hypothesis supported by orbital evidence",
                 "picture": {
-                  "scene": "orbit",
+                  "scene": "capturedMoon",
                   "label": "A hypothesis supported by orbital evidence",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19808,7 +19808,7 @@
                 "id": "neptune-tritons-backward-orbit-icy-jets-option-2",
                 "text": "Earth-like ocean beaches",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "waterBeach",
                   "label": "Earth-like ocean beaches",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }
@@ -19918,7 +19918,7 @@
                 "id": "neptune-tritons-backward-orbit-icy-jets-option-2",
                 "text": "Earth-like ocean beaches",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "waterBeach",
                   "label": "Earth-like ocean beaches",
                   "detail": "Schematic answer idea; Triton’s Backward Orbit"
                 }

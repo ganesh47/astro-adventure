@@ -567,6 +567,41 @@ final class QuestionSessionTests: XCTestCase {
         XCTAssertTrue(restored.questionClock.pauseReasons.contains(.awaitingResume))
     }
 
+    func testWorldsBackAndStartMenuResumeKeepSecondQuestionSelectionAndBudget() throws {
+        let time = TestTime()
+        let session = startedSession(time: time)
+        session.submitAnswer(at: 0, now: answerDate)
+        session.confirm()
+        let question = try XCTUnwrap(session.currentQuiz)
+        let interaction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: interaction)
+        session.selectQuizAnswer(at: 1, interaction: interaction)
+        time.now = 25
+        session.returnToWorlds()
+        session.back()
+        XCTAssertEqual(session.phase, .missionPrompt)
+        let saved = try roundTrip(session.progress)
+        let presentation = try XCTUnwrap(saved.questionPresentation)
+        time.now = 10_000
+        let restored = makeSession(progress: saved, count: 1, marker: "changed", time: time)
+        restored.confirm()
+        restored.back()
+        XCTAssertEqual(restored.phase, .missionPrompt)
+        XCTAssertEqual(restored.progress.questionPresentation, presentation)
+        restored.resumeSavedAdventure()
+        XCTAssertEqual(restored.phase, .quiz)
+        XCTAssertEqual(restored.quizQuestionIndex, 1)
+        XCTAssertEqual(restored.currentQuiz, question)
+        XCTAssertEqual(restored.selectedQuizChoiceID, "rock")
+        XCTAssertEqual(restored.questionClock.mode, .challenge)
+        XCTAssertEqual(restored.questionClock.remaining, 65)
+        XCTAssertTrue(restored.questionClock.pauseReasons.contains(.awaitingResume))
+        XCTAssertEqual(restored.questionAttemptCount, 0)
+        XCTAssertEqual(restored.progress.questionEvidence.count, 1)
+        XCTAssertEqual(restored.roundScore, 100)
+        XCTAssertEqual(restored.progress.totalScore, 0, "The unfinished round is not rewarded yet")
+    }
+
     func testMatchingWorldStoryMarksPendingQuestionAssistedWithoutChangingPriorEvidence() throws {
         let time = TestTime()
         let session = startedSession(time: time)

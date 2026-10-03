@@ -180,22 +180,7 @@ public struct GameRootView: View {
     }
 
     private var game: some View {
-        ZStack {
-            AstroWorldView(
-                lessons: session.lessons,
-                selectedDestinationID: session.focusedLesson?.id,
-                isExploring: session.phase != .missionPrompt && session.phase != .navigation
-            )
-            .ignoresSafeArea()
-
-            LinearGradient(
-                colors: [.black.opacity(0.6), .clear, .black.opacity(0.72)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-            .accessibilityHidden(true)
-
+        Group {
             if isVideoPhase {
                 VideoLessonView(session: session, isPaused: isPaused)
             } else if isPlanetAdventurePhase {
@@ -281,6 +266,23 @@ public struct GameRootView: View {
                     .accessibilityIdentifier("adventure.menu")
                 }
             }
+        }
+        .background {
+            ZStack {
+                AstroWorldView(
+                    lessons: session.lessons,
+                    selectedDestinationID: session.focusedLesson?.id,
+                    isExploring: session.phase != .missionPrompt && session.phase != .navigation
+                )
+                LinearGradient(
+                    colors: [.black.opacity(0.6), .clear, .black.opacity(0.72)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
         }
         .preferredColorScheme(.dark)
         .onChange(of: session.progress) { _, progress in
@@ -773,6 +775,21 @@ public struct GameRootView: View {
     }
 
     private var pausePanel: some View {
+        GeometryReader { proxy in
+            ScrollView {
+                pausePanelContent
+                    .frame(maxWidth: 760)
+                    .frame(
+                        maxWidth: .infinity, minHeight: max(0, proxy.size.height - 48)
+                    )
+                    .padding(24)
+            }
+            .accessibilityIdentifier("adventure.pause.scroll")
+        }
+        .onAppear { resumeFocused = true }
+    }
+
+    private var pausePanelContent: some View {
         VStack(spacing: 24) {
             Label("Mission paused", systemImage: "pause.circle.fill")
                 .font(.largeTitle.bold())
@@ -795,8 +812,8 @@ public struct GameRootView: View {
             .controlSize(.large)
             .accessibilityIdentifier("adventure.pause.worlds")
         }
-        .padding(48)
-        .onAppear { resumeFocused = true }
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private func selectSection(_ section: ExplorerSection) {

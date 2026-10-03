@@ -8,15 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		0369B78E9450BC01D4720951 /* AstroUI in Frameworks */ = {isa = PBXBuildFile; productRef = EF4E6075809D88D70F7EED45 /* AstroUI */; };
+		078822A883737554EE518669 /* ReviewedScientificQuestionFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECB4DD08451C6322DAAD23C /* ReviewedScientificQuestionFixture.swift */; };
 		09466088699472BA793B7E43 /* DestinationMenuLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EA3FDA88315D07D79677CF /* DestinationMenuLayoutTests.swift */; };
 		146E87751AAABFC382E068A2 /* AstroAdventureTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */; };
 		2C530A9A664D9D2BE255426E /* QuestionExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285FDFE5333B3A836D13105C /* QuestionExperienceTests.swift */; };
 		3778C5FE61C1CA2B4C6139D6 /* AstroAdventureIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F6F81C93F4ADDB7373A2F1 /* AstroAdventureIOSApp.swift */; };
 		3952C134EFC36CEC317F449D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
+		546B72FFA14EAEA76EA39A44 /* ReviewedScientificQuestionFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECB4DD08451C6322DAAD23C /* ReviewedScientificQuestionFixture.swift */; };
 		54A1C09B703A573566394828 /* ExplorationPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BCC5028E7A1CE09A015BF /* ExplorationPlaygroundTests.swift */; };
 		54BD1498BAE310010D3FB407 /* AstroUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5A7EE07D38D75EACEB60D83 /* AstroUI */; };
+		55385ABA045237421DCE063C /* AstroContent in Frameworks */ = {isa = PBXBuildFile; productRef = F9916889459F463F06D6B358 /* AstroContent */; };
 		7024CEC9BCA841DB627515B5 /* GravityPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E915FD8B4BCDCF0E02D7DB05 /* GravityPlaygroundTests.swift */; };
+		753C6CE2346C0C78D208CF3A /* AstroContent in Frameworks */ = {isa = PBXBuildFile; productRef = 2746AB61B8F8ABF7975505E1 /* AstroContent */; };
 		8A3DBF10A3173073256CC310 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
+		A447C87B80013E32E7993E5B /* AstroGameCore in Frameworks */ = {isa = PBXBuildFile; productRef = E4E14CD84F5BFC59B5437F2E /* AstroGameCore */; };
 		A9F1C4257F6DD96942649B9B /* PlanetAdventureFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */; };
 		AD7B8D4DFB2405FCF1A8C615 /* DestinationMenuLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259C8A44EA0E44BBF83446D8 /* DestinationMenuLayoutTests.swift */; };
 		B8EFB109E619F00A97310423 /* GravityPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1453C7EA037C17F97F4ADDA /* GravityPlaygroundTests.swift */; };
@@ -24,6 +29,7 @@
 		D74D8CCBC79C547E9D6349D4 /* ExplorationPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */; };
 		DAA6A7F02D6F1DCE322CE3BC /* QuestionExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E43453E8C2C66E05786D8F /* QuestionExperienceTests.swift */; };
 		E4397B7C60491C22A8337191 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
+		F0570E541D69A71727A5A5F1 /* AstroGameCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5F1D6F099685B80140E1DFEC /* AstroGameCore */; };
 		F650018B6F28409BC32EC2C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +62,7 @@
 		78E43453E8C2C66E05786D8F /* QuestionExperienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionExperienceTests.swift; sourceTree = "<group>"; };
 		8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureTVApp.swift; sourceTree = "<group>"; };
 		86F6F81C93F4ADDB7373A2F1 /* AstroAdventureIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureIOSApp.swift; sourceTree = "<group>"; };
+		AECB4DD08451C6322DAAD23C /* ReviewedScientificQuestionFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewedScientificQuestionFixture.swift; sourceTree = "<group>"; };
 		C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D1453C7EA037C17F97F4ADDA /* GravityPlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GravityPlaygroundTests.swift; sourceTree = "<group>"; };
 		D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetAdventureFlowTests.swift; sourceTree = "<group>"; };
@@ -72,6 +79,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				54BD1498BAE310010D3FB407 /* AstroUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47436A97B9F8FD150BA7AAC2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55385ABA045237421DCE063C /* AstroContent in Frameworks */,
+				F0570E541D69A71727A5A5F1 /* AstroGameCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		51D1D7EE1110A53149C33578 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				753C6CE2346C0C78D208CF3A /* AstroContent in Frameworks */,
+				A447C87B80013E32E7993E5B /* AstroGameCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +152,14 @@
 			path = AstroTVUITests;
 			sourceTree = "<group>";
 		};
+		6B21B45FA7D69452A2946EC0 /* SharedUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AECB4DD08451C6322DAAD23C /* ReviewedScientificQuestionFixture.swift */,
+			);
+			path = SharedUITests;
+			sourceTree = "<group>";
+		};
 		6D551F4B9729BB65FBB2B92B /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +183,7 @@
 			children = (
 				B5C6EA7EC9DFABC901872DF5 /* AstroIOSUITests */,
 				6AB262B172BC73F6B34E85B2 /* AstroTVUITests */,
+				6B21B45FA7D69452A2946EC0 /* SharedUITests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -191,6 +225,7 @@
 			buildConfigurationList = 8FB6E2E00BA4DB0D5A83554D /* Build configuration list for PBXNativeTarget "AstroAdventure-iOS-UITests" */;
 			buildPhases = (
 				57E79B6459612D70A1A9AAD9 /* Sources */,
+				47436A97B9F8FD150BA7AAC2 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -199,6 +234,8 @@
 			);
 			name = "AstroAdventure-iOS-UITests";
 			packageProductDependencies = (
+				F9916889459F463F06D6B358 /* AstroContent */,
+				5F1D6F099685B80140E1DFEC /* AstroGameCore */,
 			);
 			productName = "AstroAdventure-iOS-UITests";
 			productReference = FFC89062A13B0560ACE4A2C1 /* AstroAdventure-iOS-UITests.xctest */;
@@ -209,6 +246,7 @@
 			buildConfigurationList = 5A3B7763DF05A8A68829BF08 /* Build configuration list for PBXNativeTarget "AstroAdventure-tvOS-UITests" */;
 			buildPhases = (
 				2B8BE53E7C04329C47D02CFD /* Sources */,
+				51D1D7EE1110A53149C33578 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -217,6 +255,8 @@
 			);
 			name = "AstroAdventure-tvOS-UITests";
 			packageProductDependencies = (
+				2746AB61B8F8ABF7975505E1 /* AstroContent */,
+				E4E14CD84F5BFC59B5437F2E /* AstroGameCore */,
 			);
 			productName = "AstroAdventure-tvOS-UITests";
 			productReference = 3D654AEADE4132F3F788534D /* AstroAdventure-tvOS-UITests.xctest */;
@@ -355,6 +395,7 @@
 				D74D8CCBC79C547E9D6349D4 /* ExplorationPlaygroundTests.swift in Sources */,
 				7024CEC9BCA841DB627515B5 /* GravityPlaygroundTests.swift in Sources */,
 				2C530A9A664D9D2BE255426E /* QuestionExperienceTests.swift in Sources */,
+				078822A883737554EE518669 /* ReviewedScientificQuestionFixture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +408,7 @@
 				B8EFB109E619F00A97310423 /* GravityPlaygroundTests.swift in Sources */,
 				A9F1C4257F6DD96942649B9B /* PlanetAdventureFlowTests.swift in Sources */,
 				DAA6A7F02D6F1DCE322CE3BC /* QuestionExperienceTests.swift in Sources */,
+				546B72FFA14EAEA76EA39A44 /* ReviewedScientificQuestionFixture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -729,13 +771,29 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2746AB61B8F8ABF7975505E1 /* AstroContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AstroContent;
+		};
+		5F1D6F099685B80140E1DFEC /* AstroGameCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AstroGameCore;
+		};
 		A5A7EE07D38D75EACEB60D83 /* AstroUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AstroUI;
 		};
+		E4E14CD84F5BFC59B5437F2E /* AstroGameCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AstroGameCore;
+		};
 		EF4E6075809D88D70F7EED45 /* AstroUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AstroUI;
+		};
+		F9916889459F463F06D6B358 /* AstroContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AstroContent;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

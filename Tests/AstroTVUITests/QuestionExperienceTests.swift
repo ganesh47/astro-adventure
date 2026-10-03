@@ -88,8 +88,28 @@ final class QuestionExperienceTests: XCTestCase {
         }
     }
 
+    func testReviewedScientificContextsRenderTheirRealCatalogProposals() throws {
+        for fixture in try ReviewedScientificQuestionFixture.reviewedQuestions() {
+            launch(fixture: fixture.progressJSON)
+            select("adventure.resume")
+            let prefix = fixture.identifierPrefix
+            XCTAssertTrue(app.staticTexts["\(prefix).question"].waitForExistence(timeout: 10))
+            XCTAssertEqual(app.staticTexts["\(prefix).question"].label, fixture.quiz.prompt)
+            for (index, choice) in fixture.quiz.choices.enumerated() {
+                let identifier = "\(prefix).answer.\(index)"
+                focus(identifier)
+                XCTAssertEqual(app.buttons[identifier].label, "Answer \(index + 1): \(choice.text)")
+                XCTAssertTrue(app.buttons[identifier].hasFocus)
+            }
+            XCTAssertFalse(app.buttons["\(prefix).check"].isEnabled)
+            capture("Television reviewed scientific proposals \(fixture.name)")
+            app.terminate()
+        }
+    }
+
     private func launch(
-        reset: Bool = true, allowance: String? = nil, category: String = "UICTContentSizeCategoryL"
+        reset: Bool = true, allowance: String? = nil, category: String = "UICTContentSizeCategoryL",
+        fixture: String? = nil
     ) {
         app.launchArguments = ["--ui-testing", "-UIPreferredContentSizeCategoryName", category]
         if reset { app.launchArguments.append("--reset-ui-testing-progress") }
@@ -97,6 +117,7 @@ final class QuestionExperienceTests: XCTestCase {
         if let allowance {
             app.launchEnvironment["ASTRO_UI_TEST_QUESTION_ALLOWANCE_SECONDS"] = allowance
         }
+        if let fixture { app.launchEnvironment["ASTRO_UI_TEST_PROGRESS_JSON"] = fixture }
         app.launch()
     }
 

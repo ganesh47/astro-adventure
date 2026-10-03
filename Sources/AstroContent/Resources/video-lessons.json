@@ -68,7 +68,7 @@
                   "id": "one",
                   "text": "A ball of water",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "waterSphere",
                     "label": "A ball of water",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -96,7 +96,7 @@
                   "id": "one",
                   "text": "A planet covered by an ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "waterSphere",
                     "label": "A planet covered by an ocean",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -133,7 +133,7 @@
                   "id": "one",
                   "text": "A global liquid-water ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "waterSphere",
                     "label": "A global liquid-water ocean",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -172,7 +172,7 @@
                   "id": "one",
                   "text": "A ball of water",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "waterSphere",
                     "label": "A ball of water",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -200,7 +200,7 @@
                   "id": "one",
                   "text": "A planet covered by an ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "waterSphere",
                     "label": "A planet covered by an ocean",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -237,7 +237,7 @@
                   "id": "one",
                   "text": "A global liquid-water ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "waterSphere",
                     "label": "A global liquid-water ocean",
                     "detail": "Schematic answer idea; Mercury's Rocky Secrets"
                   }
@@ -1158,7 +1158,7 @@
                   "id": "one",
                   "text": "The Sun turns off",
                   "picture": {
-                    "scene": "shadow",
+                    "scene": "darkSun",
                     "label": "The Sun turns off",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1186,7 +1186,7 @@
                   "id": "one",
                   "text": "The Sun switches off every night",
                   "picture": {
-                    "scene": "shadow",
+                    "scene": "darkSun",
                     "label": "The Sun switches off every night",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1223,7 +1223,7 @@
                   "id": "one",
                   "text": "The Sun stops producing light at night",
                   "picture": {
-                    "scene": "shadow",
+                    "scene": "darkSun",
                     "label": "The Sun stops producing light at night",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1262,7 +1262,7 @@
                   "id": "one",
                   "text": "The Sun turns off",
                   "picture": {
-                    "scene": "shadow",
+                    "scene": "darkSun",
                     "label": "The Sun turns off",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1290,7 +1290,7 @@
                   "id": "one",
                   "text": "The Sun switches off every night",
                   "picture": {
-                    "scene": "shadow",
+                    "scene": "darkSun",
                     "label": "The Sun switches off every night",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1327,7 +1327,7 @@
                   "id": "one",
                   "text": "The Sun stops producing light at night",
                   "picture": {
-                    "scene": "shadow",
+                    "scene": "darkSun",
                     "label": "The Sun stops producing light at night",
                     "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
                   }
@@ -1766,7 +1766,7 @@
                   "id": "two",
                   "text": "A red liquid ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "redLiquidOcean",
                     "label": "A red liquid ocean",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
                     "tone": "rust"
@@ -1805,7 +1805,7 @@
                   "id": "two",
                   "text": "A global red-water ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "redLiquidOcean",
                     "label": "A global red-water ocean",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
                     "tone": "rust"
@@ -1875,7 +1875,7 @@
                   "id": "two",
                   "text": "A red liquid ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "redLiquidOcean",
                     "label": "A red liquid ocean",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
                     "tone": "rust"
@@ -1914,7 +1914,7 @@
                   "id": "two",
                   "text": "A global red-water ocean",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "redLiquidOcean",
                     "label": "A global red-water ocean",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
                     "tone": "rust"
@@ -1968,7 +1968,7 @@
                   "id": "one",
                   "text": "A tiny lake",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "pond",
                     "label": "A tiny lake",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
                   }
@@ -2004,7 +2004,7 @@
                   "id": "one",
                   "text": "A tiny pond",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "pond",
                     "label": "A tiny pond",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
                   }
@@ -2040,7 +2040,7 @@
                   "id": "one",
                   "text": "A small liquid-water lake",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "pond",
                     "label": "A small liquid-water lake",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
                   }
@@ -2069,7 +2069,7 @@
                   "id": "one",
                   "text": "A tiny lake",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "pond",
                     "label": "A tiny lake",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
                   }
@@ -2105,7 +2105,7 @@
                   "id": "one",
                   "text": "A tiny pond",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "pond",
                     "label": "A tiny pond",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
                   }
@@ -2141,7 +2141,7 @@
                   "id": "one",
                   "text": "A small liquid-water lake",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "pond",
                     "label": "A small liquid-water lake",
                     "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
                   }
@@ -3917,7 +3917,7 @@
                   "id": "one",
                   "text": "Earth",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "earthWorld",
                     "label": "Earth",
                     "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
                   }
@@ -3945,7 +3945,7 @@
                   "id": "one",
                   "text": "Earth",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "earthWorld",
                     "label": "Earth",
                     "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
                   }
@@ -3982,7 +3982,7 @@
                   "id": "one",
                   "text": "Earth",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "earthWorld",
                     "label": "Earth",
                     "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
                   }
@@ -4021,7 +4021,7 @@
                   "id": "one",
                   "text": "Earth",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "earthWorld",
                     "label": "Earth",
                     "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
                   }
@@ -4049,7 +4049,7 @@
                   "id": "one",
                   "text": "Earth",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "earthWorld",
                     "label": "Earth",
                     "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
                   }
@@ -4086,7 +4086,7 @@
                   "id": "one",
                   "text": "Earth",
                   "picture": {
-                    "scene": "ocean",
+                    "scene": "earthWorld",
                     "label": "Earth",
                     "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
                   }

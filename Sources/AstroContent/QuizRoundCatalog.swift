@@ -156,7 +156,7 @@ public enum QuizRoundCatalog {
                     .init(
                         id: "deep_ocean", text: "A deep ocean carries heat away",
                         picture: .init(
-                            scene: .ocean, label: "A deep ocean carries heat away",
+                            scene: .oceanCirculation, label: "A deep ocean carries heat away",
                             detail: "A surface ocean carrying heat away"
                         )
                     ),

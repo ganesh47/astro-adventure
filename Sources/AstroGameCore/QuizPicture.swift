@@ -29,6 +29,10 @@ public struct QuizPicture: Codable, Equatable, Sendable {
         case directSunlight, slantedSunlight, illustrationEvidence, pixelColorEvidence
         case hydrocarbonLake, imageTitle, destinationLabels, polarIllumination
         case darkSun, briefDuration, longDuration, instantLight
+        case ringParticleOrbits, spaceshipOrbit, rigidRingRotation, capturedMoon
+        case noSunlight, stoppedLight, redLiquidOcean, rockWave, liquidWave
+        case pond, riverFlow, ancientRiver, riverDelta, waterSphere, earthWorld
+        case oceanBasin, oceanCirculation, craterWaterFlow, hiddenLakeFlow, waterBeach
     }
 
     public enum Tone: String, Codable, Sendable {
