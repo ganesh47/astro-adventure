@@ -115,8 +115,8 @@ final class QuestionExperienceTests: XCTestCase {
             openSunQuestion()
             for index in 0..<3 {
                 let answer = button("quiz.answer.\(index)")
-                reveal(answer)
-                XCTAssertTrue(isReachable(answer))
+                reveal(answer, fully: true)
+                XCTAssertTrue(isFullyVisible(answer), "The entire Sun proposal must be visible")
                 capture("\(category) readable Sun proposal \(index + 1)")
             }
             tap("quiz.answer.0")
@@ -156,26 +156,71 @@ final class QuestionExperienceTests: XCTestCase {
         if app.buttons["adventure.explore"].exists { tap("adventure.explore") }
         let progress = app.descendants(matching: .any).matching(identifier: "story.progress")
             .firstMatch
+        let title = app.staticTexts["story.title"]
         let cardCount = DiscoveryStoryCatalog.slides(destinationID: "sun", ageBand: .ages7To9).count
         XCTAssertGreaterThan(cardCount, 1)
         XCTAssertTrue(progress.waitForExistence(timeout: 5))
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        let firstTitle = title.label
         XCTAssertEqual(progress.value as? String, "Card 1 of \(cardCount)")
         tap("story.next")
+        waitForStoryCard("Card 2 of \(cardCount)", excludingTitle: firstTitle)
         XCTAssertEqual(progress.value as? String, "Card 2 of \(cardCount)")
         XCTAssertTrue(progress.isHittable, "Next must scroll the new card's header into view")
-        capture("Largest text Story Next restores the new card top")
+        capture("Largest text settled Story Next restores the new card top")
+        reveal(title, fully: true)
+        XCTAssertTrue(isFullyVisible(title), "The complete new card title must be readable")
+        capture("Largest text settled Story Next complete title")
         tap("story.previous")
+        waitForStoryCard("Card 1 of \(cardCount)", title: firstTitle)
         XCTAssertEqual(progress.value as? String, "Card 1 of \(cardCount)")
         XCTAssertTrue(progress.isHittable, "Previous must restore the prior card's header")
+        capture("Largest text settled Story Previous restores the first card top")
+        reveal(title, fully: true)
+        XCTAssertTrue(isFullyVisible(title))
+        capture("Largest text settled Story Previous complete title")
         tap("adventure.pause")
         XCTAssertTrue(app.scrollViews["adventure.pause.scroll"].waitForExistence(timeout: 5))
+        let resume = button("adventure.pause.resume")
+        reveal(resume, fully: true)
+        XCTAssertTrue(isFullyVisible(resume), "The complete native Resume action must be visible")
+        capture("Largest text Pause Resume action fully visible")
         tap("adventure.pause.resume")
         XCTAssertFalse(app.scrollViews["adventure.pause.scroll"].exists)
         XCTAssertTrue(app.buttons["story.next"].exists)
+        XCTAssertEqual(progress.value as? String, "Card 1 of \(cardCount)")
         tap("adventure.pause")
-        capture("Largest text Pause panel scrolls to its actions")
+        let worlds = button("adventure.pause.worlds")
+        reveal(worlds, fully: true)
+        XCTAssertTrue(isFullyVisible(worlds), "The complete native Worlds action must be visible")
+        capture("Largest text Pause Worlds action fully visible")
         tap("adventure.pause.worlds")
         XCTAssertTrue(app.buttons["adventure.explore"].waitForExistence(timeout: 5))
+    }
+
+    private func waitForStoryCard(
+        _ expectedProgress: String, title expectedTitle: String? = nil,
+        excludingTitle previousTitle: String? = nil
+    ) {
+        let progress = app.descendants(matching: .any).matching(identifier: "story.progress")
+            .firstMatch
+        let title = app.staticTexts["story.title"]
+        let changedAt = ProcessInfo.processInfo.systemUptime
+        let settled = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                // The full header and long title are captured separately on compact screens.
+                guard ProcessInfo.processInfo.systemUptime - changedAt >= 0.75,
+                    progress.exists, title.exists,
+                    progress.value as? String == expectedProgress,
+                    self.isFullyVisible(progress)
+                else { return false }
+                if let expectedTitle, title.label != expectedTitle { return false }
+                if let previousTitle, title.label == previousTitle { return false }
+                return true
+            }, object: progress)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [settled], timeout: 5), .completed,
+            "The changed Story card must settle with its own title and restored header")
     }
 
     func testFutureOrCorruptLogHasRecoveryWithoutReplacement() {
