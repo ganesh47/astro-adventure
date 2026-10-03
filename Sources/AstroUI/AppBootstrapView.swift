@@ -125,6 +125,14 @@ public struct AppBootstrapView: View {
             let store = try Self.makeStore()
             progressStore = store
             savedProgress = try await store.load()
+            #if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("--ui-testing"),
+                    let fixture = ProcessInfo.processInfo.environment["ASTRO_UI_TEST_PROGRESS_JSON"]
+                {
+                    savedProgress = try JSONDecoder().decode(
+                        GameProgress.self, from: Data(fixture.utf8))
+                }
+            #endif
             saveQueue = ProgressSaveQueue(store: store)
             loadError = nil
             hasLoadedProgress = true

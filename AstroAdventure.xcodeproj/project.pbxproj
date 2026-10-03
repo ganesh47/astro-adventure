@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0369B78E9450BC01D4720951 /* AstroUI in Frameworks */ = {isa = PBXBuildFile; productRef = EF4E6075809D88D70F7EED45 /* AstroUI */; };
+		09466088699472BA793B7E43 /* DestinationMenuLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EA3FDA88315D07D79677CF /* DestinationMenuLayoutTests.swift */; };
 		146E87751AAABFC382E068A2 /* AstroAdventureTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */; };
 		3778C5FE61C1CA2B4C6139D6 /* AstroAdventureIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F6F81C93F4ADDB7373A2F1 /* AstroAdventureIOSApp.swift */; };
 		3952C134EFC36CEC317F449D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 		54BD1498BAE310010D3FB407 /* AstroUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5A7EE07D38D75EACEB60D83 /* AstroUI */; };
 		8A3DBF10A3173073256CC310 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C28C2A2F10FFC441F77F6F67 /* PrivacyInfo.xcprivacy */; };
 		A9F1C4257F6DD96942649B9B /* PlanetAdventureFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */; };
+		AD7B8D4DFB2405FCF1A8C615 /* DestinationMenuLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259C8A44EA0E44BBF83446D8 /* DestinationMenuLayoutTests.swift */; };
 		D1AAFA1A295A9E336E2D39FC /* DiscoveryFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */; };
 		D74D8CCBC79C547E9D6349D4 /* ExplorationPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */; };
 		E4397B7C60491C22A8337191 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF46344DD5BC7F6DBA36CE2 /* Assets.xcassets */; };
@@ -41,6 +43,8 @@
 /* Begin PBXFileReference section */
 		0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryFlowTests.swift; sourceTree = "<group>"; };
 		0C6F53AEA0E024CF5883507B /* Astro Adventure.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Astro Adventure.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		259C8A44EA0E44BBF83446D8 /* DestinationMenuLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationMenuLayoutTests.swift; sourceTree = "<group>"; };
+		28EA3FDA88315D07D79677CF /* DestinationMenuLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationMenuLayoutTests.swift; sourceTree = "<group>"; };
 		3D654AEADE4132F3F788534D /* AstroAdventure-tvOS-UITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "AstroAdventure-tvOS-UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorationPlaygroundTests.swift; sourceTree = "<group>"; };
 		8664A150D211D1E5F844B5F9 /* AstroAdventureTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstroAdventureTVApp.swift; sourceTree = "<group>"; };
@@ -106,6 +110,7 @@
 		6AB262B172BC73F6B34E85B2 /* AstroTVUITests */ = {
 			isa = PBXGroup;
 			children = (
+				28EA3FDA88315D07D79677CF /* DestinationMenuLayoutTests.swift */,
 				0350B463EBBB4EF1ECD50FC1 /* DiscoveryFlowTests.swift */,
 				7757CA362DE072B211CF1276 /* ExplorationPlaygroundTests.swift */,
 			);
@@ -151,6 +156,7 @@
 		B5C6EA7EC9DFABC901872DF5 /* AstroIOSUITests */ = {
 			isa = PBXGroup;
 			children = (
+				259C8A44EA0E44BBF83446D8 /* DestinationMenuLayoutTests.swift */,
 				DC3BCC5028E7A1CE09A015BF /* ExplorationPlaygroundTests.swift */,
 				D37B5D07C8F584E9A0B8FCD8 /* PlanetAdventureFlowTests.swift */,
 			);
@@ -332,6 +338,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09466088699472BA793B7E43 /* DestinationMenuLayoutTests.swift in Sources */,
 				D1AAFA1A295A9E336E2D39FC /* DiscoveryFlowTests.swift in Sources */,
 				D74D8CCBC79C547E9D6349D4 /* ExplorationPlaygroundTests.swift in Sources */,
 			);
@@ -341,6 +348,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD7B8D4DFB2405FCF1A8C615 /* DestinationMenuLayoutTests.swift in Sources */,
 				54A1C09B703A573566394828 /* ExplorationPlaygroundTests.swift in Sources */,
 				A9F1C4257F6DD96942649B9B /* PlanetAdventureFlowTests.swift in Sources */,
 			);

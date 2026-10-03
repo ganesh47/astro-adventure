@@ -25,7 +25,7 @@ final class PlanetAdventureFlowTests: XCTestCase {
             XCTAssertTrue(sound.waitForExistence(timeout: 5))
             if sound.label == "Sound On" { sound.tap() }
             XCTAssertEqual(sound.label, "Sound Off")
-            tap("mission.select.\(missionID)")
+            selectMission(missionID)
             tap("mission.start")
             finishMission()
             capture("Touch \(missionID) celebration")
@@ -230,6 +230,44 @@ final class PlanetAdventureFlowTests: XCTestCase {
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Missing action: \(id)")
         if !button.isHittable { app.swipeUp() }
         button.tap()
+    }
+
+    private func selectMission(_ id: String) {
+        XCTContext.runActivity(named: "Reveal and select mission \(id)") { _ in
+            let button = app.buttons["mission.select.\(id)"]
+            XCTAssertTrue(button.waitForExistence(timeout: 10))
+            let missions = app.scrollViews.firstMatch
+            capture("Chooser before revealing \(id)")
+            for _ in 0..<8 {
+                let visible = missions.frame.intersection(app.frame)
+                if button.frame.minY >= visible.minY && button.frame.maxY <= visible.maxY {
+                    break
+                }
+                let delta = button.frame.midY - visible.midY
+                let distance = min(abs(delta), visible.height * 0.45)
+                let start = missions.coordinate(
+                    withNormalizedOffset: CGVector(dx: 0.08, dy: delta > 0 ? 0.75 : 0.25))
+                let end = start.withOffset(CGVector(dx: 0, dy: delta > 0 ? -distance : distance))
+                start.press(
+                    forDuration: 0.1, thenDragTo: end, withVelocity: .slow,
+                    thenHoldForDuration: 0.25)
+            }
+            capture("Before selecting \(id)")
+            captureHierarchy("Before selecting \(id)")
+            XCTAssertGreaterThanOrEqual(button.frame.minY, missions.frame.minY)
+            XCTAssertLessThanOrEqual(button.frame.maxY, missions.frame.maxY)
+            XCTAssertTrue(button.isHittable, "Mission card must be visible before selection")
+            button.tap()
+            capture("After selecting \(id)")
+            captureHierarchy("After selecting \(id)")
+        }
+    }
+
+    private func captureHierarchy(_ name: String) {
+        let attachment = XCTAttachment(string: app.debugDescription)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func capture(_ name: String) {
