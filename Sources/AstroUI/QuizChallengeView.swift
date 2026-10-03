@@ -198,6 +198,7 @@ struct QuizChallengeView: View {
                     }
                     .padding(compact ? 12 : 22)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .foregroundStyle(.white)
                     .background(
                         Color(red: 0.07, green: 0.11, blue: 0.2),
                         in: RoundedRectangle(cornerRadius: 24)
