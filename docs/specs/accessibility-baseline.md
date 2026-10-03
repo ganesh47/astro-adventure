@@ -55,7 +55,7 @@ Run this checklist for first playable menus, mission prompts, and quiz loops.
 
 - Can the screen be completed with only a controller?
 - Is the current focus visible at a glance?
-- Are stamped, playground, mission-count, and long Technology Lab cards fully readable, including focused TV cards at 1080p/4K and portrait/landscape iPhone/iPad cards at the largest accessibility text size?
+- Are stamped, playground, mission-count, and long Technology Lab cards fully readable, including focused TV cards at 1080p/4K, landscape iPhone cards, and portrait/landscape iPad cards at the largest accessibility text size?
 - Can a player recover from a wrong answer without losing progress?
 - Is every vibration, color, and audio cue backed by another cue?
 - Can a parent or teacher understand the learning goal from the screen context?
