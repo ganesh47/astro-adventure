@@ -46,6 +46,10 @@ public final class MissionSession {
     public private(set) var currentStreak: Int
     public private(set) var roundBestStreak: Int
     public private(set) var questionAttemptCount: Int
+    public private(set) var selectedQuizChoiceID: String?
+    public private(set) var questionClock = QuestionChallengeClock(questionID: "none", now: 0)
+    private var presentationPhase: MissionPhase = .missionPrompt
+    private var presentationEpoch: UInt64 = 0
 
     public private(set) var activeRoundAgeBand: AgeBand?
     public private(set) var activeReviewQuestions: [LearningQuestion] = []
@@ -59,12 +63,16 @@ public final class MissionSession {
     private var activeRoundQuestions: [QuizContent] = []
     private var hasFinishedRound = false
 
+    private let monotonicTime: () -> Double
+    private let questionChallengeAllowance: Double
     private let quizProvider: (String, AgeBand) -> [QuizContent]
 
     public var ageBand: AgeBand {
         get { progress.selectedAgeBand }
         set {
-            guard !isRoundInProgress else { return }
+            guard !isRoundInProgress, !(phase == .discoveryCard && hasSuspendedBonusRound) else {
+                return
+            }
             progress.selectedAgeBand = newValue
             focusedQuizChoiceIndex = 0
             isShowingHint = false
@@ -110,7 +118,9 @@ public final class MissionSession {
             }
             return activeReviewQuestions.map { $0.reviewContent[activeMissionAgeBand] }
         }
-        if isRoundInProgress { return activeRoundQuestions }
+        if isRoundInProgress || (phase == .discoveryCard && hasSuspendedBonusRound) {
+            return activeRoundQuestions
+        }
         guard let lesson = focusedLesson else { return [] }
         let provided = quizProvider(lesson.id, ageBand)
         return provided.isEmpty ? [lesson.content[ageBand].quiz] : provided
@@ -150,13 +160,17 @@ public final class MissionSession {
         progress: GameProgress? = nil,
         quizProvider: @escaping (String, AgeBand) -> [QuizContent] = { _, _ in [] },
         planetMissions: [PlanetMission] = [],
-        videoLessons: [VideoLesson] = []
+        videoLessons: [VideoLesson] = [],
+        monotonicTime: @escaping () -> Double = { ProcessInfo.processInfo.systemUptime },
+        questionChallengeAllowance: Double = QuestionChallengeClock.defaultAllowance
     ) {
         self.missionID = missionID
         self.lessons = lessons
         self.planetMissions = planetMissions
         self.videoLessons = videoLessons
         self.quizProvider = quizProvider
+        self.monotonicTime = monotonicTime
+        self.questionChallengeAllowance = questionChallengeAllowance
         self.progress =
             progress
             ?? GameProgress(
@@ -224,25 +238,33 @@ public final class MissionSession {
     }
 
     public func confirm(now: Date = Date()) {
+        defer { prepareQuestion(now: monotonicTime()) }
         if confirmAdventure(now: now) { return }
         guard let lesson = focusedLesson else { return }
-        isShowingHint = false
-
         switch phase {
         case .missionPrompt:
             phase = .navigation
         case .navigation:
             markScanned(destinationID: lesson.id)
             if availableMissions.isEmpty {
-                // Bonus discoveries keep their existing restart behavior and replace an older run.
+                // A Story visit can resume the same locked bonus round.
                 progress.activeRun = nil
+                if progress.bonusQuizRun?.destinationID != lesson.id {
+                    progress.bonusQuizRun = nil
+                    activeRoundQuestions = []
+                }
                 phase = .discoveryCard
             } else {
                 phase = .missionSelection
             }
         case .discoveryCard:
-            beginQuizRound()
-            phase = .quiz
+            if hasSuspendedBonusRound {
+                restoreBonusRound()
+            } else {
+                beginQuizRound()
+                phase = .quiz
+            }
+            persistBonusRound()
         case .quiz:
             submitAnswer(at: focusedQuizChoiceIndex, now: now)
         case .quizFeedback:
@@ -251,6 +273,9 @@ public final class MissionSession {
                     quizQuestionIndex += 1
                     focusedQuizChoiceIndex = 0
                     questionAttemptCount = 0
+                    isShowingHint = false
+                    wasLastAnswerCorrect = false
+                    lastFeedback = ""
                     phase = .quiz
                 } else {
                     phase = .quizRoundComplete
@@ -259,15 +284,18 @@ public final class MissionSession {
                 phase = .quiz
             }
         case .quizRoundComplete:
+            progress.bonusQuizRun = nil
             exploreNextDestination()
         case .missionComplete:
             phase = .navigation
         default:
             break
         }
+        persistBonusRound()
     }
 
     public func back() {
+        defer { prepareQuestion(now: monotonicTime()) }
         if phase == .deepDive {
             closeDeepDive()
             return
@@ -276,11 +304,12 @@ public final class MissionSession {
             returnToWorlds()
             return
         }
-        isShowingHint = false
+        persistBonusRound()
         switch phase {
         case .navigation:
             phase = .missionPrompt
         case .quiz:
+            progress.bonusQuizRun?.assistedQuestionIndices.insert(quizQuestionIndex)
             phase = .discoveryCard
         case .discoveryCard, .quizFeedback, .quizRoundComplete, .missionComplete:
             phase = .navigation
@@ -292,6 +321,8 @@ public final class MissionSession {
     }
 
     public func returnToWorlds() {
+        defer { prepareQuestion(now: monotonicTime()) }
+        persistBonusRound()
         if isNewRunPhase, phase != .deepDive { persistRun() }
         isVideoPlaying = false
         videoSeekTarget = nil
@@ -300,11 +331,16 @@ public final class MissionSession {
     }
 
     public func requestHint() {
+        defer { prepareQuestion(now: monotonicTime()) }
         guard
             phase == .quiz || phase == .missionQuestion || phase == .missionActivity
                 || phase == .videoCheckpoint || phase == .reviewQuestion
         else { return }
         isShowingHint = true
+        if phase == .quiz {
+            progress.bonusQuizRun?.assistedQuestionIndices.insert(quizQuestionIndex)
+            persistBonusRound()
+        }
         if isNewRunPhase {
             let conceptID =
                 phase == .missionActivity
@@ -330,6 +366,7 @@ public final class MissionSession {
     }
 
     public func submitAnswer(at choiceIndex: Int, now: Date = Date()) {
+        defer { prepareQuestion(now: monotonicTime()) }
         if phase == .missionQuestion || phase == .videoCheckpoint || phase == .reviewQuestion {
             submitLearningAnswer(at: choiceIndex, now: now)
             return
@@ -352,6 +389,9 @@ public final class MissionSession {
         lastFeedback = isCorrect ? quiz.correctFeedback : quiz.retryFeedback
         phase = .quizFeedback
 
+        if !isCorrect {
+            progress.bonusQuizRun?.assistedQuestionIndices.insert(quizQuestionIndex)
+        }
         if isCorrect {
             roundCorrectAnswers += 1
             roundScore += 100
@@ -366,16 +406,19 @@ public final class MissionSession {
                 destinationProgress.masteryScore
                     + LearningEngine.masteryDelta(
                         answeredCorrectly: isCorrect,
-                        attempts: destinationProgress.attempts
+                        attempts: progress.bonusQuizRun?.assistedQuestionIndices.contains(
+                            quizQuestionIndex) == true
+                            ? max(questionAttemptCount, 2) : questionAttemptCount
                     ),
                 0
             ),
             100
         )
-        destinationProgress.reviewBox = LearningEngine.nextReviewBox(
-            current: destinationProgress.reviewBox,
-            answeredCorrectly: isCorrect
-        )
+        destinationProgress.reviewBox =
+            progress.bonusQuizRun?.assistedQuestionIndices.contains(quizQuestionIndex) == true
+            ? 1
+            : LearningEngine.nextReviewBox(
+                current: destinationProgress.reviewBox, answeredCorrectly: isCorrect)
         let delay = LearningEngine.reviewDelayDays(for: destinationProgress.reviewBox)
         destinationProgress.nextReviewAt = now.addingTimeInterval(
             TimeInterval(delay * 24 * 60 * 60)
@@ -384,6 +427,8 @@ public final class MissionSession {
         if isCorrect && quizQuestionIndex == activeRoundQuestions.count - 1 {
             finishQuizRound(now: now)
         }
+        persistBonusRound()
+        recordQuestionEvidence()
     }
 
     private func markScanned(destinationID: String) {
@@ -399,6 +444,7 @@ public final class MissionSession {
     }
 
     private func beginQuizRound() {
+        resetQuestionPresentation()
         activeRoundAgeBand = ageBand
         activeRoundQuestions = quizQuestions
         hasFinishedRound = false
@@ -410,6 +456,71 @@ public final class MissionSession {
         roundBestStreak = 0
         questionAttemptCount = 0
         isShowingHint = false
+        if let lesson = focusedLesson {
+            progress.bonusQuizRun = BonusQuizRunCursor(
+                destinationID: lesson.id, ageBand: ageBand, questions: activeRoundQuestions)
+        }
+    }
+
+    private var hasSuspendedBonusRound: Bool {
+        guard let cursor = progress.bonusQuizRun else { return false }
+        return cursor.isValid && cursor.destinationID == focusedLesson?.id
+    }
+
+    private func persistBonusRound() {
+        guard var cursor = progress.bonusQuizRun,
+            [.quiz, .quizFeedback, .quizRoundComplete].contains(phase)
+        else { return }
+        cursor.phase = phase
+        cursor.questionIndex = quizQuestionIndex
+        cursor.roundScore = roundScore
+        cursor.correctAnswers = roundCorrectAnswers
+        cursor.hasFinishedRound = hasFinishedRound
+        cursor.attempts = questionAttemptCount
+        cursor.isShowingHint = isShowingHint
+        cursor.feedbackWasCorrect = wasLastAnswerCorrect
+        cursor.feedbackText = lastFeedback
+        progress.bonusQuizRun = cursor
+    }
+
+    private func restoreBonusRound() {
+        guard let cursor = progress.bonusQuizRun, cursor.isValid,
+            lessons.contains(where: { $0.id == cursor.destinationID })
+        else {
+            progress.bonusQuizRun = nil
+            phase = .navigation
+            return
+        }
+        focusDestination(id: cursor.destinationID)
+        progress.selectedAgeBand = cursor.ageBand
+        activeRoundAgeBand = cursor.ageBand
+        activeRoundQuestions = cursor.questions
+        phase = cursor.phase
+        quizQuestionIndex = cursor.questionIndex
+        roundScore = cursor.roundScore
+        roundCorrectAnswers = cursor.correctAnswers
+        hasFinishedRound = cursor.hasFinishedRound
+        questionAttemptCount = cursor.attempts
+        isShowingHint = cursor.isShowingHint
+        wasLastAnswerCorrect = cursor.feedbackWasCorrect
+        lastFeedback = cursor.feedbackText
+        focusedQuizChoiceIndex = 0
+        synchronizeQuestionPresentation(now: monotonicTime(), restoring: true)
+        saveQuestionPresentation()
+    }
+
+    /// Restart is deliberate; visiting the Story or Worlds never restarts a round.
+    public func restartBonusRound() {
+        defer { prepareQuestion(now: monotonicTime()) }
+        guard [.discoveryCard, .quiz, .quizFeedback, .quizRoundComplete].contains(phase),
+            focusedLesson != nil
+        else { return }
+        progress.bonusQuizRun = nil
+        activeRoundQuestions = []
+        phase = .discoveryCard
+        beginQuizRound()
+        phase = .quiz
+        persistBonusRound()
     }
 
     private func finishQuizRound(now: Date) {
@@ -439,6 +550,17 @@ public final class MissionSession {
 }
 
 extension MissionSession {
+    @discardableResult
+    public func continueQuestionFeedback(
+        interaction: QuestionChallengeInteraction, now: Date = Date()
+    ) -> Bool {
+        guard interaction == questionInteraction,
+            [.quizFeedback, .missionStepFeedback, .videoFeedback, .reviewFeedback].contains(phase)
+        else { return false }
+        confirm(now: now)
+        return true
+    }
+
     public var availableMissions: [PlanetMission] {
         planetMissions.filter { $0.destinationID == focusedLesson?.id }
     }
@@ -467,13 +589,19 @@ extension MissionSession {
     public var currentActivityTaskIndex: Int { progress.activeRun?.activityTaskIndex ?? 0 }
     public var currentReviewQuestionIndex: Int { activeQuestionIndex }
     public var hasSavedAdventure: Bool {
+        if progress.bonusQuizRun?.isValid == true { return true }
         guard let savedPhase = progress.activeRun?.phase else { return false }
         return savedPhase != .planetMissionComplete && savedPhase != .videoComplete
             && savedPhase != .reviewComplete
     }
 
     public var savedAdventureTitle: String? {
-        switch progress.activeRun?.kind {
+        if let bonus = progress.bonusQuizRun, bonus.isValid {
+            return lessons.first { $0.id == bonus.destinationID }.map {
+                "\($0.displayName) picture questions"
+            }
+        }
+        return switch progress.activeRun?.kind {
         case .planetMission: activePlanetMission?.title
         case .video: activeVideoLesson?.title
         case .review: "A quick clue adventure"
@@ -560,6 +688,8 @@ extension MissionSession {
         else { return }
         focusDestination(id: mission.destinationID)
         markScanned(destinationID: mission.destinationID)
+        resetQuestionPresentation()
+        progress.bonusQuizRun = nil
         progress.activeRun = AdventureRunCursor(
             kind: .planetMission, contentID: id, destinationID: mission.destinationID,
             revision: mission.revision, ageBand: ageBand, phase: .missionBriefing
@@ -630,6 +760,8 @@ extension MissionSession {
         else { return }
         focusDestination(id: video.destinationID)
         markScanned(destinationID: video.destinationID)
+        resetQuestionPresentation()
+        progress.bonusQuizRun = nil
         progress.activeRun = AdventureRunCursor(
             kind: .video, contentID: id, destinationID: video.destinationID,
             revision: video.revision, ageBand: ageBand, phase: .videoPlayback
@@ -744,6 +876,8 @@ extension MissionSession {
         let questions = Array(reviewQuestionsDue(now: now).prefix(2))
         guard let first = questions.first else { return }
         activeReviewQuestions = questions
+        resetQuestionPresentation()
+        progress.bonusQuizRun = nil
         progress.activeRun = AdventureRunCursor(
             kind: .review, contentID: "quick-clue-review", destinationID: focusedLesson?.id ?? "",
             revision: 1, ageBand: ageBand, phase: .reviewQuestion, stepID: first.id
@@ -760,6 +894,12 @@ extension MissionSession {
 
     /// Loading the app never starts media. Resume is an explicit player action.
     public func resumeSavedAdventure() {
+        if [.missionPrompt, .navigation, .missionSelection].contains(phase),
+            progress.bonusQuizRun != nil
+        {
+            restoreBonusRound()
+            return
+        }
         guard phase == .missionPrompt || phase == .navigation || phase == .missionSelection,
             var cursor = progress.activeRun
         else { return }
@@ -867,6 +1007,7 @@ extension MissionSession {
             $0.id == cursor.selectedActivityOptionID
         }
         focusedQuizChoiceIndex = 0
+        synchronizeQuestionPresentation(now: monotonicTime(), restoring: true)
         persistRun()
     }
 
@@ -1035,6 +1176,7 @@ extension MissionSession {
             return
         }
         persistRun()
+        recordQuestionEvidence()
     }
 
     private func recordConceptEncounter(_ conceptID: String, now: Date) {
@@ -1118,6 +1260,8 @@ extension MissionSession {
     }
 
     private func persistRun() {
+        synchronizeQuestionPresentation(now: monotonicTime())
+        saveQuestionPresentation()
         guard var cursor = progress.activeRun else { return }
         if phase == .deepDive { return }
         cursor.phase = phase
@@ -1158,5 +1302,204 @@ extension MissionSession {
         isVideoPlaying = false
         videoSeekTarget = nil
         phase = .navigation
+    }
+}
+
+extension MissionSession {
+    public var isQuestionPhase: Bool {
+        [.quiz, .missionQuestion, .videoCheckpoint, .reviewQuestion].contains(phase)
+    }
+
+    public var questionInteraction: QuestionChallengeInteraction { questionClock.interaction }
+
+    public var lastAnswerUsedHelp: Bool {
+        if let bonus = progress.bonusQuizRun {
+            return bonus.assistedQuestionIndices.contains(quizQuestionIndex)
+        }
+        guard let conceptID = activeLearningQuestion?.conceptID else { return false }
+        return progress.activeRun?.assistedConceptIDs.contains(conceptID) == true
+    }
+
+    public var isQuestionInputBlocked: Bool {
+        !isQuestionPhase || questionClock.isExpired
+            || !questionClock.pauseReasons.isDisjoint(with: [
+                .manual, .appInactive, .awaitingResume, .story, .feedback,
+            ])
+    }
+
+    private var presentationQuestionID: String? {
+        if let bonus = progress.bonusQuizRun, bonus.isValid {
+            return "bonus:\(bonus.id):\(quizQuestionIndex)"
+        }
+        guard let run = progress.activeRun, let question = activeLearningQuestion else {
+            return nil
+        }
+        return
+            "\(run.kind.rawValue):\(run.contentID):\(run.revision):\(run.ageBand.rawValue):\(question.id)"
+    }
+
+    private func resetQuestionPresentation() {
+        presentationEpoch &+= 1
+        questionClock = QuestionChallengeClock(
+            questionID: "none", allowance: questionChallengeAllowance, now: monotonicTime(),
+            interactionEpoch: presentationEpoch)
+        selectedQuizChoiceID = nil
+        progress.questionPresentation = nil
+    }
+
+    public func revisitBonusStory() {
+        guard [.quiz, .quizFeedback].contains(phase), progress.bonusQuizRun != nil else { return }
+        // Story is another clue for an incorrect attempt. Return to its question,
+        // rather than restoring the retry panel and trapping the player in a loop.
+        if phase == .quizFeedback && !wasLastAnswerCorrect { phase = .quiz }
+        persistBonusRound()
+        progress.bonusQuizRun?.assistedQuestionIndices.insert(quizQuestionIndex)
+        phase = .discoveryCard
+        prepareQuestion()
+    }
+
+    /// Reconcile only at semantic transitions. Countdown sampling never saves progress.
+    public func prepareQuestion(now: Double? = nil) {
+        let now = now ?? monotonicTime()
+        synchronizeQuestionPresentation(now: now)
+        saveQuestionPresentation()
+    }
+
+    private func synchronizeQuestionPresentation(now: Double, restoring: Bool = false) {
+        guard let id = presentationQuestionID else { return }
+        if questionClock.questionID != id || restoring {
+            presentationEpoch &+= 1
+            if let saved = progress.questionPresentation, saved.challenge.questionID == id {
+                questionClock = QuestionChallengeClock(
+                    restoring: saved.challenge, now: now, allowance: questionChallengeAllowance,
+                    interactionEpoch: presentationEpoch)
+                selectedQuizChoiceID =
+                    currentQuiz?.choices.first { $0.id == saved.selectedChoiceID }?.id
+                if questionClock.mode == .practice {
+                    questionClock.setPaused(.awaitingResume, isPaused: false, now: now)
+                }
+            } else {
+                questionClock = QuestionChallengeClock(
+                    questionID: id, mode: questionClock.mode, allowance: questionChallengeAllowance,
+                    now: now,
+                    interactionEpoch: presentationEpoch)
+                selectedQuizChoiceID = nil
+            }
+        } else if presentationPhase != phase {
+            questionClock.invalidateInteractions(now: now)
+            presentationEpoch = questionClock.interactionEpoch
+            questionClock.setPaused(.narration, isPaused: false, now: now)
+        }
+        presentationPhase = phase
+        questionClock.setPaused(.feedback, isPaused: !isQuestionPhase, now: now)
+        questionClock.setPaused(
+            .story, isPaused: phase == .discoveryCard || phase == .videoPlayback, now: now)
+        questionClock.setPaused(.help, isPaused: isShowingHint, now: now)
+    }
+
+    private func saveQuestionPresentation() {
+        guard questionClock.questionID != "none" else { return }
+        progress.questionPresentation = QuestionPresentationSnapshot(
+            challenge: questionClock.snapshot, selectedChoiceID: selectedQuizChoiceID)
+    }
+
+    public func sampleQuestionTime(
+        now: Double? = nil,
+        interaction: QuestionChallengeInteraction
+    ) {
+        let now = now ?? monotonicTime()
+        questionClock.tick(now: now, expectedInteraction: interaction)
+    }
+
+    public func selectQuizAnswer(
+        at index: Int, interaction: QuestionChallengeInteraction,
+        now: Double? = nil
+    ) {
+        let now = now ?? monotonicTime()
+        guard interaction == questionInteraction, isQuestionPhase,
+            questionClock.pauseReasons.isDisjoint(with: [
+                .manual, .appInactive, .awaitingResume, .story, .feedback,
+            ]),
+            let quiz = currentQuiz, quiz.choices.indices.contains(index)
+        else { return }
+        questionClock.tick(now: now, expectedInteraction: interaction)
+        selectedQuizChoiceID = quiz.choices[index].id
+        focusedQuizChoiceIndex = index
+        saveQuestionPresentation()
+    }
+
+    public func confirmSelectedQuizAnswer(
+        interaction: QuestionChallengeInteraction, now: Date = Date(),
+        monotonicNow: Double? = nil
+    ) {
+        let monotonicNow = monotonicNow ?? monotonicTime()
+        questionClock.tick(now: monotonicNow, expectedInteraction: interaction)
+        guard interaction == questionInteraction, !isQuestionInputBlocked,
+            let quiz = currentQuiz,
+            let index = quiz.choices.firstIndex(where: { $0.id == selectedQuizChoiceID })
+        else { return }
+        submitAnswer(at: index, now: now)
+    }
+
+    public func setQuestionPaused(
+        _ reason: QuestionChallengePauseReason, isPaused: Bool,
+        interaction: QuestionChallengeInteraction? = nil,
+        now: Double? = nil
+    ) {
+        let now = now ?? monotonicTime()
+        questionClock.setPaused(
+            reason, isPaused: isPaused, now: now, expectedInteraction: interaction)
+        if interaction == nil || interaction == questionInteraction { saveQuestionPresentation() }
+    }
+
+    public func chooseQuestionMode(
+        _ mode: QuestionChallengeMode, interaction: QuestionChallengeInteraction,
+        now: Double? = nil
+    ) {
+        let now = now ?? monotonicTime()
+        guard isQuestionPhase, interaction == questionInteraction else { return }
+        questionClock.setMode(mode, now: now, expectedInteraction: interaction)
+        if mode == .practice {
+            questionClock.setPaused(.awaitingResume, isPaused: false, now: now)
+        }
+        saveQuestionPresentation()
+    }
+
+    public func giveQuestionMoreTime(
+        interaction: QuestionChallengeInteraction,
+        now: Double? = nil
+    ) {
+        let now = now ?? monotonicTime()
+        guard isQuestionPhase, interaction == questionInteraction else { return }
+        questionClock.moreTime(now: now, expectedInteraction: interaction)
+        saveQuestionPresentation()
+    }
+
+    public func resumeQuestionChallenge(
+        interaction: QuestionChallengeInteraction,
+        now: Double? = nil
+    ) {
+        let now = now ?? monotonicTime()
+        setQuestionPaused(.awaitingResume, isPaused: false, interaction: interaction, now: now)
+    }
+
+    public func dismissQuestionHint(now: Double? = nil) {
+        let now = now ?? monotonicTime()
+        guard isQuestionPhase else { return }
+        isShowingHint = false
+        questionClock.setPaused(.help, isPaused: false, now: now)
+        persistBonusRound()
+        if isNewRunPhase { persistRun() }
+        saveQuestionPresentation()
+    }
+
+    private func recordQuestionEvidence() {
+        guard wasLastAnswerCorrect, let id = presentationQuestionID else { return }
+        progress.questionEvidence.removeAll { $0.questionID == id }
+        progress.questionEvidence.append(
+            QuestionAnswerEvidence(
+                questionID: id, attempts: questionAttemptCount,
+                usedHelp: lastAnswerUsedHelp, usedChallenge: questionClock.challengeUsed))
+        progress.questionEvidence = Array(progress.questionEvidence.suffix(64))
     }
 }

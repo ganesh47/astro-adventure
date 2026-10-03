@@ -43,6 +43,7 @@ public struct GameRootView: View {
     @State private var session: MissionSession
     @State private var playground: ExplorationSession?
     @State private var showingPassport = false
+    @State private var showingGravity = false
     @State private var isPaused = false
     @FocusState private var resumeFocused: Bool
     @State private var selectedSection: ExplorerSection = .solarSystem
@@ -63,15 +64,31 @@ public struct GameRootView: View {
                 progress: progress,
                 quizProvider: QuizRoundCatalog.quizzes,
                 planetMissions: planetMissions,
-                videoLessons: videoLessons
+                videoLessons: videoLessons,
+                questionChallengeAllowance: Self.questionChallengeAllowance
             )
         )
         self.onProgressChanged = onProgressChanged
     }
 
+    private static var questionChallengeAllowance: Double {
+        #if DEBUG
+            let process = ProcessInfo.processInfo
+            if process.arguments.contains("--ui-testing"),
+                let raw = process.environment["ASTRO_UI_TEST_QUESTION_ALLOWANCE_SECONDS"],
+                let seconds = Double(raw), seconds.isFinite, (1...300).contains(seconds)
+            {
+                return seconds
+            }
+        #endif
+        return QuestionChallengeClock.defaultAllowance
+    }
+
     public var body: some View {
         Group {
-            if let playground {
+            if showingGravity {
+                GravityPlaygroundView(onLeave: { showingGravity = false })
+            } else if let playground {
                 ExplorationPlaygroundView(
                     session: playground, videoLessons: session.videoLessons,
                     onLeave: leavePlayground
@@ -90,7 +107,13 @@ public struct GameRootView: View {
                 progress: session.progress, adventures: ExplorationCatalog.adventures,
                 lessons: session.lessons, onClose: { showingPassport = false })
         }
+        .onChange(of: isPaused) {
+            session.setQuestionPaused(.manual, isPaused: isPaused)
+            if isPaused { session.pauseVideo() }
+        }
         .onChange(of: scenePhase) {
+            session.setQuestionPaused(.appInactive, isPaused: scenePhase != .active)
+            if showingGravity { return }
             if scenePhase != .active, let playground {
                 playground.send(.pause)
             } else if scenePhase != .active, session.phase != .missionPrompt {
@@ -109,6 +132,7 @@ public struct GameRootView: View {
                     type == AVAudioSession.InterruptionType.began.rawValue,
                     session.phase != .missionPrompt || playground != nil
                 else { return }
+                if showingGravity { return }
                 if let playground {
                     playground.send(.pause)
                     return
@@ -176,6 +200,9 @@ public struct GameRootView: View {
                 VideoLessonView(session: session, isPaused: isPaused)
             } else if isPlanetAdventurePhase {
                 PlanetAdventureView(session: session, isPaused: isPaused)
+            } else if session.phase == .quizFeedback {
+                QuestionFeedbackView(
+                    session: session, onStory: { session.revisitBonusStory() }, isPaused: isPaused)
             } else if session.phase == .quizRoundComplete,
                 let lesson = session.focusedLesson
             {
@@ -209,34 +236,21 @@ public struct GameRootView: View {
                     onBack: {
                         session.back()
                     },
-                    isPaused: isPaused
+                    isPaused: isPaused,
+                    resumeQuestionLabel: session.progress.bonusQuizRun == nil
+                        ? nil : "Resume Question \(session.quizQuestionIndex + 1)"
                 )
                 .id("\(lesson.id)-\(session.ageBand.rawValue)")
             } else if session.phase == .quiz,
                 let lesson = session.focusedLesson,
-                let quiz = session.currentQuiz
+                session.currentQuiz != nil
             {
                 QuizChallengeView(
-                    destinationName: lesson.displayName,
-                    ageBand: session.ageBand,
-                    quiz: quiz,
-                    isShowingHint: session.isShowingHint,
-                    completedCount: session.completedDestinationCount,
-                    totalCount: session.lessons.count,
+                    session: session, destinationName: lesson.displayName,
+                    ageBand: session.activeRoundAgeBand ?? session.ageBand,
                     questionIndex: session.quizQuestionIndex,
                     questionCount: session.quizQuestions.count,
-                    score: session.roundScore,
-                    streak: session.currentStreak,
-                    onSelectAnswer: { index in
-                        session.submitAnswer(at: index)
-                    },
-                    onHint: {
-                        session.requestHint()
-                    },
-                    onBack: {
-                        session.back()
-                    },
-                    isPaused: isPaused
+                    onBack: { session.back() }, isPaused: isPaused
                 )
                 .id("\(lesson.id)-\(session.ageBand.rawValue)-quiz")
             } else {
@@ -442,6 +456,10 @@ public struct GameRootView: View {
                     }
                     .accessibilityIdentifier("playground.legacy")
                 }
+                secondaryButton("Try the Gravity Playground", systemImage: "arrow.up.right") {
+                    showingGravity = true
+                }
+                .accessibilityIdentifier("gravity.open")
                 if !session.dueReviewQuestions.isEmpty {
                     secondaryButton("Play a Memory Adventure", systemImage: "brain.head.profile") {
                         session.startReview()

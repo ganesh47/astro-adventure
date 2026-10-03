@@ -1,0 +1,383 @@
+import Foundation
+import XCTest
+
+@testable import AstroContent
+@testable import AstroGameCore
+
+final class QuizPictureCatalogTests: XCTestCase {
+    func testEveryBundledQuestionAndReviewHasAuthoredPictureChoices() throws {
+        let lessons = try LessonCatalog.bundled()
+        var questionCount = 0
+        var choiceCount = 0
+
+        func inspect(_ quiz: QuizContent, context: String) throws {
+            questionCount += 1
+            choiceCount += quiz.choices.count
+            for choice in quiz.choices {
+                let picture = try XCTUnwrap(choice.picture, "\(context): \(choice.id)")
+                XCTAssertFalse(picture.label.trimmingCharacters(in: .whitespaces).isEmpty)
+                XCTAssertFalse((picture.detail ?? "").isEmpty)
+                if picture.scene == .waterCoverage {
+                    let fraction = try XCTUnwrap(picture.fraction, choice.id)
+                    XCTAssertTrue((0...1).contains(fraction), choice.id)
+                } else {
+                    XCTAssertNil(picture.fraction, choice.id)
+                }
+            }
+            XCTAssertEqual(
+                Set(quiz.choices.compactMap { $0.picture?.label }).count,
+                quiz.choices.count,
+                "\(context) needs distinct answer proposals")
+        }
+
+        for lesson in lessons {
+            for band in AgeBand.allCases {
+                try inspect(lesson.content[band].quiz, context: "\(lesson.id) \(band)")
+                for quiz in QuizRoundCatalog.quizzes(destinationID: lesson.id, ageBand: band) {
+                    try inspect(quiz, context: "\(lesson.id) round \(band)")
+                }
+            }
+        }
+        for mission in try PlanetMissionCatalog.bundled() {
+            for question in mission.questions {
+                for band in AgeBand.allCases {
+                    try inspect(question.content[band], context: "\(question.id) \(band)")
+                    try inspect(
+                        question.reviewContent[band], context: "\(question.id) review \(band)")
+                }
+            }
+        }
+        for video in try VideoLessonCatalog.bundled() {
+            for checkpoint in video.checkpoints {
+                for band in AgeBand.allCases {
+                    try inspect(
+                        checkpoint.question.content[band],
+                        context: "\(checkpoint.id) \(band)")
+                    try inspect(
+                        checkpoint.question.reviewContent[band],
+                        context: "\(checkpoint.id) review \(band)")
+                }
+            }
+        }
+
+        XCTAssertEqual(questionCount, 873)
+        XCTAssertEqual(choiceCount, 2_328)
+    }
+
+    func testAnswerPositionMixingPreservesAuthoredPicturePayloads() throws {
+        let destinations = [
+            "sun", "venus", "earth", "moon", "jupiter", "saturn", "uranus", "neptune",
+            "pluto", "ceres", "space-technology-lab",
+        ]
+        for destination in destinations {
+            for band in AgeBand.allCases {
+                let authored: [QuizContent]
+                if destination == "space-technology-lab" {
+                    authored = SpaceTechnologyCatalog.quizzes(ageBand: band)
+                } else {
+                    authored = try XCTUnwrap(
+                        SolarSystemExpansionCatalog.quizzes(
+                            destinationID: destination, ageBand: band))
+                }
+                let mixed = QuizRoundCatalog.quizzes(destinationID: destination, ageBand: band)
+                XCTAssertEqual(mixed.count, authored.count)
+                for (original, reordered) in zip(authored, mixed) {
+                    XCTAssertEqual(original.correctChoiceID, reordered.correctChoiceID)
+                    let originalChoices = Dictionary(
+                        uniqueKeysWithValues: original.choices.map { ($0.id, $0) })
+                    for choice in reordered.choices {
+                        XCTAssertEqual(choice, originalChoices[choice.id])
+                    }
+                }
+            }
+        }
+    }
+
+    func testSharedChoiceIDsKeepTheirContextualMeaning() throws {
+        let mercury = QuizRoundCatalog.quizzes(destinationID: "mercury", ageBand: .ages7To9)
+        let europa = QuizRoundCatalog.quizzes(destinationID: "europa", ageBand: .ages7To9)
+        let innerOrbit = try XCTUnwrap(mercury[0].choices.first { $0.id == "sun" }?.picture)
+        let smallStar = try XCTUnwrap(europa[0].choices.first { $0.id == "sun" }?.picture)
+        XCTAssertEqual(innerOrbit.scene, .innerOrbit)
+        XCTAssertEqual(smallStar.scene, .star)
+        XCTAssertNotEqual(innerOrbit, smallStar)
+
+        let surfaceOcean = try XCTUnwrap(
+            mercury[2].choices.first { $0.id == "deep_ocean" }?.picture)
+        let subsurfaceOcean = try XCTUnwrap(
+            europa[2].choices.first { $0.id == "deep_ocean" }?.picture)
+        XCTAssertEqual(surfaceOcean.scene, .ocean)
+        XCTAssertEqual(subsurfaceOcean.scene, .subsurfaceOcean)
+        XCTAssertTrue(surfaceOcean.detail?.contains("surface ocean") == true)
+        XCTAssertTrue(subsurfaceOcean.detail?.contains("beneath") == true)
+        XCTAssertNotEqual(surfaceOcean, subsurfaceOcean)
+    }
+
+    func testAgeSpecificChangesToAnOptionHaveAgeSpecificPictures() throws {
+        let mission = try XCTUnwrap(
+            PlanetMissionCatalog.bundled().first { $0.id == "venus-backward-spinner" })
+        let question = try XCTUnwrap(
+            mission.questions.first { $0.conceptID == "venus-backward-spinner-retrograde" })
+        let id = "venus-backward-spinner-retrograde-option-1"
+        let young = try XCTUnwrap(
+            question.content[.ages4To6].choices.first { $0.id == id }?.picture)
+        let older = try XCTUnwrap(
+            question.content[.ages7To9].choices.first { $0.id == id }?.picture)
+        XCTAssertEqual(young.scene, .sameSpins)
+        XCTAssertEqual(older.scene, .stillWorld)
+        XCTAssertEqual(young.label, "Exactly the same way")
+        XCTAssertEqual(older.label, "It does not spin at all")
+        XCTAssertEqual(
+            question.reviewContent[.ages7To9].choices.first { $0.id == id }?.picture, older)
+    }
+
+    func testLightTimeProposalsNameOneJourneyAndUseDistinctDurations() throws {
+        for lesson in try LessonCatalog.bundled() where lesson.id != "space-technology-lab" {
+            for band in AgeBand.allCases {
+                let quiz = try XCTUnwrap(
+                    QuizRoundCatalog.quizzes(destinationID: lesson.id, ageBand: band)
+                        .first { $0.correctChoiceID.contains("-light") })
+                let target = lesson.id == "sun" ? "Earth" : lesson.displayName
+                XCTAssertTrue(quiz.prompt.contains(target), quiz.prompt)
+                let expectedJourney = "Sunlight travelling from the Sun to \(target)"
+                for choice in quiz.choices {
+                    XCTAssertEqual(choice.picture?.scene, .duration)
+                    XCTAssertEqual(choice.picture?.detail, expectedJourney)
+                    XCTAssertEqual(choice.picture?.label, choice.text)
+                }
+                let values = try quiz.choices.map { try XCTUnwrap(minutes(in: $0.text)) }
+                XCTAssertEqual(Set(values).count, quiz.choices.count, "\(lesson.id) \(band)")
+            }
+        }
+        for destination in ["sun", "earth", "moon"] {
+            let quiz = try XCTUnwrap(
+                QuizRoundCatalog.quizzes(destinationID: destination, ageBand: .ages7To9)
+                    .first { $0.correctChoiceID == "\(destination)-light-correct" })
+            XCTAssertEqual(
+                Set(quiz.choices.map(\.text)), Set(["8.3 min", "6 min", "43 min"]))
+        }
+    }
+
+    func testNumericAndShapeProposalsAreNotSharedPhotographs() throws {
+        let mars = QuizRoundCatalog.quizzes(destinationID: "mars", ageBand: .ages7To9)
+        XCTAssertTrue(mars[1].choices.allSatisfy { $0.picture?.scene == .sizeComparison })
+        XCTAssertEqual(
+            Set(mars[1].choices.compactMap { $0.picture?.label }),
+            Set(["1/2 × Earth", "1 × Earth", "2 × Earth"]))
+        XCTAssertTrue(mars[2].choices.allSatisfy { $0.picture?.scene == .canyonLength })
+        XCTAssertTrue(mars[3].choices.allSatisfy { $0.picture?.scene == .volcanoWidth })
+        for question in [mars[2], mars[3]] {
+            XCTAssertTrue(question.choices.allSatisfy { $0.picture?.label == $0.text })
+        }
+        let saturn = try XCTUnwrap(
+            VideoLessonCatalog.bundled().first { $0.destinationID == "saturn" })
+        let shapes = saturn.checkpoints[0].question.content[.ages7To9].choices
+        XCTAssertEqual(
+            Set(shapes.compactMap { $0.picture?.scene.rawValue }),
+            Set(["hexagon", "triangle", "line"]))
+    }
+
+    func testFeatureMeasurementsKeepTheirPhysicalEndpoints() throws {
+        for band in AgeBand.allCases {
+            let mercury = QuizRoundCatalog.quizzes(destinationID: "mercury", ageBand: band)
+            let europa = QuizRoundCatalog.quizzes(destinationID: "europa", ageBand: band)
+            XCTAssertTrue(mercury[1].choices.allSatisfy { $0.picture?.scene == .craterWidth })
+            XCTAssertTrue(europa[4].choices.allSatisfy { $0.picture?.scene == .flybyDistance })
+            let hollows = try XCTUnwrap(mercury[3].choices.first { $0.id == "bright_hollows" })
+            XCTAssertEqual(hollows.picture?.scene, .hollows)
+        }
+        let missions = try PlanetMissionCatalog.bundled()
+        let expected: [String: QuizPicture.Scene] = [
+            "A change in orbital distance": .changingOrbitDistance,
+            "Only the diameter of the planet": .planetDiameter,
+            "Pulls the Sun closer to Venus": .movingSun,
+            "Changes the Sun’s position instead of energy flow": .movingSun,
+            "The spacecraft-size clock": .spacecraftSize,
+            "Only the spacecraft’s dimensions": .spacecraftSize,
+            "The distance from a classroom": .classroomDistance,
+            "A classroom to a nearby city": .classroomDistance,
+            "A fixed distance from Earth": .earthWorldDistance,
+            "An unchanging Earth-to-Neptune separation": .earthWorldDistance,
+        ]
+        var found = Set<String>()
+        for mission in missions {
+            for question in mission.questions {
+                for band in AgeBand.allCases {
+                    for quiz in [question.content[band], question.reviewContent[band]] {
+                        for choice in quiz.choices {
+                            guard let scene = expected[choice.text] else { continue }
+                            XCTAssertEqual(choice.picture?.scene, scene, choice.text)
+                            found.insert(choice.text)
+                        }
+                    }
+                }
+            }
+        }
+        XCTAssertEqual(found, Set(expected.keys))
+    }
+
+    func testTechnologyProposalsHaveTheirOwnMeaningfulScenes() throws {
+        let quizzes = QuizRoundCatalog.quizzes(
+            destinationID: "space-technology-lab", ageBand: .ages7To9)
+        let choices = quizzes.flatMap(\.choices)
+        let expected: [String: QuizPicture.Scene] = [
+            "tech_satellite_parts": .solarPanels,
+            "tech_satellite_wings": .wingedSatellite,
+            "tech_satellite_sails": .sailingSatellite,
+            "tech_suit_life": .spacesuit,
+            "tech_suit_wings": .wingedSuit,
+            "tech_suit_room": .crewSuit,
+            "tech_empty_tank": .emptyTank,
+            "tech_telescope_near": .movingStars,
+        ]
+        for (id, scene) in expected {
+            let choice = try XCTUnwrap(choices.first { $0.id == id })
+            XCTAssertEqual(choice.picture?.scene, scene)
+            XCTAssertEqual(choice.picture?.label, choice.text)
+        }
+    }
+
+    func testAuthoredAxesAndDirectionsAreDistinctFromGenericMotion() throws {
+        let missions = try PlanetMissionCatalog.bundled()
+        let expected: [String: [String: QuizPicture.Scene]] = [
+            "mercury-speedy-year-rotation": [
+                "Turn in place": .spin,
+                "Turn once around its own axis": .spin,
+                "The axial rotation period": .spin,
+            ],
+            "venus-backward-spinner-retrograde": [
+                "The other way": .retrogradeSpin,
+                "Its spin is opposite to most planets": .retrogradeSpin,
+                "Axial spin is reversed, not its orbital direction": .retrogradeSpin,
+                "Exactly the same way": .sameSpins,
+            ],
+            "earth-season-tracker-tilt": [
+                "Earth’s tilt": .tiltedSpin,
+                "The tilt of Earth’s axis": .tiltedSpin,
+                "Axial tilt changing illumination": .tiltedSpin,
+            ],
+            "uranus-sideways-seasons-tilt": [
+                "A sideways globe": .sidewaysSpin,
+                "A nearly sideways axis": .sidewaysSpin,
+                "Extreme axial tilt near 98 degrees": .sidewaysSpin,
+                "A globe standing upright": .uprightSpin,
+                "An almost upright axis": .uprightSpin,
+                "An axis nearly perpendicular to the orbital plane": .uprightSpin,
+            ],
+            "neptune-tritons-backward-orbit-retrograde-orbit": [
+                "The opposite way": .oppositeMotion,
+                "Its orbit is opposite to Neptune’s spin": .oppositeMotion,
+                "Orbital revolution opposite to the planet’s rotation": .oppositeMotion,
+                "Exactly the same way": .sameMotion,
+            ],
+        ]
+        var inspected = Set<String>()
+        for question in missions.flatMap(\.questions) {
+            guard let variants = expected[question.conceptID] else { continue }
+            for band in AgeBand.allCases {
+                for quiz in [question.content[band], question.reviewContent[band]] {
+                    for choice in quiz.choices {
+                        guard let scene = variants[choice.text] else { continue }
+                        XCTAssertEqual(choice.picture?.scene, scene)
+                        inspected.insert("\(question.conceptID):\(choice.text)")
+                    }
+                }
+            }
+        }
+        XCTAssertEqual(inspected.count, expected.values.reduce(0) { $0 + $1.count })
+    }
+
+    func testOceanCoverageAndLifeScopeAreAuthoredAsDifferentProposals() throws {
+        let earthVideo = try XCTUnwrap(
+            VideoLessonCatalog.bundled().first { $0.destinationID == "earth" })
+        for band in [AgeBand.ages7To9, .ages10To12] {
+            let question = earthVideo.checkpoints[1].question
+            for quiz in [question.content[band], question.reviewContent[band]] {
+                let proposals = quiz.choices.compactMap(\.picture)
+                XCTAssertTrue(proposals.allSatisfy { $0.scene == .waterCoverage })
+                XCTAssertEqual(Set(proposals.compactMap(\.fraction)), Set([0.71, 0.10, 0.0]))
+            }
+        }
+        let lifeMission = try XCTUnwrap(
+            PlanetMissionCatalog.bundled().first { $0.id == "earth-our-water-world" })
+        let life = lifeMission.questions[2].content[.ages4To6]
+        XCTAssertEqual(life.choices.first { $0.text == "Earth" }?.picture?.scene, .livingEarth)
+        XCTAssertEqual(
+            life.choices.first { $0.text == "Every planet" }?.picture?.scene, .livingWorlds)
+        let europa = QuizRoundCatalog.quizzes(destinationID: "europa", ageBand: .ages7To9)
+        XCTAssertEqual(
+            europa[2].choices.first { $0.text == "A deep salty ocean" }?.picture?.scene,
+            .subsurfaceOcean)
+    }
+
+    func testColorProposalsKeepTheirToneAcrossDestinationsAndAnswerPositions() throws {
+        let expected: [String: QuizPicture.Tone] = [
+            "White light, often pictured gold or orange": .gold,
+            "Cream and golden clouds": .cream,
+            "Blue oceans and white clouds": .blueWhite,
+            "Gray rock with dark lava plains": .gray,
+            "Cream, orange and brown cloud bands": .gold,
+            "Pale gold clouds and bright icy rings": .gold,
+            "Pale blue-green": .blueGreen,
+            "Blue with bright white clouds": .blueWhite,
+            "Tan, white and rusty red": .rust,
+            "Dark gray with brilliant white spots": .gray,
+        ]
+        let destinations = [
+            "sun", "venus", "earth", "moon", "jupiter", "saturn", "uranus", "neptune",
+            "pluto", "ceres",
+        ]
+        for destination in destinations {
+            for band in AgeBand.allCases {
+                let colors = QuizRoundCatalog.quizzes(destinationID: destination, ageBand: band)[1]
+                for choice in colors.choices {
+                    let tone = try XCTUnwrap(expected[choice.text], choice.text)
+                    XCTAssertEqual(choice.picture?.tone, tone)
+                }
+            }
+        }
+    }
+
+    func testGeneratedFeaturesAndSpecialOrbitCentersHaveExplicitVariants() throws {
+        let expected: [String: QuizPicture.Scene] = [
+            "Magnetic loops and solar prominences": .solarLoops,
+            "A heart-shaped nitrogen-ice plain": .heartPlain,
+            "Bright salt deposits in Occator Crater": .saltSpots,
+            "It keeps nearly the same face toward Earth": .synchronousMoon,
+            "It rotates almost completely on its side": .sidewaysSpin,
+            "A ≈25-day equator spin; a ≈230-million-year galactic orbit": .galacticOrbit,
+            "A 243-day backward spin; a 225-day year": .retrogradeSpinOrbit,
+            "A 27.3-day spin and 27.3-day orbit": .synchronousMoon,
+        ]
+        var found = Set<String>()
+        for destination in ["sun", "venus", "moon", "uranus", "pluto", "ceres"] {
+            let choices = QuizRoundCatalog.quizzes(destinationID: destination, ageBand: .ages7To9)
+                .flatMap(\.choices)
+            for choice in choices {
+                if let scene = expected[choice.text] {
+                    XCTAssertEqual(choice.picture?.scene, scene)
+                    found.insert(choice.text)
+                }
+            }
+        }
+        XCTAssertEqual(found, Set(expected.keys))
+    }
+
+    private func minutes(in text: String) -> Double? {
+        let pattern = #"([0-9]+(?:\.[0-9]+)?)\s*(hours?|hrs?|minutes?|min|seconds?|sec)"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        else { return nil }
+        let range = NSRange(text.startIndex..<text.endIndex, in: text)
+        let matches = regex.matches(in: text, range: range)
+        guard !matches.isEmpty else { return nil }
+        return matches.reduce(0) { total, match in
+            guard let numberRange = Range(match.range(at: 1), in: text),
+                let unitRange = Range(match.range(at: 2), in: text),
+                let value = Double(text[numberRange])
+            else { return total }
+            let unit = text[unitRange].lowercased()
+            let multiplier = unit.hasPrefix("h") ? 60.0 : unit.hasPrefix("s") ? 1.0 / 60 : 1.0
+            return total + value * multiplier
+        }
+    }
+}

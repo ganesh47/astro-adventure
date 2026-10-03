@@ -77,9 +77,27 @@ public enum QuizRoundCatalog {
                     ? "Which planet is closest to the Sun?"
                     : "Which clue places Mercury in the solar system?",
                 choices: [
-                    .init(id: "sun", text: "Closest planet to the Sun"),
-                    .init(id: "red_planet", text: "The rusty red planet"),
-                    .init(id: "icy_moon", text: "An icy moon of Jupiter"),
+                    .init(
+                        id: "sun", text: "Closest planet to the Sun",
+                        picture: .init(
+                            scene: .innerOrbit, label: "Closest planet to the Sun",
+                            detail: "Mercury on the innermost orbit around the Sun"
+                        )
+                    ),
+                    .init(
+                        id: "red_planet", text: "The rusty red planet",
+                        picture: .init(
+                            scene: .rust, label: "The rusty red planet",
+                            detail: "Schematic answer idea for Mercury", tone: .rust
+                        )
+                    ),
+                    .init(
+                        id: "icy_moon", text: "An icy moon of Jupiter",
+                        picture: .init(
+                            scene: .moon, label: "An icy moon of Jupiter",
+                            detail: "Schematic answer idea for Mercury", tone: .blueWhite
+                        )
+                    ),
                 ],
                 correct: "sun",
                 correctFeedback: "Solar-powered! Mercury is the closest planet to the Sun.",
@@ -90,9 +108,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "About how wide is Mercury’s Caloris Basin?",
                 choices: [
-                    .init(id: "caloris_1550", text: "1,550 kilometres"),
-                    .init(id: "caloris_155", text: "155 kilometres"),
-                    .init(id: "caloris_15500", text: "15,500 kilometres"),
+                    .init(
+                        id: "caloris_1550", text: "1,550 kilometres",
+                        picture: .init(
+                            scene: .craterWidth, label: "1,550 kilometres",
+                            detail: "Proposed diameter of Caloris Basin"
+                        )
+                    ),
+                    .init(
+                        id: "caloris_155", text: "155 kilometres",
+                        picture: .init(
+                            scene: .craterWidth, label: "155 kilometres",
+                            detail: "Proposed diameter of Caloris Basin"
+                        )
+                    ),
+                    .init(
+                        id: "caloris_15500", text: "15,500 kilometres",
+                        picture: .init(
+                            scene: .craterWidth, label: "15,500 kilometres",
+                            detail: "Proposed diameter of Caloris Basin"
+                        )
+                    ),
                 ],
                 correct: "caloris_1550",
                 correctFeedback: "Crater champion! Caloris is about 1,550 kilometres wide.",
@@ -103,9 +139,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "Why can Mercury have scorching days and freezing nights?",
                 choices: [
-                    .init(id: "thin_air", text: "Almost no atmosphere holds the heat"),
-                    .init(id: "red_dust", text: "Red dust cools the whole planet"),
-                    .init(id: "deep_ocean", text: "A deep ocean carries heat away"),
+                    .init(
+                        id: "thin_air", text: "Almost no atmosphere holds the heat",
+                        picture: .init(
+                            scene: .thinAtmosphere, label: "Almost no atmosphere holds the heat",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
+                    .init(
+                        id: "red_dust", text: "Red dust cools the whole planet",
+                        picture: .init(
+                            scene: .desert, label: "Red dust cools the whole planet",
+                            detail: "A proposal that dusty rock carries heat away"
+                        )
+                    ),
+                    .init(
+                        id: "deep_ocean", text: "A deep ocean carries heat away",
+                        picture: .init(
+                            scene: .ocean, label: "A deep ocean carries heat away",
+                            detail: "A surface ocean carrying heat away"
+                        )
+                    ),
                 ],
                 correct: "thin_air",
                 correctFeedback:
@@ -117,9 +171,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What are Mercury’s mysterious hollows?",
                 choices: [
-                    .init(id: "bright_hollows", text: "Bright, shallow pits in the surface"),
-                    .init(id: "storm_clouds", text: "Giant spinning storm clouds"),
-                    .init(id: "ice_mountains", text: "Floating mountains of ice"),
+                    .init(
+                        id: "bright_hollows", text: "Bright, shallow pits in the surface",
+                        picture: .init(
+                            scene: .hollows, label: "Bright, shallow pits in the surface",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
+                    .init(
+                        id: "storm_clouds", text: "Giant spinning storm clouds",
+                        picture: .init(
+                            scene: .storm, label: "Giant spinning storm clouds",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
+                    .init(
+                        id: "ice_mountains", text: "Floating mountains of ice",
+                        picture: .init(
+                            scene: .ice, label: "Floating mountains of ice",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
                 ],
                 correct: "bright_hollows",
                 correctFeedback: "Hollow hunter! They are bright, shallow pits found by MESSENGER.",
@@ -130,9 +202,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "Where can water ice survive on Mercury?",
                 choices: [
-                    .init(id: "polar_shadow", text: "Inside permanently shadowed polar craters"),
-                    .init(id: "sunny_plain", text: "Across the hottest sunny plains"),
-                    .init(id: "thick_cloud", text: "Inside Mercury’s thick clouds"),
+                    .init(
+                        id: "polar_shadow", text: "Inside permanently shadowed polar craters",
+                        picture: .init(
+                            scene: .shadow, label: "Inside permanently shadowed polar craters",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
+                    .init(
+                        id: "sunny_plain", text: "Across the hottest sunny plains",
+                        picture: .init(
+                            scene: .sunlight, label: "Across the hottest sunny plains",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
+                    .init(
+                        id: "thick_cloud", text: "Inside Mercury’s thick clouds",
+                        picture: .init(
+                            scene: .clouds, label: "Inside Mercury’s thick clouds",
+                            detail: "Schematic answer idea for Mercury"
+                        )
+                    ),
                 ],
                 correct: "polar_shadow",
                 correctFeedback: "Ice detective! Deep polar shadows can stay colder than −173°C.",
@@ -148,9 +238,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What makes much of Mars look red?",
                 choices: [
-                    .init(id: "oxidation", text: "Rusty iron in rocks and dust"),
-                    .init(id: "vegetation", text: "Forests of red plants"),
-                    .init(id: "reflected_light", text: "Red light from Jupiter"),
+                    .init(
+                        id: "oxidation", text: "Rusty iron in rocks and dust",
+                        picture: .init(
+                            scene: .rust, label: "Rusty iron in rocks and dust",
+                            detail: "Schematic answer idea for Mars", tone: .rust
+                        )
+                    ),
+                    .init(
+                        id: "vegetation", text: "Forests of red plants",
+                        picture: .init(
+                            scene: .forest, label: "Forests of red plants",
+                            detail: "Schematic answer idea for Mars", tone: .rust
+                        )
+                    ),
+                    .init(
+                        id: "reflected_light", text: "Red light from Jupiter",
+                        picture: .init(
+                            scene: .reflection, label: "Red light from Jupiter",
+                            detail: "Schematic answer idea for Mars"
+                        )
+                    ),
                 ],
                 correct: "oxidation",
                 correctFeedback: "Red-planet expert! Iron minerals rust and tint the dust.",
@@ -161,9 +269,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "Mars is about what fraction of Earth’s diameter?",
                 choices: [
-                    .init(id: "half_earth", text: "About one-half"),
-                    .init(id: "same_earth", text: "About the same size"),
-                    .init(id: "double_earth", text: "About twice as wide"),
+                    .init(
+                        id: "half_earth", text: "About one-half",
+                        picture: .init(
+                            scene: .sizeComparison, label: "1/2 × Earth",
+                            detail: "Mars diameter one-half of Earth diameter"
+                        )
+                    ),
+                    .init(
+                        id: "same_earth", text: "About the same size",
+                        picture: .init(
+                            scene: .sizeComparison, label: "1 × Earth",
+                            detail: "Mars and Earth proposed at equal diameter"
+                        )
+                    ),
+                    .init(
+                        id: "double_earth", text: "About twice as wide",
+                        picture: .init(
+                            scene: .sizeComparison, label: "2 × Earth",
+                            detail: "Mars proposed at twice Earth diameter"
+                        )
+                    ),
                 ],
                 correct: "half_earth",
                 correctFeedback: "Size scanner locked! Mars is about 53% of Earth’s diameter.",
@@ -174,9 +300,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "How long is the Valles Marineris canyon system?",
                 choices: [
-                    .init(id: "canyon_4000", text: "About 4,000 kilometres"),
-                    .init(id: "canyon_400", text: "About 400 kilometres"),
-                    .init(id: "canyon_40", text: "About 40 kilometres"),
+                    .init(
+                        id: "canyon_4000", text: "About 4,000 kilometres",
+                        picture: .init(
+                            scene: .canyonLength, label: "About 4,000 kilometres",
+                            detail: "Proposed length of Valles Marineris"
+                        )
+                    ),
+                    .init(
+                        id: "canyon_400", text: "About 400 kilometres",
+                        picture: .init(
+                            scene: .canyonLength, label: "About 400 kilometres",
+                            detail: "Proposed length of Valles Marineris"
+                        )
+                    ),
+                    .init(
+                        id: "canyon_40", text: "About 40 kilometres",
+                        picture: .init(
+                            scene: .canyonLength, label: "About 40 kilometres",
+                            detail: "Proposed length of Valles Marineris"
+                        )
+                    ),
                 ],
                 correct: "canyon_4000",
                 correctFeedback: "Canyon champion! It stretches about 4,000 kilometres.",
@@ -187,9 +331,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "How wide is the giant volcano Olympus Mons?",
                 choices: [
-                    .init(id: "olympus_600", text: "About 600 kilometres"),
-                    .init(id: "olympus_60", text: "About 60 kilometres"),
-                    .init(id: "olympus_6", text: "About 6 kilometres"),
+                    .init(
+                        id: "olympus_600", text: "About 600 kilometres",
+                        picture: .init(
+                            scene: .volcanoWidth, label: "About 600 kilometres",
+                            detail: "Proposed base width of Olympus Mons"
+                        )
+                    ),
+                    .init(
+                        id: "olympus_60", text: "About 60 kilometres",
+                        picture: .init(
+                            scene: .volcanoWidth, label: "About 60 kilometres",
+                            detail: "Proposed base width of Olympus Mons"
+                        )
+                    ),
+                    .init(
+                        id: "olympus_6", text: "About 6 kilometres",
+                        picture: .init(
+                            scene: .volcanoWidth, label: "About 6 kilometres",
+                            detail: "Proposed base width of Olympus Mons"
+                        )
+                    ),
                 ],
                 correct: "olympus_600",
                 correctFeedback: "Volcano victory! Olympus Mons is about 600 kilometres wide.",
@@ -200,9 +362,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What happens to Mars’s polar caps as seasons change?",
                 choices: [
-                    .init(id: "seasonal_ice", text: "They grow in winter and shrink in spring"),
-                    .init(id: "never_change", text: "They always stay exactly the same"),
-                    .init(id: "fly_away", text: "They leave Mars and orbit the Sun"),
+                    .init(
+                        id: "seasonal_ice", text: "They grow in winter and shrink in spring",
+                        picture: .init(
+                            scene: .seasonalIce, label: "They grow in winter and shrink in spring",
+                            detail: "Schematic answer idea for Mars"
+                        )
+                    ),
+                    .init(
+                        id: "never_change", text: "They always stay exactly the same",
+                        picture: .init(
+                            scene: .steadyIce, label: "They always stay exactly the same",
+                            detail: "Schematic answer idea for Mars"
+                        )
+                    ),
+                    .init(
+                        id: "fly_away", text: "They leave Mars and orbit the Sun",
+                        picture: .init(
+                            scene: .escapingIce, label: "They leave Mars and orbit the Sun",
+                            detail: "Schematic answer idea for Mars"
+                        )
+                    ),
                 ],
                 correct: "seasonal_ice",
                 correctFeedback: "Season scientist! Frost makes the polar caps grow and retreat.",
@@ -218,9 +398,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What kind of world is Europa?",
                 choices: [
-                    .init(id: "icy_moon", text: "An icy moon of Jupiter"),
-                    .init(id: "red_planet", text: "A rusty planet near Earth"),
-                    .init(id: "sun", text: "A tiny star beside the Sun"),
+                    .init(
+                        id: "icy_moon", text: "An icy moon of Jupiter",
+                        picture: .init(
+                            scene: .moon, label: "An icy moon of Jupiter",
+                            detail: "Schematic answer idea for Europa", tone: .blueWhite
+                        )
+                    ),
+                    .init(
+                        id: "red_planet", text: "A rusty planet near Earth",
+                        picture: .init(
+                            scene: .rust, label: "A rusty planet near Earth",
+                            detail: "Schematic answer idea for Europa", tone: .rust
+                        )
+                    ),
+                    .init(
+                        id: "sun", text: "A tiny star beside the Sun",
+                        picture: .init(
+                            scene: .star, label: "A tiny star beside the Sun",
+                            detail: "A small glowing star beside the Sun"
+                        )
+                    ),
                 ],
                 correct: "icy_moon",
                 correctFeedback: "Moon mapper! Europa is an icy moon orbiting Jupiter.",
@@ -231,9 +429,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What covers Europa’s surface?",
                 choices: [
-                    .init(id: "cracked_ice", text: "Water ice with cracks and ridges"),
-                    .init(id: "red_dust", text: "Warm red desert sand"),
-                    .init(id: "green_clouds", text: "Thick green clouds"),
+                    .init(
+                        id: "cracked_ice", text: "Water ice with cracks and ridges",
+                        picture: .init(
+                            scene: .ice, label: "Water ice with cracks and ridges",
+                            detail: "Schematic answer idea for Europa"
+                        )
+                    ),
+                    .init(
+                        id: "red_dust", text: "Warm red desert sand",
+                        picture: .init(
+                            scene: .desert, label: "Warm red desert sand",
+                            detail: "A warm red desert surface"
+                        )
+                    ),
+                    .init(
+                        id: "green_clouds", text: "Thick green clouds",
+                        picture: .init(
+                            scene: .clouds, label: "Thick green clouds",
+                            detail: "Schematic answer idea for Europa", tone: .green
+                        )
+                    ),
                 ],
                 correct: "cracked_ice",
                 correctFeedback:
@@ -245,9 +461,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What may be hidden beneath Europa’s ice?",
                 choices: [
-                    .init(id: "deep_ocean", text: "A deep salty ocean"),
-                    .init(id: "lava_desert", text: "A dry lava desert"),
-                    .init(id: "iron_core", text: "A hollow iron cave"),
+                    .init(
+                        id: "deep_ocean", text: "A deep salty ocean",
+                        picture: .init(
+                            scene: .subsurfaceOcean, label: "A deep salty ocean",
+                            detail: "An icy shell with a salty ocean beneath"
+                        )
+                    ),
+                    .init(
+                        id: "lava_desert", text: "A dry lava desert",
+                        picture: .init(
+                            scene: .volcano, label: "A dry lava desert",
+                            detail: "Schematic answer idea for Europa"
+                        )
+                    ),
+                    .init(
+                        id: "iron_core", text: "A hollow iron cave",
+                        picture: .init(
+                            scene: .ironCave, label: "A hollow iron cave",
+                            detail: "A hollow cave with iron walls"
+                        )
+                    ),
                 ],
                 correct: "deep_ocean",
                 correctFeedback: "Ocean explorer! Evidence points to salty water beneath the ice.",
@@ -258,9 +492,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "What is Europa’s chaos terrain?",
                 choices: [
-                    .init(id: "chaos_blocks", text: "Broken and rotated blocks of icy crust"),
-                    .init(id: "sand_dunes", text: "Smooth dunes made from hot sand"),
-                    .init(id: "green_forest", text: "A forest growing above the ice"),
+                    .init(
+                        id: "chaos_blocks", text: "Broken and rotated blocks of icy crust",
+                        picture: .init(
+                            scene: .blocks, label: "Broken and rotated blocks of icy crust",
+                            detail: "Schematic answer idea for Europa"
+                        )
+                    ),
+                    .init(
+                        id: "sand_dunes", text: "Smooth dunes made from hot sand",
+                        picture: .init(
+                            scene: .desert, label: "Smooth dunes made from hot sand",
+                            detail: "Schematic answer idea for Europa"
+                        )
+                    ),
+                    .init(
+                        id: "green_forest", text: "A forest growing above the ice",
+                        picture: .init(
+                            scene: .forest, label: "A forest growing above the ice",
+                            detail: "Schematic answer idea for Europa"
+                        )
+                    ),
                 ],
                 correct: "chaos_blocks",
                 correctFeedback: "Puzzle solver! Chaos terrain is a jumble of broken icy blocks.",
@@ -271,9 +523,27 @@ public enum QuizRoundCatalog {
                 ageBand: ageBand,
                 prompt: "How close was Juno when it captured this Europa view?",
                 choices: [
-                    .init(id: "juno_1521", text: "About 1,521 kilometres away"),
-                    .init(id: "juno_15210", text: "About 15,210 kilometres away"),
-                    .init(id: "juno_152100", text: "About 152,100 kilometres away"),
+                    .init(
+                        id: "juno_1521", text: "About 1,521 kilometres away",
+                        picture: .init(
+                            scene: .flybyDistance, label: "About 1,521 kilometres away",
+                            detail: "Proposed Juno-to-Europa flyby distance"
+                        )
+                    ),
+                    .init(
+                        id: "juno_15210", text: "About 15,210 kilometres away",
+                        picture: .init(
+                            scene: .flybyDistance, label: "About 15,210 kilometres away",
+                            detail: "Proposed Juno-to-Europa flyby distance"
+                        )
+                    ),
+                    .init(
+                        id: "juno_152100", text: "About 152,100 kilometres away",
+                        picture: .init(
+                            scene: .flybyDistance, label: "About 152,100 kilometres away",
+                            detail: "Proposed Juno-to-Europa flyby distance"
+                        )
+                    ),
                 ],
                 correct: "juno_1521",
                 correctFeedback: "Flyby ace! Juno was only about 1,521 kilometres from Europa.",
@@ -314,14 +584,44 @@ public enum QuizRoundCatalog {
         }
 
         let auChoices = [
-            QuizChoice(id: "\(destinationID)-au", text: details.au),
-            QuizChoice(id: "\(destinationID)-au-earth", text: "1 AU"),
-            QuizChoice(id: "\(destinationID)-au-neptune", text: "30 AU"),
+            QuizChoice(
+                id: "\(destinationID)-au", text: details.au,
+                picture: .init(
+                    scene: .distance, label: details.au,
+                    detail: "Sun to \(details.name); 1 AU is the Sun-to-Earth reference")
+            ),
+            QuizChoice(
+                id: "\(destinationID)-au-earth", text: "1 AU",
+                picture: .init(
+                    scene: .distance, label: "1 AU",
+                    detail: "Sun to \(details.name); 1 AU is the Sun-to-Earth reference")
+            ),
+            QuizChoice(
+                id: "\(destinationID)-au-neptune", text: "30 AU",
+                picture: .init(
+                    scene: .distance, label: "30 AU",
+                    detail: "Sun to \(details.name); 1 AU is the Sun-to-Earth reference")
+            ),
         ]
         let lightChoices = [
-            QuizChoice(id: "\(destinationID)-light", text: details.lightTime),
-            QuizChoice(id: "\(destinationID)-light-short", text: "about 1 second"),
-            QuizChoice(id: "\(destinationID)-light-long", text: "about 4 hours"),
+            QuizChoice(
+                id: "\(destinationID)-light", text: details.lightTime,
+                picture: .init(
+                    scene: .duration, label: details.lightTime,
+                    detail: "Sunlight travelling from the Sun to \(details.name)")
+            ),
+            QuizChoice(
+                id: "\(destinationID)-light-short", text: "about 1 second",
+                picture: .init(
+                    scene: .duration, label: "about 1 second",
+                    detail: "Sunlight travelling from the Sun to \(details.name)")
+            ),
+            QuizChoice(
+                id: "\(destinationID)-light-long", text: "about 4 hours",
+                picture: .init(
+                    scene: .duration, label: "about 4 hours",
+                    detail: "Sunlight travelling from the Sun to \(details.name)")
+            ),
         ]
 
         return [

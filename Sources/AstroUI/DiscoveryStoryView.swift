@@ -17,6 +17,7 @@ struct DiscoveryStoryView: View {
     let onComplete: () -> Void
     let onBack: () -> Void
     var isPaused = false
+    var resumeQuestionLabel: String?
 
     @State private var selectedIndex = 0
     @AppStorage("astro.narrationEnabled") private var narrationEnabled = true
@@ -270,7 +271,9 @@ struct DiscoveryStoryView: View {
             } label: {
                 Label(
                     selectedIndex == slides.count - 1
-                        ? (compact ? "Start Quiz" : "Start \(quizQuestionCount)-Question Quiz")
+                        ? (resumeQuestionLabel
+                            ?? (compact
+                                ? "Start Quiz" : "Start \(quizQuestionCount)-Question Quiz"))
                         : (compact ? "Next" : "Next Card"),
                     systemImage: selectedIndex == slides.count - 1
                         ? "gamecontroller.fill"

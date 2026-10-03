@@ -783,5 +783,7 @@ SOURCES['earth-observe']['title']='NASA Space Place: What Is a Satellite?'
 SOURCES['earth-observe']['url']='https://spaceplace.nasa.gov/satellite/en/'
 assert len(missions)==24
 out=ROOT/'Sources/AstroContent/Resources/planet-missions.json'
+from quiz_picture_authoring import preserve_quiz_pictures
+preserve_quiz_pictures(json.loads(out.read_text()), missions)
 out.write_text(json.dumps(missions,ensure_ascii=False,indent=2)+'\n')
 print(f'Authored {len(missions)} missions, {sum(len(m["cards"])+1 for m in missions)} cards, {sum(len(m["questions"])*3 for m in missions)} initial and review quiz variants each.')
