@@ -252,6 +252,11 @@ public final class MissionSession {
                 if progress.bonusQuizRun?.destinationID != lesson.id {
                     progress.bonusQuizRun = nil
                     activeRoundQuestions = []
+                } else if hasSuspendedBonusRound {
+                    restoreBonusRound()
+                    if phase == .quiz || (phase == .quizFeedback && !wasLastAnswerCorrect) {
+                        progress.bonusQuizRun?.assistedQuestionIndices.insert(quizQuestionIndex)
+                    }
                 }
                 phase = .discoveryCard
             } else {
@@ -1328,8 +1333,17 @@ extension MissionSession {
     }
 
     private var presentationQuestionID: String? {
-        if let bonus = progress.bonusQuizRun, bonus.isValid {
-            return "bonus:\(bonus.id):\(quizQuestionIndex)"
+        guard
+            isQuestionPhase
+                || [
+                    .quizFeedback, .quizRoundComplete, .discoveryCard, .missionStepFeedback,
+                    .videoFeedback, .reviewFeedback,
+                ].contains(phase)
+        else { return nil }
+        if let bonus = progress.bonusQuizRun, bonus.isValid,
+            bonus.destinationID == focusedLesson?.id, !activeRoundQuestions.isEmpty
+        {
+            return "bonus:\(bonus.id):\(bonus.questionIndex)"
         }
         guard let run = progress.activeRun, let question = activeLearningQuestion else {
             return nil
@@ -1366,7 +1380,16 @@ extension MissionSession {
     }
 
     private func synchronizeQuestionPresentation(now: Double, restoring: Bool = false) {
-        guard let id = presentationQuestionID else { return }
+        guard let id = presentationQuestionID else {
+            if questionClock.questionID != "none", presentationPhase != phase {
+                questionClock.invalidateInteractions(now: now)
+                presentationEpoch = questionClock.interactionEpoch
+                questionClock.setPaused(.narration, isPaused: false, now: now)
+                presentationPhase = phase
+            }
+            questionClock.setPaused(.feedback, isPaused: true, now: now)
+            return
+        }
         if questionClock.questionID != id || restoring {
             presentationEpoch &+= 1
             if let saved = progress.questionPresentation, saved.challenge.questionID == id {

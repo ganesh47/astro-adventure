@@ -219,6 +219,7 @@ struct QuizChallengeView: View {
                         ])
                 )
                 .accessibilityElement(children: .ignore)
+                .accessibilityAddTraits(.isButton)
                 .accessibilityLabel("Answer \(index + 1): \(choice.text)")
                 .accessibilityValue(selected ? "Selected" : "Not selected")
                 .accessibilityHint(

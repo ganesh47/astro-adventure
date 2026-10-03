@@ -538,6 +538,75 @@ final class QuestionSessionTests: XCTestCase {
         XCTAssertTrue(evidence.usedChallenge)
     }
 
+    func testRelaunchedSecondQuestionSurvivesPrimaryMenuAndWorldsBeforeResume() throws {
+        let time = TestTime()
+        let session = startedSession(time: time)
+        session.submitAnswer(at: 0, now: answerDate)
+        session.confirm()
+        let interaction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: interaction)
+        session.selectQuizAnswer(at: 1, interaction: interaction)
+        time.now = 25
+        session.returnToWorlds()
+        let saved = try roundTrip(session.progress)
+        let presentation = try XCTUnwrap(saved.questionPresentation)
+        XCTAssertEqual(presentation.challenge.remaining, 65)
+        time.now = 10_000
+        let restored = makeSession(progress: saved, count: 1, marker: "changed", time: time)
+        restored.confirm()  // Primary Continue Adventure, before the explicit resume action.
+        XCTAssertEqual(restored.phase, .navigation)
+        XCTAssertEqual(restored.progress.questionPresentation, presentation)
+        restored.returnToWorlds()
+        XCTAssertEqual(restored.progress.questionPresentation, presentation)
+        restored.resumeSavedAdventure()
+        XCTAssertEqual(restored.quizQuestionIndex, 1)
+        XCTAssertEqual(restored.currentQuiz, saved.bonusQuizRun?.questions[1])
+        XCTAssertEqual(restored.selectedQuizChoiceID, "rock")
+        XCTAssertEqual(restored.questionClock.mode, .challenge)
+        XCTAssertEqual(restored.questionClock.remaining, 65)
+        XCTAssertTrue(restored.questionClock.pauseReasons.contains(.awaitingResume))
+    }
+
+    func testMatchingWorldStoryMarksPendingQuestionAssistedWithoutChangingPriorEvidence() throws {
+        let time = TestTime()
+        let session = startedSession(time: time)
+        session.submitAnswer(at: 0, now: answerDate)
+        let firstEvidence = try XCTUnwrap(session.progress.questionEvidence.first)
+        session.returnToWorlds()
+        session.confirm()
+        XCTAssertEqual(session.phase, .discoveryCard)
+        XCTAssertEqual(session.progress.bonusQuizRun?.assistedQuestionIndices, [])
+        XCTAssertEqual(session.progress.questionEvidence.first, firstEvidence)
+        session.confirm()
+        XCTAssertEqual(session.phase, .quizFeedback)
+        session.confirm()
+        XCTAssertEqual(session.quizQuestionIndex, 1)
+        let interaction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: interaction)
+        session.selectQuizAnswer(at: 0, interaction: interaction)
+        time.now = 25
+        session.returnToWorlds()
+        let saved = try roundTrip(session.progress)
+        time.now = 10_000
+        let restored = makeSession(progress: saved, count: 1, marker: "changed", time: time)
+        restored.confirm()
+        restored.confirm()
+        XCTAssertEqual(restored.phase, .discoveryCard)
+        XCTAssertEqual(restored.quizQuestionIndex, 1)
+        XCTAssertEqual(restored.currentQuiz, saved.bonusQuizRun?.questions[1])
+        XCTAssertEqual(restored.selectedQuizChoiceID, "star")
+        XCTAssertEqual(restored.questionClock.remaining, 65)
+        XCTAssertEqual(restored.progress.bonusQuizRun?.assistedQuestionIndices, [1])
+        XCTAssertEqual(restored.progress.questionEvidence.first, firstEvidence)
+        restored.confirm()
+        let resumedInteraction = restored.questionInteraction
+        restored.resumeQuestionChallenge(interaction: resumedInteraction)
+        restored.confirmSelectedQuizAnswer(interaction: resumedInteraction, now: answerDate)
+        XCTAssertEqual(restored.progress.totalScore, 200)
+        XCTAssertTrue(try XCTUnwrap(restored.progress.questionEvidence.last).usedHelp)
+        XCTAssertEqual(restored.progress.questionEvidence.first, firstEvidence)
+    }
+
     func testHelpDismissalCannotTurnAssistedAnswerIntoIndependentEvidence() throws {
         let time = TestTime()
         let session = startedSession(count: 1, time: time)

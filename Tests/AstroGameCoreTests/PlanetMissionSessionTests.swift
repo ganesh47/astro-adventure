@@ -287,6 +287,36 @@ final class PlanetMissionSessionTests: XCTestCase {
         XCTAssertEqual(session.questionAttemptCount, 1)
     }
 
+    func testVideoReplayRejectsOldQuestionInputAndCancelledNarrationCallbacks() {
+        let session = makeSession()
+        session.startVideoLesson(id: "mercury-video")
+        session.videoSeek(to: 10)
+        XCTAssertEqual(session.phase, .videoCheckpoint)
+        let originalInteraction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: originalInteraction)
+        session.setQuestionPaused(.narration, isPaused: true, interaction: originalInteraction)
+        session.replayVideoClue()
+        XCTAssertEqual(session.phase, .videoPlayback)
+        XCTAssertNotEqual(session.questionInteraction, originalInteraction)
+        XCTAssertFalse(session.questionClock.pauseReasons.contains(.narration))
+        session.videoSeek(to: 10)
+        XCTAssertEqual(session.phase, .videoCheckpoint)
+        XCTAssertNotEqual(session.questionInteraction, originalInteraction)
+        let returnedProgress = session.progress
+        session.selectQuizAnswer(at: 0, interaction: originalInteraction)
+        session.confirmSelectedQuizAnswer(interaction: originalInteraction, now: firstDay)
+        session.setQuestionPaused(.narration, isPaused: true, interaction: originalInteraction)
+        XCTAssertEqual(session.progress, returnedProgress)
+        XCTAssertNil(session.selectedQuizChoiceID)
+        XCTAssertEqual(session.questionAttemptCount, 0)
+        XCTAssertTrue(session.questionClock.isRunning)
+        let currentInteraction = session.questionInteraction
+        session.selectQuizAnswer(at: 0, interaction: currentInteraction)
+        session.confirmSelectedQuizAnswer(interaction: currentInteraction, now: firstDay)
+        XCTAssertEqual(session.phase, .videoFeedback)
+        XCTAssertEqual(session.questionAttemptCount, 1)
+    }
+
     func testSeekCannotSkipQuestionsAndFinalSegmentCompletesVideoWithoutPlanetStamp() throws {
         let session = makeSession()
         session.startVideoLesson(id: "mercury-video")

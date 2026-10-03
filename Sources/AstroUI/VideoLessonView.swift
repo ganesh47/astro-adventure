@@ -45,7 +45,7 @@ struct VideoLessonView: View {
         #endif
     }
 
-    private var content: some View {
+    private var presentedContent: some View {
         Group {
             if session.phase == .videoCheckpoint {
                 QuizChallengeView(
@@ -99,49 +99,62 @@ struct VideoLessonView: View {
         }
         .background(Color(red: 0.025, green: 0.045, blue: 0.09).opacity(0.96))
         .preferredColorScheme(.dark)
-        .onAppear {
-            primaryFocused = true
-            if let lesson {
-                let url = Bundle.module.url(forResource: lesson.resourceName, withExtension: "mp4")
-                driver.configure(url: url, lesson: lesson, session: session)
-            }
-            synchronizePlayback()
-        }
-        .onChange(of: session.phase) {
-            if session.phase == .videoCheckpoint {
-                focusedChoiceIndex = 0
-            } else {
+    }
+
+    private var playbackManagedContent: some View {
+        presentedContent
+            .onAppear {
                 primaryFocused = true
+                if let lesson {
+                    let url = Bundle.module.url(
+                        forResource: lesson.resourceName, withExtension: "mp4")
+                    driver.configure(url: url, lesson: lesson, session: session)
+                }
+                synchronizePlayback()
             }
-            synchronizePlayback()
-            speakForState()
-        }
-        .onChange(of: session.isVideoPlaying) { synchronizePlayback() }
-        .onChange(of: session.isVideoFallback) {
-            synchronizePlayback()
-            speakForState()
-        }
-        .onChange(of: session.videoSeekTarget) { synchronizePlayback() }
-        .onChange(of: segment?.id) { speakForState() }
-        .onChange(of: session.videoFallbackCardIndex) { speakForState() }
-        .onChange(of: session.isShowingHint) {
-            if session.isShowingHint && session.phase != .videoCheckpoint {
-                speak(session.currentQuiz?.hint)
+            .onChange(of: session.phase) {
+                if session.phase == .videoCheckpoint {
+                    focusedChoiceIndex = 0
+                } else {
+                    primaryFocused = true
+                }
+                synchronizePlayback()
+                speakForState()
             }
-        }
-        .onChange(of: isPaused) { pauseIfNeeded() }
-        .onChange(of: scenePhase) { pauseIfNeeded() }
-        .onChange(of: narrationEnabled) { speakForState() }
-        .onChange(of: voiceOverEnabled) { speakForState() }
-        .onDisappear {
-            session.pauseVideo()
-            narrator.stopSpeaking(at: .immediate)
-            driver.stop()
-        }
-        .onChange(of: showingTranscript) {
-            session.setQuestionPaused(.story, isPaused: showingTranscript)
-        }
-        .sheet(isPresented: $showingTranscript) { transcript }
+            .onChange(of: session.isVideoPlaying) { synchronizePlayback() }
+            .onChange(of: session.isVideoFallback) {
+                synchronizePlayback()
+                speakForState()
+            }
+            .onChange(of: session.videoSeekTarget) { synchronizePlayback() }
+    }
+
+    private var narrationManagedContent: some View {
+        playbackManagedContent
+            .onChange(of: segment?.id) { speakForState() }
+            .onChange(of: session.videoFallbackCardIndex) { speakForState() }
+            .onChange(of: session.isShowingHint) {
+                if session.isShowingHint && session.phase != .videoCheckpoint {
+                    speak(session.currentQuiz?.hint)
+                }
+            }
+    }
+
+    private var content: some View {
+        narrationManagedContent
+            .onChange(of: isPaused) { pauseIfNeeded() }
+            .onChange(of: scenePhase) { pauseIfNeeded() }
+            .onChange(of: narrationEnabled) { speakForState() }
+            .onChange(of: voiceOverEnabled) { speakForState() }
+            .onDisappear {
+                session.pauseVideo()
+                narrator.stopSpeaking(at: .immediate)
+                driver.stop()
+            }
+            .onChange(of: showingTranscript) {
+                session.setQuestionPaused(.story, isPaused: showingTranscript)
+            }
+            .sheet(isPresented: $showingTranscript) { transcript }
     }
 
     private func header(compact: Bool) -> some View {

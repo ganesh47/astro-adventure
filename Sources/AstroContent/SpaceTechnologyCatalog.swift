@@ -478,7 +478,7 @@ enum SpaceTechnologyCatalog {
                     .init(
                         id: "tech_dsn_rotation", text: "To stay in touch as Earth rotates",
                         picture: .init(
-                            scene: .orbit, label: "To stay in touch as Earth rotates",
+                            scene: .spin, label: "To stay in touch as Earth rotates",
                             detail: "Schematic space-technology answer idea"
                         )
                     ),

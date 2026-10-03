@@ -1379,7 +1379,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-0",
                 "text": "Venus’s thick atmosphere traps heat",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "greenhouseWarming",
                   "label": "Venus’s thick atmosphere traps heat",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1388,7 +1388,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-2",
                 "text": "Every rocky planet has the same temperature",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "equalTemperatures",
                   "label": "Every rocky planet has the same temperature",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1415,7 +1415,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-2",
                 "text": "All rocky planets have identical atmospheres",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "equalAtmospheres",
                   "label": "All rocky planets have identical atmospheres",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1424,7 +1424,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-0",
                 "text": "Atmospheric greenhouse warming",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "greenhouseWarming",
                   "label": "Atmospheric greenhouse warming",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1481,7 +1481,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-2",
                 "text": "Every rocky planet has the same temperature",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "equalTemperatures",
                   "label": "Every rocky planet has the same temperature",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1490,7 +1490,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-0",
                 "text": "Venus’s thick atmosphere traps heat",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "greenhouseWarming",
                   "label": "Venus’s thick atmosphere traps heat",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1508,7 +1508,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-0",
                 "text": "Atmospheric greenhouse warming",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "greenhouseWarming",
                   "label": "Atmospheric greenhouse warming",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -1526,7 +1526,7 @@
                 "id": "mercury-heat-and-shadow-not-hottest-option-2",
                 "text": "All rocky planets have identical atmospheres",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "equalAtmospheres",
                   "label": "All rocky planets have identical atmospheres",
                   "detail": "Schematic answer idea; Heat and Shadow"
                 }
@@ -2177,7 +2177,7 @@
                 "id": "mercury-speedy-year-solar-day-option-0",
                 "text": "No, the two clocks can differ",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "unequalClocks",
                   "label": "No, the two clocks can differ",
                   "detail": "Schematic answer idea; Speedy Year"
                 }
@@ -2186,7 +2186,7 @@
                 "id": "mercury-speedy-year-solar-day-option-1",
                 "text": "Yes, they always match",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "equalClocks",
                   "label": "Yes, they always match",
                   "detail": "Schematic answer idea; Speedy Year"
                 }
@@ -2278,7 +2278,7 @@
                 "id": "mercury-speedy-year-solar-day-option-1",
                 "text": "Yes, they always match",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "equalClocks",
                   "label": "Yes, they always match",
                   "detail": "Schematic answer idea; Speedy Year"
                 }
@@ -2287,7 +2287,7 @@
                 "id": "mercury-speedy-year-solar-day-option-0",
                 "text": "No, the two clocks can differ",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "unequalClocks",
                   "label": "No, the two clocks can differ",
                   "detail": "Schematic answer idea; Speedy Year"
                 }
@@ -3088,7 +3088,7 @@
                 "id": "venus-radar-explorer-volcanoes-option-0",
                 "text": "The presence and shape of volcanic terrain",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "volcanicTerrain",
                   "label": "The presence and shape of volcanic terrain",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -3097,7 +3097,7 @@
                 "id": "venus-radar-explorer-volcanoes-option-2",
                 "text": "Proof that every volcano is erupting now",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "eruptingVolcanoes",
                   "label": "Proof that every volcano is erupting now",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -3189,7 +3189,7 @@
                 "id": "venus-radar-explorer-volcanoes-option-2",
                 "text": "Proof that every volcano is erupting now",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "eruptingVolcanoes",
                   "label": "Proof that every volcano is erupting now",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -3198,7 +3198,7 @@
                 "id": "venus-radar-explorer-volcanoes-option-0",
                 "text": "The presence and shape of volcanic terrain",
                 "picture": {
-                  "scene": "volcano",
+                  "scene": "volcanicTerrain",
                   "label": "The presence and shape of volcanic terrain",
                   "detail": "Schematic answer idea; Radar Explorer"
                 }
@@ -4688,7 +4688,7 @@
                 "id": "venus-backward-spinner-solar-clock-option-1",
                 "text": "No, clocks must match",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "equalClocks",
                   "label": "No, clocks must match",
                   "detail": "Schematic answer idea; Backward Spinner"
                 }
@@ -4697,7 +4697,7 @@
                 "id": "venus-backward-spinner-solar-clock-option-0",
                 "text": "Yes, they can differ",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "unequalClocks",
                   "label": "Yes, they can differ",
                   "detail": "Schematic answer idea; Backward Spinner"
                 }
@@ -4789,7 +4789,7 @@
                 "id": "venus-backward-spinner-solar-clock-option-0",
                 "text": "Yes, they can differ",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "unequalClocks",
                   "label": "Yes, they can differ",
                   "detail": "Schematic answer idea; Backward Spinner"
                 }
@@ -4798,7 +4798,7 @@
                 "id": "venus-backward-spinner-solar-clock-option-1",
                 "text": "No, clocks must match",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "equalClocks",
                   "label": "No, clocks must match",
                   "detail": "Schematic answer idea; Backward Spinner"
                 }
@@ -5346,7 +5346,7 @@
                 "id": "earth-our-water-world-atmosphere-option-2",
                 "text": "Almost all carbon dioxide",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "carbonDioxideAir",
                   "label": "Almost all carbon dioxide",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5355,7 +5355,7 @@
                 "id": "earth-our-water-world-atmosphere-option-0",
                 "text": "Mostly nitrogen and oxygen",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "nitrogenOxygenAir",
                   "label": "Mostly nitrogen and oxygen",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5373,7 +5373,7 @@
                 "id": "earth-our-water-world-atmosphere-option-0",
                 "text": "Nitrogen and oxygen dominate",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "nitrogenOxygenAir",
                   "label": "Nitrogen and oxygen dominate",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5391,7 +5391,7 @@
                 "id": "earth-our-water-world-atmosphere-option-2",
                 "text": "Carbon dioxide dominates as on Venus",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "carbonDioxideAir",
                   "label": "Carbon dioxide dominates as on Venus",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5438,7 +5438,7 @@
                 "id": "earth-our-water-world-atmosphere-option-0",
                 "text": "Mostly nitrogen and oxygen",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "nitrogenOxygenAir",
                   "label": "Mostly nitrogen and oxygen",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5456,7 +5456,7 @@
                 "id": "earth-our-water-world-atmosphere-option-2",
                 "text": "Almost all carbon dioxide",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "carbonDioxideAir",
                   "label": "Almost all carbon dioxide",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5483,7 +5483,7 @@
                 "id": "earth-our-water-world-atmosphere-option-0",
                 "text": "Nitrogen and oxygen dominate",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "nitrogenOxygenAir",
                   "label": "Nitrogen and oxygen dominate",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -5492,7 +5492,7 @@
                 "id": "earth-our-water-world-atmosphere-option-2",
                 "text": "Carbon dioxide dominates as on Venus",
                 "picture": {
-                  "scene": "clouds",
+                  "scene": "carbonDioxideAir",
                   "label": "Carbon dioxide dominates as on Venus",
                   "detail": "Schematic answer idea; Our Water World"
                 }
@@ -6155,7 +6155,7 @@
                 "id": "earth-season-tracker-hemispheres-option-0",
                 "text": "Winter",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "oppositeSeasons",
                   "label": "Winter",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6164,7 +6164,7 @@
                 "id": "earth-season-tracker-hemispheres-option-1",
                 "text": "The same summer",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "sameSeasons",
                   "label": "The same summer",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6182,7 +6182,7 @@
                 "id": "earth-season-tracker-hemispheres-option-0",
                 "text": "Winter in the Southern Hemisphere",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "oppositeSeasons",
                   "label": "Winter in the Southern Hemisphere",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6191,7 +6191,7 @@
                 "id": "earth-season-tracker-hemispheres-option-1",
                 "text": "Summer everywhere on Earth",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "sameSeasons",
                   "label": "Summer everywhere on Earth",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6218,7 +6218,7 @@
                 "id": "earth-season-tracker-hemispheres-option-1",
                 "text": "Identical summer illumination in both hemispheres",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "sameSeasons",
                   "label": "Identical summer illumination in both hemispheres",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6227,7 +6227,7 @@
                 "id": "earth-season-tracker-hemispheres-option-0",
                 "text": "Southern winter with less direct sunlight",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "oppositeSeasons",
                   "label": "Southern winter with less direct sunlight",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6256,7 +6256,7 @@
                 "id": "earth-season-tracker-hemispheres-option-1",
                 "text": "The same summer",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "sameSeasons",
                   "label": "The same summer",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6265,7 +6265,7 @@
                 "id": "earth-season-tracker-hemispheres-option-0",
                 "text": "Winter",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "oppositeSeasons",
                   "label": "Winter",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6283,7 +6283,7 @@
                 "id": "earth-season-tracker-hemispheres-option-1",
                 "text": "Summer everywhere on Earth",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "sameSeasons",
                   "label": "Summer everywhere on Earth",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6292,7 +6292,7 @@
                 "id": "earth-season-tracker-hemispheres-option-0",
                 "text": "Winter in the Southern Hemisphere",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "oppositeSeasons",
                   "label": "Winter in the Southern Hemisphere",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6319,7 +6319,7 @@
                 "id": "earth-season-tracker-hemispheres-option-1",
                 "text": "Identical summer illumination in both hemispheres",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "sameSeasons",
                   "label": "Identical summer illumination in both hemispheres",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6337,7 +6337,7 @@
                 "id": "earth-season-tracker-hemispheres-option-0",
                 "text": "Southern winter with less direct sunlight",
                 "picture": {
-                  "scene": "temperature",
+                  "scene": "oppositeSeasons",
                   "label": "Southern winter with less direct sunlight",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6366,7 +6366,7 @@
                 "id": "earth-season-tracker-sun-angle-option-1",
                 "text": "Light spread far sideways",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "slantedSunlight",
                   "label": "Light spread far sideways",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6375,7 +6375,7 @@
                 "id": "earth-season-tracker-sun-angle-option-0",
                 "text": "Light aimed straight at the patch",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "directSunlight",
                   "label": "Light aimed straight at the patch",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6393,7 +6393,7 @@
                 "id": "earth-season-tracker-sun-angle-option-1",
                 "text": "The more slanting beam",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "slantedSunlight",
                   "label": "The more slanting beam",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6402,7 +6402,7 @@
                 "id": "earth-season-tracker-sun-angle-option-0",
                 "text": "The more direct beam",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "directSunlight",
                   "label": "The more direct beam",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6429,7 +6429,7 @@
                 "id": "earth-season-tracker-sun-angle-option-1",
                 "text": "A beam spread over a larger area",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "slantedSunlight",
                   "label": "A beam spread over a larger area",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6447,7 +6447,7 @@
                 "id": "earth-season-tracker-sun-angle-option-0",
                 "text": "A beam concentrated over a smaller area",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "directSunlight",
                   "label": "A beam concentrated over a smaller area",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6467,7 +6467,7 @@
                 "id": "earth-season-tracker-sun-angle-option-0",
                 "text": "Light aimed straight at the patch",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "directSunlight",
                   "label": "Light aimed straight at the patch",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6476,7 +6476,7 @@
                 "id": "earth-season-tracker-sun-angle-option-1",
                 "text": "Light spread far sideways",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "slantedSunlight",
                   "label": "Light spread far sideways",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6494,7 +6494,7 @@
                 "id": "earth-season-tracker-sun-angle-option-1",
                 "text": "The more slanting beam",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "slantedSunlight",
                   "label": "The more slanting beam",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6512,7 +6512,7 @@
                 "id": "earth-season-tracker-sun-angle-option-0",
                 "text": "The more direct beam",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "directSunlight",
                   "label": "The more direct beam",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6530,7 +6530,7 @@
                 "id": "earth-season-tracker-sun-angle-option-0",
                 "text": "A beam concentrated over a smaller area",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "directSunlight",
                   "label": "A beam concentrated over a smaller area",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -6539,7 +6539,7 @@
                 "id": "earth-season-tracker-sun-angle-option-1",
                 "text": "A beam spread over a larger area",
                 "picture": {
-                  "scene": "sunlight",
+                  "scene": "slantedSunlight",
                   "label": "A beam spread over a larger area",
                   "detail": "Schematic answer idea; Season Tracker"
                 }
@@ -12035,7 +12035,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-1",
                 "text": "A drawing without measurements",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "illustrationEvidence",
                   "label": "A drawing without measurements",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12053,7 +12053,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-2",
                 "text": "Only counting red pixels",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "pixelColorEvidence",
                   "label": "Only counting red pixels",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12071,7 +12071,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-1",
                 "text": "An illustration alone establishes composition",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "illustrationEvidence",
                   "label": "An illustration alone establishes composition",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12080,7 +12080,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-2",
                 "text": "Surface hue uniquely reveals the entire interior",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "pixelColorEvidence",
                   "label": "Surface hue uniquely reveals the entire interior",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12136,7 +12136,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-1",
                 "text": "A drawing without measurements",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "illustrationEvidence",
                   "label": "A drawing without measurements",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12145,7 +12145,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-2",
                 "text": "Only counting red pixels",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "pixelColorEvidence",
                   "label": "Only counting red pixels",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12181,7 +12181,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-1",
                 "text": "An illustration alone establishes composition",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "illustrationEvidence",
                   "label": "An illustration alone establishes composition",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -12190,7 +12190,7 @@
                 "id": "jupiter-giant-planet-expedition-gravity-evidence-option-2",
                 "text": "Surface hue uniquely reveals the entire interior",
                 "picture": {
-                  "scene": "paint",
+                  "scene": "pixelColorEvidence",
                   "label": "Surface hue uniquely reveals the entire interior",
                   "detail": "Schematic answer idea; Giant-Planet Expedition"
                 }
@@ -13463,7 +13463,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-0",
                 "text": "Methane and ethane",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hydrocarbonLake",
                   "label": "Methane and ethane",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13508,7 +13508,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-0",
                 "text": "Liquid methane and ethane",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hydrocarbonLake",
                   "label": "Liquid methane and ethane",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13526,7 +13526,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-0",
                 "text": "Surface hydrocarbon liquids rather than liquid water",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hydrocarbonLake",
                   "label": "Surface hydrocarbon liquids rather than liquid water",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13573,7 +13573,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-0",
                 "text": "Methane and ethane",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hydrocarbonLake",
                   "label": "Methane and ethane",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13591,7 +13591,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-0",
                 "text": "Liquid methane and ethane",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hydrocarbonLake",
                   "label": "Liquid methane and ethane",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -13636,7 +13636,7 @@
                 "id": "saturn-two-moon-mysteries-titan-lakes-option-0",
                 "text": "Surface hydrocarbon liquids rather than liquid water",
                 "picture": {
-                  "scene": "ocean",
+                  "scene": "hydrocarbonLake",
                   "label": "Surface hydrocarbon liquids rather than liquid water",
                   "detail": "Schematic answer idea; Two Moon Mysteries"
                 }
@@ -14751,7 +14751,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-1",
                 "text": "Only give the picture a new title",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "imageTitle",
                   "label": "Only give the picture a new title",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14760,7 +14760,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-2",
                 "text": "Only count planet names",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "destinationLabels",
                   "label": "Only count planet names",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14796,7 +14796,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-1",
                 "text": "A new descriptive image title",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "imageTitle",
                   "label": "A new descriptive image title",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14805,7 +14805,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-2",
                 "text": "The number of destination labels",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "destinationLabels",
                   "label": "The number of destination labels",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14861,7 +14861,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-1",
                 "text": "Only give the picture a new title",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "imageTitle",
                   "label": "Only give the picture a new title",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14870,7 +14870,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-2",
                 "text": "Only count planet names",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "destinationLabels",
                   "label": "Only count planet names",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14888,7 +14888,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-1",
                 "text": "A new descriptive image title",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "imageTitle",
                   "label": "A new descriptive image title",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -14906,7 +14906,7 @@
                 "id": "saturn-cassini-detective-plume-measure-option-2",
                 "text": "The number of destination labels",
                 "picture": {
-                  "scene": "nameTag",
+                  "scene": "destinationLabels",
                   "label": "The number of destination labels",
                   "detail": "Schematic answer idea; Cassini Detective"
                 }
@@ -15367,7 +15367,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-0",
                 "text": "The other can be dark",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "polarIllumination",
                   "label": "The other can be dark",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15394,7 +15394,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-2",
                 "text": "The Sun switches off for all planets",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun switches off for all planets",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15403,7 +15403,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-0",
                 "text": "One pole is lit while the other is dark",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "polarIllumination",
                   "label": "One pole is lit while the other is dark",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15421,7 +15421,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-0",
                 "text": "Prolonged illumination at one pole and darkness at the other",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "polarIllumination",
                   "label": "Prolonged illumination at one pole and darkness at the other",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15439,7 +15439,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-2",
                 "text": "A cessation of the Sun’s energy production",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "A cessation of the Sun’s energy production",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15459,7 +15459,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-0",
                 "text": "The other can be dark",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "polarIllumination",
                   "label": "The other can be dark",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15486,7 +15486,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-0",
                 "text": "One pole is lit while the other is dark",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "polarIllumination",
                   "label": "One pole is lit while the other is dark",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15504,7 +15504,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-2",
                 "text": "The Sun switches off for all planets",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "The Sun switches off for all planets",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15531,7 +15531,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-0",
                 "text": "Prolonged illumination at one pole and darkness at the other",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "polarIllumination",
                   "label": "Prolonged illumination at one pole and darkness at the other",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15540,7 +15540,7 @@
                 "id": "uranus-sideways-seasons-polar-light-option-2",
                 "text": "A cessation of the Sun’s energy production",
                 "picture": {
-                  "scene": "shadow",
+                  "scene": "darkSun",
                   "label": "A cessation of the Sun’s energy production",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15569,7 +15569,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-0",
                 "text": "Much longer",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "longDuration",
                   "label": "Much longer",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15578,7 +15578,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-1",
                 "text": "Only a few seconds",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "briefDuration",
                   "label": "Only a few seconds",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15596,7 +15596,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-0",
                 "text": "Its Sun trip lasts about 84 Earth years",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "longDuration",
                   "label": "Its Sun trip lasts about 84 Earth years",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15605,7 +15605,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-1",
                 "text": "Its Sun trip lasts a few seconds",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "briefDuration",
                   "label": "Its Sun trip lasts a few seconds",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15633,7 +15633,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-1",
                 "text": "A seconds-long orbital period",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "briefDuration",
                   "label": "A seconds-long orbital period",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15642,7 +15642,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-0",
                 "text": "Its long orbital period changes seasonal illumination slowly",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "longDuration",
                   "label": "Its long orbital period changes seasonal illumination slowly",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15672,7 +15672,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-1",
                 "text": "Only a few seconds",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "briefDuration",
                   "label": "Only a few seconds",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15681,7 +15681,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-0",
                 "text": "Much longer",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "longDuration",
                   "label": "Much longer",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15699,7 +15699,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-1",
                 "text": "Its Sun trip lasts a few seconds",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "briefDuration",
                   "label": "Its Sun trip lasts a few seconds",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15708,7 +15708,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-0",
                 "text": "Its Sun trip lasts about 84 Earth years",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "longDuration",
                   "label": "Its Sun trip lasts about 84 Earth years",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15736,7 +15736,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-1",
                 "text": "A seconds-long orbital period",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "briefDuration",
                   "label": "A seconds-long orbital period",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -15755,7 +15755,7 @@
                 "id": "uranus-sideways-seasons-long-year-option-0",
                 "text": "Its long orbital period changes seasonal illumination slowly",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "longDuration",
                   "label": "Its long orbital period changes seasonal illumination slowly",
                   "detail": "Schematic answer idea; Sideways Seasons"
                 }
@@ -18720,7 +18720,7 @@
                 "id": "neptune-the-distant-sun-sunlight-option-1",
                 "text": "Yes, it takes no time",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "instantLight",
                   "label": "Yes, it takes no time",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }
@@ -18830,7 +18830,7 @@
                 "id": "neptune-the-distant-sun-sunlight-option-1",
                 "text": "Yes, it takes no time",
                 "picture": {
-                  "scene": "duration",
+                  "scene": "instantLight",
                   "label": "Yes, it takes no time",
                   "detail": "Schematic answer idea; The Distant Sun"
                 }

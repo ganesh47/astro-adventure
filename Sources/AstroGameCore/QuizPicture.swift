@@ -23,6 +23,12 @@ public struct QuizPicture: Codable, Equatable, Sendable {
         case hollows, craterWidth, canyonLength, volcanoWidth, flybyDistance
         case planetDiameter, spacecraftSize, classroomDistance, earthWorldDistance
         case changingOrbitDistance, movingSun, movingStars
+        case greenhouseWarming, equalTemperatures, equalAtmospheres
+        case unequalClocks, equalClocks, volcanicTerrain, eruptingVolcanoes
+        case nitrogenOxygenAir, carbonDioxideAir, oppositeSeasons, sameSeasons
+        case directSunlight, slantedSunlight, illustrationEvidence, pixelColorEvidence
+        case hydrocarbonLake, imageTitle, destinationLabels, polarIllumination
+        case darkSun, briefDuration, longDuration, instantLight
     }
 
     public enum Tone: String, Codable, Sendable {

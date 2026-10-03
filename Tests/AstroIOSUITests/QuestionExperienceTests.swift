@@ -36,12 +36,16 @@ final class QuestionExperienceTests: XCTestCase {
         let secondPrompt = app.staticTexts["quiz.question"].label
         XCTAssertTrue(app.staticTexts["quiz.progress"].label.contains("2"))
         tap("quiz.answer.0")
+        turnSoundOff()
+        tap("quiz.time.mode")
         app.terminate()
         launch(reset: false)
-        tap("adventure.resume")
+        // Taking the primary menu route before resuming must preserve Q2's presentation.
+        openSunQuestion()
         XCTAssertTrue(app.buttons["quiz.answer.0"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["quiz.question"].label, secondPrompt)
         XCTAssertEqual(app.buttons["quiz.answer.0"].value as? String, "Selected")
+        XCTAssertTrue(app.buttons["quiz.time.resume"].exists)
         capture("Restored second question with its selected proposal")
     }
 
@@ -127,6 +131,63 @@ final class QuestionExperienceTests: XCTestCase {
         }
     }
 
+    func testNativeReduceMotionKeepsQuestionAndFeedbackUsable() {
+        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+        settings.launch()
+        settingsLabel("Accessibility", in: settings).tap()
+        settingsLabel("Motion", in: settings).tap()
+        let motion = settings.switches["Reduce Motion"]
+        XCTAssertTrue(motion.waitForExistence(timeout: 10))
+        let initiallyEnabled = motion.value as? String == "1"
+        if !initiallyEnabled { motion.tap() }
+        XCTAssertEqual(motion.value as? String, "1")
+        defer {
+            app.terminate()
+            settings.activate()
+            if !initiallyEnabled, motion.value as? String == "1" { motion.tap() }
+            settings.terminate()
+        }
+        launch()
+        openSunQuestion()
+        capture("Native Reduce Motion Sun proposals")
+        tap("quiz.answer.0")
+        tap("quiz.check")
+        capture("Native Reduce Motion explanatory feedback")
+        tap("feedback.hint")
+        tap("quiz.hint.close")
+        tap(starAnswer().identifier)
+        tap("quiz.check")
+        XCTAssertEqual(button("feedback.continue").label, "Continue")
+        tap("adventure.pause")
+        tap("adventure.pause.worlds")
+        tap("gravity.open")
+        tap("gravity.world.moon")
+        tap("gravity.angle.plus")
+        tap("gravity.speed.plus")
+        tap("gravity.launch")
+        let field = app.otherElements["gravity.field"]
+        XCTAssertTrue((field.value as? String ?? "").contains("Static flight paths"))
+        tap("gravity.pause")
+        for _ in 0..<8 {
+            if field.isHittable { break }
+            app.swipeUp()
+        }
+        capture("Native Reduce Motion static Moon and Earth trajectories")
+    }
+
+    private func settingsLabel(_ text: String, in settings: XCUIApplication) -> XCUIElement {
+        let label = settings.staticTexts[text].firstMatch
+        for _ in 0..<12 {
+            if label.exists, label.isHittable { return label }
+            settings.swipeUp()
+        }
+        let attachment = XCTAttachment(screenshot: settings.screenshot())
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        XCTAssertTrue(label.isHittable, "Settings must expose \(text)")
+        return label
+    }
+
     private func launch(
         reset: Bool = true, allowance: String? = nil,
         category: String = "UICTContentSizeCategoryL", fixture: String? = nil
@@ -174,7 +235,14 @@ final class QuestionExperienceTests: XCTestCase {
 
     @discardableResult private func button(_ identifier: String) -> XCUIElement {
         let element = app.buttons[identifier]
-        XCTAssertTrue(element.waitForExistence(timeout: 10), "Missing \(identifier)")
+        let exists = element.waitForExistence(timeout: 10)
+        if !exists {
+            capture("Missing \(identifier)")
+            let hierarchy = XCTAttachment(string: app.debugDescription)
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+        }
+        XCTAssertTrue(exists, "Missing \(identifier)")
         reveal(element)
         return element
     }

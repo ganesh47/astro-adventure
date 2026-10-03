@@ -97,6 +97,27 @@ final class GravityPlaygroundTests: XCTestCase {
         assertNavigationUnchanged(navigation)
     }
 
+    func testBackgroundingAnActivelyFlyingBallRequiresExplicitResume() {
+        launchApp()
+        let navigation = openFromMercury()
+        tap("gravity.world.moon")
+        tap("gravity.angle.plus")
+        tap("gravity.speed.plus")
+        tap("gravity.launch")
+        XCTAssertTrue(app.buttons["gravity.pause"].waitForExistence(timeout: 2))
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        XCTAssertTrue(app.buttons["gravity.resume"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["gravity.pause"].exists)
+        XCTAssertTrue(fieldValue.contains("Flight paused on Moon"))
+        assertRemainsPaused(for: 9)
+        capture("iOS gravity active flight freezes across background and foreground")
+        tap("gravity.resume")
+        waitForLanding(on: "Moon", timeout: 12)
+        tap("gravity.worlds")
+        assertNavigationUnchanged(navigation)
+    }
+
     func testTabletPortraitGravityCardsAndControlsGrowAtLargestAccessibilitySize() throws {
         guard UIDevice.current.userInterfaceIdiom == .pad else {
             throw XCTSkip("Portrait gravity layout is supported on iPad; iPhone is landscape-only")
@@ -250,7 +271,9 @@ final class GravityPlaygroundTests: XCTestCase {
         XCTAssertTrue(pause.waitForExistence(timeout: 3))
         XCTAssertTrue(pause.isHittable, "Launch must keep Pause visible")
         pause.press(forDuration: 0.1)
-        XCTAssertTrue(app.buttons["gravity.resume"].waitForExistence(timeout: 3))
+        let resumed = app.buttons["gravity.resume"].waitForExistence(timeout: 3)
+        if !resumed { capture("iOS gravity Pause failed to expose Resume") }
+        XCTAssertTrue(resumed)
         XCTAssertFalse(app.staticTexts["gravity.comparison"].exists)
     }
 

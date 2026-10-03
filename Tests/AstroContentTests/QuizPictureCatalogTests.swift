@@ -229,6 +229,7 @@ final class QuizPictureCatalogTests: XCTestCase {
             "tech_suit_room": .crewSuit,
             "tech_empty_tank": .emptyTank,
             "tech_telescope_near": .movingStars,
+            "tech_dsn_rotation": .spin,
         ]
         for (id, scene) in expected {
             let choice = try XCTUnwrap(choices.first { $0.id == id })
@@ -361,6 +362,137 @@ final class QuizPictureCatalogTests: XCTestCase {
             }
         }
         XCTAssertEqual(found, Set(expected.keys))
+    }
+
+    func testQualitativeProposalsHaveDifferentRenderRelevantMetadata() throws {
+        var quizzes: [QuizContent] = []
+        for lesson in try LessonCatalog.bundled() {
+            for band in AgeBand.allCases {
+                quizzes.append(lesson.content[band].quiz)
+                quizzes += QuizRoundCatalog.quizzes(destinationID: lesson.id, ageBand: band)
+            }
+        }
+        for mission in try PlanetMissionCatalog.bundled() {
+            for question in mission.questions {
+                for band in AgeBand.allCases {
+                    quizzes += [question.content[band], question.reviewContent[band]]
+                }
+            }
+        }
+        for video in try VideoLessonCatalog.bundled() {
+            for checkpoint in video.checkpoints {
+                for band in AgeBand.allCases {
+                    quizzes += [
+                        checkpoint.question.content[band],
+                        checkpoint.question.reviewContent[band],
+                    ]
+                }
+            }
+        }
+
+        // These share an illustrative diagram with an explicit displayed quantity.
+        // Qualitative text alone does not permit an otherwise identical picture.
+        let quantityScenes: Set<QuizPicture.Scene> = [
+            .distance, .duration, .craterWidth, .canyonLength, .volcanoWidth, .flybyDistance,
+        ]
+        for quiz in quizzes {
+            var grouped: [String: [QuizPicture]] = [:]
+            for choice in quiz.choices {
+                let picture = try XCTUnwrap(choice.picture, choice.text)
+                let signature = renderedSignature(picture)
+                grouped[signature, default: []].append(picture)
+            }
+            for pictures in grouped.values where pictures.count > 1 {
+                XCTAssertTrue(
+                    quantityScenes.contains(pictures[0].scene),
+                    "Qualitative proposals share a drawing: \(quiz.prompt)")
+                XCTAssertEqual(Set(pictures.map(\.label)).count, pictures.count)
+                for picture in pictures {
+                    XCTAssertNotNil(
+                        picture.label.range(of: #"[0-9]"#, options: .regularExpression),
+                        "A shared numeric diagram needs an explicit quantity: \(picture.label)")
+                    XCTAssertNotNil(
+                        picture.label.range(
+                            of:
+                                #"\b(AU|min|minutes?|hr|hours?|seconds?|kilometres|days?|years?)\b"#,
+                            options: .regularExpression),
+                        "A shared numeric diagram needs its unit: \(picture.label)")
+                }
+            }
+        }
+        XCTAssertEqual(quizzes.count, 873)
+    }
+
+    func testReviewedLiquidsLightingAndClockProposalsUseTheirAuthoredVariants() throws {
+        let expected: [String: [String: QuizPicture.Scene]] = [
+            "saturn-two-moon-mysteries-titan-lakes": [
+                "Methane and ethane": .hydrocarbonLake,
+                "Liquid methane and ethane": .hydrocarbonLake,
+                "Surface hydrocarbon liquids rather than liquid water": .hydrocarbonLake,
+                "Warm water like home": .ocean,
+                "Warm liquid water like Earth’s": .ocean,
+                "Earth-like warm surface water oceans": .ocean,
+            ],
+            "earth-season-tracker-sun-angle": [
+                "Light aimed straight at the patch": .directSunlight,
+                "The more direct beam": .directSunlight,
+                "A beam concentrated over a smaller area": .directSunlight,
+                "Light spread far sideways": .slantedSunlight,
+                "The more slanting beam": .slantedSunlight,
+                "A beam spread over a larger area": .slantedSunlight,
+            ],
+            "uranus-sideways-seasons-polar-light": [
+                "The other can be dark": .polarIllumination,
+                "One pole is lit while the other is dark": .polarIllumination,
+                "Prolonged illumination at one pole and darkness at the other": .polarIllumination,
+                "The Sun switches off for all planets": .darkSun,
+                "A cessation of the Sun’s energy production": .darkSun,
+            ],
+            "venus-backward-spinner-solar-clock": [
+                "Yes, they can differ": .unequalClocks,
+                "No, clocks must match": .equalClocks,
+            ],
+        ]
+        var found: [String: Set<String>] = [:]
+        var hydrocarbonInstances = 0
+        for mission in try PlanetMissionCatalog.bundled() {
+            for question in mission.questions {
+                guard let proposals = expected[question.conceptID] else { continue }
+                for band in AgeBand.allCases {
+                    for quiz in [question.content[band], question.reviewContent[band]] {
+                        for choice in quiz.choices {
+                            guard let scene = proposals[choice.text] else { continue }
+                            XCTAssertEqual(choice.picture?.scene, scene, choice.text)
+                            found[question.conceptID, default: []].insert(choice.text)
+                            if scene == .hydrocarbonLake { hydrocarbonInstances += 1 }
+                        }
+                    }
+                }
+            }
+        }
+        for (concept, proposals) in expected {
+            XCTAssertEqual(found[concept], Set(proposals.keys), concept)
+        }
+        XCTAssertEqual(hydrocarbonInstances, 6)
+    }
+
+    private func renderedSignature(_ picture: QuizPicture) -> String {
+        // Only metadata consumed by the drawing counts. Detail and unused tone
+        // cannot disguise two visually identical qualitative proposals.
+        let tone: String
+        switch picture.scene {
+        case .rockyWorld, .moon, .gasWorld, .icyWorld, .dwarfWorld, .rust, .clouds, .forest,
+            .rings, .solidRing, .sidewaysSpin, .uprightSpin, .tiltedSpin, .stillWorld, .storm:
+            tone = picture.tone?.rawValue ?? ""
+        case .ocean:
+            tone = picture.tone == .blueWhite ? "blueWhite" : ""
+        default:
+            tone = ""
+        }
+        let fraction =
+            picture.scene == .waterCoverage ? picture.fraction.map { String($0) } ?? "" : ""
+        let ratio = picture.scene == .sizeComparison ? picture.label : ""
+        return "\(picture.scene.rawValue)|\(fraction)|\(tone)|\(ratio)"
     }
 
     private func minutes(in text: String) -> Double? {

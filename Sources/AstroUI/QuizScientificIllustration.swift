@@ -184,6 +184,32 @@ private struct ScientificQuizCanvas {
             emptyTank()
         case .ironCave:
             ironCave()
+        case .greenhouseWarming:
+            greenhouseWarming()
+        case .equalTemperatures, .equalAtmospheres:
+            equalWorldProperties(atmospheres: picture.scene == .equalAtmospheres)
+        case .unequalClocks, .equalClocks:
+            pairedClocks(equal: picture.scene == .equalClocks)
+        case .volcanicTerrain, .eruptingVolcanoes:
+            volcanicEvidence(erupting: picture.scene == .eruptingVolcanoes)
+        case .nitrogenOxygenAir, .carbonDioxideAir:
+            atmosphericMolecules(carbonDioxide: picture.scene == .carbonDioxideAir)
+        case .oppositeSeasons, .sameSeasons:
+            hemisphereSeasons(same: picture.scene == .sameSeasons)
+        case .directSunlight, .slantedSunlight:
+            sunlightAngle(slanted: picture.scene == .slantedSunlight)
+        case .illustrationEvidence, .pixelColorEvidence:
+            imageEvidence(pixels: picture.scene == .pixelColorEvidence)
+        case .hydrocarbonLake:
+            hydrocarbonLake()
+        case .imageTitle, .destinationLabels:
+            descriptiveLabels(multiple: picture.scene == .destinationLabels)
+        case .polarIllumination, .darkSun:
+            polarLight(sunOff: picture.scene == .darkSun)
+        case .briefDuration, .longDuration:
+            durationScale(long: picture.scene == .longDuration)
+        case .instantLight:
+            instantLight()
         }
     }
 
@@ -1256,5 +1282,244 @@ private struct ScientificQuizCanvas {
             circle(x, y, radius: 8, color: .gray)
             ellipse(x - 4, y - 4, 8, 8, color: .white.opacity(0.7))
         }
+    }
+
+    private func greenhouseWarming() {
+        sun(14, 19, radius: 7)
+        sphere(51, 63, radius: 23, color: .orange)
+        ellipse(19, 31, 64, 64, color: .white.opacity(0.65))
+        arrow(from: (25, 27), to: (41, 50), color: .yellow)
+        arrow(from: (58, 46), to: (69, 34), color: .orange)
+        arrow(from: (73, 34), to: (64, 54), color: .orange)
+        arrow(from: (46, 47), to: (42, 19), color: .orange.opacity(0.7))
+        label("Heat + atmosphere", 50, 96, size: 6)
+    }
+
+    private func equalWorldProperties(atmospheres: Bool) {
+        for (x, color) in [(22.0, Color.gray), (50, .orange), (78, .blue)] {
+            sphere(x, 39, radius: 13, color: color)
+            if atmospheres {
+                ellipse(x - 18, 21, 36, 36, color: .white)
+                for dx in [-6.0, 0, 6] { circle(x + dx, 69, radius: 2, color: .cyan) }
+            } else {
+                thermometer(x, 66, level: 0.75)
+            }
+        }
+        label(atmospheres ? "Same air" : "Same temperature", 50, 95, size: 6)
+    }
+
+    private func thermometer(_ x: Double, _ y: Double, level: Double) {
+        let tube = Path(roundedRect: box(x - 2, y - 10, 4, 21), cornerRadius: frame.width / 50)
+        stroke(tube, color: .white, width: 1)
+        line([(x, y + 10), (x, y + 8 - level * 17)], color: .orange, width: 2)
+        circle(x, y + 12, radius: 4, color: .orange)
+    }
+
+    private func smallClock(_ x: Double, _ y: Double, radius: Double, hand: Double) {
+        circle(x, y, radius: radius, color: .blue.opacity(0.3))
+        ellipse(x - radius, y - radius, radius * 2, radius * 2)
+        line([(x, y - radius * 0.7), (x, y)], color: .white, width: 1.6)
+        let a = hand * .pi / 180
+        line(
+            [(x, y), (x + cos(a) * radius * 0.55, y + sin(a) * radius * 0.55)], color: .white,
+            width: 1.6)
+        circle(x, y, radius: 1.5, color: .cyan)
+    }
+
+    private func pairedClocks(equal: Bool) {
+        smallClock(25, 47, radius: 20, hand: 0)
+        smallClock(75, 47, radius: 20, hand: equal ? 0 : 135)
+        label("Spin", 25, 84, size: 6)
+        label("Sunrise", 75, 84, size: 6)
+    }
+
+    private func volcanicEvidence(erupting: Bool) {
+        for (x, y) in [(25.0, 47.0), (71, 48), (50, 77)] {
+            polygon([(x - 18, y), (x - 6, y - 12), (x + 6, y - 12), (x + 18, y)], color: .brown)
+            ellipse(x - 5, y - 14, 10, 4, color: .gray)
+            if erupting {
+                line([(x, y - 12), (x - 4, y - 23), (x - 9, y - 26)], color: .orange, width: 2.5)
+                line([(x, y - 12), (x + 4, y - 24), (x + 9, y - 29)], color: .orange, width: 2.5)
+                line([(x + 4, y - 10), (x + 14, y - 2)], color: .orange, width: 2)
+                circle(x - 10, y - 29, radius: 1.2, color: .orange)
+                circle(x + 10, y - 31, radius: 1.2, color: .orange)
+            } else {
+                ellipse(x - 21, y - 10, 42, 15, color: .white.opacity(0.35))
+            }
+        }
+        label(erupting ? "All erupting" : "Terrain shapes", 50, 95, size: 6)
+    }
+
+    private func atmosphericMolecules(carbonDioxide: Bool) {
+        for (index, center) in [
+            (0, (29.0, 30.0)), (1, (72.0, 30.0)), (2, (29.0, 64.0)), (3, (72.0, 64.0)),
+        ] {
+            let (x, y) = center
+            if carbonDioxide {
+                line([(x - 11, y), (x + 11, y)], color: .white, width: 2)
+                circle(x, y, radius: 5, color: .gray)
+                circle(x - 11, y, radius: 5, color: .orange)
+                circle(x + 11, y, radius: 5, color: .orange)
+            } else {
+                line([(x - 5, y), (x + 5, y)], color: .white, width: 2)
+                let color: Color = index == 3 ? .orange : .cyan
+                circle(x - 6, y, radius: 6, color: color)
+                circle(x + 6, y, radius: 6, color: color)
+            }
+        }
+        label(carbonDioxide ? "CO₂" : "N₂ + O₂", 50, 91)
+    }
+
+    private func hemisphereSeasons(same: Bool) {
+        for (x, isSummer, hemisphere) in [(25.0, true, "N"), (75.0, same, "S")] {
+            earth(x, 45, radius: 17)
+            line([(x - 16, 45), (x + 16, 45)], color: .white.opacity(0.7), width: 1)
+            if isSummer {
+                sun(x, 14, radius: 5)
+                arrow(from: (x, 24), to: (x, 34), color: .yellow)
+            } else {
+                sun(x - 20, 16, radius: 5)
+                arrow(from: (x - 14, 23), to: (x - 3, 34), color: .yellow)
+            }
+            label(hemisphere, x, 45, size: 8)
+            label(isSummer ? "Summer" : "Winter", x, 80, size: 6)
+        }
+    }
+
+    private func sunlightAngle(slanted: Bool) {
+        fill(Path(box(8, 70, 84, 15)), color: .brown)
+        if slanted {
+            fill(Path(box(40, 68, 38, 4)), color: .yellow.opacity(0.8))
+            for (x, y) in [(8.0, 36.0), (16.5, 27.5), (25, 19)] {
+                arrow(from: (x, y), to: (x + 70 - y, 70), color: .yellow)
+            }
+        } else {
+            fill(Path(box(36, 68, 28, 4)), color: .yellow.opacity(0.8))
+            for x in [38.0, 50, 62] {
+                arrow(from: (x, 19), to: (x, 70), color: .yellow)
+            }
+        }
+        label(slanted ? "Spread out" : "Concentrated", 50, 94, size: 6)
+    }
+
+    private func imageEvidence(pixels: Bool) {
+        fill(Path(box(16, 16, 68, 64)), color: .blue.opacity(0.25))
+        stroke(Path(box(16, 16, 68, 64)), color: .white)
+        sphere(50, 44, radius: 21, color: .orange, bands: true)
+        if pixels {
+            for x in stride(from: 16.0, through: 84.0, by: 17) {
+                line([(x, 16), (x, 80)], color: .white.opacity(0.6), width: 1)
+            }
+            for y in stride(from: 16.0, through: 80.0, by: 16) {
+                line([(16, y), (84, y)], color: .white.opacity(0.6), width: 1)
+            }
+            fill(Path(box(34, 33, 15, 14)), color: .orange)
+            label("Pixel colours", 50, 95, size: 6)
+        } else {
+            line([(68, 70), (80, 47)], color: .white, width: 5)
+            polygon([(65, 76), (68, 66), (72, 69)], color: .orange)
+            label("Drawing", 50, 95, size: 6)
+        }
+    }
+
+    private func hydrocarbonLake() {
+        polygon(
+            [(8, 60), (24, 53), (38, 59), (58, 53), (78, 57), (92, 52), (92, 85), (8, 85)],
+            color: .brown)
+        fill(Path(box(19, 62, 62, 15)), color: .orange.opacity(0.75))
+        curve(
+            from: (19, 62), to: (81, 62), control1: (38, 54), control2: (62, 69), color: .yellow,
+            width: 2)
+        // Species labels distinguish these liquids from H₂O without implying lake colour.
+        circle(29, 27, radius: 5, color: .gray)
+        for (x, y) in [(19.0, 27.0), (39, 27), (29, 17), (29, 37)] {
+            line([(29, 27), (x, y)], color: .white, width: 1)
+            circle(x, y, radius: 3, color: .white)
+        }
+        line([(65, 27), (77, 27)], color: .white, width: 1)
+        for x in [65.0, 77] {
+            circle(x, 27, radius: 4, color: .gray)
+            for y in [17.0, 37] {
+                line([(x, 27), (x, y)], color: .white, width: 1)
+                circle(x, y, radius: 2.5, color: .white)
+            }
+        }
+        line([(65, 27), (55, 27)], color: .white, width: 1)
+        line([(77, 27), (87, 27)], color: .white, width: 1)
+        circle(55, 27, radius: 2.5, color: .white)
+        circle(87, 27, radius: 2.5, color: .white)
+        label("CH₄", 29, 47, size: 6)
+        label("C₂H₆", 72, 47, size: 6)
+        label("Methane + ethane", 50, 95, size: 6)
+    }
+
+    private func descriptiveLabels(multiple: Bool) {
+        if multiple {
+            for (x, text) in [(20.0, "1"), (50, "2"), (80, "3")] {
+                sphere(x, 34, radius: 10, color: .blue)
+                stroke(Path(box(x - 12, 56, 24, 15)), color: .white)
+                label(text, x, 64, size: 6)
+            }
+            label("Count names", 50, 92, size: 6)
+        } else {
+            stroke(Path(box(19, 18, 62, 53)), color: .white)
+            sphere(50, 44, radius: 17, color: .blue)
+            fill(Path(box(22, 76, 56, 14)), color: .gray.opacity(0.6))
+            label("New title", 50, 83, size: 6)
+        }
+    }
+
+    private func polarLight(sunOff: Bool) {
+        if sunOff {
+            circle(50, 31, radius: 16, color: .gray)
+            for angle in stride(from: 0.0, to: 360.0, by: 45) {
+                let a = angle * .pi / 180
+                line(
+                    [
+                        (50 + cos(a) * 19, 31 + sin(a) * 19),
+                        (50 + cos(a) * 25, 31 + sin(a) * 25),
+                    ],
+                    color: .gray, width: 1.2)
+            }
+            for x in [25.0, 74] { sphere(x, 73, radius: 10, color: .gray) }
+            label("Sun off", 50, 96, size: 6)
+        } else {
+            circle(43, 50, radius: 25, color: tone(.blueGreen, fallback: .cyan))
+            var shaded = context
+            shaded.clip(to: Path(ellipseIn: box(18, 25, 50, 50)))
+            shaded.fill(Path(box(17, 24, 25, 52)), with: .color(.black.opacity(0.5)))
+            line([(10, 45), (77, 55)], color: .white, width: 1.7)
+            label("S", 13, 37, size: 6)
+            label("N", 75, 45, size: 6)
+            sun(88, 62, radius: 7)
+            arrow(from: (77, 62), to: (66, 60), color: .yellow)
+            label("One pole lit", 50, 95, size: 6)
+        }
+    }
+
+    private func durationScale(long: Bool) {
+        if long {
+            for offset in [10.0, 5, 0] {
+                fill(Path(box(22 + offset, 22 - offset, 51, 53)), color: .gray.opacity(0.65))
+                stroke(Path(box(22 + offset, 22 - offset, 51, 53)), color: .white)
+            }
+            line([(22, 36), (73, 36)], color: .white)
+            for x in [31.0, 42, 53, 64] {
+                for y in [45.0, 55, 65] { circle(x, y, radius: 1.5, color: .cyan) }
+            }
+            label("Years", 50, 92)
+        } else {
+            smallClock(50, 49, radius: 27, hand: 30)
+            line([(50, 16), (50, 8)], color: .white, width: 3)
+            line([(43, 8), (57, 8)], color: .white, width: 3)
+            label("Seconds", 50, 92)
+        }
+    }
+
+    private func instantLight() {
+        sun(21, 36, radius: 11)
+        sphere(80, 36, radius: 16, color: .blue, bands: true)
+        arrow(from: (38, 36), to: (61, 36), color: .yellow)
+        label("0 time", 50, 78)
     }
 }

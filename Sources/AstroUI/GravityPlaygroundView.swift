@@ -94,7 +94,7 @@ public struct GravityPlaygroundView: View {
                     .accessibilityIdentifier("gravity.playground")
                     .onChange(of: clock.phase) {
                         if clock.phase == .flying, !wide {
-                            scroll.scrollTo("gravity.flight-controls", anchor: .top)
+                            scroll.scrollTo("gravity.flight-controls", anchor: .center)
                         }
                     }
                 }
@@ -236,11 +236,13 @@ public struct GravityPlaygroundView: View {
             .accessibilityValue(fieldDescription)
             .accessibilityIdentifier("gravity.field")
             HStack(alignment: .top) {
-                Text("0 m")
-                Spacer()
-                Text(
-                    "Distance → \(number(GravityTrajectory(world: .moon, launch: launch).range)) m")
+                Text("Distance →")
             }
+            .font(.caption).foregroundStyle(.white.opacity(0.8))
+            .fixedSize(horizontal: false, vertical: true)
+            Text(
+                "Longest flight at these settings: \(number(GravityTrajectory(world: .moon, launch: launch).range)) m"
+            )
             .font(.caption).foregroundStyle(.white.opacity(0.8))
             .fixedSize(horizontal: false, vertical: true)
             ViewThatFits(in: .horizontal) {
