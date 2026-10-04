@@ -85,7 +85,7 @@ final class QuestionExperienceTests: XCTestCase {
         XCTAssertEqual(button("feedback.continue").label, "Continue")
     }
 
-    func testBackgroundAndRestoredChallengeRequireExplicitResume() {
+    func testBackgroundAndRestoredChallengeRequireExplicitResume() throws {
         launch(allowance: "30")
         openSunQuestion()
         turnSoundOff()
@@ -95,8 +95,10 @@ final class QuestionExperienceTests: XCTestCase {
         XCUIDevice.shared.press(.home)
         app.activate()
         tap("adventure.pause.resume")
-        XCTAssertEqual(app.buttons["quiz.answer.0"].value as? String, "Selected")
-        XCTAssertFalse(app.buttons["quiz.time.more"].exists)
+        guard
+            let savedRemaining = try assertRunningSelectedChallenge(
+                "Background Resume", maximumRemaining: 30)
+        else { return }
         app.terminate()
         launch(reset: false, allowance: "30")
         tap("adventure.resume")
@@ -104,8 +106,55 @@ final class QuestionExperienceTests: XCTestCase {
         XCTAssertFalse(app.buttons["quiz.check"].isEnabled)
         capture("Saved challenge waits for explicit resume")
         tap("quiz.time.resume")
-        tap("quiz.time.mode")
-        XCTAssertTrue(app.buttons["quiz.check"].isEnabled)
+        // Check Resume itself before any mode change could clear awaitingResume or expiry.
+        _ = try assertRunningSelectedChallenge(
+            "Restored Challenge Resume", maximumRemaining: savedRemaining)
+    }
+
+    private func assertRunningSelectedChallenge(_ context: String, maximumRemaining: Int) throws
+        -> Int?
+    {
+        let started = ProcessInfo.processInfo.systemUptime
+        let snapshot = try app.snapshot()
+        let elements = snapshotElements(snapshot)
+        let answers = elements.filter { $0.identifier == "quiz.answer.0" }
+        let checks = elements.filter { $0.identifier == "quiz.check" }
+        let modes = elements.filter { $0.identifier == "quiz.time.mode" }
+        let timers = elements.filter { $0.identifier == "quiz.time.remaining" }
+        let timerValue = timers.first?.value as? String
+        let remaining = timerValue?.components(separatedBy: " ").first.flatMap { Int($0) }
+        let conditions: [(String, Bool)] = [
+            ("Resume disappeared", !elements.contains { $0.identifier == "quiz.time.resume" }),
+            ("Check Answer enabled", checks.count == 1 && checks.first?.isEnabled == true),
+            (
+                "answer retained",
+                answers.count == 1 && answers.first?.value as? String == "Selected"
+            ),
+            ("Challenge mode retained", modes.count == 1 && modes.first?.label == "Calm Practice"),
+            (
+                "countdown running",
+                timers.count == 1 && timerValue == remaining.map { "\($0) seconds remaining" }
+            ),
+            (
+                "saved time budget retained",
+                remaining.map { $0 > 0 && $0 <= maximumRemaining } ?? false
+            ),
+            ("not expired", !elements.contains { $0.identifier == "quiz.time.more" }),
+        ]
+        let details =
+            "\(context): one immediate AX snapshot after native Resume\n"
+            + "Snapshot duration: \(ProcessInfo.processInfo.systemUptime - started)s\n"
+            + "Timer: \(timerValue ?? "missing"); saved upper bound: \(maximumRemaining)s\n"
+            + conditions.map { "\($0.0): \($0.1)" }.joined(separator: "\n")
+        let evidence = XCTAttachment(
+            string: details + "\nCached hierarchy:\n\(snapshot.dictionaryRepresentation)")
+        evidence.name = "\(context) immediate selected challenge state"
+        evidence.lifetime = .keepAlways
+        add(evidence)
+        let resumed = conditions.allSatisfy { $0.1 }
+        if !resumed { capture("\(context) did not resume the saved challenge") }
+        XCTAssertTrue(resumed, details)
+        return resumed ? remaining : nil
     }
 
     func testQuestionAndFeedbackRemainReachableAtLargestTextSize() {
