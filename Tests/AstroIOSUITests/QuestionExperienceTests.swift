@@ -631,9 +631,16 @@ final class QuestionExperienceTests: XCTestCase {
         // Settings is backgrounded. Restore that observed dependent option natively.
         let messageEffects = settings.switches["ReduceMotionAutoplayMessagesEffects"]
         if let originalEffects = initialAutoPlayMessageEffects {
-            guard messageEffects.waitForExistence(timeout: 10),
-                setSettingsSwitch(messageEffects, enabled: originalEffects, in: settings)
-            else { return }
+            guard messageEffects.waitForExistence(timeout: 10) else {
+                captureNativeSettingsState(
+                    motion, in: settings,
+                    name: "Native Auto-Play Message Effects missing during restoration")
+                XCTFail("Native Settings must expose Auto-Play Message Effects during restoration")
+                return
+            }
+            guard setSettingsSwitch(messageEffects, enabled: originalEffects, in: settings) else {
+                return
+            }
         }
         let restoredMotion = motion.value as? String == (original ? "1" : "0")
         let restoredEffects =
