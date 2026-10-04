@@ -76,9 +76,9 @@ jobs:
         include:
           - name: iOS Simulator Build
             scheme: AstroAdventure-iOS
-            # Measured startup/cases plus prior complete science duration project
-            # about 105 minutes; retain every serial case with cleanup headroom.
-            timeout_minutes: 120
+            # Hosted serial validation reached its final case at the 120-minute
+            # limit; allow bounded completion and artifact-upload headroom.
+            timeout_minutes: 150
             destination: generic/platform=iOS Simulator
           - name: tvOS Simulator Build
             scheme: AstroAdventure-tvOS
