@@ -63,7 +63,13 @@ final class QuestionExperienceTests: XCTestCase {
             openSunQuestion()
             if app.buttons["quiz.narration"].label == "Sound Off" { select("quiz.narration") }
             for index in 0..<3 {
-                focus("quiz.answer.\(index)")
+                let identifier = "quiz.answer.\(index)"
+                focus(identifier)
+                let answer = app.buttons[identifier]
+                XCTAssertTrue(answer.hasFocus)
+                XCTAssertTrue(
+                    visibleFrame(for: identifier).contains(answer.frame),
+                    "The entire focused \(category) proposal must be visible")
                 capture("\(category) television focused proposal \(index + 1)")
             }
             for identifier in [

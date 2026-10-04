@@ -1,5 +1,6 @@
 import AstroContent
 import AstroGameCore
+import MachO
 import UIKit
 import XCTest
 
@@ -11,6 +12,7 @@ final class QuestionExperienceTests: XCTestCase {
     override func setUp() async throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .landscapeLeft
+        recordRunnerIdentity()
     }
 
     override func tearDown() async throws {
@@ -120,6 +122,13 @@ final class QuestionExperienceTests: XCTestCase {
                     isFullyVisible(answer),
                     "The entire Sun proposal must be visible: \(answer.frame) in \(visibleFrame(for: answer))"
                 )
+                let geometry = XCTAttachment(
+                    string: "Proposal: \(answer.identifier), \(answer.frame)\n"
+                        + "Uncovered viewport: \(visibleFrame(for: answer))\n\(app.debugDescription)"
+                )
+                geometry.name = "\(category) Sun proposal \(index + 1) capture geometry"
+                geometry.lifetime = .keepAlways
+                add(geometry)
                 capture("\(category) readable Sun proposal \(index + 1)")
             }
             tap("quiz.answer.0")
@@ -527,6 +536,47 @@ final class QuestionExperienceTests: XCTestCase {
     private func capture(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func recordRunnerIdentity() {
+        let executable = Bundle(for: Self.self).executableURL?.path ?? "missing"
+        var loadedUUID = "missing"
+        var loadedPath = "missing"
+        for index in 0..<_dyld_image_count() {
+            guard let name = _dyld_get_image_name(index),
+                String(cString: name).hasSuffix("/AstroAdventure-iOS-UITests"),
+                let header = _dyld_get_image_header(index)
+            else { continue }
+            loadedPath = String(cString: name)
+            let rawHeader = UnsafeRawPointer(header)
+            let headerSize =
+                header.pointee.magic == MH_MAGIC_64
+                ? MemoryLayout<mach_header_64>.size : MemoryLayout<mach_header>.size
+            var command = rawHeader.advanced(by: headerSize)
+            let end = command.advanced(by: Int(header.pointee.sizeofcmds))
+            for _ in 0..<header.pointee.ncmds {
+                guard command.advanced(by: MemoryLayout<load_command>.size) <= end else { break }
+                let load = command.load(as: load_command.self)
+                guard load.cmdsize >= MemoryLayout<load_command>.size,
+                    command.advanced(by: Int(load.cmdsize)) <= end
+                else { break }
+                if load.cmd == LC_UUID, load.cmdsize >= MemoryLayout<uuid_command>.size {
+                    loadedUUID = UUID(uuid: command.load(as: uuid_command.self).uuid).uuidString
+                    break
+                }
+                command = command.advanced(by: Int(load.cmdsize))
+            }
+            break
+        }
+        let identity =
+            "Question capture helper v16: gutter precision and complete geometry\n"
+            + "Bundle executable: \(executable)\nLoaded image: \(loadedPath)\n"
+            + "Loaded Mach-O UUID: \(loadedUUID)"
+        print(identity)
+        let attachment = XCTAttachment(string: identity)
+        attachment.name = "Executing question test bundle identity"
         attachment.lifetime = .keepAlways
         add(attachment)
     }
