@@ -178,7 +178,9 @@ final class QuestionExperienceTests: XCTestCase {
         tap("story.next")
         waitForStoryCard("Card 2 of \(cardCount)", excludingTitle: firstTitle)
         XCTAssertEqual(progress.value as? String, "Card 2 of \(cardCount)")
-        XCTAssertTrue(progress.isHittable, "Next must scroll the new card's header into view")
+        XCTAssertTrue(
+            storyProgressIsFullyVisible("Card 2 of \(cardCount)"),
+            "Next must scroll the complete new card's header into view")
         capture("Largest text settled Story Next restores the new card top")
         reveal(title, fully: true)
         XCTAssertTrue(
@@ -189,7 +191,9 @@ final class QuestionExperienceTests: XCTestCase {
         tap("story.previous")
         waitForStoryCard("Card 1 of \(cardCount)", title: firstTitle)
         XCTAssertEqual(progress.value as? String, "Card 1 of \(cardCount)")
-        XCTAssertTrue(progress.isHittable, "Previous must restore the prior card's header")
+        XCTAssertTrue(
+            storyProgressIsFullyVisible("Card 1 of \(cardCount)"),
+            "Previous must restore the complete prior card's header")
         capture("Largest text settled Story Previous restores the first card top")
         reveal(title, fully: true)
         XCTAssertTrue(isFullyVisible(title))
@@ -217,31 +221,49 @@ final class QuestionExperienceTests: XCTestCase {
         _ expectedProgress: String, title expectedTitle: String? = nil,
         excludingTitle previousTitle: String? = nil
     ) {
-        let progress = app.descendants(matching: .any).matching(identifier: "story.progress")
-            .firstMatch
-        let title = app.staticTexts["story.title"]
         let changedAt = ProcessInfo.processInfo.systemUptime
+        var sampleCount = 0
+        var lastEvaluation = "No Story header snapshot evaluated"
+        var lastSnapshot: (any XCUIElementSnapshot)?
         let settled = XCTNSPredicateExpectation(
             predicate: NSPredicate { _, _ in
-                // The full header and long title are captured separately on compact screens.
-                guard ProcessInfo.processInfo.systemUptime - changedAt >= 0.75,
-                    progress.exists, title.exists,
-                    progress.value as? String == expectedProgress,
-                    self.isFullyVisible(progress)
-                else { return false }
-                if let expectedTitle, title.label != expectedTitle { return false }
-                if let previousTitle, title.label == previousTitle { return false }
-                return true
-            }, object: progress)
+                let sampleStarted = ProcessInfo.processInfo.systemUptime
+                guard sampleStarted - changedAt >= 0.75 else { return false }
+                sampleCount += 1
+                do {
+                    // Evaluate identity and bounds from one AX tree, with no live queries per field.
+                    let observation = try self.storyHeaderObservation(
+                        expectedProgress, title: expectedTitle, excludingTitle: previousTitle)
+                    lastSnapshot = observation.snapshot
+                    let duration = ProcessInfo.processInfo.systemUptime - sampleStarted
+                    lastEvaluation =
+                        "Sample \(sampleCount), elapsed \(sampleStarted - changedAt)s, "
+                        + "duration \(duration)s\n\(observation.details)"
+                    return observation.ready
+                } catch {
+                    lastSnapshot = nil
+                    lastEvaluation =
+                        "Sample \(sampleCount), elapsed \(sampleStarted - changedAt)s, "
+                        + "duration \(ProcessInfo.processInfo.systemUptime - sampleStarted)s\n"
+                        + "Snapshot failed: \(error)"
+                    return false
+                }
+            }, object: nil)
         let result = XCTWaiter.wait(for: [settled], timeout: 5)
+        if result == .completed {
+            let evaluation = XCTAttachment(string: lastEvaluation)
+            evaluation.name = "Settled Story \(expectedProgress) evaluated geometry and timing"
+            evaluation.lifetime = .keepAlways
+            add(evaluation)
+        }
         if result != .completed {
             capture("Unsettled Story \(expectedProgress)")
-            let progressDetails =
-                progress.exists ? "\(progress.value ?? "missing"), \(progress.frame)" : "missing"
-            let titleDetails = title.exists ? "\(title.label), \(title.frame)" : "missing"
+            let hierarchy =
+                lastSnapshot.map { String(describing: $0.dictionaryRepresentation) }
+                ?? "No successful snapshot in the last evaluated sample"
             let geometry = XCTAttachment(
-                string: "Progress: \(progressDetails)\nTitle: \(titleDetails)\n"
-                    + app.debugDescription)
+                string: "Last evaluated Story header:\n\(lastEvaluation)\n"
+                    + "Total snapshots: \(sampleCount)\nCached hierarchy:\n\(hierarchy)")
             geometry.name = "Unsettled Story card geometry and hierarchy"
             geometry.lifetime = .keepAlways
             add(geometry)
@@ -249,6 +271,87 @@ final class QuestionExperienceTests: XCTestCase {
         XCTAssertEqual(
             result, .completed,
             "The changed Story card must settle with its own title and restored header")
+    }
+
+    private func storyProgressIsFullyVisible(_ expectedProgress: String) -> Bool {
+        do {
+            return try storyHeaderObservation(expectedProgress).ready
+        } catch {
+            XCTFail("Cannot snapshot the restored Story header: \(error)")
+            return false
+        }
+    }
+
+    private func storyHeaderObservation(
+        _ expectedProgress: String, title expectedTitle: String? = nil,
+        excludingTitle previousTitle: String? = nil
+    ) throws -> (ready: Bool, details: String, snapshot: any XCUIElementSnapshot) {
+        let snapshot = try app.snapshot()
+        let elements = snapshotElements(snapshot)
+        let windows = elements.filter { $0.elementType == .window && validSnapshotFrame($0.frame) }
+        let windowFrame =
+            windows.max {
+                $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height
+            }?.frame ?? .null
+        let progress = elements.filter { $0.identifier == "story.progress" }
+        let titles = elements.filter { $0.identifier == "story.title" }
+        let scrolls = elements.filter { $0.identifier == "story.scroll" }
+        let pause = elements.first { $0.identifier == "adventure.pause" }
+        let progressFrame = progress.first?.frame ?? .null
+        let titleFrame = titles.first?.frame ?? .null
+        let scrollFrame = scrolls.first?.frame ?? .null
+        let pauseFrame = pause?.frame ?? .null
+        let progressValue = progress.first?.value as? String
+        let titleLabel = titles.first?.label
+        var viewport = CGRect.null
+        if validSnapshotFrame(windowFrame), validSnapshotFrame(scrollFrame) {
+            viewport = windowFrame.insetBy(dx: 18, dy: 18)
+                .intersection(scrollFrame.insetBy(dx: 4, dy: 8))
+            if validSnapshotFrame(pauseFrame),
+                windowFrame.contains(CGPoint(x: pauseFrame.midX, y: pauseFrame.midY))
+            {
+                viewport.size.height = max(
+                    0, min(viewport.maxY, pauseFrame.minY - 8) - viewport.minY)
+            }
+        }
+        // Progress is a read-only glyph. Its complete bounds and exact value establish visibility;
+        // the long title is revealed separately, and controls retain native hit-point/tap checks.
+        let conditions: [(String, Bool)] = [
+            ("main window valid", validSnapshotFrame(windowFrame)),
+            ("one Story scroll", scrolls.count == 1 && validSnapshotFrame(scrollFrame)),
+            ("one progress element", progress.count == 1 && validSnapshotFrame(progressFrame)),
+            ("one title element", titles.count == 1 && validSnapshotFrame(titleFrame)),
+            ("progress value matches", progressValue == expectedProgress),
+            (
+                "complete progress in viewport",
+                validSnapshotFrame(viewport) && viewport.contains(progressFrame)
+            ),
+            ("title matches", expectedTitle.map { titleLabel == $0 } ?? true),
+            ("title changed", previousTitle.map { titleLabel != $0 } ?? true),
+            (
+                "Pause sheet absent",
+                !elements.contains { $0.identifier == "adventure.pause.scroll" }
+            ),
+        ]
+        let details =
+            "Progress: \(progressValue ?? "missing"), \(progressFrame)\n"
+            + "Title: \(titleLabel ?? "missing"), \(titleFrame)\n"
+            + "Window: \(windowFrame)\nStory scroll: \(scrollFrame)\n"
+            + "Pause: \(pauseFrame)\nViewport: \(viewport)\n"
+            + conditions.map { "\($0.0): \($0.1)" }.joined(separator: "\n")
+        return (conditions.allSatisfy { $0.1 }, details, snapshot)
+    }
+
+    private func snapshotElements(_ snapshot: any XCUIElementSnapshot)
+        -> [any XCUIElementSnapshot]
+    {
+        [snapshot] + snapshot.children.flatMap { snapshotElements($0) }
+    }
+
+    private func validSnapshotFrame(_ frame: CGRect) -> Bool {
+        !frame.isEmpty && !frame.isNull && !frame.isInfinite
+            && frame.origin.x.isFinite && frame.origin.y.isFinite
+            && frame.width.isFinite && frame.height.isFinite
     }
 
     func testFutureOrCorruptLogHasRecoveryWithoutReplacement() {
