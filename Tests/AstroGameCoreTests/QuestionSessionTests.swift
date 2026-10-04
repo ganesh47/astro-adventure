@@ -511,24 +511,41 @@ final class QuestionSessionTests: XCTestCase {
         let interaction = session.questionInteraction
         session.chooseQuestionMode(.challenge, interaction: interaction, now: time.now)
         session.selectQuizAnswer(at: 0, interaction: interaction, now: time.now)
-        time.now = 30
+        // A running display can cross a whole-second boundary after the last saved
+        // interaction. Relaunch restores the saved fraction, not that later display tick.
+        time.now = 90 - 27.52939770833109
         session.setQuestionPaused(.appInactive, isPaused: true, now: time.now)
+        session.setQuestionPaused(.appInactive, isPaused: false, now: time.now)
+        let savedBeforeTick = try XCTUnwrap(session.progress.questionPresentation).challenge
+        XCTAssertGreaterThan(savedBeforeTick.remaining, 27)
+        XCTAssertLessThan(savedBeforeTick.remaining, 28)
+        time.now = 63.125
+        session.sampleQuestionTime(now: time.now, interaction: interaction)
+        XCTAssertEqual(ceil(session.questionClock.remaining), 27)
+        XCTAssertEqual(session.progress.questionPresentation?.challenge, savedBeforeTick)
+        XCTAssertEqual(ceil(savedBeforeTick.remaining), 28)
+        // A subsequent pause settles and saves a budget within the earlier live bound.
+        time.now = 63.5
+        session.setQuestionPaused(.appInactive, isPaused: true, now: time.now)
+        XCTAssertEqual(session.questionClock.remaining, 26.5)
+        XCTAssertEqual(session.progress.questionPresentation?.challenge.remaining, 26.5)
         session.returnToWorlds()
         time.now = 10_000
         let restored = makeSession(
             progress: try roundTrip(session.progress), count: 1, time: time)
         restored.resumeSavedAdventure()
         XCTAssertEqual(restored.selectedQuizChoiceID, "star")
-        XCTAssertEqual(restored.questionClock.remaining, 60)
+        XCTAssertEqual(restored.questionClock.remaining, 26.5)
         XCTAssertTrue(restored.questionClock.pauseReasons.contains(.awaitingResume))
         let restoredInteraction = restored.questionInteraction
         time.now = 20_000
         restored.sampleQuestionTime(now: time.now, interaction: restoredInteraction)
-        XCTAssertEqual(restored.questionClock.remaining, 60)
+        XCTAssertEqual(restored.questionClock.remaining, 26.5)
         restored.resumeQuestionChallenge(interaction: restoredInteraction, now: time.now)
+        XCTAssertEqual(restored.questionClock.remaining, 26.5)
         time.now = 20_010
         restored.sampleQuestionTime(now: time.now, interaction: restoredInteraction)
-        XCTAssertEqual(restored.questionClock.remaining, 50)
+        XCTAssertEqual(restored.questionClock.remaining, 16.5)
         restored.confirmSelectedQuizAnswer(
             interaction: restoredInteraction, now: answerDate, monotonicNow: time.now)
         XCTAssertEqual(restored.progress.totalScore, 100)

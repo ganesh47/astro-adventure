@@ -96,9 +96,16 @@ final class QuestionExperienceTests: XCTestCase {
         app.activate()
         tap("adventure.pause.resume")
         guard
-            let savedRemaining = try assertRunningSelectedChallenge(
+            let remainingBeforeCheckpoint = try assertRunningSelectedChallenge(
                 "Background Resume", maximumRemaining: 30)
         else { return }
+        // Display ticks do not write progress. Settle and save the current budget through
+        // a native pause before terminating, so the live upper bound precedes the save.
+        tap("adventure.pause")
+        XCTAssertTrue(app.buttons["adventure.pause.resume"].waitForExistence(timeout: 10))
+        capture("Paused challenge checkpoint before relaunch")
+        XCUIDevice.shared.press(.home)
+        XCTAssertTrue(app.wait(for: .runningBackground, timeout: 5))
         app.terminate()
         launch(reset: false, allowance: "30")
         tap("adventure.resume")
@@ -109,7 +116,7 @@ final class QuestionExperienceTests: XCTestCase {
         // Check Resume itself before any mode change could clear awaitingResume or expiry.
         guard
             try assertRunningSelectedChallenge(
-                "Restored Challenge Resume", maximumRemaining: savedRemaining) != nil
+                "Restored Challenge Resume", maximumRemaining: remainingBeforeCheckpoint) != nil
         else { return }
         // Let the unchanged 30-second budget expire before checking footer geometry. The
         // expanded recovery row must settle before revealing and activating the footer.

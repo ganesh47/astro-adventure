@@ -199,6 +199,24 @@ final class QuestionChallengeClockTests: XCTestCase {
         XCTAssertEqual(restored.remaining, 65)
         restored.tick(now: 200_030, expectedInteraction: original.interaction)
         XCTAssertEqual(restored.remaining, 65)
+
+        for (remaining, displayedSeconds) in [
+            (27.52939770833109, 28.0), (Double(27).nextDown, 27.0),
+            (27.0, 27.0), (Double(27).nextUp, 28.0),
+        ] {
+            let saved = QuestionChallengeSnapshot(
+                mode: .challenge, questionID: "fractional-sun", remaining: remaining)
+            let decoded = try JSONDecoder().decode(
+                QuestionChallengeSnapshot.self, from: JSONEncoder().encode(saved))
+            var fractional = QuestionChallengeClock(restoring: decoded, now: 100_000)
+            fractional.tick(now: 200_000)
+            XCTAssertEqual(fractional.remaining, remaining)
+            XCTAssertEqual(ceil(fractional.remaining), displayedSeconds)
+            fractional.setPaused(.awaitingResume, isPaused: false, now: 200_000)
+            XCTAssertEqual(fractional.remaining, remaining, "Resume must not refill the budget")
+            fractional.tick(now: 200_000.5)
+            XCTAssertEqual(fractional.remaining, remaining - 0.5)
+        }
     }
 
     func testSnapshotsContainOnlyBoundedPresentationContext() throws {
