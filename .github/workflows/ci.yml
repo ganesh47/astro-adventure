@@ -68,17 +68,19 @@ jobs:
   apple-builds:
     name: ${{ matrix.name }}
     runs-on: macos-26
-    # Full serial gameplay and scientific capture suites exceed 40 minutes on TV.
-    timeout-minutes: 75
+    # Preserve the full serial suites with bounded platform-specific limits.
+    timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: iOS Simulator Build
             scheme: AstroAdventure-iOS
+            timeout_minutes: 90
             destination: generic/platform=iOS Simulator
           - name: tvOS Simulator Build
             scheme: AstroAdventure-tvOS
+            timeout_minutes: 75
             destination: generic/platform=tvOS Simulator
     steps:
       - name: Checkout
