@@ -8,6 +8,7 @@ import XCTest
 final class QuestionExperienceTests: XCTestCase {
     private let app = XCUIApplication()
     private var initialReduceMotion: Bool?
+    private var initialAutoPlayMessageEffects: Bool?
 
     override func setUp() async throws {
         continueAfterFailure = false
@@ -454,6 +455,15 @@ final class QuestionExperienceTests: XCTestCase {
         let initiallyEnabled = initialValue == "1"
         initialReduceMotion = initiallyEnabled
         defer { restoreNativeReduceMotion() }
+        let messageEffects = settings.switches["ReduceMotionAutoplayMessagesEffects"]
+        guard messageEffects.waitForExistence(timeout: 10),
+            let effectsValue = messageEffects.value as? String,
+            effectsValue == "0" || effectsValue == "1"
+        else {
+            XCTFail("Native Auto-Play Message Effects must expose its original value")
+            return
+        }
+        initialAutoPlayMessageEffects = effectsValue == "1"
         if !initiallyEnabled {
             guard setSettingsSwitch(motion, enabled: true, in: settings) else { return }
         }
@@ -596,6 +606,7 @@ final class QuestionExperienceTests: XCTestCase {
         add(screenshot)
         let facts =
             "Settings state: \(settings.state.rawValue)\n"
+            + "Named switch identifier: \(toggle.identifier)\n"
             + "Named switch value: \(toggle.value as? String ?? "unknown")\n"
             + settings.debugDescription
         let hierarchy = XCTAttachment(string: facts)
@@ -616,10 +627,27 @@ final class QuestionExperienceTests: XCTestCase {
         // Navigate to Motion again; never synthesize a touch for a missing element.
         guard let motion = nativeReduceMotionSwitch(in: settings) else { return }
         guard setSettingsSwitch(motion, enabled: original, in: settings) else { return }
-        let restored = motion.value as? String == (original ? "1" : "0")
-        if restored { initialReduceMotion = nil }
+        // Changing Reduce Motion can also change Auto-Play Message Effects while
+        // Settings is backgrounded. Restore that observed dependent option natively.
+        let messageEffects = settings.switches["ReduceMotionAutoplayMessagesEffects"]
+        if let originalEffects = initialAutoPlayMessageEffects {
+            guard messageEffects.waitForExistence(timeout: 10),
+                setSettingsSwitch(messageEffects, enabled: originalEffects, in: settings)
+            else { return }
+        }
+        let restoredMotion = motion.value as? String == (original ? "1" : "0")
+        let restoredEffects =
+            initialAutoPlayMessageEffects.map {
+                messageEffects.value as? String == ($0 ? "1" : "0")
+            } ?? true
+        let restored = restoredMotion && restoredEffects
+        if restored {
+            initialReduceMotion = nil
+            initialAutoPlayMessageEffects = nil
+        }
         XCTAssertTrue(
-            restored, "The dedicated simulator's original Reduce Motion setting is restored")
+            restored,
+            "The dedicated simulator's original Reduce Motion and Message Effects are restored")
     }
 
     private func launch(
