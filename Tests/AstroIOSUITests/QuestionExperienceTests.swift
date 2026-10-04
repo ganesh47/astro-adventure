@@ -227,9 +227,12 @@ final class QuestionExperienceTests: XCTestCase {
         let result = XCTWaiter.wait(for: [settled], timeout: 5)
         if result != .completed {
             capture("Unsettled Story \(expectedProgress)")
+            let progressDetails =
+                progress.exists ? "\(progress.value ?? "missing"), \(progress.frame)" : "missing"
+            let titleDetails = title.exists ? "\(title.label), \(title.frame)" : "missing"
             let geometry = XCTAttachment(
-                string: "Progress: \(progress.value ?? "missing"), \(progress.frame)\n"
-                    + "Title: \(title.label), \(title.frame)\n\(app.debugDescription)")
+                string: "Progress: \(progressDetails)\nTitle: \(titleDetails)\n"
+                    + app.debugDescription)
             geometry.name = "Unsettled Story card geometry and hierarchy"
             geometry.lifetime = .keepAlways
             add(geometry)
@@ -429,41 +432,46 @@ final class QuestionExperienceTests: XCTestCase {
     }
 
     private func reveal(_ element: XCUIElement, fully: Bool = false) {
-        for _ in 0..<18 {
+        guard element.exists else { return }
+        let identifier = element.identifier
+        var steps: [String] = []
+        for step in 0..<18 {
+            guard element.exists else { break }
             if fully ? isFullyVisible(element) : isReachable(element) { return }
             let frame = visibleFrame(for: element)
             guard !frame.isEmpty, !frame.isNull, !frame.isInfinite, frame.height > 40 else { break }
+            let elementFrame = element.frame
+            steps.append("\(step): \(elementFrame) in \(frame)")
             // The ScrollView's AX frame includes the bottom safe-area inset.
-            // Start and end the real drag inside the uncovered content viewport.
-            let gap: CGFloat
-            if fully, element.frame.minY < frame.minY {
-                gap = element.frame.minY - frame.minY
-            } else if fully, element.frame.maxY > frame.maxY {
-                gap = element.frame.maxY - frame.maxY
-            } else {
-                gap = element.frame.midY - frame.midY
-            }
+            // Center a whole card to leave space at both edges of the uncovered viewport.
+            let gap = elementFrame.midY - frame.midY
             let distance = min(frame.height * 0.55, max(fully ? 12 : 40, abs(gap)))
             let direction: CGFloat = gap < 0 ? -1 : 1
+            // Keep the physical pan outside the centered buttons, including Pause actions.
+            let gutter = min(44, frame.width * 0.055)
+            let dragX = frame.minX + gutter
             let origin = app.coordinate(withNormalizedOffset: .zero)
             let start = origin.withOffset(
                 CGVector(
-                    dx: frame.midX - app.frame.minX,
+                    dx: dragX - app.frame.minX,
                     dy: frame.midY + direction * distance / 2 - app.frame.minY))
             let end = origin.withOffset(
                 CGVector(
-                    dx: frame.midX - app.frame.minX,
+                    dx: dragX - app.frame.minX,
                     dy: frame.midY - direction * distance / 2 - app.frame.minY))
+            let velocity = XCUIGestureVelocity(
+                rawValue: fully && elementFrame.height > frame.height * 0.75 ? 10 : 100)
             // Stop momentum before checking visibility or activating a revealed control.
             start.press(
-                forDuration: 0.1, thenDragTo: end, withVelocity: .slow,
-                thenHoldForDuration: 0.25)
+                forDuration: 0.1, thenDragTo: end, withVelocity: velocity,
+                thenHoldForDuration: 0.5)
         }
-        capture("Unreachable \(element.identifier)")
+        capture("Unreachable \(identifier)")
+        let finalFrame = element.exists ? "\(element.frame)" : "missing"
         let geometry = XCTAttachment(
-            string: "Element: \(element.identifier)\nFrame: \(element.frame)\n"
-                + "Uncovered viewport: \(visibleFrame(for: element))\n\(app.debugDescription)")
-        geometry.name = "Unreachable \(element.identifier) geometry and hierarchy"
+            string: "Element: \(identifier)\nFrame: \(finalFrame)\n"
+                + "Pan steps:\n\(steps.joined(separator: "\n"))\n\(app.debugDescription)")
+        geometry.name = "Unreachable \(identifier) geometry and hierarchy"
         geometry.lifetime = .keepAlways
         add(geometry)
     }
@@ -510,6 +518,7 @@ final class QuestionExperienceTests: XCTestCase {
     }
 
     private func hasVisibleGeometry(_ element: XCUIElement) -> Bool {
+        guard element.exists else { return false }
         let frame = element.frame
         return !frame.isEmpty && !frame.isNull && !frame.isInfinite
             && app.frame.contains(CGPoint(x: frame.midX, y: frame.midY))
