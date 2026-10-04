@@ -406,7 +406,14 @@ final class QuestionExperienceTests: XCTestCase {
         tap("gravity.launch")
         let field = app.otherElements["gravity.field"]
         XCTAssertTrue((field.value as? String ?? "").contains("Static flight paths"))
-        tap("gravity.pause")
+        // Pause is already visible beside Launch. Activate it before the 8.6-second flight
+        // completes instead of spending that interval querying and revealing a moving control.
+        let pause = app.buttons["gravity.pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 3))
+        XCTAssertTrue(pause.isHittable, "Launch must keep the native Pause action visible")
+        pause.press(forDuration: 0.1)
+        XCTAssertTrue(app.buttons["gravity.resume"].waitForExistence(timeout: 3))
+        XCTAssertTrue((field.value as? String ?? "").contains("Flight paused on Moon"))
         reveal(field)
         XCTAssertTrue(isReachable(field))
         capture("Native Reduce Motion static Moon and Earth trajectories")
