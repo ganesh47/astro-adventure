@@ -107,8 +107,24 @@ final class QuestionExperienceTests: XCTestCase {
         capture("Saved challenge waits for explicit resume")
         tap("quiz.time.resume")
         // Check Resume itself before any mode change could clear awaitingResume or expiry.
-        _ = try assertRunningSelectedChallenge(
-            "Restored Challenge Resume", maximumRemaining: savedRemaining)
+        guard
+            try assertRunningSelectedChallenge(
+                "Restored Challenge Resume", maximumRemaining: savedRemaining) != nil
+        else { return }
+        // Let the unchanged 30-second budget expire before checking footer geometry. The
+        // expanded recovery row must settle before revealing and activating the footer.
+        XCTAssertTrue(app.buttons["quiz.time.more"].waitForExistence(timeout: 30))
+        let mode = button("quiz.time.mode")
+        reveal(mode, fully: true)
+        capture("Expired Challenge footer before native Practice activation")
+        XCTAssertTrue(
+            isFullyVisible(mode), "The complete native Calm Practice footer must be visible")
+        tap("quiz.time.mode")
+        XCTAssertEqual(app.buttons["quiz.time.mode"].label, "Try 30s Challenge")
+        XCTAssertFalse(app.buttons["quiz.time.more"].exists)
+        XCTAssertTrue(app.buttons["quiz.check"].isEnabled)
+        XCTAssertEqual(app.buttons["quiz.answer.0"].value as? String, "Selected")
+        capture("Footer Calm Practice restores checking without losing the selected answer")
     }
 
     private func assertRunningSelectedChallenge(_ context: String, maximumRemaining: Int) throws
