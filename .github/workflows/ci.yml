@@ -76,7 +76,9 @@ jobs:
         include:
           - name: iOS Simulator Build
             scheme: AstroAdventure-iOS
-            timeout_minutes: 90
+            # Measured startup/cases plus prior complete science duration project
+            # about 105 minutes; retain every serial case with cleanup headroom.
+            timeout_minutes: 120
             destination: generic/platform=iOS Simulator
           - name: tvOS Simulator Build
             scheme: AstroAdventure-tvOS
@@ -133,17 +135,25 @@ jobs:
       - name: iPhone touch gameplay smoke test
         if: matrix.scheme == 'AstroAdventure-iOS'
         run: |
-          device_id="$(
-            xcrun simctl list devices available --json | python3 -c '
-          import json, sys
-          devices = json.load(sys.stdin)["devices"]
-          candidates = [device["udid"] for runtime, entries in devices.items()
-                        if "iOS" in runtime for device in entries
-                        if device.get("isAvailable") and "iPhone" in device["name"]]
+          export ASTRO_CI_IOS_SDK_VERSION="$(xcrun --sdk iphonesimulator --show-sdk-version)"
+          runtime_id="$(
+            xcrun simctl list runtimes --json | python3 -c '
+          import json, os, sys
+          version = lambda value: tuple(int(part) for part in value.split("."))
+          sdk = version(os.environ["ASTRO_CI_IOS_SDK_VERSION"])
+          candidates = [runtime for runtime in json.load(sys.stdin)["runtimes"]
+                        if runtime.get("isAvailable")
+                        and runtime["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-")
+                        and version(runtime["version"]) <= sdk]
           if not candidates:
-              raise SystemExit("No available iPhone simulator")
-          print(candidates[0])'
+              raise SystemExit("No available iOS runtime compatible with selected Xcode SDK")
+          print(max(candidates, key=lambda runtime: version(runtime["version"]))["identifier"])'
           )"
+          device_id="$(xcrun simctl create \
+            "AstroCI-iOS-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro "$runtime_id")"
+          trap 'xcrun simctl shutdown "$device_id" >/dev/null 2>&1 || true' EXIT
+          echo "Dedicated iOS simulator: $device_id; runtime: $runtime_id; SDK: $ASTRO_CI_IOS_SDK_VERSION"
           xcrun simctl bootstatus "$device_id" -b
           xcodebuild \
             -project AstroAdventure.xcodeproj \

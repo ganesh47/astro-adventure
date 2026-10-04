@@ -441,6 +441,7 @@ final class QuestionExperienceTests: XCTestCase {
     func testNativeReduceMotionKeepsQuestionAndFeedbackUsable() {
         XCUIDevice.shared.orientation = .portrait
         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+        settings.terminate()
         settings.launch()
         guard let motion = nativeReduceMotionSwitch(in: settings) else { return }
         guard let initialValue = motion.value as? String,
@@ -457,6 +458,7 @@ final class QuestionExperienceTests: XCTestCase {
             guard setSettingsSwitch(motion, enabled: true, in: settings) else { return }
         }
         XCTAssertEqual(motion.value as? String, "1")
+        settings.terminate()
         XCUIDevice.shared.orientation = .landscapeLeft
         launch()
         openSunQuestion()
@@ -540,39 +542,66 @@ final class QuestionExperienceTests: XCTestCase {
     private func setSettingsSwitch(
         _ toggle: XCUIElement, enabled: Bool, in settings: XCUIApplication
     ) -> Bool {
+        guard settings.wait(for: .runningForeground, timeout: 5) else {
+            XCTFail("Native Settings must be foreground before activation")
+            return false
+        }
         guard toggle.exists, toggle.isHittable else {
             XCTFail("Native Settings switch must exist and be reachable before activation")
             return false
         }
         let value = enabled ? "1" : "0"
-        guard toggle.value as? String != value else { return true }
-        // Settings can expose both a named row and its native switch child.
-        // Activate the native switch when available, then verify the named row.
-        let nativeSwitch = toggle.children(matching: .switch).firstMatch
-        if nativeSwitch.exists {
-            guard nativeSwitch.isHittable else {
-                XCTFail("Native Settings switch child must be reachable before activation")
-                return false
-            }
-            nativeSwitch.tap()
-        } else {
-            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+        guard let currentValue = toggle.value as? String,
+            currentValue == "0" || currentValue == "1"
+        else {
+            XCTFail("Native Settings switch must expose a known value before activation")
+            return false
         }
+        guard currentValue != value else { return true }
+        // Keep the native target inside the foreground window. A hosted 50 ms tap
+        // reached this switch's bounds without changing its value; use one deliberate
+        // 100 ms native press, with the same value deadline and no action retry.
+        let nativeSwitch = toggle.children(matching: .switch).firstMatch
+        let control = nativeSwitch.exists ? nativeSwitch : toggle
+        let frame = control.frame
+        let window = settings.windows.firstMatch.frame
+        guard control.isHittable, validSnapshotFrame(frame), validSnapshotFrame(window),
+            window.contains(frame)
+        else {
+            XCTFail("Complete native Settings switch must be reachable in its foreground window")
+            return false
+        }
+        captureNativeSettingsState(
+            toggle, in: settings, name: "Before native Motion value \(value)")
+        control.press(forDuration: 0.1)
         let changed = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", value), object: toggle)
         let result = XCTWaiter.wait(for: [changed], timeout: 5)
-        if result != .completed {
-            let screenshot = XCTAttachment(screenshot: settings.screenshot())
-            screenshot.name = "Native Reduce Motion switch did not reach \(value)"
-            screenshot.lifetime = .keepAlways
-            add(screenshot)
-            let hierarchy = XCTAttachment(string: settings.debugDescription)
-            hierarchy.lifetime = .keepAlways
-            add(hierarchy)
-        }
+        let stateName =
+            result == .completed
+            ? "After native Motion value \(value)"
+            : "Native Reduce Motion switch did not reach \(value)"
+        captureNativeSettingsState(toggle, in: settings, name: stateName)
         XCTAssertEqual(result, .completed, "Native Settings switch must reach \(value)")
         XCTAssertEqual(toggle.value as? String, value)
         return result == .completed && toggle.value as? String == value
+    }
+
+    private func captureNativeSettingsState(
+        _ toggle: XCUIElement, in settings: XCUIApplication, name: String
+    ) {
+        let screenshot = XCTAttachment(screenshot: settings.screenshot())
+        screenshot.name = name
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+        let facts =
+            "Settings state: \(settings.state.rawValue)\n"
+            + "Named switch value: \(toggle.value as? String ?? "unknown")\n"
+            + settings.debugDescription
+        let hierarchy = XCTAttachment(string: facts)
+        hierarchy.name = name + " native state and hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
     }
 
     private func restoreNativeReduceMotion() {
@@ -580,7 +609,8 @@ final class QuestionExperienceTests: XCTestCase {
         app.terminate()
         XCUIDevice.shared.orientation = .portrait
         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
-        settings.activate()
+        settings.terminate()
+        settings.launch()
         defer { settings.terminate() }
         // Preferences may relaunch at its root after the app and orientation change.
         // Navigate to Motion again; never synthesize a touch for a missing element.
