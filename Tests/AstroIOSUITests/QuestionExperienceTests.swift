@@ -267,19 +267,20 @@ final class QuestionExperienceTests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
         settings.launch()
-        let motion = settings.switches["Reduce Motion"]
-        if !motion.waitForExistence(timeout: 1) {
-            let motionPage = settings.staticTexts["Motion"].firstMatch
-            if !motionPage.exists || !motionPage.isHittable {
-                settingsLabel("Accessibility", in: settings).tap()
-            }
-            settingsLabel("Motion", in: settings).tap()
+        guard let motion = nativeReduceMotionSwitch(in: settings) else { return }
+        guard let initialValue = motion.value as? String,
+            initialValue == "0" || initialValue == "1"
+        else {
+            XCTFail("Native Reduce Motion value must be 0 or 1 before changing the setting")
+            settings.terminate()
+            return
         }
-        XCTAssertTrue(motion.waitForExistence(timeout: 10))
-        let initiallyEnabled = motion.value as? String == "1"
+        let initiallyEnabled = initialValue == "1"
         initialReduceMotion = initiallyEnabled
         defer { restoreNativeReduceMotion() }
-        if !initiallyEnabled { setSettingsSwitch(motion, enabled: true, in: settings) }
+        if !initiallyEnabled {
+            guard setSettingsSwitch(motion, enabled: true, in: settings) else { return }
+        }
         XCTAssertEqual(motion.value as? String, "1")
         XCUIDevice.shared.orientation = .landscapeLeft
         launch()
@@ -308,6 +309,39 @@ final class QuestionExperienceTests: XCTestCase {
         capture("Native Reduce Motion static Moon and Earth trajectories")
     }
 
+    private func nativeReduceMotionSwitch(in settings: XCUIApplication) -> XCUIElement? {
+        let motion = settings.switches["Reduce Motion"]
+        if !motion.waitForExistence(timeout: 1) {
+            let motionPage = settings.staticTexts["Motion"].firstMatch
+            if !motionPage.exists || !motionPage.isHittable {
+                let accessibility = settingsLabel("Accessibility", in: settings)
+                guard accessibility.exists, accessibility.isHittable else {
+                    XCTFail("Native Settings Accessibility link must remain reachable")
+                    return nil
+                }
+                accessibility.tap()
+            }
+            let motionLink = settingsLabel("Motion", in: settings)
+            guard motionLink.exists, motionLink.isHittable else {
+                XCTFail("Native Settings Motion link must remain reachable")
+                return nil
+            }
+            motionLink.tap()
+        }
+        guard motion.waitForExistence(timeout: 10) else {
+            let screenshot = XCTAttachment(screenshot: settings.screenshot())
+            screenshot.name = "Native Reduce Motion switch missing after navigation"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+            let hierarchy = XCTAttachment(string: settings.debugDescription)
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+            XCTFail("Native Settings must expose Reduce Motion after navigation")
+            return nil
+        }
+        return motion
+    }
+
     private func settingsLabel(_ text: String, in settings: XCUIApplication) -> XCUIElement {
         let label = settings.staticTexts[text].firstMatch
         for _ in 0..<12 {
@@ -323,14 +357,21 @@ final class QuestionExperienceTests: XCTestCase {
 
     private func setSettingsSwitch(
         _ toggle: XCUIElement, enabled: Bool, in settings: XCUIApplication
-    ) {
+    ) -> Bool {
+        guard toggle.exists, toggle.isHittable else {
+            XCTFail("Native Settings switch must exist and be reachable before activation")
+            return false
+        }
         let value = enabled ? "1" : "0"
-        guard toggle.value as? String != value else { return }
+        guard toggle.value as? String != value else { return true }
         // Settings can expose both a named row and its native switch child.
         // Activate the native switch when available, then verify the named row.
         let nativeSwitch = toggle.children(matching: .switch).firstMatch
         if nativeSwitch.exists {
-            XCTAssertTrue(nativeSwitch.isHittable)
+            guard nativeSwitch.isHittable else {
+                XCTFail("Native Settings switch child must be reachable before activation")
+                return false
+            }
             nativeSwitch.tap()
         } else {
             toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
@@ -349,6 +390,7 @@ final class QuestionExperienceTests: XCTestCase {
         }
         XCTAssertEqual(result, .completed, "Native Settings switch must reach \(value)")
         XCTAssertEqual(toggle.value as? String, value)
+        return result == .completed && toggle.value as? String == value
     }
 
     private func restoreNativeReduceMotion() {
@@ -357,11 +399,12 @@ final class QuestionExperienceTests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
         settings.activate()
-        let motion = settings.switches["Reduce Motion"]
-        XCTAssertTrue(motion.waitForExistence(timeout: 5))
-        setSettingsSwitch(motion, enabled: original, in: settings)
+        defer { settings.terminate() }
+        // Preferences may relaunch at its root after the app and orientation change.
+        // Navigate to Motion again; never synthesize a touch for a missing element.
+        guard let motion = nativeReduceMotionSwitch(in: settings) else { return }
+        guard setSettingsSwitch(motion, enabled: original, in: settings) else { return }
         let restored = motion.value as? String == (original ? "1" : "0")
-        settings.terminate()
         if restored { initialReduceMotion = nil }
         XCTAssertTrue(
             restored, "The dedicated simulator's original Reduce Motion setting is restored")
