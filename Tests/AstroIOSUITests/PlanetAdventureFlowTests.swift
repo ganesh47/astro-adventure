@@ -250,6 +250,10 @@ final class PlanetAdventureFlowTests: XCTestCase {
             return
         }
         XCTAssertTrue(button.isEnabled, "The action must be enabled: \(id)")
+        if id.hasPrefix("activity.option.") {
+            capture("Reachable \(id) before activation")
+            captureHierarchy("Reachable \(id) before activation")
+        }
         if id == "quiz.check", app.staticTexts["quiz.progress"].label.contains("3 of 3") {
             capture("Final mission Check in uncovered viewport")
             captureHierarchy("Final mission Check in uncovered viewport")
@@ -260,11 +264,14 @@ final class PlanetAdventureFlowTests: XCTestCase {
     }
 
     private func reveal(_ button: XCUIElement) {
-        for _ in 0..<18 {
+        var steps: [String] = []
+        for step in 0..<18 {
             if isReachable(button) { return }
             let viewport = visibleFrame(for: button)
             guard !viewport.isEmpty, !viewport.isNull, viewport.height > 40 else { break }
-            let gap = button.frame.midY - viewport.midY
+            let buttonFrame = button.frame
+            steps.append("\(step): \(buttonFrame) in \(viewport)")
+            let gap = buttonFrame.midY - viewport.midY
             let distance = min(viewport.height * 0.55, max(40, abs(gap)))
             let direction: CGFloat = gap < 0 ? -1 : 1
             let origin = app.coordinate(withNormalizedOffset: .zero)
@@ -276,10 +283,18 @@ final class PlanetAdventureFlowTests: XCTestCase {
                 CGVector(
                     dx: viewport.midX - app.frame.minX,
                     dy: viewport.midY - direction * distance / 2 - app.frame.minY))
-            start.press(forDuration: 0.1, thenDragTo: end)
+            // A fast released pan can carry the model option past the viewport.
+            // Stop momentum before measuring reachability or activating it.
+            start.press(
+                forDuration: 0.1, thenDragTo: end,
+                withVelocity: XCUIGestureVelocity(rawValue: 100), thenHoldForDuration: 0.5)
         }
         capture("Unable to reveal \(button.identifier)")
         captureHierarchy("Unable to reveal \(button.identifier)")
+        let geometry = XCTAttachment(string: "Pan steps:\n\(steps.joined(separator: "\n"))")
+        geometry.name = "Unable to reveal \(button.identifier) pan geometry"
+        geometry.lifetime = .keepAlways
+        add(geometry)
         XCTAssertTrue(isReachable(button))
     }
 
