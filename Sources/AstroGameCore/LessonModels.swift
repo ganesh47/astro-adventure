@@ -3,10 +3,12 @@ import Foundation
 public struct QuizChoice: Codable, Equatable, Identifiable, Sendable {
     public let id: String
     public let text: String
+    public let picture: QuizPicture?
 
-    public init(id: String, text: String) {
+    public init(id: String, text: String, picture: QuizPicture? = nil) {
         self.id = id
         self.text = text
+        self.picture = picture
     }
 }
 

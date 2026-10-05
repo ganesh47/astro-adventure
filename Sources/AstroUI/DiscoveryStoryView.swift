@@ -17,12 +17,17 @@ struct DiscoveryStoryView: View {
     let onComplete: () -> Void
     let onBack: () -> Void
     var isPaused = false
+    var resumeQuestionLabel: String?
 
     @State private var selectedIndex = 0
     @AppStorage("astro.narrationEnabled") private var narrationEnabled = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .title) private var titleSize = 52.0
+    @ScaledMetric(relativeTo: .body) private var bodySize = 30.0
+    @ScaledMetric(relativeTo: .headline) private var factSize = 26.0
     @State private var narrator = AVSpeechSynthesizer()
     @FocusState private var focusedControl: StoryControl?
 
@@ -43,51 +48,69 @@ struct DiscoveryStoryView: View {
             if let slide = selectedSlide {
                 let compact = proxy.size.height < 520
 
-                ZStack {
-                    if let image = bundledImage(named: slide.imageName) {
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: proxy.size.width, height: proxy.size.height)
-                            .clipped()
-                            .id(slide.id)
-                            .transition(
-                                reduceMotion
-                                    ? .identity : .opacity.combined(with: .scale(scale: 1.025))
-                            )
-                            .accessibilityHidden(true)
-                    } else {
-                        Color.black
+                ScrollViewReader { storyScroll in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: compact ? 6 : 0) {
+                            storyHeader(slide: slide, compact: compact)
+                            Spacer(minLength: compact ? 4 : 8)
+                            storyCopy(slide: slide, compact: compact)
+                            storyControls(compact: compact)
+                        }
+                        .frame(
+                            maxWidth: .infinity,
+                            minHeight: max(0, proxy.size.height - (compact ? 24 : 92)),
+                            alignment: .leading
+                        )
+                        .padding(.horizontal, compact ? 44 : 64)
+                        .padding(.vertical, compact ? 12 : 46)
+                        .id("story.top")
                     }
-
-                    LinearGradient(
-                        stops: [
-                            .init(color: .black.opacity(0.14), location: 0),
-                            .init(color: .black.opacity(0.18), location: 0.38),
-                            .init(color: .black.opacity(0.92), location: 1),
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .ignoresSafeArea()
-                    .accessibilityHidden(true)
-
-                    LinearGradient(
-                        colors: [.black.opacity(0.7), .clear],
-                        startPoint: .leading,
-                        endPoint: .center
-                    )
-                    .ignoresSafeArea()
-                    .accessibilityHidden(true)
-
-                    VStack(alignment: .leading, spacing: compact ? 6 : 0) {
-                        storyHeader(slide: slide, compact: compact)
-                        Spacer(minLength: compact ? 4 : 8)
-                        storyCopy(slide: slide, compact: compact)
-                        storyControls(compact: compact)
+                    .accessibilityIdentifier("story.scroll")
+                    .onChange(of: selectedIndex) {
+                        storyScroll.scrollTo("story.top", anchor: .top)
                     }
-                    .padding(.horizontal, compact ? 44 : 64)
-                    .padding(.vertical, compact ? 12 : 46)
+                }
+                .background {
+                    ZStack {
+                        if let image = bundledImage(named: slide.imageName) {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: proxy.size.width, height: proxy.size.height)
+                                .clipped()
+                                .id(slide.id)
+                                .transition(
+                                    reduceMotion
+                                        ? .identity : .opacity.combined(with: .scale(scale: 1.025))
+                                )
+                                .accessibilityHidden(true)
+                        } else {
+                            Color.black
+                        }
+
+                        LinearGradient(
+                            stops: [
+                                .init(color: .black.opacity(0.14), location: 0),
+                                .init(color: .black.opacity(0.18), location: 0.38),
+                                .init(color: .black.opacity(0.92), location: 1),
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .ignoresSafeArea()
+                        .accessibilityHidden(true)
+
+                        LinearGradient(
+                            colors: [.black.opacity(0.7), .clear],
+                            startPoint: .leading,
+                            endPoint: .center
+                        )
+                        .ignoresSafeArea()
+                        .accessibilityHidden(true)
+
+                    }
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
                 }
                 .animation(reduceMotion ? nil : .easeInOut(duration: 0.45), value: selectedIndex)
                 .onAppear {
@@ -127,7 +150,11 @@ struct DiscoveryStoryView: View {
     }
 
     private func storyHeader(slide: DiscoverySlide, compact: Bool) -> some View {
-        HStack(alignment: .top) {
+        let layout =
+            dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+            : AnyLayout(HStackLayout(alignment: .top))
+        return layout {
             VStack(alignment: .leading, spacing: compact ? 2 : 8) {
                 Label(
                     "DISCOVERY SCAN · \(destinationName.uppercased())",
@@ -146,7 +173,7 @@ struct DiscoveryStoryView: View {
                 in: RoundedRectangle(cornerRadius: compact ? 12 : 18, style: .continuous)
             )
 
-            Spacer()
+            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
 
             HStack(spacing: compact ? 5 : 10) {
                 ForEach(slides.indices, id: \.self) { index in
@@ -162,38 +189,58 @@ struct DiscoveryStoryView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Flashcard progress")
             .accessibilityValue("Card \(selectedIndex + 1) of \(slides.count)")
+            .accessibilityIdentifier("story.progress")
         }
     }
 
     private func storyCopy(slide: DiscoverySlide, compact: Bool) -> some View {
         VStack(alignment: .leading, spacing: compact ? 6 : 14) {
             Text(slide.title)
-                .font(.system(size: compact ? 30 : 52, weight: .bold, design: .rounded))
-                .lineLimit(2)
-                .minimumScaleFactor(0.78)
+                .accessibilityIdentifier("story.title")
+                .accessibilityAddTraits(.isHeader)
+                .font(
+                    .system(
+                        size: titleSize * (compact ? 30.0 / 52 : 1), weight: .bold,
+                        design: .rounded)
+                )
+                .fixedSize(horizontal: false, vertical: true)
 
+            storyDetails(slide: slide, compact: compact)
+        }
+        .shadow(color: .black.opacity(0.8), radius: 12, y: 4)
+        .padding(.bottom, compact ? 4 : 28)
+    }
+
+    private func storyDetails(slide: DiscoverySlide, compact: Bool) -> some View {
+        VStack(alignment: .leading, spacing: compact ? 6 : 14) {
             Text(slide.body)
-                .font(.system(size: compact ? 17 : 30, weight: .medium, design: .rounded))
+                .font(
+                    .system(
+                        size: bodySize * (compact ? 17.0 / 30 : 1), weight: .medium,
+                        design: .rounded)
+                )
                 .foregroundStyle(.white.opacity(0.94))
                 .lineSpacing(compact ? 1 : 5)
-                .lineLimit(compact ? 2 : nil)
-                .minimumScaleFactor(0.78)
+                .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: 1120, alignment: .leading)
 
-            HStack(spacing: compact ? 8 : 14) {
+            let factsLayout =
+                dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+                : AnyLayout(HStackLayout(spacing: compact ? 8 : 14))
+            factsLayout {
                 ForEach(Array(slide.facts.enumerated()), id: \.offset) { _, fact in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(fact.value)
                             .font(
                                 .system(
-                                    size: compact ? 17 : 26,
+                                    size: factSize * (compact ? 17.0 / 26 : 1),
                                     weight: .black,
                                     design: .rounded
                                 )
                             )
                             .foregroundStyle(.yellow)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
+                            .fixedSize(horizontal: false, vertical: true)
                         Text(fact.label.uppercased())
                             .font((compact ? Font.caption2 : Font.caption).weight(.bold))
                             .tracking(0.8)
@@ -209,17 +256,18 @@ struct DiscoveryStoryView: View {
             Text("\(slide.credit) · \(slide.sourceID)")
                 .font((compact ? Font.caption2 : Font.footnote).weight(.medium))
                 .foregroundStyle(.white.opacity(0.68))
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, compact ? 0 : 4)
         }
-        .shadow(color: .black.opacity(0.8), radius: 12, y: 4)
-        .padding(.bottom, compact ? 4 : 28)
         .accessibilityElement(children: .combine)
     }
 
     private func storyControls(compact: Bool) -> some View {
-        HStack(spacing: compact ? 8 : 18) {
+        let layout =
+            dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
+            : AnyLayout(HStackLayout(spacing: compact ? 8 : 18))
+        return layout {
             Button {
                 narrator.stopSpeaking(at: .immediate)
                 onBack()
@@ -239,6 +287,7 @@ struct DiscoveryStoryView: View {
             .controlSize(compact ? .small : .large)
             .disabled(selectedIndex == 0)
             .focused($focusedControl, equals: .previous)
+            .accessibilityIdentifier("story.previous")
 
             Button {
                 narrationEnabled.toggle()
@@ -255,7 +304,7 @@ struct DiscoveryStoryView: View {
             .focused($focusedControl, equals: .narration)
             .accessibilityHint("Turns automatic spoken descriptions on or off")
 
-            Spacer()
+            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
 
             Text(
                 compact
@@ -270,7 +319,9 @@ struct DiscoveryStoryView: View {
             } label: {
                 Label(
                     selectedIndex == slides.count - 1
-                        ? (compact ? "Start Quiz" : "Start \(quizQuestionCount)-Question Quiz")
+                        ? (resumeQuestionLabel
+                            ?? (compact
+                                ? "Start Quiz" : "Start \(quizQuestionCount)-Question Quiz"))
                         : (compact ? "Next" : "Next Card"),
                     systemImage: selectedIndex == slides.count - 1
                         ? "gamecontroller.fill"
@@ -282,6 +333,7 @@ struct DiscoveryStoryView: View {
             .focused($focusedControl, equals: .next)
             .accessibilityIdentifier("story.next")
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private func showPreviousSlide() {

@@ -92,19 +92,14 @@ public struct AppBootstrapView: View {
                 VStack(spacing: 24) {
                     Text("Your space log could not be opened")
                         .font(.title)
-                    Text("Retry to recover your rewards, or begin a new space log.")
+                    Text(
+                        "Your existing space log is preserved. Retry after restoring a compatible log or updating the app."
+                    )
+                    .multilineTextAlignment(.center)
                     Button("Retry") { Task { await loadProgress() } }
+                        .accessibilityIdentifier("progress.load.retry")
                         .focused($retryFocused)
                         .onAppear { retryFocused = true }
-                    if let store = progressStore {
-                        Button("Begin a new space log") {
-                            let freshProgress = GameProgress()
-                            savedProgress = freshProgress
-                            saveQueue = ProgressSaveQueue(store: store)
-                            saveQueue?.enqueue(freshProgress)
-                            hasLoadedProgress = true
-                        }
-                    }
                 }
                 .padding()
             } else {

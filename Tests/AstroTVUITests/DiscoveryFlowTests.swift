@@ -246,7 +246,7 @@ final class DiscoveryFlowTests: XCTestCase {
     }
 
     private func capture(_ name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
@@ -255,6 +255,8 @@ final class DiscoveryFlowTests: XCTestCase {
     private func select(_ identifier: String, file: StaticString = #filePath, line: UInt = #line) {
         focus(identifier, file: file, line: line)
         remote.press(.select)
+        if identifier.hasPrefix("quiz.answer.") { select("quiz.check") }
+        if identifier.hasPrefix("video.answer.") { select("video.check") }
     }
 
     private func focus(_ identifier: String, file: StaticString = #filePath, line: UInt = #line) {
@@ -274,9 +276,14 @@ final class DiscoveryFlowTests: XCTestCase {
             }
             let deltaX = target.frame.midX - focused.frame.midX
             let deltaY = target.frame.midY - focused.frame.midY
+            let overlap = max(
+                0,
+                min(target.frame.maxY, focused.frame.maxY)
+                    - max(target.frame.minY, focused.frame.minY))
+            let sharesRow = overlap > min(target.frame.height, focused.frame.height) * 0.5
             var horizontal =
-                target.frame.minX > focused.frame.maxX
-                || target.frame.maxX < focused.frame.minX || abs(deltaY) <= 40
+                target.frame.minX > focused.frame.maxX || target.frame.maxX < focused.frame.minX
+                || abs(deltaY) <= 40 || (sharesRow && abs(deltaX) > abs(deltaY))
             if previousFrame == focused.frame {
                 horizontal = !previousHorizontal
             }
@@ -293,7 +300,7 @@ final class DiscoveryFlowTests: XCTestCase {
                         predicate: NSPredicate(format: "hasFocus == true"), object: target)
                 ], timeout: 0.3)
         }
-        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         screenshot.lifetime = .keepAlways
         add(screenshot)
         XCTFail(

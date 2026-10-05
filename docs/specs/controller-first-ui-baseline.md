@@ -48,10 +48,11 @@ All states must satisfy the accessibility baseline for color, vibration, audio, 
 
 - Multiple-choice answers are focusable items.
 - Moving focus previews the answer without committing it.
-- Confirm submits the focused answer.
+- Confirm selects the focused answer; a visible selection mark identifies the proposal. A separate Check Answer action submits it. Touch uses the same two steps.
 - Feedback appears after submit and keeps a clear route to continue, retry, or request a hint.
 - True/false and matching questions should reuse the same focus and submit model.
 - Interaction-based questions may use gameplay controls, but must still expose clear confirm, retry, and hint states.
+- Optional challenge expiry focuses More Time and offers Continue in Practice. A restored challenge waits for explicit Resume Challenge; background, narration, help, Story, and feedback pause the clock independently.
 
 ## Prototype Test Cases
 

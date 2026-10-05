@@ -28,23 +28,20 @@ struct PlanetAdventureView: View {
     var body: some View {
         Group {
             if session.phase == .missionQuestion || session.phase == .reviewQuestion,
-                let quiz = session.currentQuiz
+                session.currentQuiz != nil
             {
                 QuizChallengeView(
+                    session: session,
                     destinationName: session.phase == .reviewQuestion
-                        ? "Memory adventure" : session.activePlanetMission?.title ?? planetName,
-                    ageBand: ageBand, quiz: quiz, isShowingHint: session.isShowingHint,
-                    completedCount: session.completedPlanetMissionCount, totalCount: 24,
-                    questionIndex: session.phase == .reviewQuestion
-                        ? session.currentReviewQuestionIndex : session.activeQuestionIndex,
-                    questionCount: session.phase == .reviewQuestion
-                        ? session.activeReviewQuestions.count : 3,
-                    score: 0, streak: 0,
-                    onSelectAnswer: { session.submitAnswer(at: $0) },
-                    onHint: { session.requestHint() },
-                    onBack: { session.returnToWorlds() }, isPaused: isPaused
+                        ? "Memory Mission" : session.activePlanetMission?.title ?? "Planet mission",
+                    ageBand: session.activeMissionAgeBand,
+                    questionIndex: session.activeQuestionIndex,
+                    questionCount: session.quizQuestions.count,
+                    onBack: { session.returnToWorlds() }, backTitle: "Worlds", isPaused: isPaused
                 )
                 .id(session.activeLearningQuestion?.id ?? stepIdentity)
+            } else if usesSharedQuestionFeedback {
+                QuestionFeedbackView(session: session, isPaused: isPaused)
             } else {
                 expeditionScreens
             }
@@ -56,7 +53,9 @@ struct PlanetAdventureView: View {
         .onChange(of: narrationEnabled) { speakCurrentStep() }
         .onChange(of: voiceOverEnabled) { speakCurrentStep() }
         .onChange(of: session.isShowingHint) {
-            if session.isShowingHint, let task = session.activeActivityTask {
+            if session.phase == .missionActivity, session.isShowingHint,
+                let task = session.activeActivityTask
+            {
                 speak(task.hint[ageBand])
                 focusedAction = "activity.0"
             }
@@ -110,6 +109,7 @@ struct PlanetAdventureView: View {
                         .padding(.vertical, 8)
                     }
                     .scrollIndicators(.hidden)
+                    .accessibilityIdentifier("mission.scroll")
                     HStack {
                         Button {
                             narrator.stopSpeaking(at: .immediate)
@@ -429,6 +429,10 @@ struct PlanetAdventureView: View {
     }
 
     private func focusAndNarrate() {
+        if usesSharedQuestionFeedback {
+            narrator.stopSpeaking(at: .immediate)
+            return
+        }
         switch session.phase {
         case .missionSelection:
             focusedAction =
@@ -448,6 +452,10 @@ struct PlanetAdventureView: View {
     }
 
     private func speakCurrentStep() {
+        if usesSharedQuestionFeedback {
+            narrator.stopSpeaking(at: .immediate)
+            return
+        }
         switch session.phase {
         case .missionBriefing: speak(session.activePlanetMission?.invitation[ageBand] ?? "")
         case .missionClue: speak(session.activeCard?.body[ageBand] ?? "")
@@ -458,6 +466,12 @@ struct PlanetAdventureView: View {
         case .missionStepFeedback, .reviewFeedback: speak(session.lastFeedback)
         default: narrator.stopSpeaking(at: .immediate)
         }
+    }
+
+    private var usesSharedQuestionFeedback: Bool {
+        session.phase == .reviewFeedback
+            || (session.phase == .missionStepFeedback
+                && session.progress.activeRun?.stepID == session.activeLearningQuestion?.id)
     }
 
     private func speak(_ text: String) {
