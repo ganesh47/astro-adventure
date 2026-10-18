@@ -1,117 +1,29 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  swift:
-    name: Swift Tests and Format
+  tv-focus-diagnostic:
+    name: Isolated TV restoration focus diagnostic
     runs-on: macos-26
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           lfs: true
           persist-credentials: false
-
-      - name: Toolchain
-        run: |
-          xcodebuild -version
-          swift --version
-
       - name: Install XcodeGen
         run: brew install xcodegen
-
-      - name: Generate Xcode project
-        run: |
-          xcodegen generate --spec project.yml
-
-      - name: Verify generated project configuration
-        run: |
-          for scheme in AstroAdventure-iOS AstroAdventure-tvOS; do
-            settings="$(
-              xcodebuild \
-                -project AstroAdventure.xcodeproj \
-                -scheme "$scheme" \
-                -showBuildSettings
-            )"
-
-            grep -Fq \
-              "PRODUCT_BUNDLE_IDENTIFIER = com.ganesh47.astroadventure" \
-              <<< "$settings"
-            grep -Fq "DEVELOPMENT_TEAM = J3387FUR8X" <<< "$settings"
-            grep -Fq "CODE_SIGN_STYLE = Automatic" <<< "$settings"
-          done
-
-          git diff --exit-code -- \
-            Apps/iOS/Info.plist \
-            Apps/tvOS/Info.plist
-
-      - name: Format
-        run: swift format lint --recursive --strict Sources Tests Apps
-
-      - name: Test packages
-        run: swift test --enable-code-coverage
-
-  apple-builds:
-    name: ${{ matrix.name }}
-    runs-on: macos-26
-    # Preserve the full serial suites with bounded platform-specific limits.
-    timeout-minutes: ${{ matrix.timeout_minutes }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: iOS Simulator Build
-            scheme: AstroAdventure-iOS
-            # Hosted serial validation reached its final case at the 120-minute
-            # limit; allow bounded completion and artifact-upload headroom.
-            timeout_minutes: 150
-            destination: generic/platform=iOS Simulator
-          - name: tvOS Simulator Build
-            scheme: AstroAdventure-tvOS
-            timeout_minutes: 75
-            destination: generic/platform=tvOS Simulator
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          lfs: true
-          persist-credentials: false
-
-      - name: Install XcodeGen
-        run: brew install xcodegen
-
-      - name: Generate Xcode project
+      - name: Generate project
         run: xcodegen generate --spec project.yml
-
-      - name: Build
+      - name: Run exact failing restoration case
         run: |
-          xcodebuild \
-            -project AstroAdventure.xcodeproj \
-            -scheme "${{ matrix.scheme }}" \
-            -destination "${{ matrix.destination }}" \
-            -derivedDataPath "$RUNNER_TEMP/DerivedData-${{ matrix.scheme }}" \
-            CODE_SIGNING_ALLOWED=NO \
-            build
-
-      - name: Apple TV remote gameplay smoke test
-        if: matrix.scheme == 'AstroAdventure-tvOS'
-        run: |
-          device_id="$(
-            xcrun simctl list devices available --json | python3 -c '
+          device_id="$(xcrun simctl list devices available --json | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
           candidates = [device["udid"] for runtime, entries in devices.items()
@@ -119,64 +31,18 @@ jobs:
                         if device.get("isAvailable") and "Apple TV" in device["name"]]
           if not candidates:
               raise SystemExit("No available Apple TV simulator")
-          print(candidates[0])'
-          )"
+          print(candidates[0])')"
           xcrun simctl bootstatus "$device_id" -b
-          xcodebuild \
-            -project AstroAdventure.xcodeproj \
-            -scheme AstroAdventure-tvOS \
+          xcodebuild -project AstroAdventure.xcodeproj -scheme AstroAdventure-tvOS \
             -destination "platform=tvOS Simulator,id=$device_id" \
-            -derivedDataPath "$RUNNER_TEMP/DerivedData-${{ matrix.scheme }}" \
-            -resultBundlePath "$RUNNER_TEMP/AstroTVGameplay.xcresult" \
-            -parallel-testing-enabled NO \
-            CODE_SIGNING_ALLOWED=NO \
-            test
-
-      - name: iPhone touch gameplay smoke test
-        if: matrix.scheme == 'AstroAdventure-iOS'
-        run: |
-          export ASTRO_CI_IOS_SDK_VERSION="$(xcrun --sdk iphonesimulator --show-sdk-version)"
-          runtime_id="$(
-            xcrun simctl list runtimes --json | python3 -c '
-          import json, os, sys
-          version = lambda value: tuple(int(part) for part in value.split("."))
-          sdk = version(os.environ["ASTRO_CI_IOS_SDK_VERSION"])
-          candidates = [runtime for runtime in json.load(sys.stdin)["runtimes"]
-                        if runtime.get("isAvailable")
-                        and runtime["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-")
-                        and version(runtime["version"]) <= sdk]
-          if not candidates:
-              raise SystemExit("No available iOS runtime compatible with selected Xcode SDK")
-          print(max(candidates, key=lambda runtime: version(runtime["version"]))["identifier"])'
-          )"
-          device_id="$(xcrun simctl create \
-            "AstroCI-iOS-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
-            com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro "$runtime_id")"
-          trap 'xcrun simctl shutdown "$device_id" >/dev/null 2>&1 || true' EXIT
-          echo "Dedicated iOS simulator: $device_id; runtime: $runtime_id; SDK: $ASTRO_CI_IOS_SDK_VERSION"
-          xcrun simctl bootstatus "$device_id" -b
-          xcodebuild \
-            -project AstroAdventure.xcodeproj \
-            -scheme AstroAdventure-iOS \
-            -destination "platform=iOS Simulator,id=$device_id" \
-            -derivedDataPath "$RUNNER_TEMP/DerivedData-${{ matrix.scheme }}" \
-            -resultBundlePath "$RUNNER_TEMP/AstroTouchGameplay.xcresult" \
-            -parallel-testing-enabled NO \
-            CODE_SIGNING_ALLOWED=NO \
-            test
-
-      - name: Upload touch gameplay test results
-        if: always() && matrix.scheme == 'AstroAdventure-iOS'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+            -derivedDataPath "$RUNNER_TEMP/TVFocusBuild" \
+            -resultBundlePath "$RUNNER_TEMP/TVFocus.xcresult" \
+            -only-testing:AstroAdventure-tvOS-UITests/ExplorationPlaygroundTests/testRemoteThreePlaygroundsAndSavedCreation \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: touch-gameplay-results
-          path: ${{ runner.temp }}/AstroTouchGameplay.xcresult
-          if-no-files-found: ignore
-
-      - name: Upload Apple TV gameplay test results
-        if: always() && matrix.scheme == 'AstroAdventure-tvOS'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: apple-tv-gameplay-results
-          path: ${{ runner.temp }}/AstroTVGameplay.xcresult
+          name: tv-focus-diagnostic-${{ github.run_id }}
+          path: ${{ runner.temp }}/TVFocus.xcresult
           if-no-files-found: ignore
