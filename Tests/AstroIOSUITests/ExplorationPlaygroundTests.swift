@@ -57,7 +57,7 @@ final class ExplorationPlaygroundTests: XCTestCase {
         app.terminate()
         app.launchArguments = ["--ui-testing", "--legacy-playgrounds"]
         app.launch()
-        tap("playground.resume")
+        tap("playground.return")
         XCTAssertTrue(app.staticTexts["Taking a little break"].waitForExistence(timeout: 10))
         capture("Carried sensor restored paused")
         tap("playground.resume")

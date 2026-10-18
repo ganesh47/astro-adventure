@@ -42,14 +42,19 @@ final class ExplorationPlaygroundTests: XCTestCase {
         app.terminate()
         app.launchArguments = ["--ui-testing", "--legacy-playgrounds"]
         app.launch()
-        select("playground.resume")
-        XCTAssertEqual(
-            XCTWaiter.wait(
-                for: [
-                    XCTNSPredicateExpectation(
-                        predicate: NSPredicate(format: "hasFocus == true"),
-                        object: app.buttons["playground.resume"])
-                ], timeout: 5), .completed, "Restored play focuses explicit resume")
+        select("playground.return")
+        let restoredFocus = XCTWaiter.wait(
+            for: [
+                XCTNSPredicateExpectation(
+                    predicate: NSPredicate(format: "hasFocus == true"),
+                    object: app.buttons["playground.resume"])
+            ], timeout: 5)
+        capture("Restored legacy pause focus")
+        let restoredHierarchy = XCTAttachment(string: app.debugDescription)
+        restoredHierarchy.name = "Restored legacy pause hierarchy"
+        restoredHierarchy.lifetime = .keepAlways
+        add(restoredHierarchy)
+        XCTAssertEqual(restoredFocus, .completed, "Restored play focuses explicit resume")
         select("playground.resume")
         XCTAssertFalse(app.buttons["playground.target.mercury-sunlit-sensor-site"].exists)
         XCTAssertTrue(app.buttons["playground.target.mercury-shadow-sensor-site"].hasFocus)
