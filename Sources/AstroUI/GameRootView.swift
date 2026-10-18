@@ -448,7 +448,7 @@ public struct GameRootView: View {
                     secondaryButton("Return to \(adventure.title)", systemImage: "play.fill") {
                         openPlayground(adventure)
                     }
-                    .accessibilityIdentifier("playground.resume")
+                    .accessibilityIdentifier("playground.return")
                 }
                 if session.hasSavedAdventure {
                     secondaryButton(

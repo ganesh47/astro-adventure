@@ -42,7 +42,7 @@ final class ExplorationPlaygroundTests: XCTestCase {
         app.terminate()
         app.launchArguments = ["--ui-testing", "--legacy-playgrounds"]
         app.launch()
-        select("playground.resume")
+        select("playground.return")
         let restoredFocus = XCTWaiter.wait(
             for: [
                 XCTNSPredicateExpectation(
