@@ -8,7 +8,9 @@ final class ExplorationPlaygroundTests: XCTestCase {
     override func setUp() async throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .landscapeLeft
-        app.launchArguments = ["--ui-testing", "--reset-ui-testing-progress"]
+        app.launchArguments = [
+            "--ui-testing", "--reset-ui-testing-progress", "--legacy-playgrounds",
+        ]
         app.launch()
     }
 
@@ -53,7 +55,7 @@ final class ExplorationPlaygroundTests: XCTestCase {
             app.staticTexts["playground.feedback"].label,
             "Your portable sensor is ready for another site.")
         app.terminate()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "--legacy-playgrounds"]
         app.launch()
         tap("playground.resume")
         XCTAssertTrue(app.staticTexts["Taking a little break"].waitForExistence(timeout: 10))
@@ -204,5 +206,89 @@ final class ExplorationPlaygroundTests: XCTestCase {
                     withVelocity: .slow, thenHoldForDuration: 0.2)
         }
         XCTAssertTrue(card.isHittable)
+    }
+}
+
+@MainActor
+final class PhotoSafariTests: XCTestCase {
+    private let app = XCUIApplication()
+    override func setUp() async throws {
+        continueAfterFailure = false
+        XCUIDevice.shared.orientation = .landscapeLeft
+        app.launchArguments = ["--ui-testing", "--reset-ui-testing-progress"]
+        app.launch()
+    }
+
+    func testTouchPhotoSafariCollectionAndPassport() {
+        tap("adventure.begin")
+        tap("destination.mercury")
+        tap("adventure.explore")
+        tap("safari.choice.saturn-portrait")
+        XCTAssertTrue(app.staticTexts["safari.hint"].exists)
+        capture("Touch Photo Safari two real photos and hint")
+        tap("safari.showMe")
+        capture("Touch Photo Safari discovery")
+        tap("safari.next")
+        tap("safari.choice.mercury-caloris")
+        tap("safari.next")
+        tap("safari.choice.mercury-hollows")
+        tap("safari.next")
+        XCTAssertTrue(app.staticTexts["safari.collection"].exists)
+        capture("Touch Photo Safari collection")
+        tap("safari.album.mercury-photo-craters")
+        XCTAssertTrue(app.staticTexts["safari.fact"].exists)
+        tap("safari.album.back")
+        tap("safari.worlds")
+        tap("playground.passport")
+        tap("passport.photo.mercury-photo-craters")
+        capture("Touch passport saved photo")
+        tap("passport.photo.close")
+        tap("passport.close")
+    }
+
+    func testTouchPhotoRevealRestoresAndStaysInSafeArea() {
+        tap("adventure.begin")
+        tap("destination.mercury")
+        tap("adventure.explore")
+        tap("safari.choice.mercury-horizon")
+        app.terminate()
+        app.launchArguments = ["--ui-testing"]
+        app.launch()
+        tap("safari.return")
+        tap("safari.resume")
+        XCTAssertTrue(app.staticTexts["safari.fact"].exists)
+        XCTAssertTrue(app.buttons["safari.next"].isHittable)
+        tap("safari.next")
+        for id in [
+            "safari.choice.tech-rover", "safari.choice.mercury-caloris", "safari.showMe",
+            "safari.options",
+        ] {
+            let control = app.buttons[id]
+            XCTAssertTrue(control.isHittable)
+            XCTAssertTrue(app.frame.contains(control.frame))
+        }
+        tap("safari.options")
+        tap("safari.resume")
+        capture("Touch Photo Safari restored next clue")
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            XCUIDevice.shared.orientation = .portrait
+            XCTAssertTrue(app.buttons["safari.showMe"].isHittable)
+            capture("Tablet Photo Safari portrait clue")
+            tap("safari.showMe")
+            XCTAssertTrue(app.buttons["safari.next"].isHittable)
+            capture("Tablet Photo Safari portrait discovery")
+        }
+    }
+
+    private func tap(_ id: String, file: StaticString = #filePath, line: UInt = #line) {
+        let button = app.buttons[id]
+        XCTAssertTrue(button.waitForExistence(timeout: 10), "Missing \(id)", file: file, line: line)
+        button.tap()
+    }
+    private func capture(_ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 }

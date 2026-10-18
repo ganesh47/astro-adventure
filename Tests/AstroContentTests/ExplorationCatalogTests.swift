@@ -93,6 +93,84 @@ final class ExplorationCatalogTests: XCTestCase {
         }
     }
 
+    func testGuidedRemoteJourneysCompleteEveryDiscoveryInEveryAgeMode() throws {
+        let expectedActionCounts = ["mercury": 5, "mars": 6, "saturn": 4]
+        for adventure in ExplorationCatalog.adventures {
+            for age in AgeBand.allCases {
+                let session = ExplorationSession(
+                    adventure: adventure, progress: GameProgress(selectedAgeBand: age))
+                session.send(.begin, now: now)
+                var actions = 0
+                while session.cursor.phase == .playing, actions < 12 {
+                    XCTAssertTrue((1...2).contains(session.guidedTargets.count), adventure.id)
+                    let target = try XCTUnwrap(session.guidedTargets.first)
+                    XCTAssertNotNil(target.guidedTitle)
+                    XCTAssertNotNil(session.currentGoal?.guidedInstruction)
+                    let before = session.cursor.observations
+                    session.send(.selectTarget(target.id), now: now)
+                    XCTAssertEqual(session.cursor.observations, before, "Focus cannot act")
+                    session.send(.performGuidedAction(target.id), now: now)
+                    XCTAssertGreaterThan(session.cursor.observations.count, before.count)
+                    XCTAssertNil(session.cursor.carriedItemID)
+                    actions += 1
+                }
+                XCTAssertEqual(actions, expectedActionCounts[adventure.destinationID])
+                XCTAssertEqual(session.cursor.phase, .celebrating)
+                XCTAssertEqual(session.cursor.completedGoalIDs, Set(adventure.goals.map(\.id)))
+                let saved = try XCTUnwrap(session.progress.explorationCompletions[adventure.id])
+                XCTAssertEqual(saved.postcard, session.cursor)
+                session.send(.keepPlaying, now: now)
+                XCTAssertGreaterThan(
+                    session.guidedTargets.count, 2, "All tools return in free play")
+                for target in session.guidedTargets {
+                    session.send(.performGuidedAction(target.id), now: now)
+                }
+                XCTAssertEqual(session.progress.explorationCompletions[adventure.id], saved)
+            }
+        }
+    }
+
+    func testGuidedActionsRejectUnrelatedLockedRepeatedAndPausedActions() throws {
+        let session = try makeSession("mercury")
+        let initial = session.cursor
+        for id in ["mercury-sensor", "mercury-shadow-sensor-site", "unknown"] {
+            session.send(.performGuidedAction(id), now: now)
+            XCTAssertEqual(session.cursor, initial)
+        }
+        session.send(.pause, now: now)
+        session.send(.performGuidedAction("mercury-small-impact"), now: now)
+        XCTAssertEqual(session.cursor, initial)
+        session.send(.resume, now: now)
+        session.send(.performGuidedAction("mercury-large-impact"), now: now)
+        XCTAssertEqual(session.guidedTargets.map(\.id), ["mercury-small-impact"])
+        let partial = session.cursor
+        session.send(.performGuidedAction("mercury-large-impact"), now: now)
+        XCTAssertEqual(session.cursor, partial)
+        session.send(.performGuidedAction("mercury-small-impact"), now: now)
+        XCTAssertEqual(session.guidedTargets.map(\.id), ["mercury-ejecta-trail"])
+    }
+
+    func testGuidedSensorResumesOnlyTheUnfinishedComparisonAndReusesTheSameItem() throws {
+        let session = try makeSession("mercury")
+        for id in ["mercury-small-impact", "mercury-large-impact", "mercury-ejecta-trail"] {
+            session.send(.performGuidedAction(id), now: now)
+        }
+        // A save made with the original touch controls can carry a kit into the TV flow.
+        activate("mercury-sensor", in: session)
+        session.send(.performGuidedAction("mercury-shadow-sensor-site"), now: now)
+        XCTAssertEqual(session.cursor.placements["mercury.sensor"], "mercury-shadow-sensor-site")
+        let data = try JSONEncoder().encode(session.progress)
+        let saved = try JSONDecoder().decode(GameProgress.self, from: data)
+        let restored = ExplorationSession(adventure: session.adventure, progress: saved)
+        XCTAssertTrue(restored.isPaused)
+        XCTAssertEqual(restored.guidedTargets.map(\.id), ["mercury-sunlit-sensor-site"])
+        restored.send(.resume, now: now)
+        restored.send(.performGuidedAction("mercury-sunlit-sensor-site"), now: now)
+        XCTAssertEqual(restored.cursor.placements["mercury.sensor"], "mercury-sunlit-sensor-site")
+        XCTAssertEqual(restored.cursor.phase, .celebrating)
+        XCTAssertTrue(restored.cursor.observations.contains("mercury.sensor.shadow"))
+    }
+
     func testMercuryNeedsBothImpactPatternsAndMovesTheSameSensor() throws {
         let session = try makeSession("mercury")
         XCTAssertFalse(session.availableTargets.contains { $0.id == "mercury-ejecta-trail" })

@@ -1,5 +1,7 @@
 # Living planet playgrounds
 
+> Historical implementation: [Photo Safari](photo-safari.md) now replaces this default play route. Saved playground postcards remain available in the passport.
+
 Implementation issue: https://github.com/ganesh47/astro-adventure/issues/91
 
 ## Experience
@@ -13,6 +15,8 @@ Primary audience is ages 4–9. Ages 4–6 receive concrete spoken suggestions; 
 ExplorationSession owns semantic input, logical target selection, carried tools, placements, stepped model settings, observations, and deterministic goal predicates. RealityKit renders their consequences and cosmetic motion, with no direct reward authority. Stable adventure, goal, target, concept, and source IDs connect content, rendering, accessibility, persistence, and tests. Age and revision are captured at entry.
 
 Touch targets and Siri Remote directions/Select operate the same actions. Focus changes alone never activate tools. Every manipulation has a button alternative. World/HUD input ownership prevents one direction from moving two selections. Optional clips suspend the world and retain their paused frame during two action invitations; explicit Continue film or Try it in the playground replaces multiple-choice questions. Boundary and periodic events pass through pure ObservationPlaybackState. Duplicate/stale callbacks cannot bypass pending invitations or award progress.
+
+On tvOS, [simple playground discoveries](tvos-playground-simplicity.md) present one current discovery and only its unfinished actions in a large horizontal row. Placement actions fetch the reusable kit automatically. Intermediate discoveries have an explicit Next discovery acknowledgement. Options contains help, journal, films, narration, reset, and world navigation; completed worlds expose repeatable tools for free play. The touch playground retains spatial targets and manual tool handling.
 
 Pause, backgrounding, interruptions, and leaving stop world motion, narration, and films. Restoration is paused and resumption is explicit. Native transport uses generation and seek tokens to reject stale work.
 

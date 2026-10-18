@@ -20,6 +20,8 @@ public struct ExplorationPlaygroundView: View {
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
     @State private var narrator = AVSpeechSynthesizer()
     @State private var topHUDHeight: CGFloat = 0
+    @State private var pendingDiscovery: ExplorationGoal?
+    @State private var acknowledgedFeedback: String?
     @FocusState private var focusedControl: String?
 
     public init(
@@ -66,26 +68,32 @@ public struct ExplorationPlaygroundView: View {
                 .zIndex(1)
 
                 if session.cursor.phase == .playing, session.overlay == nil {
-                    hotspotLayer(size: geometry.size, compact: compact)
-                        .zIndex(2)
-                    VStack(spacing: compact ? 5 : 15) {
+                    #if os(tvOS)
+                        televisionHUD
+                            .padding(.horizontal, 52).padding(.vertical, 28)
+                            .zIndex(3)
+                    #else
+                        hotspotLayer(size: geometry.size, compact: compact)
+                            .zIndex(2)
                         VStack(spacing: compact ? 5 : 15) {
-                            header(compact: compact)
-                            invitation(compact: compact)
-                        }
-                        .background {
-                            GeometryReader { proxy in
-                                Color.clear.preference(
-                                    key: PlaygroundHUDHeight.self, value: proxy.size.height)
+                            VStack(spacing: compact ? 5 : 15) {
+                                header(compact: compact)
+                                invitation(compact: compact)
                             }
-                            .allowsHitTesting(false)
+                            .background {
+                                GeometryReader { proxy in
+                                    Color.clear.preference(
+                                        key: PlaygroundHUDHeight.self, value: proxy.size.height)
+                                }
+                                .allowsHitTesting(false)
+                            }
+                            Spacer(minLength: 0)
+                            footer(compact: compact)
                         }
-                        Spacer(minLength: 0)
-                        footer(compact: compact)
-                    }
-                    .padding(.horizontal, television ? 52 : 18)
-                    .padding(.vertical, television ? 28 : 8)
-                    .zIndex(3)
+                        .padding(.horizontal, television ? 52 : 18)
+                        .padding(.vertical, television ? 28 : 8)
+                        .zIndex(3)
+                    #endif
                 }
 
                 if session.cursor.phase == .arriving, session.overlay == nil {
@@ -106,21 +114,19 @@ public struct ExplorationPlaygroundView: View {
         .onPreferenceChange(PlaygroundHUDHeight.self) { topHUDHeight = $0 }
         .preferredColorScheme(.dark)
         .onAppear {
-            focusedControl =
-                session.cursor.phase == .arriving
-                ? "begin" : "target.\(session.cursor.selectedTargetID)"
+            focusedControl = session.overlay == .pause ? "resume" : preferredPlayFocus
             speakCurrentState()
         }
         .onChange(of: focusedControl) {
-            guard let id = focusedControl, id.hasPrefix("target."), session.overlay == nil else {
+            guard let id = focusedControl, session.overlay == nil else {
                 return
             }
-            session.send(.selectTarget(String(id.dropFirst(7))))
+            if id.hasPrefix("target.") || id.hasPrefix("guided.") {
+                session.send(.selectTarget(String(id.dropFirst(7))))
+            }
         }
         .onChange(of: session.cursor.phase) {
-            focusedControl =
-                session.cursor.phase == .celebrating
-                ? "keepPlaying" : "target.\(session.cursor.selectedTargetID)"
+            focusedControl = preferredPlayFocus
             speakCurrentState()
         }
         .onChange(of: session.overlay) {
@@ -129,7 +135,7 @@ public struct ExplorationPlaygroundView: View {
             } else if session.overlay == .help, session.currentGoal != nil {
                 focusedControl = "help.aim"
             } else if session.overlay == nil {
-                focusedControl = "target.\(session.cursor.selectedTargetID)"
+                focusedControl = preferredPlayFocus
             } else {
                 focusedControl = "overlay.close"
             }
@@ -161,6 +167,189 @@ public struct ExplorationPlaygroundView: View {
             }
         #endif
     }
+
+    private var preferredPlayFocus: String {
+        if session.cursor.phase == .arriving { return "begin" }
+        if session.cursor.phase == .celebrating { return "keepPlaying" }
+        if television {
+            if pendingDiscovery != nil { return "discovery.next" }
+            if session.guidedTargets.contains(where: { $0.id == session.cursor.selectedTargetID }) {
+                return "guided.\(session.cursor.selectedTargetID)"
+            }
+            return session.guidedTargets.first.map { "guided.\($0.id)" } ?? "pause"
+        }
+        return "target.\(session.cursor.selectedTargetID)"
+    }
+
+    #if os(tvOS)
+        private var televisionHUD: some View {
+            VStack(alignment: .leading, spacing: 20) {
+                HStack {
+                    Text(session.adventure.title.uppercased())
+                        .font(.system(size: 36, weight: .black, design: .rounded))
+                    Spacer()
+                    Button("Options", systemImage: "line.3.horizontal") { session.send(.pause) }
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .buttonStyle(.bordered)
+                        .focused($focusedControl, equals: "pause")
+                        .accessibilityIdentifier("playground.pause")
+                        .onMoveCommand { direction in
+                            if direction == .down { focusedControl = preferredPlayFocus }
+                        }
+                }
+                HStack(spacing: 18) {
+                    companionImage.resizable().scaledToFit()
+                        .frame(width: 80, height: 80).accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(discoveryProgress)
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .foregroundStyle(.cyan)
+                            .accessibilityIdentifier("playground.progress")
+                        Text(
+                            pendingDiscovery?.title ?? session.currentGoal?.title ?? "Play your way"
+                        )
+                        .font(.system(size: 34, weight: .heavy, design: .rounded))
+                        .foregroundStyle(.yellow)
+                        Text(
+                            pendingDiscovery != nil
+                                ? "You made a discovery!"
+                                : session.currentGoal?.guidedInstruction
+                                    ?? "Try the tools again. Your discoveries are saved."
+                        )
+                        .font(.system(size: 28, weight: .semibold, design: .rounded))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("playground.goal")
+                    }
+                }
+                .padding(22)
+                .frame(maxWidth: 1100, alignment: .leading)
+                .background(.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 24))
+                .allowsHitTesting(false)
+                Spacer(minLength: 30)
+                VStack(spacing: 18) {
+                    if let discovery = pendingDiscovery {
+                        Text(discovery.explanation.text(for: session.ageBand))
+                            .font(.system(size: 28, weight: .semibold, design: .rounded))
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: 1200)
+                            .padding(12)
+                            .background(
+                                .black.opacity(0.84), in: RoundedRectangle(cornerRadius: 18)
+                            )
+                            .accessibilityIdentifier("playground.feedback")
+                        Button("Next discovery", systemImage: "arrow.right") {
+                            acknowledgedFeedback = session.feedback
+                            pendingDiscovery = nil
+                            focusedControl = preferredPlayFocus
+                            speakCurrentState()
+                        }
+                        .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .buttonStyle(.borderedProminent).tint(.yellow)
+                        .foregroundStyle(.black)
+                        .focused($focusedControl, equals: "discovery.next")
+                        .accessibilityIdentifier("playground.next")
+                        .onMoveCommand { direction in
+                            if direction == .up { focusedControl = "pause" }
+                        }
+                    } else {
+                        if !session.cursor.observations.isEmpty,
+                            session.feedback != acknowledgedFeedback,
+                            session.feedback
+                                != session.currentGoal?.invitation.text(for: session.ageBand)
+                        {
+                            Text(session.feedback)
+                                .font(.system(size: 26, weight: .semibold, design: .rounded))
+                                .multilineTextAlignment(.center).frame(maxWidth: 1300)
+                                .padding(10)
+                                .background(
+                                    .black.opacity(0.84), in: RoundedRectangle(cornerRadius: 18)
+                                )
+                                .accessibilityIdentifier("playground.feedback")
+                        }
+                        if session.currentGoal == nil {
+                            ScrollViewReader { proxy in
+                                ScrollView(.horizontal) { remoteActions.padding(24) }
+                                    .scrollIndicators(.hidden)
+                                    .onAppear {
+                                        proxy.scrollTo(
+                                            session.cursor.selectedTargetID, anchor: .center)
+                                    }
+                                    .onChange(of: focusedControl) {
+                                        if let id = focusedControl, id.hasPrefix("guided.") {
+                                            proxy.scrollTo(String(id.dropFirst(7)), anchor: .center)
+                                        }
+                                    }
+                            }
+                        } else {
+                            remoteActions
+                        }
+                    }
+                    Text("Left or right to choose · Press to try · Back for options")
+                        .font(.system(size: 22, weight: .medium, design: .rounded))
+                    Text(modelFootnote)
+                        .font(.system(size: 22, weight: .medium, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .multilineTextAlignment(.center)
+                        .accessibilityIdentifier("playground.modelLabel")
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity)
+            }
+            .foregroundStyle(.white)
+        }
+
+        private var discoveryProgress: String {
+            if let discovery = pendingDiscovery,
+                let index = session.adventure.goals.firstIndex(where: { $0.id == discovery.id })
+            {
+                return "Discovery \(index + 1) of \(session.adventure.goals.count) saved"
+            }
+            guard let goal = session.currentGoal,
+                let index = session.adventure.goals.firstIndex(where: { $0.id == goal.id })
+            else { return "All discoveries saved" }
+            let tried = goal.requiredObservations.intersection(session.cursor.observations).count
+            return
+                "Discovery \(index + 1) of \(session.adventure.goals.count) · \(tried) of \(goal.requiredObservations.count) tried"
+        }
+
+        private var remoteActions: some View {
+            HStack(spacing: 30) {
+                ForEach(session.guidedTargets) { target in
+                    Button {
+                        acknowledgedFeedback = nil
+                        let goal = session.currentGoal
+                        session.send(.performGuidedAction(target.id))
+                        if let goal, session.cursor.completedGoalIDs.contains(goal.id),
+                            session.cursor.phase == .playing
+                        {
+                            pendingDiscovery = goal
+                        }
+                        focusedControl =
+                            session.cursor.phase == .celebrating
+                            ? "keepPlaying" : preferredPlayFocus
+                        speakCurrentState()
+                    } label: {
+                        Label(
+                            target.guidedTitle ?? "\(target.verb): \(target.name)",
+                            systemImage: target.symbol
+                        )
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
+                        .frame(width: 380, height: 72)
+                    }
+                    .buttonStyle(.borderedProminent).tint(.yellow)
+                    .foregroundStyle(.black)
+                    .focused($focusedControl, equals: "guided.\(target.id)")
+                    .id(target.id)
+                    .accessibilityIdentifier("playground.target.\(target.id)")
+                    .accessibilityHint("Press to try this action in the model.")
+                    .onMoveCommand { direction in
+                        if direction == .up { focusedControl = "pause" }
+                    }
+                }
+            }
+            .focusSection()
+        }
+    #endif
 
     private func header(compact: Bool) -> some View {
         HStack(alignment: .top, spacing: 10) {
@@ -523,7 +712,11 @@ public struct ExplorationPlaygroundView: View {
             Text(session.adventure.title).font(
                 .system(size: compact ? 24 : 38, weight: .heavy, design: .rounded)
             ).foregroundStyle(.yellow)
-            Text(session.adventure.welcome.text(for: session.ageBand)).font(
+            Text(
+                television
+                    ? "Three discoveries to try. Choose an action and press to see what happens."
+                    : session.adventure.welcome.text(for: session.ageBand)
+            ).font(
                 .system(size: compact ? 16 : 24, weight: .medium, design: .rounded)
             )
             .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
@@ -605,6 +798,20 @@ public struct ExplorationPlaygroundView: View {
                 .buttonStyle(PlaygroundActionStyle(highlighted: focusedControl == "resume"))
                 .focused($focusedControl, equals: "resume").accessibilityIdentifier(
                     "playground.resume")
+                #if os(tvOS)
+                    HStack(spacing: 20) {
+                        Button("Help", systemImage: "lightbulb.fill") {
+                            session.send(.resume)
+                            session.send(.requestHelp)
+                        }
+                        .buttonStyle(.bordered).accessibilityIdentifier("playground.help")
+                        Button("Journal", systemImage: "book.closed.fill") {
+                            session.send(.resume)
+                            session.send(.openJournal)
+                        }
+                        .buttonStyle(.bordered).accessibilityIdentifier("playground.journal")
+                    }
+                #endif
                 HStack(spacing: 16) {
                     Button {
                         narrationEnabled.toggle()
@@ -631,20 +838,27 @@ public struct ExplorationPlaygroundView: View {
                 Label("Try this idea", systemImage: "lightbulb.fill").font(.title2.bold())
                     .foregroundStyle(.yellow)
                 Text(
-                    session.currentGoal?.hint.text(for: session.ageBand)
-                        ?? "Aim at a toy and press its action. Your discoveries stay in the journal."
+                    (television ? session.currentGoal?.guidedInstruction : nil)
+                        ?? session.currentGoal?.hint.text(for: session.ageBand)
+                        ?? (television
+                            ? "Choose any tool in the action row. Your discoveries are saved."
+                            : "Aim at a toy and press its action. Your discoveries stay in the journal.")
                 )
                 .font(compact ? .body : .title3).multilineTextAlignment(.center).fixedSize(
                     horizontal: false, vertical: true
                 )
                 .accessibilityIdentifier("playground.hint")
-                if let goal = session.currentGoal {
+                if session.currentGoal != nil {
                     Button {
                         session.send(.closeOverlay)
-                        session.send(.selectTarget(goal.suggestedTargetID))
-                        focusedControl = "target.\(session.cursor.selectedTargetID)"
+                        let targetID =
+                            television
+                            ? session.guidedTargets.first?.id
+                            : session.currentGoal?.suggestedTargetID
+                        if let targetID { session.send(.selectTarget(targetID)) }
+                        focusedControl = preferredPlayFocus
                     } label: {
-                        Label("Aim there", systemImage: "scope")
+                        Label(television ? "Show next action" : "Aim there", systemImage: "scope")
                     }
                     .buttonStyle(PlaygroundActionStyle(highlighted: focusedControl == "help.aim"))
                     .focused($focusedControl, equals: "help.aim").accessibilityIdentifier(
@@ -771,16 +985,28 @@ public struct ExplorationPlaygroundView: View {
         switch session.overlay {
         case .help:
             text =
-                session.currentGoal?.hint.text(for: session.ageBand)
+                (television ? session.currentGoal?.guidedInstruction : nil)
+                ?? session.currentGoal?.hint.text(for: session.ageBand)
                 ?? "Aim at a toy and press its action."
         case .journal: text = "Your discovery journal."
         case .clip, .pause: return
         case nil:
             if session.cursor.phase == .arriving {
-                text = session.adventure.welcome.text(for: session.ageBand)
+                text =
+                    television
+                    ? "Three discoveries to try. Choose an action and press to see what happens."
+                    : session.adventure.welcome.text(for: session.ageBand)
             } else if session.cursor.phase == .celebrating {
                 text =
                     "\(session.adventure.postcardTitle). Your discoveries are safe in your journal."
+            } else if television {
+                if let discovery = pendingDiscovery {
+                    text = discovery.explanation.text(for: session.ageBand)
+                } else {
+                    let next = session.guidedTargets.first?.guidedTitle ?? "Try another tool."
+                    text =
+                        "\(session.currentGoal?.guidedInstruction ?? "Your discoveries are saved.") Next: \(next)."
+                }
             } else {
                 text =
                     session.feedback.isEmpty

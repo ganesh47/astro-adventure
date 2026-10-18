@@ -27,6 +27,28 @@ public final class ExplorationSession {
         adventure.targets.filter { $0.requiredObservations.isSubset(of: cursor.observations) }
     }
 
+    /// Offer only actions that can add an observation to the current discovery.
+    /// After completion, the same controls become repeatable free-play tools.
+    public var guidedTargets: [ExplorationTarget] {
+        availableTargets.filter { target in
+            let observations: Set<String>
+            switch target.interaction {
+            case .observe(let observation), .place(_, let observation):
+                observations = [observation]
+            case .impact(let size):
+                observations = [size == 0 ? "impact.small" : "impact.large"]
+            case .adjust(_, let values):
+                observations = Set(values)
+            case .pickUp:
+                return false
+            }
+            guard let goal = currentGoal else { return true }
+            return !observations.intersection(
+                goal.requiredObservations.subtracting(cursor.observations)
+            ).isEmpty
+        }
+    }
+
     public init(adventure: ExplorationAdventure, progress: GameProgress) {
         self.adventure = adventure
         var updated = progress
@@ -87,6 +109,24 @@ public final class ExplorationSession {
         case .activateTarget:
             guard cursor.phase == .playing, let target = selectedTarget else { return }
             guard apply(target.interaction, at: target) else { return }
+            cursor.avatarAnchorID = target.id
+            feedback = target.response.text(for: ageBand)
+            completeEligibleGoals(now: now)
+        case .performGuidedAction(let id):
+            guard cursor.phase == .playing,
+                let target = guidedTargets.first(where: { $0.id == id })
+            else { return }
+            // A remote action names the destination, so fetching the kit is incidental.
+            // Keep the same item, placement, observations, and reward predicates.
+            if case .place(let item, _) = target.interaction {
+                guard cursor.carriedItemID == nil || cursor.carriedItemID == item,
+                    let kit = availableTargets.first(where: {
+                        $0.interaction == .pickUp(item)
+                    }), apply(kit.interaction, at: kit)
+                else { return }
+            }
+            guard apply(target.interaction, at: target) else { return }
+            cursor.selectedTargetID = target.id
             cursor.avatarAnchorID = target.id
             feedback = target.response.text(for: ageBand)
             completeEligibleGoals(now: now)

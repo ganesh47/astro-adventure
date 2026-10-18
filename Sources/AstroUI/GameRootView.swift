@@ -30,6 +30,7 @@ public struct GameRootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var session: MissionSession
     @State private var playground: ExplorationSession?
+    @State private var photoSafari: PhotoSafariSession?
     @State private var showingPassport = false
     @State private var isPaused = false
     @FocusState private var resumeFocused: Bool
@@ -59,7 +60,14 @@ public struct GameRootView: View {
 
     public var body: some View {
         Group {
-            if let playground {
+            if let photoSafari {
+                PhotoSafariView(session: photoSafari, onLeave: leavePhotoSafari)
+                    .onChange(of: photoSafari.progress) { _, progress in
+                        session.applyExplorationProgress(progress)
+                        onProgressChanged(progress)
+                    }
+                    .onAppear { onProgressChanged(photoSafari.progress) }
+            } else if let playground {
                 ExplorationPlaygroundView(
                     session: playground, videoLessons: session.videoLessons,
                     onLeave: leavePlayground
@@ -73,13 +81,15 @@ public struct GameRootView: View {
                 lifecycleManagedGame
             }
         }
-        .sheet(isPresented: $showingPassport) {
-            DiscoveryPassportView(
-                progress: session.progress, adventures: ExplorationCatalog.adventures,
-                lessons: session.lessons, onClose: { showingPassport = false })
-        }
+        #if os(tvOS)
+            .fullScreenCover(isPresented: $showingPassport) { passport }
+        #else
+            .sheet(isPresented: $showingPassport) { passport }
+        #endif
         .onChange(of: scenePhase) {
-            if scenePhase != .active, let playground {
+            if scenePhase != .active, let photoSafari {
+                photoSafari.pause()
+            } else if scenePhase != .active, let playground {
                 playground.send(.pause)
             } else if scenePhase != .active, session.phase != .missionPrompt {
                 session.pauseVideo()
@@ -95,8 +105,12 @@ public struct GameRootView: View {
                     let type = notification.userInfo?[AVAudioSessionInterruptionTypeKey]
                         as? UInt,
                     type == AVAudioSession.InterruptionType.began.rawValue,
-                    session.phase != .missionPrompt || playground != nil
+                    session.phase != .missionPrompt || playground != nil || photoSafari != nil
                 else { return }
+                if let photoSafari {
+                    photoSafari.pause()
+                    return
+                }
                 if let playground {
                     playground.send(.pause)
                     return
@@ -105,6 +119,13 @@ public struct GameRootView: View {
                 isPaused = true
             }
         #endif
+    }
+
+    private var passport: some View {
+        DiscoveryPassportView(
+            progress: session.progress, adventures: ExplorationCatalog.adventures,
+            safaris: PhotoSafariCatalog.safaris,
+            lessons: session.lessons, onClose: { showingPassport = false })
     }
 
     @ViewBuilder
@@ -333,7 +354,7 @@ public struct GameRootView: View {
                 Text(
                     session.completedDestinationCount > 0
                         ? "Mission Control is ready! Collect discovery stamps by exploring new worlds."
-                        : "Meet your robot crew. Make craters, explore with a rover, and build moving rings."
+                        : "Spot a rover, find Saturn’s rings, and collect real space photos."
                 )
                 .font(compact ? .subheadline : .title3)
                 .multilineTextAlignment(.center)
@@ -350,9 +371,22 @@ public struct GameRootView: View {
                 }
                 .accessibilityIdentifier("adventure.begin")
                 if let cursor = session.progress.explorationCursor,
+                    let safari = PhotoSafariCatalog.safaris.first(where: {
+                        $0.id == cursor.adventureID
+                            || $0.destinationID
+                                == ExplorationCatalog.adventures.first(where: {
+                                    $0.id == cursor.adventureID
+                                })?.destinationID
+                    }), !usesLegacyPlaygrounds
+                {
+                    secondaryButton("Return to \(safari.title)", systemImage: "play.fill") {
+                        openPhotoSafari(safari)
+                    }
+                    .accessibilityIdentifier("safari.return")
+                } else if let cursor = session.progress.explorationCursor,
                     let adventure = ExplorationCatalog.adventures.first(where: {
                         $0.id == cursor.adventureID
-                    })
+                    }), usesLegacyPlaygrounds
                 {
                     secondaryButton("Return to \(adventure.title)", systemImage: "play.fill") {
                         openPlayground(adventure)
@@ -505,18 +539,18 @@ public struct GameRootView: View {
                 missionStep(
                     "Pick an adventure", systemImage: "globe.americas.fill", compact: compact)
                 missionStep(
-                    "Try your tools", systemImage: "wrench.and.screwdriver.fill", compact: compact)
+                    "Spot a photo", systemImage: "camera.fill", compact: compact)
                 missionStep(
-                    "Make discoveries", systemImage: "sparkles", compact: compact)
+                    "Keep discoveries", systemImage: "sparkles", compact: compact)
             }
 
             VStack(spacing: 8) {
                 missionStep(
                     "Pick an adventure", systemImage: "globe.americas.fill", compact: compact)
                 missionStep(
-                    "Try your tools", systemImage: "wrench.and.screwdriver.fill", compact: compact)
+                    "Spot a photo", systemImage: "camera.fill", compact: compact)
                 missionStep(
-                    "Make discoveries", systemImage: "sparkles", compact: compact)
+                    "Keep discoveries", systemImage: "sparkles", compact: compact)
             }
         }
     }
@@ -580,13 +614,13 @@ public struct GameRootView: View {
                             let missions = session.planetMissions.filter {
                                 $0.destinationID == lesson.id
                             }
-                            if let adventure = ExplorationCatalog.adventure(
+                            if let safari = PhotoSafariCatalog.safari(
                                 destinationID: lesson.id)
                             {
-                                Label("Living playground", systemImage: "gamecontroller.fill")
+                                Label("Photo Safari", systemImage: "camera.fill")
                                     .font(.caption2.bold())
-                                if session.progress.explorationCompletions[adventure.id] != nil {
-                                    Text("Postcard collected").font(.caption2)
+                                if session.progress.explorationCompletions[safari.id] != nil {
+                                    Text("Photos collected").font(.caption2)
                                 }
                             } else if !missions.isEmpty {
                                 Text(
@@ -647,7 +681,7 @@ public struct GameRootView: View {
 
         return switch selectedSection {
         case .solarSystem:
-            "Discovery Passport · \(completed) world stamps · \(session.progress.explorationCompletions.count) playground postcards"
+            "Discovery Passport · \(completed) world stamps · \(session.progress.explorationCompletions.count) collections"
         case .technologyLab:
             "Discovery Passport · \(completed) of \(lessons.count) lab stamps"
         }
@@ -655,7 +689,7 @@ public struct GameRootView: View {
 
     private var recommendedLesson: DestinationLesson? {
         if let playground = sectionLessons.first(where: { _, lesson in
-            guard let adventure = ExplorationCatalog.adventure(destinationID: lesson.id) else {
+            guard let adventure = PhotoSafariCatalog.safari(destinationID: lesson.id) else {
                 return false
             }
             return session.progress.explorationCompletions[adventure.id] == nil
@@ -724,6 +758,12 @@ public struct GameRootView: View {
                 return
             }
         #endif
+        if !usesLegacyPlaygrounds, let destination = session.focusedLesson?.id,
+            let safari = PhotoSafariCatalog.safari(destinationID: destination)
+        {
+            openPhotoSafari(safari)
+            return
+        }
         if let destination = session.focusedLesson?.id,
             let adventure = ExplorationCatalog.adventure(destinationID: destination)
         {
@@ -731,6 +771,27 @@ public struct GameRootView: View {
         } else {
             session.confirm()
         }
+    }
+
+    private var usesLegacyPlaygrounds: Bool {
+        #if DEBUG
+            ProcessInfo.processInfo.arguments.contains("--legacy-playgrounds")
+        #else
+            false
+        #endif
+    }
+
+    private func openPhotoSafari(_ safari: PhotoSafari) {
+        photoSafari = PhotoSafariSession(safari: safari, progress: session.progress)
+    }
+
+    private func leavePhotoSafari() {
+        guard let active = photoSafari else { return }
+        active.pause()
+        session.applyExplorationProgress(active.progress)
+        onProgressChanged(active.progress)
+        photoSafari = nil
+        session.returnToWorlds()
     }
 
     private func openPlayground(_ adventure: ExplorationAdventure) {
