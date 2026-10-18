@@ -4,6 +4,7 @@ All notable public changes to Astro Adventure are tracked here.
 
 ## Unreleased
 
+- Replaced the default Mercury, Mars, and Saturn playgrounds with Photo Safaris: two large real-photo choices per clue, free Show me help, narrated age-banded discoveries, and saved photo collections. Earlier playground postcards remain in the passport.
 - Added three interactive missions for every planet: 96 age-banded discovery cards, 216 core question variants, 24 science activities, and separately authored transfer questions.
 - Added eight bundled native NASA video lessons with captions, transcripts, narration, replayable pause-and-quiz checkpoints, and illustrated offline recovery.
 - Added mission passport badges, resumable learning steps, concept-based review, and schema 3 migration that preserves existing stamps.

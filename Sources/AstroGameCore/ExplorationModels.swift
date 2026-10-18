@@ -49,11 +49,14 @@ public struct ExplorationTarget: Codable, Equatable, Identifiable, Sendable {
     public let interaction: ExplorationInteraction
     public let requiredObservations: Set<String>
     public let response: ExplorationText
+    /// A short, self-contained action for a remote control, including its destination.
+    public let guidedTitle: String?
 
     public init(
         id: String, name: String, symbol: String, verb: String,
         position: ExplorationPoint, interaction: ExplorationInteraction,
-        requiredObservations: Set<String> = [], response: ExplorationText
+        requiredObservations: Set<String> = [], response: ExplorationText,
+        guidedTitle: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -63,6 +66,7 @@ public struct ExplorationTarget: Codable, Equatable, Identifiable, Sendable {
         self.interaction = interaction
         self.requiredObservations = requiredObservations
         self.response = response
+        self.guidedTitle = guidedTitle
     }
 }
 
@@ -76,11 +80,12 @@ public struct ExplorationGoal: Codable, Equatable, Identifiable, Sendable {
     public let conceptID: String
     public let explanation: ExplorationText
     public let sourceURL: String
+    public let guidedInstruction: String?
 
     public init(
         id: String, title: String, invitation: ExplorationText, hint: ExplorationText,
         requiredObservations: Set<String>, suggestedTargetID: String, conceptID: String,
-        explanation: ExplorationText, sourceURL: String
+        explanation: ExplorationText, sourceURL: String, guidedInstruction: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -91,6 +96,7 @@ public struct ExplorationGoal: Codable, Equatable, Identifiable, Sendable {
         self.conceptID = conceptID
         self.explanation = explanation
         self.sourceURL = sourceURL
+        self.guidedInstruction = guidedInstruction
     }
 }
 
@@ -165,6 +171,8 @@ public enum ExplorationCommand: Equatable, Sendable {
     case selectTarget(String)
     case moveTarget(ExplorationDirection)
     case activateTarget
+    /// Perform one useful discovery action, retrieving its reusable kit when needed.
+    case performGuidedAction(String)
     case adjustModel(String, by: Int)
     case requestHelp
     case openJournal

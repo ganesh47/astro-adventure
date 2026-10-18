@@ -5,8 +5,10 @@ import SwiftUI
 struct DiscoveryPassportView: View {
     let progress: GameProgress
     let adventures: [ExplorationAdventure]
+    let safaris: [PhotoSafari]
     let lessons: [DestinationLesson]
     let onClose: () -> Void
+    @State private var selectedPhoto: PhotoSafariStop?
 
     var body: some View {
         GeometryReader { geometry in
@@ -28,13 +30,66 @@ struct DiscoveryPassportView: View {
             .frame(maxWidth: 1100)
             .frame(maxWidth: .infinity)
         }
+        .background(Color(red: 0.035, green: 0.055, blue: 0.095).ignoresSafeArea())
+        .preferredColorScheme(.dark)
+        #if os(tvOS)
+            .fullScreenCover(item: $selectedPhoto) { photoDetail($0) }
+        #else
+            .sheet(item: $selectedPhoto) { photoDetail($0) }
+        #endif
+    }
+
+    private func photoDetail(_ stop: PhotoSafariStop) -> some View {
+        VStack(spacing: 20) {
+            if let photo = stop.discoveryPhoto {
+                SpacePhotoImage(photo: photo).frame(maxHeight: .infinity)
+                Text(stop.title).font(.title.bold())
+                Text(stop.fact.text(for: progress.selectedAgeBand)).font(.title3)
+                Text(photo.caption).font(.body)
+                Text(photo.credit).font(.caption)
+            }
+            Button("Back to passport") { selectedPhoto = nil }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("passport.photo.close")
+        }
+        .multilineTextAlignment(.center).padding(36)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(red: 0.035, green: 0.055, blue: 0.095).ignoresSafeArea())
         .preferredColorScheme(.dark)
     }
 
     private func discoveries(compact: Bool) -> some View {
         VStack(alignment: .leading, spacing: compact ? 16 : 28) {
-            Text("Your crew keeps the things you made and noticed.")
+            Text("Keep your space photos and discoveries here.")
                 .font(compact ? .body : .title3).foregroundStyle(.secondary)
+            ForEach(safaris) { safari in
+                if progress.explorationCompletions[safari.id] != nil {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("My \(safari.destinationID.capitalized) space photos").font(
+                            .title2.bold()
+                        )
+                        .accessibilityIdentifier("passport.collection.\(safari.destinationID)")
+                        HStack(spacing: 20) {
+                            ForEach(safari.stops) { stop in
+                                if let photo = stop.discoveryPhoto {
+                                    Button {
+                                        selectedPhoto = stop
+                                    } label: {
+                                        VStack {
+                                            SpacePhotoImage(photo: photo)
+                                                .frame(height: compact ? 100 : 170)
+                                            Text(stop.title).font(.headline)
+                                                .lineLimit(2).multilineTextAlignment(.center)
+                                        }
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .accessibilityIdentifier("passport.photo.\(stop.id)")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             ForEach(adventures) { adventure in
                 if let completion = progress.explorationCompletions[adventure.id] {
                     VStack(alignment: .leading, spacing: 12) {
@@ -53,7 +108,7 @@ struct DiscoveryPassportView: View {
             }
             if progress.explorationCompletions.isEmpty {
                 Label(
-                    "Your first playground postcard is waiting to be made.",
+                    "Your first space-photo collection is waiting to be discovered.",
                     systemImage: "camera.fill"
                 )
                 .font(.headline)

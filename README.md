@@ -17,7 +17,7 @@ The active targets are iPhone, iPad, and Apple TV. The game uses Swift 6, SwiftU
 
 `M0: Native Apple Parity` rebuilds the Mercury, Mars, and Europa proof as a native Apple game:
 
-- Three living playgrounds on Mercury, Mars, and Saturn, with nine connected environmental goals, expressive companion feedback, and optional offline NASA observations.
+- [Photo Safaris](docs/specs/photo-safari.md) on Mercury, Mars, and Saturn: spot familiar things in real NASA images, reveal age-banded facts, and keep three-photo collections. Large remote-friendly choices and free Show me help replace the default tool playgrounds.
 - Three age modes: Junior Explorer (4–6), Space Explorer (7–9), and Mission Scientist (10–12).
 - Shared mission flow: Mission Control welcome, destination selection, narrated discovery cards, picture quizzes, encouraging feedback, and Discovery Passport stamps.
 - Twenty-four interactive planet missions with 96 discovery cards, 216 age-specific core questions, and 24 evidence, classification, and experiment activities.

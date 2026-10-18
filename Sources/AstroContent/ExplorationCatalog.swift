@@ -82,7 +82,8 @@ public enum ExplorationCatalog {
                     "Impacts dig craters and throw material outward. Changing the rock changes the pattern in our simplified model.",
                     "Real impact craters depend on impactor size, speed, composition, and the target. Our two-size toy illustrates a comparison, not a numerical prediction."
                 ),
-                sourceURL: "https://www.nasa.gov/solar-system/asteroid-day-and-impact-craters/"
+                sourceURL: "https://www.nasa.gov/solar-system/asteroid-day-and-impact-craters/",
+                guidedInstruction: "Try each space rock. Watch the marks it makes."
             ),
             ExplorationGoal(
                 id: "mercury-trace-ejecta", title: "Follow the flying rock",
@@ -103,7 +104,8 @@ public enum ExplorationCatalog {
                     "An impact crushes and scatters rock. On Mercury, reflective fragments can make bright rays around a crater.",
                     "Ejecta is material displaced by an impact. Mercury's bright crater rays contain reflective fragmented rock; exposure to the space environment darkens them over time."
                 ),
-                sourceURL: "https://science.nasa.gov/mercury/facts/"
+                sourceURL: "https://science.nasa.gov/mercury/facts/",
+                guidedInstruction: "Follow the bright trail from the crater."
             ),
             ExplorationGoal(
                 id: "mercury-sun-and-shadow", title: "Move the warmth sensor",
@@ -124,7 +126,8 @@ public enum ExplorationCatalog {
                     "Our sensor compares sunlit ground with a permanently shadowed polar crater. Such cold places can preserve ice even on Mercury.",
                     "Permanently shadowed polar crater floors receive no direct sunlight and can preserve water ice. Ordinary temporary shade is different; our sensor shows a qualitative comparison."
                 ),
-                sourceURL: "https://science.nasa.gov/mercury/facts/"
+                sourceURL: "https://science.nasa.gov/mercury/facts/",
+                guidedInstruction: "Test both places. Where is the ground colder?"
             ),
         ],
         targets: [
@@ -137,7 +140,8 @@ public enum ExplorationCatalog {
                     "Plunk! Your model has a small crater.",
                     "The small impact made a crater and scattered material.",
                     "Small model impact recorded. Compare it with the larger pattern."
-                )
+                ),
+                guidedTitle: "Drop small rock"
             ),
             ExplorationTarget(
                 id: "mercury-large-impact", name: "Big space rock", symbol: "circle.inset.filled",
@@ -147,7 +151,8 @@ public enum ExplorationCatalog {
                     "Plunk! This model crater looks bigger.",
                     "The larger model rock made a different crater pattern.",
                     "Large model impact recorded. The toy keeps its comparison qualitative."
-                )
+                ),
+                guidedTitle: "Drop big rock"
             ),
             ExplorationTarget(
                 id: "mercury-ejecta-trail", name: "Bright rock trail", symbol: "sparkles",
@@ -158,7 +163,8 @@ public enum ExplorationCatalog {
                     "You followed the scattered rock back to a crater!",
                     "The trail connects scattered fragments with an impact crater.",
                     "Ejecta traced: the pattern records material displaced by an impact."
-                )
+                ),
+                guidedTitle: "Follow bright trail"
             ),
             ExplorationTarget(
                 id: "mercury-sensor", name: "Portable sensor", symbol: "thermometer.medium",
@@ -179,7 +185,8 @@ public enum ExplorationCatalog {
                     "The sunny spot gives a warm reading.",
                     "Sunlit ground gives the warmer reading in our model.",
                     "Sunlit-site observation recorded. Retrieve the sensor to compare the shadowed site."
-                )
+                ),
+                guidedTitle: "Test sunny ground"
             ),
             ExplorationTarget(
                 id: "mercury-shadow-sensor-site", name: "Dark polar crater",
@@ -191,7 +198,8 @@ public enum ExplorationCatalog {
                     "Brr! This always-shadowed spot is colder.",
                     "The permanently shadowed crater gives a colder model reading.",
                     "Shadow-site observation recorded. This polar cold trap differs from temporary shade."
-                )
+                ),
+                guidedTitle: "Test polar shadow"
             ),
         ],
         postcardTitle: "My crater crew discovery", videoLessonID: "mercury-video"
@@ -225,7 +233,8 @@ public enum ExplorationCatalog {
                     "Rovers combine movement with cameras and other tools. Exploring a site helps scientists choose observations.",
                     "Rover mobility links close measurements to their geological context. Our short route is stylized; real exploration combines navigation and instrument observations."
                 ),
-                sourceURL: "https://science.nasa.gov/mission/msl-curiosity/science/"
+                sourceURL: "https://science.nasa.gov/mission/msl-curiosity/science/",
+                guidedInstruction: "Visit both places with your rover."
             ),
             ExplorationGoal(
                 id: "mars-layered-rock-photo", title: "Uncover a rock story",
@@ -246,7 +255,8 @@ public enum ExplorationCatalog {
                     "Rock layers can record earlier deposits and changes. Your photo preserves their pattern for comparison.",
                     "Layer geometry is one geological observation. Scientists combine images with composition and context to distinguish possible histories; a striped rock alone does not prove a lake."
                 ),
-                sourceURL: "https://science.nasa.gov/mission/msl-curiosity/science/"
+                sourceURL: "https://science.nasa.gov/mission/msl-curiosity/science/",
+                guidedInstruction: "Brush away the dust, then photograph the layers."
             ),
             ExplorationGoal(
                 id: "mars-ancient-water-compare", title: "Try the old river model",
@@ -268,7 +278,9 @@ public enum ExplorationCatalog {
                     "Delta deposits form where flow slows on entering a water body. Martian sedimentary observations support ancient-water interpretations; our toy demonstrates a process, not present-day rivers or evidence of life."
                 ),
                 sourceURL:
-                    "https://science.nasa.gov/photojournal/how-a-delta-forms-where-river-meets-lake/"
+                    "https://science.nasa.gov/photojournal/how-a-delta-forms-where-river-meets-lake/",
+                guidedInstruction:
+                    "Run the ancient river model, then compare its sand with your photo."
             ),
         ],
         targets: [
@@ -280,7 +292,8 @@ public enum ExplorationCatalog {
                     "The rover reached the crater landmark!",
                     "Crater landmark explored. The outcrop is another stop.",
                     "Crater-site context recorded before close rock inspection."
-                )
+                ),
+                guidedTitle: "Visit crater"
             ),
             ExplorationTarget(
                 id: "mars-rock-landmark", name: "Big rock landmark", symbol: "mountain.2.fill",
@@ -290,7 +303,8 @@ public enum ExplorationCatalog {
                     "The rover found the big rock landmark!",
                     "Rock landmark explored. Look for the nearby dusty outcrop.",
                     "Outcrop context recorded. Explore the layered surface next."
-                )
+                ),
+                guidedTitle: "Visit big rock"
             ),
             ExplorationTarget(
                 id: "mars-layered-rock", name: "Dusty layered rock", symbol: "paintbrush.fill",
@@ -301,7 +315,8 @@ public enum ExplorationCatalog {
                     "Swish! Now we can see the rock's layers.",
                     "The model surface is brushed. Its layers are ready to photograph.",
                     "Model surface prepared. Layer geometry is visible for imaging."
-                )
+                ),
+                guidedTitle: "Brush dusty rock"
             ),
             ExplorationTarget(
                 id: "mars-rock-camera", name: "Rock camera", symbol: "camera.fill",
@@ -312,7 +327,8 @@ public enum ExplorationCatalog {
                     "Click! Your rock picture is saved.",
                     "Layer photo saved. Let's compare it with a little model.",
                     "Layer image collected. A process model can help explore possible explanations."
-                )
+                ),
+                guidedTitle: "Take rock photo"
             ),
             ExplorationTarget(
                 id: "mars-water-model", name: "Ancient-water model", symbol: "drop.fill",
@@ -324,7 +340,8 @@ public enum ExplorationCatalog {
                     "Watch the model carry sand and leave a little fan.",
                     "Water and sediment move through the ancient-Mars toy model.",
                     "Model flow illustrates sediment transport and deposition in an ancient-water setting."
-                )
+                ),
+                guidedTitle: "Run ancient river"
             ),
             ExplorationTarget(
                 id: "mars-deposit-compare", name: "Deposit comparison",
@@ -338,7 +355,8 @@ public enum ExplorationCatalog {
                     "The picture and the model help tell a rock story.",
                     "Compare the model's deposits with your photograph of the layers.",
                     "Comparison recorded. Similar patterns suggest hypotheses; additional evidence tests them."
-                )
+                ),
+                guidedTitle: "Compare sand and photo"
             ),
         ],
         postcardTitle: "My rover's rock story", videoLessonID: "mars-video"
@@ -371,7 +389,8 @@ public enum ExplorationCatalog {
                     "The rings are mostly icy particles, with other material too. Many separate pieces together make the ring system.",
                     "Saturn's rings consist largely of water-ice particles with rock and dust. Our sparse model represents a particle system, not a rigid structure or its true scale."
                 ),
-                sourceURL: "https://science.nasa.gov/saturn/facts/"
+                sourceURL: "https://science.nasa.gov/saturn/facts/",
+                guidedInstruction: "Add icy pieces to both paths around Saturn."
             ),
             ExplorationGoal(
                 id: "saturn-watch-orbits", title: "Watch the pieces travel",
@@ -392,7 +411,8 @@ public enum ExplorationCatalog {
                     "Ring particles follow separate orbits. The inner particles move faster; the rings do not turn like a stiff wheel.",
                     "Orbital motion depends on distance from Saturn. Inner ring particles orbit faster than outer particles; our animation preserves that relationship without predicting measured speeds."
                 ),
-                sourceURL: "https://science.nasa.gov/mission/cassini/science/rings/"
+                sourceURL: "https://science.nasa.gov/mission/cassini/science/rings/",
+                guidedInstruction: "Start the model. Watch which pieces travel faster."
             ),
             ExplorationGoal(
                 id: "saturn-view-ring-edge", title: "Peek from the side",
@@ -413,7 +433,8 @@ public enum ExplorationCatalog {
                     "Saturn's main rings are very thin compared with their width. An edge view changes what we see, not whether the rings exist.",
                     "The main rings have a small vertical extent compared with their radial extent. Viewing geometry changes their apparent shape; a narrow appearance does not imply that the particles vanished."
                 ),
-                sourceURL: "https://science.nasa.gov/saturn/facts/"
+                sourceURL: "https://science.nasa.gov/saturn/facts/",
+                guidedInstruction: "Look from the side. How does the ring look now?"
             ),
         ],
         targets: [
@@ -435,7 +456,8 @@ public enum ExplorationCatalog {
                     "Icy pieces joined the near path!",
                     "The inner orbit now has icy particles in our model.",
                     "Inner-orbit particles added. Retrieve the kit to populate the outer orbit."
-                )
+                ),
+                guidedTitle: "Add ice near Saturn"
             ),
             ExplorationTarget(
                 id: "saturn-outer-orbit", name: "Far orbital path", symbol: "circle.dashed",
@@ -445,7 +467,8 @@ public enum ExplorationCatalog {
                     "Icy pieces joined the far path!",
                     "The outer orbit now has icy particles in our model.",
                     "Outer-orbit particles added. Both populated paths support a motion comparison."
-                )
+                ),
+                guidedTitle: "Add ice farther out"
             ),
             ExplorationTarget(
                 id: "saturn-watch-motion", name: "Ring motion control", symbol: "play.circle.fill",
@@ -458,7 +481,8 @@ public enum ExplorationCatalog {
                     "Follow a near piece and a far piece!",
                     "Watch separate orbital paths instead of one turning hoop.",
                     "Motion comparison available. Track the differently moving inner and outer particles."
-                )
+                ),
+                guidedTitle: "Watch icy pieces move"
             ),
             ExplorationTarget(
                 id: "saturn-edge-view", name: "Ring view control", symbol: "view.3d",
@@ -470,7 +494,8 @@ public enum ExplorationCatalog {
                     "Look from another side. The ring is still there!",
                     "Changing the viewpoint changes the ring's apparent shape.",
                     "Viewing geometry changed; the model's ring particles remain present."
-                )
+                ),
+                guidedTitle: "Look from the side"
             ),
         ],
         postcardTitle: "My moving icy rings", videoLessonID: "saturn-video"
