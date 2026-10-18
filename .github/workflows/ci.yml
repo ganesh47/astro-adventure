@@ -37,7 +37,7 @@ jobs:
             -destination "platform=tvOS Simulator,id=$device_id" \
             -derivedDataPath "$RUNNER_TEMP/TVFocusBuild" \
             -resultBundlePath "$RUNNER_TEMP/TVFocus.xcresult" \
-            -only-testing:AstroAdventure-tvOS-UITests/ExplorationPlaygroundTests/testRemoteThreePlaygroundsAndSavedCreation \
+            -only-testing:AstroAdventure-tvOS-UITests/ExplorationPlaygroundTests \
             -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test
       - name: Upload diagnostic evidence
         if: always()

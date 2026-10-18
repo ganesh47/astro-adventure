@@ -23,6 +23,10 @@ public struct ExplorationPlaygroundView: View {
     @State private var pendingDiscovery: ExplorationGoal?
     @State private var acknowledgedFeedback: String?
     @FocusState private var focusedControl: String?
+    #if os(tvOS)
+        @Namespace private var pauseFocusScope
+        @Environment(\.resetFocus) private var resetPauseFocus
+    #endif
 
     public init(
         session: ExplorationSession, videoLessons: [VideoLesson], onLeave: @escaping () -> Void
@@ -797,7 +801,11 @@ public struct ExplorationPlaygroundView: View {
                 }
                 .buttonStyle(PlaygroundActionStyle(highlighted: focusedControl == "resume"))
                 .focused($focusedControl, equals: "resume").accessibilityIdentifier(
-                    "playground.resume")
+                    "playground.resume"
+                )
+                #if os(tvOS)
+                    .prefersDefaultFocus(in: pauseFocusScope)
+                #endif
                 #if os(tvOS)
                     HStack(spacing: 20) {
                         Button("Help", systemImage: "lightbulb.fill") {
@@ -833,6 +841,15 @@ public struct ExplorationPlaygroundView: View {
                 Button("Worlds", action: leave).buttonStyle(.bordered).accessibilityIdentifier(
                     "playground.worlds")
             }
+            #if os(tvOS)
+                .focusScope(pauseFocusScope)
+                .task {
+                    // Evaluate the native default after the pause controls join the focus graph.
+                    await Task.yield()
+                    guard !Task.isCancelled, session.overlay == .pause else { return }
+                    resetPauseFocus(in: pauseFocusScope)
+                }
+            #endif
         case .help:
             modal(compact: compact) {
                 Label("Try this idea", systemImage: "lightbulb.fill").font(.title2.bold())
