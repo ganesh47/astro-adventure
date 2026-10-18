@@ -43,8 +43,13 @@ final class ExplorationPlaygroundTests: XCTestCase {
         app.launchArguments = ["--ui-testing", "--legacy-playgrounds"]
         app.launch()
         select("playground.resume")
-        XCTAssertTrue(
-            app.buttons["playground.resume"].hasFocus, "Restored play focuses explicit resume")
+        XCTAssertEqual(
+            XCTWaiter.wait(
+                for: [
+                    XCTNSPredicateExpectation(
+                        predicate: NSPredicate(format: "hasFocus == true"),
+                        object: app.buttons["playground.resume"])
+                ], timeout: 5), .completed, "Restored play focuses explicit resume")
         select("playground.resume")
         XCTAssertFalse(app.buttons["playground.target.mercury-sunlit-sensor-site"].exists)
         XCTAssertTrue(app.buttons["playground.target.mercury-shadow-sensor-site"].hasFocus)

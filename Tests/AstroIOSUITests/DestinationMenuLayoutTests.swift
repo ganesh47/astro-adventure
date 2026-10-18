@@ -53,7 +53,7 @@ final class DestinationMenuLayoutTests: XCTestCase {
             let row = app.scrollViews["destination.selector"]
             XCTAssertTrue(row.waitForExistence(timeout: 10))
             XCTAssertTrue(app.buttons["destination.sun"].label.contains("Stamped"))
-            XCTAssertTrue(app.buttons["destination.mercury"].label.contains("Living playground"))
+            XCTAssertTrue(app.buttons["destination.mercury"].label.contains("Photo Safari"))
             XCTAssertTrue(app.buttons["destination.venus"].label.contains("0/3 missions"))
             revealCard("destination.mercury", in: row)
             capture("\(orientation) \(name) world cards")

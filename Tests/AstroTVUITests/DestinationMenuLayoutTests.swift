@@ -23,14 +23,14 @@ final class DestinationMenuLayoutTests: XCTestCase {
         app.launch()
     }
 
-    func testStampedWorldAndPlaygroundCardsFitTheFocusedViewport() {
+    func testStampedWorldAndPhotoSafariCardsFitTheFocusedViewport() {
         focus("adventure.begin")
         remote.press(.select)
         XCTAssertTrue(app.buttons["review.start"].waitForExistence(timeout: 10))
         let row = app.scrollViews["destination.selector"]
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["destination.sun"].label.contains("Stamped"))
-        XCTAssertTrue(app.buttons["destination.mercury"].label.contains("Living playground"))
+        XCTAssertTrue(app.buttons["destination.mercury"].label.contains("Photo Safari"))
         XCTAssertTrue(app.buttons["destination.venus"].label.contains("0/3 missions"))
         capture("World menu with stamps and memory action")
 
