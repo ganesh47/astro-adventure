@@ -287,6 +287,136 @@ final class PlanetMissionSessionTests: XCTestCase {
         XCTAssertEqual(session.questionAttemptCount, 1)
     }
 
+    func testMissionQuestionSelectionAndBudgetSurviveWorldsAndStartMenuRelaunch() throws {
+        var instant = 0.0
+        let session = makeSession(monotonicTime: { instant })
+        session.selectPlanetMission(id: "mercury-observe")
+        session.confirm()
+        session.confirm()
+        XCTAssertEqual(session.phase, .missionQuestion)
+        let question = try XCTUnwrap(session.currentQuiz)
+        let interaction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: interaction)
+        session.selectQuizAnswer(at: 0, interaction: interaction)
+        instant = 20
+        session.returnToWorlds()
+        session.back()
+        XCTAssertEqual(session.phase, .missionPrompt)
+        let bytes = try JSONEncoder().encode(session.progress)
+        let saved = try JSONDecoder().decode(GameProgress.self, from: bytes)
+        let presentation = try XCTUnwrap(saved.questionPresentation)
+        XCTAssertEqual(presentation.challenge.remaining, 70)
+        instant = 10_000
+        let restored = makeSession(progress: saved, monotonicTime: { instant })
+        restored.confirm()
+        restored.back()
+        XCTAssertEqual(restored.phase, .missionPrompt)
+        XCTAssertEqual(restored.progress.questionPresentation, presentation)
+        restored.resumeSavedAdventure()
+        XCTAssertEqual(restored.phase, .missionQuestion)
+        XCTAssertEqual(restored.currentQuiz, question)
+        XCTAssertEqual(restored.selectedQuizChoiceID, "yes")
+        XCTAssertEqual(restored.questionClock.remaining, 70)
+        XCTAssertEqual(restored.questionClock.mode, .challenge)
+        XCTAssertTrue(restored.questionClock.pauseReasons.contains(.awaitingResume))
+        XCTAssertEqual(restored.questionAttemptCount, 0)
+        XCTAssertTrue(restored.progress.questionEvidence.isEmpty)
+        let resumed = restored.questionInteraction
+        restored.resumeQuestionChallenge(interaction: resumed)
+        instant = 10_010
+        restored.confirmSelectedQuizAnswer(interaction: resumed, now: firstDay)
+        XCTAssertEqual(restored.phase, .missionStepFeedback)
+        XCTAssertEqual(restored.questionAttemptCount, 1)
+        XCTAssertEqual(restored.questionClock.remaining, 60)
+        XCTAssertEqual(restored.progress.questionEvidence.count, 1)
+    }
+
+    func testVideoReplayKeepsPreselectionAndElapsedBudgetThroughRelaunchDuringReplay() throws {
+        var instant = 0.0
+        let session = makeSession(monotonicTime: { instant })
+        session.startVideoLesson(id: "mercury-video")
+        session.videoSeek(to: 10)
+        let question = try XCTUnwrap(session.currentQuiz)
+        let interaction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: interaction)
+        session.selectQuizAnswer(at: 0, interaction: interaction)
+        instant = 20
+        session.replayVideoClue()
+        XCTAssertEqual(session.phase, .videoPlayback)
+        XCTAssertEqual(session.selectedQuizChoiceID, "yes")
+        XCTAssertEqual(session.questionClock.remaining, 70)
+        XCTAssertNotEqual(session.questionInteraction, interaction)
+        instant = 100
+        session.videoSeek(to: 10)
+        XCTAssertEqual(session.phase, .videoCheckpoint)
+        XCTAssertEqual(session.currentQuiz, question)
+        XCTAssertEqual(session.selectedQuizChoiceID, "yes")
+        XCTAssertEqual(session.questionClock.remaining, 70)
+        let afterReplay = session.progress
+        session.confirmSelectedQuizAnswer(interaction: interaction, now: firstDay)
+        XCTAssertEqual(session.progress, afterReplay)
+        instant = 110
+        session.replayVideoClue()
+        XCTAssertEqual(session.questionClock.remaining, 60)
+        let bytes = try JSONEncoder().encode(session.progress)
+        let saved = try JSONDecoder().decode(GameProgress.self, from: bytes)
+        let presentation = try XCTUnwrap(saved.questionPresentation)
+        instant = 10_000
+        let restored = makeSession(progress: saved, monotonicTime: { instant })
+        restored.resumeSavedAdventure()
+        XCTAssertEqual(restored.phase, .videoPlayback)
+        XCTAssertFalse(restored.isVideoPlaying)
+        XCTAssertEqual(restored.videoPlaybackSeconds, 0)
+        XCTAssertEqual(restored.progress.questionPresentation, presentation)
+        instant = 20_000
+        restored.videoSeek(to: 10)
+        XCTAssertEqual(restored.phase, .videoCheckpoint)
+        XCTAssertEqual(restored.currentQuiz, question)
+        XCTAssertEqual(restored.selectedQuizChoiceID, "yes")
+        XCTAssertEqual(restored.questionClock.mode, .challenge)
+        XCTAssertEqual(restored.questionClock.remaining, 60)
+        XCTAssertTrue(restored.questionClock.pauseReasons.contains(.awaitingResume))
+        XCTAssertEqual(restored.questionAttemptCount, 0)
+        XCTAssertTrue(restored.progress.questionEvidence.isEmpty)
+        let resumed = restored.questionInteraction
+        restored.resumeQuestionChallenge(interaction: resumed)
+        restored.confirmSelectedQuizAnswer(interaction: resumed, now: firstDay)
+        XCTAssertEqual(restored.phase, .videoFeedback)
+        XCTAssertEqual(restored.questionAttemptCount, 1)
+        XCTAssertTrue(try XCTUnwrap(restored.progress.questionEvidence.last).usedHelp)
+        XCTAssertTrue(try XCTUnwrap(restored.progress.questionEvidence.last).usedChallenge)
+    }
+
+    func testVideoReplayRejectsOldQuestionInputAndCancelledNarrationCallbacks() {
+        let session = makeSession()
+        session.startVideoLesson(id: "mercury-video")
+        session.videoSeek(to: 10)
+        XCTAssertEqual(session.phase, .videoCheckpoint)
+        let originalInteraction = session.questionInteraction
+        session.chooseQuestionMode(.challenge, interaction: originalInteraction)
+        session.setQuestionPaused(.narration, isPaused: true, interaction: originalInteraction)
+        session.replayVideoClue()
+        XCTAssertEqual(session.phase, .videoPlayback)
+        XCTAssertNotEqual(session.questionInteraction, originalInteraction)
+        XCTAssertFalse(session.questionClock.pauseReasons.contains(.narration))
+        session.videoSeek(to: 10)
+        XCTAssertEqual(session.phase, .videoCheckpoint)
+        XCTAssertNotEqual(session.questionInteraction, originalInteraction)
+        let returnedProgress = session.progress
+        session.selectQuizAnswer(at: 0, interaction: originalInteraction)
+        session.confirmSelectedQuizAnswer(interaction: originalInteraction, now: firstDay)
+        session.setQuestionPaused(.narration, isPaused: true, interaction: originalInteraction)
+        XCTAssertEqual(session.progress, returnedProgress)
+        XCTAssertNil(session.selectedQuizChoiceID)
+        XCTAssertEqual(session.questionAttemptCount, 0)
+        XCTAssertTrue(session.questionClock.isRunning)
+        let currentInteraction = session.questionInteraction
+        session.selectQuizAnswer(at: 0, interaction: currentInteraction)
+        session.confirmSelectedQuizAnswer(interaction: currentInteraction, now: firstDay)
+        XCTAssertEqual(session.phase, .videoFeedback)
+        XCTAssertEqual(session.questionAttemptCount, 1)
+    }
+
     func testSeekCannotSkipQuestionsAndFinalSegmentCompletesVideoWithoutPlanetStamp() throws {
         let session = makeSession()
         session.startVideoLesson(id: "mercury-video")
@@ -464,12 +594,13 @@ final class PlanetMissionSessionTests: XCTestCase {
 
     private func makeSession(
         progress: GameProgress? = nil, revision: Int = 1,
-        family: ScienceActivityFamily = .classify
+        family: ScienceActivityFamily = .classify,
+        monotonicTime: @escaping () -> Double = { ProcessInfo.processInfo.systemUptime }
     ) -> MissionSession {
         MissionSession(
             lessons: [Self.lesson], progress: progress,
             planetMissions: [Self.mission(revision: revision, family: family)],
-            videoLessons: [Self.video]
+            videoLessons: [Self.video], monotonicTime: monotonicTime
         )
     }
 

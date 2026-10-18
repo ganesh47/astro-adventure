@@ -42,6 +42,12 @@ public actor JSONProgressStore: ProgressStoring {
     }
 
     public func save(_ progress: GameProgress) async throws {
+        try validateSupportedSchema(progress)
+        // Validate even when a caller skipped load, or another process changed the file.
+        // Failed decoding must never turn a future/corrupt log into a fresh empty log.
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            _ = try JSONDecoder().decode(GameProgress.self, from: Data(contentsOf: fileURL))
+        }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(progress)
@@ -105,6 +111,7 @@ public actor PreferencesProgressStore: ProgressStoring {
         if let data = defaults.data(forKey: key) {
             return bounded(try JSONDecoder().decode(GameProgress.self, from: data))
         }
+        if defaults.object(forKey: key) != nil { throw ProgressStorageError.invalidPayload }
         guard let legacyFileURL,
             FileManager.default.fileExists(atPath: legacyFileURL.path)
         else { return nil }
@@ -117,6 +124,13 @@ public actor PreferencesProgressStore: ProgressStoring {
     }
 
     public func save(_ progress: GameProgress) async throws {
+        try validateSupportedSchema(progress)
+        if let existing = defaults.object(forKey: key) {
+            guard let data = existing as? Data else { throw ProgressStorageError.invalidPayload }
+            _ = try JSONDecoder().decode(GameProgress.self, from: data)
+        } else if let legacyFileURL, FileManager.default.fileExists(atPath: legacyFileURL.path) {
+            _ = try JSONDecoder().decode(GameProgress.self, from: Data(contentsOf: legacyFileURL))
+        }
         let data = try JSONEncoder().encode(bounded(progress))
         guard data.count <= Self.maximumEncodedBytes else {
             throw ProgressStorageError.logTooLarge
@@ -142,12 +156,23 @@ public actor PreferencesProgressStore: ProgressStoring {
 public enum ProgressStorageError: LocalizedError {
     case unavailable
     case logTooLarge
+    case invalidPayload
 
     public var errorDescription: String? {
         switch self {
         case .unavailable: "The space log storage is unavailable."
         case .logTooLarge: "The space log is too large to store on this device."
+        case .invalidPayload: "The space log could not be read. Its original data is still safe."
         }
+    }
+}
+
+private func validateSupportedSchema(_ progress: GameProgress) throws {
+    guard (1...GameProgress.currentSchemaVersion).contains(progress.schemaVersion) else {
+        throw GameProgressDecodingError.unsupportedSchemaVersion(progress.schemaVersion)
+    }
+    if let cursor = progress.bonusQuizRun, !cursor.isValid {
+        throw GameProgressDecodingError.invalidBonusRound
     }
 }
 

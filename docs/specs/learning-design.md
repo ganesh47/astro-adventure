@@ -25,7 +25,7 @@ Astro Adventure teaches space science through discovery, retrieval, and low-pres
 - Write for ages 8-12 unless a screen is explicitly parent, teacher, or contributor facing.
 - Use one science idea per prompt.
 - Keep necessary vocabulary, but define it in context.
-- Avoid streaks, timers, leaderboards, loss framing, and manipulative reward loops.
+- Keep practice untimed by default. An optional generous challenge may add a visible clock only when players choose it; expiry offers more time or calm practice, without a wrong answer, lost progress, or speed-based rewards. Avoid leaderboards, loss framing, and manipulative reward loops.
 - Mark unsourced facts as `source needed` until reviewed.
 
 ## Validation
@@ -33,3 +33,4 @@ Astro Adventure teaches space science through discovery, retrieval, and low-pres
 - Each quiz item has a source URL, age band, prompt, choices, answer, feedback, and review status.
 - Each mission includes at least one retrieval moment and one later revisit.
 - Accessibility review confirms the loop can be completed with controller-only input and without audio, vibration, color-only cues, or timers.
+- Picture proposals must represent each answer's meaning independently of correctness and answer position. Follow `docs/specs/picture-questions-and-gravity.md` for authored diagrams, challenge pauses, and evidence preservation.

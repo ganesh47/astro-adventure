@@ -254,9 +254,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "What makes a rocket move forward?",
                 choices: [
-                    .init(id: "tech_thrust", text: "Fast exhaust pushes backward"),
-                    .init(id: "tech_solar_pull", text: "Sunlight pulls it upward"),
-                    .init(id: "tech_cloud_bounce", text: "Clouds bounce it into space"),
+                    .init(
+                        id: "tech_thrust", text: "Fast exhaust pushes backward",
+                        picture: .init(
+                            scene: .rocket, label: "Fast exhaust pushes backward",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_solar_pull", text: "Sunlight pulls it upward",
+                        picture: .init(
+                            scene: .sunlightLift, label: "Sunlight pulls it upward",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_cloud_bounce", text: "Clouds bounce it into space",
+                        picture: .init(
+                            scene: .cloudBounce, label: "Clouds bounce it into space",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_thrust",
                 success: "Thrust master! Backward exhaust creates a forward push.",
@@ -267,9 +285,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "What is the payload on a launch vehicle?",
                 choices: [
-                    .init(id: "tech_payload", text: "The mission carried to space"),
-                    .init(id: "tech_launch_smoke", text: "The cloud beside the launch pad"),
-                    .init(id: "tech_empty_tank", text: "Only an empty fuel tank"),
+                    .init(
+                        id: "tech_payload", text: "The mission carried to space",
+                        picture: .init(
+                            scene: .spacecraft, label: "The mission carried to space",
+                            detail: "A spacecraft or satellite in the rocket cargo compartment"
+                        )
+                    ),
+                    .init(
+                        id: "tech_launch_smoke", text: "The cloud beside the launch pad",
+                        picture: .init(
+                            scene: .launchCloud, label: "The cloud beside the launch pad",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_empty_tank", text: "Only an empty fuel tank",
+                        picture: .init(
+                            scene: .emptyTank, label: "Only an empty fuel tank",
+                            detail: "An empty fuel tank, shown as a cargo proposal"
+                        )
+                    ),
                 ],
                 correct: "tech_payload",
                 success:
@@ -281,9 +317,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "Why do used rocket stages separate?",
                 choices: [
-                    .init(id: "tech_stage_mass", text: "To stop carrying empty mass"),
-                    .init(id: "tech_stage_color", text: "To change the rocket’s color"),
-                    .init(id: "tech_stage_sound", text: "To make the rocket quieter"),
+                    .init(
+                        id: "tech_stage_mass", text: "To stop carrying empty mass",
+                        picture: .init(
+                            scene: .rocket, label: "To stop carrying empty mass",
+                            detail: "Empty lower stage separates from the upper rocket"
+                        )
+                    ),
+                    .init(
+                        id: "tech_stage_color", text: "To change the rocket’s color",
+                        picture: .init(
+                            scene: .paint, label: "To change the rocket’s color",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_stage_sound", text: "To make the rocket quieter",
+                        picture: .init(
+                            scene: .sound, label: "To make the rocket quieter",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_stage_mass",
                 success:
@@ -295,9 +349,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "About how long does the ISS take to orbit Earth?",
                 choices: [
-                    .init(id: "tech_iss_90", text: "About 90 minutes"),
-                    .init(id: "tech_iss_90_days", text: "About 90 days"),
-                    .init(id: "tech_iss_9_years", text: "About 9 years"),
+                    .init(
+                        id: "tech_iss_90", text: "About 90 minutes",
+                        picture: .init(
+                            scene: .duration, label: "About 90 minutes",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_iss_90_days", text: "About 90 days",
+                        picture: .init(
+                            scene: .duration, label: "About 90 days",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_iss_9_years", text: "About 9 years",
+                        picture: .init(
+                            scene: .duration, label: "About 9 years",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_iss_90",
                 success: "Orbit expert! The ISS races around Earth in about 90 minutes.",
@@ -308,9 +380,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "Which two things do most artificial satellites need?",
                 choices: [
-                    .init(id: "tech_satellite_parts", text: "A power source and an antenna"),
-                    .init(id: "tech_satellite_wings", text: "Feathers and flapping wings"),
-                    .init(id: "tech_satellite_sails", text: "A sailboat mast and anchor"),
+                    .init(
+                        id: "tech_satellite_parts", text: "A power source and an antenna",
+                        picture: .init(
+                            scene: .solarPanels, label: "A power source and an antenna",
+                            detail: "Power panels and a communication antenna"
+                        )
+                    ),
+                    .init(
+                        id: "tech_satellite_wings", text: "Feathers and flapping wings",
+                        picture: .init(
+                            scene: .wingedSatellite, label: "Feathers and flapping wings",
+                            detail: "An imagined satellite with feathers and wings"
+                        )
+                    ),
+                    .init(
+                        id: "tech_satellite_sails", text: "A sailboat mast and anchor",
+                        picture: .init(
+                            scene: .sailingSatellite, label: "A sailboat mast and anchor",
+                            detail: "An imagined satellite with a sailboat mast and anchor"
+                        )
+                    ),
                 ],
                 correct: "tech_satellite_parts",
                 success:
@@ -322,9 +412,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "Why is a spacesuit like a tiny spacecraft?",
                 choices: [
-                    .init(id: "tech_suit_life", text: "It provides life support and protection"),
-                    .init(id: "tech_suit_wings", text: "It has wings for flying to planets"),
-                    .init(id: "tech_suit_room", text: "It has bedrooms for a whole crew"),
+                    .init(
+                        id: "tech_suit_life", text: "It provides life support and protection",
+                        picture: .init(
+                            scene: .spacesuit, label: "It provides life support and protection",
+                            detail: "Oxygen, cooling, pressure and protection for one astronaut"
+                        )
+                    ),
+                    .init(
+                        id: "tech_suit_wings", text: "It has wings for flying to planets",
+                        picture: .init(
+                            scene: .wingedSuit, label: "It has wings for flying to planets",
+                            detail: "An imagined spacesuit with flying wings"
+                        )
+                    ),
+                    .init(
+                        id: "tech_suit_room", text: "It has bedrooms for a whole crew",
+                        picture: .init(
+                            scene: .crewSuit, label: "It has bedrooms for a whole crew",
+                            detail: "An imagined suit with rooms for a crew"
+                        )
+                    ),
                 ],
                 correct: "tech_suit_life",
                 success: "Spacewalk star! A suit brings pressure, oxygen, cooling, and protection.",
@@ -335,9 +443,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "What does a radio telescope collect?",
                 choices: [
-                    .init(id: "tech_radio_waves", text: "Invisible radio waves from space"),
-                    .init(id: "tech_radio_rain", text: "Raindrops from nearby clouds"),
-                    .init(id: "tech_radio_rocks", text: "Rocks that fall beside the dish"),
+                    .init(
+                        id: "tech_radio_waves", text: "Invisible radio waves from space",
+                        picture: .init(
+                            scene: .signal, label: "Invisible radio waves from space",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_radio_rain", text: "Raindrops from nearby clouds",
+                        picture: .init(
+                            scene: .rain, label: "Raindrops from nearby clouds",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_radio_rocks", text: "Rocks that fall beside the dish",
+                        picture: .init(
+                            scene: .fallingRocks, label: "Rocks that fall beside the dish",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_radio_waves",
                 success:
@@ -349,9 +475,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "Why does the Deep Space Network use three sites around Earth?",
                 choices: [
-                    .init(id: "tech_dsn_rotation", text: "To stay in touch as Earth rotates"),
-                    .init(id: "tech_dsn_weather", text: "To make identical weather everywhere"),
-                    .init(id: "tech_dsn_gravity", text: "To turn off Earth’s gravity"),
+                    .init(
+                        id: "tech_dsn_rotation", text: "To stay in touch as Earth rotates",
+                        picture: .init(
+                            scene: .spin, label: "To stay in touch as Earth rotates",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_dsn_weather", text: "To make identical weather everywhere",
+                        picture: .init(
+                            scene: .sameWeather, label: "To make identical weather everywhere",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_dsn_gravity", text: "To turn off Earth’s gravity",
+                        picture: .init(
+                            scene: .noGravity, label: "To turn off Earth’s gravity",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_dsn_rotation",
                 success: "Signal secured! Another antenna site can take over as Earth turns.",
@@ -362,9 +506,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "What is a big advantage of a telescope in space?",
                 choices: [
-                    .init(id: "tech_telescope_air", text: "It observes above Earth’s atmosphere"),
-                    .init(id: "tech_telescope_near", text: "It moves every star closer"),
-                    .init(id: "tech_telescope_day", text: "It makes a day last one year"),
+                    .init(
+                        id: "tech_telescope_air", text: "It observes above Earth’s atmosphere",
+                        picture: .init(
+                            scene: .telescope, label: "It observes above Earth’s atmosphere",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_telescope_near", text: "It moves every star closer",
+                        picture: .init(
+                            scene: .movingStars, label: "It moves every star closer",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_telescope_day", text: "It makes a day last one year",
+                        picture: .init(
+                            scene: .duration, label: "It makes a day last one year",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_telescope_air",
                 success:
@@ -376,9 +538,27 @@ enum SpaceTechnologyCatalog {
                 ageBand: ageBand,
                 prompt: "Which robot can travel across another world’s surface?",
                 choices: [
-                    .init(id: "tech_rover_drive", text: "A rover"),
-                    .init(id: "tech_orbiter_stay", text: "An orbiter parked on the ground"),
-                    .init(id: "tech_dish_drive", text: "A radio dish"),
+                    .init(
+                        id: "tech_rover_drive", text: "A rover",
+                        picture: .init(
+                            scene: .robot, label: "A rover",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_orbiter_stay", text: "An orbiter parked on the ground",
+                        picture: .init(
+                            scene: .spacecraft, label: "An orbiter parked on the ground",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
+                    .init(
+                        id: "tech_dish_drive", text: "A radio dish",
+                        picture: .init(
+                            scene: .antenna, label: "A radio dish",
+                            detail: "Schematic space-technology answer idea"
+                        )
+                    ),
                 ],
                 correct: "tech_rover_drive",
                 success: "Rover ready! Wheels let a rover investigate more than one spot.",

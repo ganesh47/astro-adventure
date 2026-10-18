@@ -1,5 +1,19 @@
 import Foundation
 
+public enum GameProgressDecodingError: LocalizedError, Equatable, Sendable {
+    case unsupportedSchemaVersion(Int)
+    case invalidBonusRound
+
+    public var errorDescription: String? {
+        switch self {
+        case .unsupportedSchemaVersion:
+            "This space log uses an unsupported version. Its original data is still safe."
+        case .invalidBonusRound:
+            "The saved picture round could not be read. Its original data is still safe."
+        }
+    }
+}
+
 public struct DestinationProgress: Codable, Equatable, Sendable {
     public var isScanned: Bool
     public var isQuizCompleted: Bool
@@ -162,7 +176,7 @@ public struct AdventureRunCursor: Codable, Equatable, Sendable {
 }
 
 public struct GameProgress: Codable, Equatable, Sendable {
-    public static let currentSchemaVersion = 4
+    public static let currentSchemaVersion = 5
 
     public var schemaVersion: Int
     public var missionID: String
@@ -175,6 +189,9 @@ public struct GameProgress: Codable, Equatable, Sendable {
     public var videoCompletions: [String: MissionCompletion]
     public var concepts: [String: ConceptProgress]
     public var activeRun: AdventureRunCursor?
+    public var bonusQuizRun: BonusQuizRunCursor?
+    public var questionPresentation: QuestionPresentationSnapshot?
+    public var questionEvidence: [QuestionAnswerEvidence]
     public var explorationCompletions: [String: ExplorationCompletion]
     public var explorationCursor: ExplorationCursor?
 
@@ -192,6 +209,9 @@ public struct GameProgress: Codable, Equatable, Sendable {
         videoCompletions: [String: MissionCompletion] = [:],
         concepts: [String: ConceptProgress] = [:],
         activeRun: AdventureRunCursor? = nil,
+        bonusQuizRun: BonusQuizRunCursor? = nil,
+        questionPresentation: QuestionPresentationSnapshot? = nil,
+        questionEvidence: [QuestionAnswerEvidence] = [],
         explorationCompletions: [String: ExplorationCompletion] = [:],
         explorationCursor: ExplorationCursor? = nil
     ) {
@@ -206,6 +226,9 @@ public struct GameProgress: Codable, Equatable, Sendable {
         self.videoCompletions = videoCompletions
         self.concepts = concepts
         self.activeRun = activeRun
+        self.bonusQuizRun = bonusQuizRun
+        self.questionPresentation = questionPresentation
+        self.questionEvidence = Array(questionEvidence.suffix(64))
         self.explorationCompletions = explorationCompletions
         self.explorationCursor = explorationCursor
     }
@@ -214,11 +237,18 @@ public struct GameProgress: Codable, Equatable, Sendable {
         case schemaVersion, missionID, selectedAgeBand, destinations
         case totalScore, bestStreak, leaderboard
         case missionCompletions, videoCompletions, concepts, activeRun
+        case bonusQuizRun, questionPresentation, questionEvidence
         case explorationCompletions, explorationCursor
     }
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        let storedVersion =
+            values.contains(.schemaVersion)
+            ? try values.decode(Int.self, forKey: .schemaVersion) : 1
+        guard (1...Self.currentSchemaVersion).contains(storedVersion) else {
+            throw GameProgressDecodingError.unsupportedSchemaVersion(storedVersion)
+        }
         schemaVersion = Self.currentSchemaVersion
         missionID = try values.decodeIfPresent(String.self, forKey: .missionID) ?? "signal-sweep"
         selectedAgeBand =
@@ -240,6 +270,15 @@ public struct GameProgress: Codable, Equatable, Sendable {
         concepts =
             try values.decodeIfPresent([String: ConceptProgress].self, forKey: .concepts) ?? [:]
         activeRun = try values.decodeIfPresent(AdventureRunCursor.self, forKey: .activeRun)
+        bonusQuizRun = try values.decodeIfPresent(BonusQuizRunCursor.self, forKey: .bonusQuizRun)
+        if let bonusQuizRun, !bonusQuizRun.isValid {
+            throw GameProgressDecodingError.invalidBonusRound
+        }
+        questionPresentation = try values.decodeIfPresent(
+            QuestionPresentationSnapshot.self, forKey: .questionPresentation)
+        questionEvidence = Array(
+            (try values.decodeIfPresent([QuestionAnswerEvidence].self, forKey: .questionEvidence)
+                ?? []).suffix(64))
         explorationCompletions =
             try values.decodeIfPresent(
                 [String: ExplorationCompletion].self, forKey: .explorationCompletions)

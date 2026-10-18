@@ -104,12 +104,17 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: Tests/AstroIOSUITests
+      - path: Tests/SharedUITests
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ganesh47.astroadventure.ios-uitests
         GENERATE_INFOPLIST_FILE: true
     dependencies:
       - target: AstroAdventure-iOS
+      - package: AstroAdventureKit
+        product: AstroContent
+      - package: AstroAdventureKit
+        product: AstroGameCore
 
   AstroAdventure-tvOS-UITests:
     type: bundle.ui-testing
@@ -117,12 +122,17 @@ targets:
     deploymentTarget: "26.0"
     sources:
       - path: Tests/AstroTVUITests
+      - path: Tests/SharedUITests
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ganesh47.astroadventure.uitests
         GENERATE_INFOPLIST_FILE: true
     dependencies:
       - target: AstroAdventure-tvOS
+      - package: AstroAdventureKit
+        product: AstroContent
+      - package: AstroAdventureKit
+        product: AstroGameCore
 
 schemes:
   AstroAdventure-iOS:

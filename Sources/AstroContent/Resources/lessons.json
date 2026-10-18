@@ -17,11 +17,22 @@
           "choices": [
             {
               "id": "sun",
-              "text": "It is close to the Sun."
+              "text": "It is close to the Sun.",
+              "picture": {
+                "scene": "innerOrbit",
+                "label": "It is close to the Sun.",
+                "detail": "Illustrated answer idea for Mercury"
+              }
             },
             {
               "id": "ice",
-              "text": "It is an icy moon."
+              "text": "It is an icy moon.",
+              "picture": {
+                "scene": "jupiterMoon",
+                "label": "It is an icy moon.",
+                "detail": "Illustrated answer idea for Mercury",
+                "tone": "blueWhite"
+              }
             }
           ],
           "correctChoiceID": "sun",
@@ -37,15 +48,31 @@
           "choices": [
             {
               "id": "sun",
-              "text": "It is the closest planet to the Sun."
+              "text": "It is the closest planet to the Sun.",
+              "picture": {
+                "scene": "innerOrbit",
+                "label": "It is the closest planet to the Sun.",
+                "detail": "Illustrated answer idea for Mercury"
+              }
             },
             {
               "id": "rust",
-              "text": "It is famous for red rusty dust."
+              "text": "It is famous for red rusty dust.",
+              "picture": {
+                "scene": "rust",
+                "label": "It is famous for red rusty dust.",
+                "detail": "Illustrated answer idea for Mercury"
+              }
             },
             {
               "id": "ice",
-              "text": "It is an icy moon of Jupiter."
+              "text": "It is an icy moon of Jupiter.",
+              "picture": {
+                "scene": "jupiterMoon",
+                "label": "It is an icy moon of Jupiter.",
+                "detail": "Illustrated answer idea for Mercury",
+                "tone": "blueWhite"
+              }
             }
           ],
           "correctChoiceID": "sun",
@@ -61,15 +88,31 @@
           "choices": [
             {
               "id": "short_orbit",
-              "text": "It is the innermost planet and has a short orbit."
+              "text": "It is the innermost planet and has a short orbit.",
+              "picture": {
+                "scene": "innerOrbit",
+                "label": "It is the innermost planet and has a short orbit.",
+                "detail": "Illustrated answer idea for Mercury"
+              }
             },
             {
               "id": "oxidized_dust",
-              "text": "Iron oxidation makes its surface look red."
+              "text": "Iron oxidation makes its surface look red.",
+              "picture": {
+                "scene": "rust",
+                "label": "Iron oxidation makes its surface look red.",
+                "detail": "Illustrated answer idea for Mercury"
+              }
             },
             {
               "id": "jupiter_moon",
-              "text": "It is an ice-covered moon orbiting Jupiter."
+              "text": "It is an ice-covered moon orbiting Jupiter.",
+              "picture": {
+                "scene": "jupiterMoon",
+                "label": "It is an ice-covered moon orbiting Jupiter.",
+                "detail": "Illustrated answer idea for Mercury",
+                "tone": "blueWhite"
+              }
             }
           ],
           "correctChoiceID": "short_orbit",
@@ -98,11 +141,22 @@
           "choices": [
             {
               "id": "red",
-              "text": "Red and rusty"
+              "text": "Red and rusty",
+              "picture": {
+                "scene": "rust",
+                "label": "Red and rusty",
+                "detail": "Illustrated answer idea for Mars",
+                "tone": "rust"
+              }
             },
             {
               "id": "icy",
-              "text": "White and icy"
+              "text": "White and icy",
+              "picture": {
+                "scene": "ice",
+                "label": "White and icy",
+                "detail": "Illustrated answer idea for Mars"
+              }
             }
           ],
           "correctChoiceID": "red",
@@ -118,15 +172,32 @@
           "choices": [
             {
               "id": "rust",
-              "text": "Rusty iron is mixed into its dust."
+              "text": "Rusty iron is mixed into its dust.",
+              "picture": {
+                "scene": "rust",
+                "label": "Rusty iron is mixed into its dust.",
+                "detail": "Illustrated answer idea for Mars",
+                "tone": "rust"
+              }
             },
             {
               "id": "plants",
-              "text": "It is covered in red plants."
+              "text": "It is covered in red plants.",
+              "picture": {
+                "scene": "forest",
+                "label": "It is covered in red plants.",
+                "detail": "Illustrated answer idea for Mars",
+                "tone": "rust"
+              }
             },
             {
               "id": "jupiter",
-              "text": "Jupiter shines red light on it."
+              "text": "Jupiter shines red light on it.",
+              "picture": {
+                "scene": "reflection",
+                "label": "Jupiter shines red light on it.",
+                "detail": "Illustrated answer idea for Mars"
+              }
             }
           ],
           "correctChoiceID": "rust",
@@ -142,15 +213,32 @@
           "choices": [
             {
               "id": "oxidation",
-              "text": "Iron-bearing minerals oxidize in the soil and dust."
+              "text": "Iron-bearing minerals oxidize in the soil and dust.",
+              "picture": {
+                "scene": "rust",
+                "label": "Iron-bearing minerals oxidize in the soil and dust.",
+                "detail": "Illustrated answer idea for Mars",
+                "tone": "rust"
+              }
             },
             {
               "id": "vegetation",
-              "text": "Seasonal vegetation changes the surface color."
+              "text": "Seasonal vegetation changes the surface color.",
+              "picture": {
+                "scene": "forest",
+                "label": "Seasonal vegetation changes the surface color.",
+                "detail": "Illustrated answer idea for Mars",
+                "tone": "rust"
+              }
             },
             {
               "id": "reflected_light",
-              "text": "Red light reflected from Jupiter colors the surface."
+              "text": "Red light reflected from Jupiter colors the surface.",
+              "picture": {
+                "scene": "reflection",
+                "label": "Red light reflected from Jupiter colors the surface.",
+                "detail": "Illustrated answer idea for Mars"
+              }
             }
           ],
           "correctChoiceID": "oxidation",
@@ -179,11 +267,22 @@
           "choices": [
             {
               "id": "icy_moon",
-              "text": "An icy moon"
+              "text": "An icy moon",
+              "picture": {
+                "scene": "jupiterMoon",
+                "label": "An icy moon",
+                "detail": "Illustrated answer idea for Europa",
+                "tone": "blueWhite"
+              }
             },
             {
               "id": "red_planet",
-              "text": "A red planet"
+              "text": "A red planet",
+              "picture": {
+                "scene": "rust",
+                "label": "A red planet",
+                "detail": "Illustrated answer idea for Europa"
+              }
             }
           ],
           "correctChoiceID": "icy_moon",
@@ -199,15 +298,31 @@
           "choices": [
             {
               "id": "icy_moon",
-              "text": "An icy moon of Jupiter"
+              "text": "An icy moon of Jupiter",
+              "picture": {
+                "scene": "jupiterMoon",
+                "label": "An icy moon of Jupiter",
+                "detail": "Illustrated answer idea for Europa",
+                "tone": "blueWhite"
+              }
             },
             {
               "id": "small_planet",
-              "text": "The smallest planet near the Sun"
+              "text": "The smallest planet near the Sun",
+              "picture": {
+                "scene": "innerOrbit",
+                "label": "The smallest planet near the Sun",
+                "detail": "Illustrated answer idea for Europa"
+              }
             },
             {
               "id": "red_planet",
-              "text": "A red planet with rusty dust"
+              "text": "A red planet with rusty dust",
+              "picture": {
+                "scene": "rust",
+                "label": "A red planet with rusty dust",
+                "detail": "Illustrated answer idea for Europa"
+              }
             }
           ],
           "correctChoiceID": "icy_moon",
@@ -223,15 +338,31 @@
           "choices": [
             {
               "id": "ocean_moon",
-              "text": "An icy Jovian moon with evidence for a subsurface ocean"
+              "text": "An icy Jovian moon with evidence for a subsurface ocean",
+              "picture": {
+                "scene": "subsurfaceOcean",
+                "label": "An icy Jovian moon with evidence for a subsurface ocean",
+                "detail": "Illustrated answer idea for Europa",
+                "tone": "blueWhite"
+              }
             },
             {
               "id": "inner_planet",
-              "text": "An inner planet with the shortest orbit around the Sun"
+              "text": "An inner planet with the shortest orbit around the Sun",
+              "picture": {
+                "scene": "innerOrbit",
+                "label": "An inner planet with the shortest orbit around the Sun",
+                "detail": "Illustrated answer idea for Europa"
+              }
             },
             {
               "id": "oxidized_planet",
-              "text": "A planet colored by oxidized iron-rich dust"
+              "text": "A planet colored by oxidized iron-rich dust",
+              "picture": {
+                "scene": "rust",
+                "label": "A planet colored by oxidized iron-rich dust",
+                "detail": "Illustrated answer idea for Europa"
+              }
             }
           ],
           "correctChoiceID": "ocean_moon",

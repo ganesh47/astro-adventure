@@ -17,7 +17,7 @@ final class ExplorationProgressTests: XCTestCase {
         object.removeValue(forKey: "explorationCursor")
         let migrated = try JSONDecoder().decode(
             GameProgress.self, from: JSONSerialization.data(withJSONObject: object))
-        XCTAssertEqual(migrated.schemaVersion, 4)
+        XCTAssertEqual(migrated.schemaVersion, GameProgress.currentSchemaVersion)
         XCTAssertEqual(migrated.destinations, old.destinations)
         XCTAssertEqual(migrated.missionCompletions, old.missionCompletions)
         XCTAssertEqual(migrated.videoCompletions, old.videoCompletions)

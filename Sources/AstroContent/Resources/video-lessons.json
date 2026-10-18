@@ -66,11 +66,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A ball of water"
+                  "text": "A ball of water",
+                  "picture": {
+                    "scene": "waterSphere",
+                    "label": "A ball of water",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A rocky planet"
+                  "text": "A rocky planet",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "A rocky planet",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets",
+                    "tone": "gray"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -83,15 +94,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A planet covered by an ocean"
+                  "text": "A planet covered by an ocean",
+                  "picture": {
+                    "scene": "waterSphere",
+                    "label": "A planet covered by an ocean",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A gas giant with rings"
+                  "text": "A gas giant with rings",
+                  "picture": {
+                    "scene": "gasWorld",
+                    "label": "A gas giant with rings",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A small rocky planet with craters"
+                  "text": "A small rocky planet with craters",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "A small rocky planet with craters",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets",
+                    "tone": "gray"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -104,15 +131,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A global liquid-water ocean"
+                  "text": "A global liquid-water ocean",
+                  "picture": {
+                    "scene": "waterSphere",
+                    "label": "A global liquid-water ocean",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A deep gas atmosphere without a rocky exterior"
+                  "text": "A deep gas atmosphere without a rocky exterior",
+                  "picture": {
+                    "scene": "gasWorld",
+                    "label": "A deep gas atmosphere without a rocky exterior",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A solid, cratered rocky surface"
+                  "text": "A solid, cratered rocky surface",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "A solid, cratered rocky surface",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets",
+                    "tone": "gray"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -127,11 +170,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A ball of water"
+                  "text": "A ball of water",
+                  "picture": {
+                    "scene": "waterSphere",
+                    "label": "A ball of water",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A rocky planet"
+                  "text": "A rocky planet",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "A rocky planet",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets",
+                    "tone": "gray"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -144,15 +198,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A planet covered by an ocean"
+                  "text": "A planet covered by an ocean",
+                  "picture": {
+                    "scene": "waterSphere",
+                    "label": "A planet covered by an ocean",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A gas giant with rings"
+                  "text": "A gas giant with rings",
+                  "picture": {
+                    "scene": "gasWorld",
+                    "label": "A gas giant with rings",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A small rocky planet with craters"
+                  "text": "A small rocky planet with craters",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "A small rocky planet with craters",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets",
+                    "tone": "gray"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -165,15 +235,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A global liquid-water ocean"
+                  "text": "A global liquid-water ocean",
+                  "picture": {
+                    "scene": "waterSphere",
+                    "label": "A global liquid-water ocean",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A deep gas atmosphere without a rocky exterior"
+                  "text": "A deep gas atmosphere without a rocky exterior",
+                  "picture": {
+                    "scene": "gasWorld",
+                    "label": "A deep gas atmosphere without a rocky exterior",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A solid, cratered rocky surface"
+                  "text": "A solid, cratered rocky surface",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "A solid, cratered rocky surface",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets",
+                    "tone": "gray"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -202,11 +288,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "In cold shadows"
+                  "text": "In cold shadows",
+                  "picture": {
+                    "scene": "shadow",
+                    "label": "In cold shadows",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "In bright sunshine"
+                  "text": "In bright sunshine",
+                  "picture": {
+                    "scene": "sunlitPlain",
+                    "label": "In bright sunshine",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -219,15 +315,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Ice grows in hot sunlight"
+                  "text": "Ice grows in hot sunlight",
+                  "picture": {
+                    "scene": "sunlightGrowsIce",
+                    "label": "Ice grows in hot sunlight",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Deep craters remain in shadow"
+                  "text": "Deep craters remain in shadow",
+                  "picture": {
+                    "scene": "shadow",
+                    "label": "Deep craters remain in shadow",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Every part of Mercury stays frozen"
+                  "text": "Every part of Mercury stays frozen",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "Every part of Mercury stays frozen",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -240,15 +351,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Strong daylight continuously cools the ice"
+                  "text": "Strong daylight continuously cools the ice",
+                  "picture": {
+                    "scene": "sunlightCoolsIce",
+                    "label": "Strong daylight continuously cools the ice",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Permanent shade limits solar heating"
+                  "text": "Permanent shade limits solar heating",
+                  "picture": {
+                    "scene": "shadow",
+                    "label": "Permanent shade limits solar heating",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "The entire planet has low temperatures"
+                  "text": "The entire planet has low temperatures",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "The entire planet has low temperatures",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -263,11 +389,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "In cold shadows"
+                  "text": "In cold shadows",
+                  "picture": {
+                    "scene": "shadow",
+                    "label": "In cold shadows",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "In bright sunshine"
+                  "text": "In bright sunshine",
+                  "picture": {
+                    "scene": "sunlitPlain",
+                    "label": "In bright sunshine",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -280,15 +416,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Ice grows in hot sunlight"
+                  "text": "Ice grows in hot sunlight",
+                  "picture": {
+                    "scene": "sunlightGrowsIce",
+                    "label": "Ice grows in hot sunlight",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Deep craters remain in shadow"
+                  "text": "Deep craters remain in shadow",
+                  "picture": {
+                    "scene": "shadow",
+                    "label": "Deep craters remain in shadow",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Every part of Mercury stays frozen"
+                  "text": "Every part of Mercury stays frozen",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "Every part of Mercury stays frozen",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -301,15 +452,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Strong daylight continuously cools the ice"
+                  "text": "Strong daylight continuously cools the ice",
+                  "picture": {
+                    "scene": "sunlightCoolsIce",
+                    "label": "Strong daylight continuously cools the ice",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Permanent shade limits solar heating"
+                  "text": "Permanent shade limits solar heating",
+                  "picture": {
+                    "scene": "shadow",
+                    "label": "Permanent shade limits solar heating",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "The entire planet has low temperatures"
+                  "text": "The entire planet has low temperatures",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "The entire planet has low temperatures",
+                    "detail": "Schematic answer idea; Mercury's Rocky Secrets"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -445,11 +611,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A blanket of snow"
+                  "text": "A blanket of snow",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "A blanket of snow",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Thick clouds"
+                  "text": "Thick clouds",
+                  "picture": {
+                    "scene": "clouds",
+                    "label": "Thick clouds",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds",
+                    "tone": "cream"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -462,15 +639,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A layer of solid ice"
+                  "text": "A layer of solid ice",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "A layer of solid ice",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Its forests"
+                  "text": "Its forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Its forests",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Its thick cloud deck"
+                  "text": "Its thick cloud deck",
+                  "picture": {
+                    "scene": "clouds",
+                    "label": "Its thick cloud deck",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds",
+                    "tone": "cream"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -483,15 +676,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A global layer of frozen water"
+                  "text": "A global layer of frozen water",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "A global layer of frozen water",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A dense global forest"
+                  "text": "A dense global forest",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "A dense global forest",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "An opaque global cloud deck"
+                  "text": "An opaque global cloud deck",
+                  "picture": {
+                    "scene": "clouds",
+                    "label": "An opaque global cloud deck",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds",
+                    "tone": "cream"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -506,11 +715,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A blanket of snow"
+                  "text": "A blanket of snow",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "A blanket of snow",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Thick clouds"
+                  "text": "Thick clouds",
+                  "picture": {
+                    "scene": "clouds",
+                    "label": "Thick clouds",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds",
+                    "tone": "cream"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -523,15 +743,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A layer of solid ice"
+                  "text": "A layer of solid ice",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "A layer of solid ice",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Its forests"
+                  "text": "Its forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Its forests",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Its thick cloud deck"
+                  "text": "Its thick cloud deck",
+                  "picture": {
+                    "scene": "clouds",
+                    "label": "Its thick cloud deck",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds",
+                    "tone": "cream"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -544,15 +780,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A global layer of frozen water"
+                  "text": "A global layer of frozen water",
+                  "picture": {
+                    "scene": "ice",
+                    "label": "A global layer of frozen water",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A dense global forest"
+                  "text": "A dense global forest",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "A dense global forest",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "An opaque global cloud deck"
+                  "text": "An opaque global cloud deck",
+                  "picture": {
+                    "scene": "clouds",
+                    "label": "An opaque global cloud deck",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds",
+                    "tone": "cream"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -581,11 +833,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Radar"
+                  "text": "Radar",
+                  "picture": {
+                    "scene": "signal",
+                    "label": "Radar",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A flashlight"
+                  "text": "A flashlight",
+                  "picture": {
+                    "scene": "lamp",
+                    "label": "A flashlight",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -598,15 +860,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "A digging tool"
+                  "text": "A digging tool",
+                  "picture": {
+                    "scene": "tools",
+                    "label": "A digging tool",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Radar"
+                  "text": "Radar",
+                  "picture": {
+                    "scene": "signal",
+                    "label": "Radar",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A normal flashlight"
+                  "text": "A normal flashlight",
+                  "picture": {
+                    "scene": "lamp",
+                    "label": "A normal flashlight",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -619,15 +896,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "A mechanical digging tool"
+                  "text": "A mechanical digging tool",
+                  "picture": {
+                    "scene": "tools",
+                    "label": "A mechanical digging tool",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Radar"
+                  "text": "Radar",
+                  "picture": {
+                    "scene": "signal",
+                    "label": "Radar",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A visible-light flashlight"
+                  "text": "A visible-light flashlight",
+                  "picture": {
+                    "scene": "lamp",
+                    "label": "A visible-light flashlight",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -642,11 +934,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Radar"
+                  "text": "Radar",
+                  "picture": {
+                    "scene": "signal",
+                    "label": "Radar",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A flashlight"
+                  "text": "A flashlight",
+                  "picture": {
+                    "scene": "lamp",
+                    "label": "A flashlight",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -659,15 +961,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "A digging tool"
+                  "text": "A digging tool",
+                  "picture": {
+                    "scene": "tools",
+                    "label": "A digging tool",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Radar"
+                  "text": "Radar",
+                  "picture": {
+                    "scene": "signal",
+                    "label": "Radar",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A normal flashlight"
+                  "text": "A normal flashlight",
+                  "picture": {
+                    "scene": "lamp",
+                    "label": "A normal flashlight",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -680,15 +997,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "A mechanical digging tool"
+                  "text": "A mechanical digging tool",
+                  "picture": {
+                    "scene": "tools",
+                    "label": "A mechanical digging tool",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Radar"
+                  "text": "Radar",
+                  "picture": {
+                    "scene": "signal",
+                    "label": "Radar",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A visible-light flashlight"
+                  "text": "A visible-light flashlight",
+                  "picture": {
+                    "scene": "lamp",
+                    "label": "A visible-light flashlight",
+                    "detail": "Schematic answer idea; Venus: Peek Behind the Clouds"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -824,11 +1156,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "The Sun turns off"
+                  "text": "The Sun turns off",
+                  "picture": {
+                    "scene": "darkSun",
+                    "label": "The Sun turns off",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Earth spins"
+                  "text": "Earth spins",
+                  "picture": {
+                    "scene": "spin",
+                    "label": "Earth spins",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -841,15 +1184,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "The Sun switches off every night"
+                  "text": "The Sun switches off every night",
+                  "picture": {
+                    "scene": "darkSun",
+                    "label": "The Sun switches off every night",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Clouds create every night"
+                  "text": "Clouds create every night",
+                  "picture": {
+                    "scene": "cloudNight",
+                    "label": "Clouds create every night",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Earth rotates"
+                  "text": "Earth rotates",
+                  "picture": {
+                    "scene": "spin",
+                    "label": "Earth rotates",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -862,15 +1221,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "The Sun stops producing light at night"
+                  "text": "The Sun stops producing light at night",
+                  "picture": {
+                    "scene": "darkSun",
+                    "label": "The Sun stops producing light at night",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "The atmosphere blocks all sunlight at regular intervals"
+                  "text": "The atmosphere blocks all sunlight at regular intervals",
+                  "picture": {
+                    "scene": "cloudNight",
+                    "label": "The atmosphere blocks all sunlight at regular intervals",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Earth's rotation changes exposure to sunlight"
+                  "text": "Earth's rotation changes exposure to sunlight",
+                  "picture": {
+                    "scene": "spin",
+                    "label": "Earth's rotation changes exposure to sunlight",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -885,11 +1260,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "The Sun turns off"
+                  "text": "The Sun turns off",
+                  "picture": {
+                    "scene": "darkSun",
+                    "label": "The Sun turns off",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Earth spins"
+                  "text": "Earth spins",
+                  "picture": {
+                    "scene": "spin",
+                    "label": "Earth spins",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -902,15 +1288,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "The Sun switches off every night"
+                  "text": "The Sun switches off every night",
+                  "picture": {
+                    "scene": "darkSun",
+                    "label": "The Sun switches off every night",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Clouds create every night"
+                  "text": "Clouds create every night",
+                  "picture": {
+                    "scene": "cloudNight",
+                    "label": "Clouds create every night",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Earth rotates"
+                  "text": "Earth rotates",
+                  "picture": {
+                    "scene": "spin",
+                    "label": "Earth rotates",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -923,15 +1325,31 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "The Sun stops producing light at night"
+                  "text": "The Sun stops producing light at night",
+                  "picture": {
+                    "scene": "darkSun",
+                    "label": "The Sun stops producing light at night",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "The atmosphere blocks all sunlight at regular intervals"
+                  "text": "The atmosphere blocks all sunlight at regular intervals",
+                  "picture": {
+                    "scene": "cloudNight",
+                    "label": "The atmosphere blocks all sunlight at regular intervals",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Earth's rotation changes exposure to sunlight"
+                  "text": "Earth's rotation changes exposure to sunlight",
+                  "picture": {
+                    "scene": "spin",
+                    "label": "Earth's rotation changes exposure to sunlight",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -960,11 +1378,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Ocean"
+                  "text": "Ocean",
+                  "picture": {
+                    "scene": "ocean",
+                    "label": "Ocean",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Land"
+                  "text": "Land",
+                  "picture": {
+                    "scene": "land",
+                    "label": "Land",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -977,15 +1405,36 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "No ocean at all"
+                  "text": "No ocean at all",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "No ocean at all",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.0,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "About 71 percent"
+                  "text": "About 71 percent",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "About 71 percent",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.71,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "About 10 percent"
+                  "text": "About 10 percent",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "About 10 percent",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.1,
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -998,15 +1447,36 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Earth has no liquid-water oceans"
+                  "text": "Earth has no liquid-water oceans",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "Earth has no liquid-water oceans",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.0,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Oceans cover about 71 percent of the surface"
+                  "text": "Oceans cover about 71 percent of the surface",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "Oceans cover about 71 percent of the surface",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.71,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Oceans cover only about 10 percent"
+                  "text": "Oceans cover only about 10 percent",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "Oceans cover only about 10 percent",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.1,
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1021,11 +1491,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Ocean"
+                  "text": "Ocean",
+                  "picture": {
+                    "scene": "ocean",
+                    "label": "Ocean",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Land"
+                  "text": "Land",
+                  "picture": {
+                    "scene": "land",
+                    "label": "Land",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1038,15 +1518,36 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "No ocean at all"
+                  "text": "No ocean at all",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "No ocean at all",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.0,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "About 71 percent"
+                  "text": "About 71 percent",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "About 71 percent",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.71,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "About 10 percent"
+                  "text": "About 10 percent",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "About 10 percent",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.1,
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1059,15 +1560,36 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Earth has no liquid-water oceans"
+                  "text": "Earth has no liquid-water oceans",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "Earth has no liquid-water oceans",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.0,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Oceans cover about 71 percent of the surface"
+                  "text": "Oceans cover about 71 percent of the surface",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "Oceans cover about 71 percent of the surface",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.71,
+                    "tone": "blueWhite"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Oceans cover only about 10 percent"
+                  "text": "Oceans cover only about 10 percent",
+                  "picture": {
+                    "scene": "waterCoverage",
+                    "label": "Oceans cover only about 10 percent",
+                    "detail": "Schematic answer idea; Earth: Our Moving Blue Home",
+                    "fraction": 0.1,
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1203,11 +1725,23 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Red trees"
+                  "text": "Red trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Red trees",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Rusty minerals"
+                  "text": "Rusty minerals",
+                  "picture": {
+                    "scene": "rust",
+                    "label": "Rusty minerals",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1220,15 +1754,33 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Red forests"
+                  "text": "Red forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Red forests",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A red liquid ocean"
+                  "text": "A red liquid ocean",
+                  "picture": {
+                    "scene": "redLiquidOcean",
+                    "label": "A red liquid ocean",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Iron-bearing rusty minerals"
+                  "text": "Iron-bearing rusty minerals",
+                  "picture": {
+                    "scene": "rust",
+                    "label": "Iron-bearing rusty minerals",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1241,15 +1793,33 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A global red forest"
+                  "text": "A global red forest",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "A global red forest",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A global red-water ocean"
+                  "text": "A global red-water ocean",
+                  "picture": {
+                    "scene": "redLiquidOcean",
+                    "label": "A global red-water ocean",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Oxidized iron minerals"
+                  "text": "Oxidized iron minerals",
+                  "picture": {
+                    "scene": "rust",
+                    "label": "Oxidized iron minerals",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1264,11 +1834,23 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Red trees"
+                  "text": "Red trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Red trees",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Rusty minerals"
+                  "text": "Rusty minerals",
+                  "picture": {
+                    "scene": "rust",
+                    "label": "Rusty minerals",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1281,15 +1863,33 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Red forests"
+                  "text": "Red forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Red forests",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A red liquid ocean"
+                  "text": "A red liquid ocean",
+                  "picture": {
+                    "scene": "redLiquidOcean",
+                    "label": "A red liquid ocean",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Iron-bearing rusty minerals"
+                  "text": "Iron-bearing rusty minerals",
+                  "picture": {
+                    "scene": "rust",
+                    "label": "Iron-bearing rusty minerals",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1302,15 +1902,33 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A global red forest"
+                  "text": "A global red forest",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "A global red forest",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A global red-water ocean"
+                  "text": "A global red-water ocean",
+                  "picture": {
+                    "scene": "redLiquidOcean",
+                    "label": "A global red-water ocean",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Oxidized iron minerals"
+                  "text": "Oxidized iron minerals",
+                  "picture": {
+                    "scene": "rust",
+                    "label": "Oxidized iron minerals",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers",
+                    "tone": "rust"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1339,11 +1957,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "A huge volcano"
+                  "text": "A huge volcano",
+                  "picture": {
+                    "scene": "volcano",
+                    "label": "A huge volcano",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A tiny lake"
+                  "text": "A tiny lake",
+                  "picture": {
+                    "scene": "pond",
+                    "label": "A tiny lake",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1356,15 +1984,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "A rover's wheel"
+                  "text": "A rover's wheel",
+                  "picture": {
+                    "scene": "robot",
+                    "label": "A rover's wheel",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Olympus Mons"
+                  "text": "Olympus Mons",
+                  "picture": {
+                    "scene": "volcano",
+                    "label": "Olympus Mons",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A tiny pond"
+                  "text": "A tiny pond",
+                  "picture": {
+                    "scene": "pond",
+                    "label": "A tiny pond",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1377,15 +2020,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "An orbiting spacecraft"
+                  "text": "An orbiting spacecraft",
+                  "picture": {
+                    "scene": "spacecraft",
+                    "label": "An orbiting spacecraft",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A vast shield volcano"
+                  "text": "A vast shield volcano",
+                  "picture": {
+                    "scene": "volcano",
+                    "label": "A vast shield volcano",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A small liquid-water lake"
+                  "text": "A small liquid-water lake",
+                  "picture": {
+                    "scene": "pond",
+                    "label": "A small liquid-water lake",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1400,11 +2058,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "A huge volcano"
+                  "text": "A huge volcano",
+                  "picture": {
+                    "scene": "volcano",
+                    "label": "A huge volcano",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A tiny lake"
+                  "text": "A tiny lake",
+                  "picture": {
+                    "scene": "pond",
+                    "label": "A tiny lake",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1417,15 +2085,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "A rover's wheel"
+                  "text": "A rover's wheel",
+                  "picture": {
+                    "scene": "robot",
+                    "label": "A rover's wheel",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Olympus Mons"
+                  "text": "Olympus Mons",
+                  "picture": {
+                    "scene": "volcano",
+                    "label": "Olympus Mons",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A tiny pond"
+                  "text": "A tiny pond",
+                  "picture": {
+                    "scene": "pond",
+                    "label": "A tiny pond",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1438,15 +2121,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "An orbiting spacecraft"
+                  "text": "An orbiting spacecraft",
+                  "picture": {
+                    "scene": "spacecraft",
+                    "label": "An orbiting spacecraft",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A vast shield volcano"
+                  "text": "A vast shield volcano",
+                  "picture": {
+                    "scene": "volcano",
+                    "label": "A vast shield volcano",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A small liquid-water lake"
+                  "text": "A small liquid-water lake",
+                  "picture": {
+                    "scene": "pond",
+                    "label": "A small liquid-water lake",
+                    "detail": "Schematic answer idea; Mars: Mountains and Robot Explorers"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1582,11 +2280,21 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Paint"
+                  "text": "Paint",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Paint",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Clouds"
+                  "text": "Clouds",
+                  "picture": {
+                    "scene": "jupiterCloudBands",
+                    "label": "Clouds",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1599,15 +2307,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Painted rock walls"
+                  "text": "Painted rock walls",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Painted rock walls",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Forests"
+                  "text": "Forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Forests",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Different cloud regions"
+                  "text": "Different cloud regions",
+                  "picture": {
+                    "scene": "jupiterCloudBands",
+                    "label": "Different cloud regions",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1620,15 +2343,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Painted patterns on a solid surface"
+                  "text": "Painted patterns on a solid surface",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Painted patterns on a solid surface",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Parallel forests"
+                  "text": "Parallel forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Parallel forests",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Cloud regions shaped by atmospheric winds"
+                  "text": "Cloud regions shaped by atmospheric winds",
+                  "picture": {
+                    "scene": "jupiterCloudBands",
+                    "label": "Cloud regions shaped by atmospheric winds",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1643,11 +2381,21 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Paint"
+                  "text": "Paint",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Paint",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Clouds"
+                  "text": "Clouds",
+                  "picture": {
+                    "scene": "jupiterCloudBands",
+                    "label": "Clouds",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1660,15 +2408,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Painted rock walls"
+                  "text": "Painted rock walls",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Painted rock walls",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Forests"
+                  "text": "Forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Forests",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Different cloud regions"
+                  "text": "Different cloud regions",
+                  "picture": {
+                    "scene": "jupiterCloudBands",
+                    "label": "Different cloud regions",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1681,15 +2444,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Painted patterns on a solid surface"
+                  "text": "Painted patterns on a solid surface",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Painted patterns on a solid surface",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Parallel forests"
+                  "text": "Parallel forests",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Parallel forests",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Cloud regions shaped by atmospheric winds"
+                  "text": "Cloud regions shaped by atmospheric winds",
+                  "picture": {
+                    "scene": "jupiterCloudBands",
+                    "label": "Cloud regions shaped by atmospheric winds",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1718,11 +2496,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "A huge storm"
+                  "text": "A huge storm",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "A huge storm",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A red mountain"
+                  "text": "A red mountain",
+                  "picture": {
+                    "scene": "mountain",
+                    "label": "A red mountain",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1735,15 +2523,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "An enormous city"
+                  "text": "An enormous city",
+                  "picture": {
+                    "scene": "city",
+                    "label": "An enormous city",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A long-lived atmospheric storm"
+                  "text": "A long-lived atmospheric storm",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "A long-lived atmospheric storm",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A mountain made of red rock"
+                  "text": "A mountain made of red rock",
+                  "picture": {
+                    "scene": "mountain",
+                    "label": "A mountain made of red rock",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1756,15 +2559,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "An artificial settlement"
+                  "text": "An artificial settlement",
+                  "picture": {
+                    "scene": "city",
+                    "label": "An artificial settlement",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "An atmospheric vortex"
+                  "text": "An atmospheric vortex",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "An atmospheric vortex",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A mountain on a solid exterior"
+                  "text": "A mountain on a solid exterior",
+                  "picture": {
+                    "scene": "mountain",
+                    "label": "A mountain on a solid exterior",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1779,11 +2597,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "A huge storm"
+                  "text": "A huge storm",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "A huge storm",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A red mountain"
+                  "text": "A red mountain",
+                  "picture": {
+                    "scene": "mountain",
+                    "label": "A red mountain",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1796,15 +2624,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "An enormous city"
+                  "text": "An enormous city",
+                  "picture": {
+                    "scene": "city",
+                    "label": "An enormous city",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A long-lived atmospheric storm"
+                  "text": "A long-lived atmospheric storm",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "A long-lived atmospheric storm",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A mountain made of red rock"
+                  "text": "A mountain made of red rock",
+                  "picture": {
+                    "scene": "mountain",
+                    "label": "A mountain made of red rock",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1817,15 +2660,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "An artificial settlement"
+                  "text": "An artificial settlement",
+                  "picture": {
+                    "scene": "city",
+                    "label": "An artificial settlement",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "An atmospheric vortex"
+                  "text": "An atmospheric vortex",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "An atmospheric vortex",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A mountain on a solid exterior"
+                  "text": "A mountain on a solid exterior",
+                  "picture": {
+                    "scene": "mountain",
+                    "label": "A mountain on a solid exterior",
+                    "detail": "Schematic answer idea; Jupiter: A Giant Weather World"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1961,11 +2819,21 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Three"
+                  "text": "Three",
+                  "picture": {
+                    "scene": "triangle",
+                    "label": "Three",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Six"
+                  "text": "Six",
+                  "picture": {
+                    "scene": "hexagon",
+                    "label": "Six",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1978,15 +2846,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A three-sided triangle"
+                  "text": "A three-sided triangle",
+                  "picture": {
+                    "scene": "triangle",
+                    "label": "A three-sided triangle",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A straight two-ended line"
+                  "text": "A straight two-ended line",
+                  "picture": {
+                    "scene": "line",
+                    "label": "A straight two-ended line",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A six-sided pattern"
+                  "text": "A six-sided pattern",
+                  "picture": {
+                    "scene": "hexagon",
+                    "label": "A six-sided pattern",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -1999,15 +2882,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A three-sided solid mountain"
+                  "text": "A three-sided solid mountain",
+                  "picture": {
+                    "scene": "triangle",
+                    "label": "A three-sided solid mountain",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A two-ended straight surface groove"
+                  "text": "A two-ended straight surface groove",
+                  "picture": {
+                    "scene": "line",
+                    "label": "A two-ended straight surface groove",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A six-sided atmospheric pattern"
+                  "text": "A six-sided atmospheric pattern",
+                  "picture": {
+                    "scene": "hexagon",
+                    "label": "A six-sided atmospheric pattern",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2022,11 +2920,21 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Three"
+                  "text": "Three",
+                  "picture": {
+                    "scene": "triangle",
+                    "label": "Three",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Six"
+                  "text": "Six",
+                  "picture": {
+                    "scene": "hexagon",
+                    "label": "Six",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2039,15 +2947,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A three-sided triangle"
+                  "text": "A three-sided triangle",
+                  "picture": {
+                    "scene": "triangle",
+                    "label": "A three-sided triangle",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A straight two-ended line"
+                  "text": "A straight two-ended line",
+                  "picture": {
+                    "scene": "line",
+                    "label": "A straight two-ended line",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A six-sided pattern"
+                  "text": "A six-sided pattern",
+                  "picture": {
+                    "scene": "hexagon",
+                    "label": "A six-sided pattern",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2060,15 +2983,30 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "A three-sided solid mountain"
+                  "text": "A three-sided solid mountain",
+                  "picture": {
+                    "scene": "triangle",
+                    "label": "A three-sided solid mountain",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A two-ended straight surface groove"
+                  "text": "A two-ended straight surface groove",
+                  "picture": {
+                    "scene": "line",
+                    "label": "A two-ended straight surface groove",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "A six-sided atmospheric pattern"
+                  "text": "A six-sided atmospheric pattern",
+                  "picture": {
+                    "scene": "hexagon",
+                    "label": "A six-sided atmospheric pattern",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2097,11 +3035,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Many pieces"
+                  "text": "Many pieces",
+                  "picture": {
+                    "scene": "rings",
+                    "label": "Many pieces",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "One solid hoop"
+                  "text": "One solid hoop",
+                  "picture": {
+                    "scene": "solidRing",
+                    "label": "One solid hoop",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2114,15 +3062,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Paint on the planet's clouds"
+                  "text": "Paint on the planet's clouds",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Paint on the planet's clouds",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Many orbiting ice and rock particles"
+                  "text": "Many orbiting ice and rock particles",
+                  "picture": {
+                    "scene": "rings",
+                    "label": "Many orbiting ice and rock particles",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "One solid sheet of metal"
+                  "text": "One solid sheet of metal",
+                  "picture": {
+                    "scene": "solidRing",
+                    "label": "One solid sheet of metal",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2135,15 +3098,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Colored paint attached to the atmosphere"
+                  "text": "Colored paint attached to the atmosphere",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Colored paint attached to the atmosphere",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Countless independently orbiting particles, mostly ice"
+                  "text": "Countless independently orbiting particles, mostly ice",
+                  "picture": {
+                    "scene": "rings",
+                    "label": "Countless independently orbiting particles, mostly ice",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A single rigid metal hoop"
+                  "text": "A single rigid metal hoop",
+                  "picture": {
+                    "scene": "solidRing",
+                    "label": "A single rigid metal hoop",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2158,11 +3136,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Many pieces"
+                  "text": "Many pieces",
+                  "picture": {
+                    "scene": "rings",
+                    "label": "Many pieces",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "One solid hoop"
+                  "text": "One solid hoop",
+                  "picture": {
+                    "scene": "solidRing",
+                    "label": "One solid hoop",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2175,15 +3163,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Paint on the planet's clouds"
+                  "text": "Paint on the planet's clouds",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Paint on the planet's clouds",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Many orbiting ice and rock particles"
+                  "text": "Many orbiting ice and rock particles",
+                  "picture": {
+                    "scene": "rings",
+                    "label": "Many orbiting ice and rock particles",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "One solid sheet of metal"
+                  "text": "One solid sheet of metal",
+                  "picture": {
+                    "scene": "solidRing",
+                    "label": "One solid sheet of metal",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2196,15 +3199,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Colored paint attached to the atmosphere"
+                  "text": "Colored paint attached to the atmosphere",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Colored paint attached to the atmosphere",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Countless independently orbiting particles, mostly ice"
+                  "text": "Countless independently orbiting particles, mostly ice",
+                  "picture": {
+                    "scene": "rings",
+                    "label": "Countless independently orbiting particles, mostly ice",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "A single rigid metal hoop"
+                  "text": "A single rigid metal hoop",
+                  "picture": {
+                    "scene": "solidRing",
+                    "label": "A single rigid metal hoop",
+                    "detail": "Schematic answer idea; Saturn: Rings and a Six-Sided Surprise"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2340,11 +3358,23 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "It has no tilt at all"
+                  "text": "It has no tilt at all",
+                  "picture": {
+                    "scene": "uprightSpin",
+                    "label": "It has no tilt at all",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "It is almost on its side"
+                  "text": "It is almost on its side",
+                  "picture": {
+                    "scene": "sidewaysSpin",
+                    "label": "It is almost on its side",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2357,15 +3387,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "It is perfectly upright"
+                  "text": "It is perfectly upright",
+                  "picture": {
+                    "scene": "uprightSpin",
+                    "label": "It is perfectly upright",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "It has square corners"
+                  "text": "It has square corners",
+                  "picture": {
+                    "scene": "cube",
+                    "label": "It has square corners",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "It is tilted almost sideways"
+                  "text": "It is tilted almost sideways",
+                  "picture": {
+                    "scene": "sidewaysSpin",
+                    "label": "It is tilted almost sideways",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2378,15 +3425,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "An axial tilt of exactly zero"
+                  "text": "An axial tilt of exactly zero",
+                  "picture": {
+                    "scene": "uprightSpin",
+                    "label": "An axial tilt of exactly zero",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A cube-shaped planet has no axis"
+                  "text": "A cube-shaped planet has no axis",
+                  "picture": {
+                    "scene": "cube",
+                    "label": "A cube-shaped planet has no axis",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "An axial tilt near 98 degrees"
+                  "text": "An axial tilt near 98 degrees",
+                  "picture": {
+                    "scene": "sidewaysSpin",
+                    "label": "An axial tilt near 98 degrees",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2401,11 +3465,23 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "It has no tilt at all"
+                  "text": "It has no tilt at all",
+                  "picture": {
+                    "scene": "uprightSpin",
+                    "label": "It has no tilt at all",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "It is almost on its side"
+                  "text": "It is almost on its side",
+                  "picture": {
+                    "scene": "sidewaysSpin",
+                    "label": "It is almost on its side",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2418,15 +3494,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "It is perfectly upright"
+                  "text": "It is perfectly upright",
+                  "picture": {
+                    "scene": "uprightSpin",
+                    "label": "It is perfectly upright",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "It has square corners"
+                  "text": "It has square corners",
+                  "picture": {
+                    "scene": "cube",
+                    "label": "It has square corners",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "It is tilted almost sideways"
+                  "text": "It is tilted almost sideways",
+                  "picture": {
+                    "scene": "sidewaysSpin",
+                    "label": "It is tilted almost sideways",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2439,15 +3532,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "An axial tilt of exactly zero"
+                  "text": "An axial tilt of exactly zero",
+                  "picture": {
+                    "scene": "uprightSpin",
+                    "label": "An axial tilt of exactly zero",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "A cube-shaped planet has no axis"
+                  "text": "A cube-shaped planet has no axis",
+                  "picture": {
+                    "scene": "cube",
+                    "label": "A cube-shaped planet has no axis",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "An axial tilt near 98 degrees"
+                  "text": "An axial tilt near 98 degrees",
+                  "picture": {
+                    "scene": "sidewaysSpin",
+                    "label": "An axial tilt near 98 degrees",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2476,11 +3586,22 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Methane"
+                  "text": "Methane",
+                  "picture": {
+                    "scene": "methaneAbsorption",
+                    "label": "Methane",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Smoke from cars"
+                  "text": "Smoke from cars",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Smoke from cars",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2493,15 +3614,31 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Pink paint"
+                  "text": "Pink paint",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Pink paint",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Methane"
+                  "text": "Methane",
+                  "picture": {
+                    "scene": "methaneAbsorption",
+                    "label": "Methane",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Car exhaust"
+                  "text": "Car exhaust",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Car exhaust",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2514,15 +3651,31 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Paint pigments"
+                  "text": "Paint pigments",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Paint pigments",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Methane"
+                  "text": "Methane",
+                  "picture": {
+                    "scene": "methaneAbsorption",
+                    "label": "Methane",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Vehicle exhaust"
+                  "text": "Vehicle exhaust",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Vehicle exhaust",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2537,11 +3690,22 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Methane"
+                  "text": "Methane",
+                  "picture": {
+                    "scene": "methaneAbsorption",
+                    "label": "Methane",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Smoke from cars"
+                  "text": "Smoke from cars",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Smoke from cars",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2554,15 +3718,31 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Pink paint"
+                  "text": "Pink paint",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Pink paint",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Methane"
+                  "text": "Methane",
+                  "picture": {
+                    "scene": "methaneAbsorption",
+                    "label": "Methane",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Car exhaust"
+                  "text": "Car exhaust",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Car exhaust",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2575,15 +3755,31 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Paint pigments"
+                  "text": "Paint pigments",
+                  "picture": {
+                    "scene": "paint",
+                    "label": "Paint pigments",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Methane"
+                  "text": "Methane",
+                  "picture": {
+                    "scene": "methaneAbsorption",
+                    "label": "Methane",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side",
+                    "tone": "blueGreen"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Vehicle exhaust"
+                  "text": "Vehicle exhaust",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Vehicle exhaust",
+                    "detail": "Schematic answer idea; Uranus: The Planet on Its Side"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2719,11 +3915,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Earth"
+                  "text": "Earth",
+                  "picture": {
+                    "scene": "earthWorld",
+                    "label": "Earth",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Neptune"
+                  "text": "Neptune",
+                  "picture": {
+                    "scene": "icyWorld",
+                    "label": "Neptune",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2736,15 +3943,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Earth"
+                  "text": "Earth",
+                  "picture": {
+                    "scene": "earthWorld",
+                    "label": "Earth",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Mercury"
+                  "text": "Mercury",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "Mercury",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Neptune"
+                  "text": "Neptune",
+                  "picture": {
+                    "scene": "icyWorld",
+                    "label": "Neptune",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2757,15 +3981,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Earth"
+                  "text": "Earth",
+                  "picture": {
+                    "scene": "earthWorld",
+                    "label": "Earth",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Mercury"
+                  "text": "Mercury",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "Mercury",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Neptune"
+                  "text": "Neptune",
+                  "picture": {
+                    "scene": "icyWorld",
+                    "label": "Neptune",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2780,11 +4021,22 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Earth"
+                  "text": "Earth",
+                  "picture": {
+                    "scene": "earthWorld",
+                    "label": "Earth",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Neptune"
+                  "text": "Neptune",
+                  "picture": {
+                    "scene": "icyWorld",
+                    "label": "Neptune",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2797,15 +4049,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Earth"
+                  "text": "Earth",
+                  "picture": {
+                    "scene": "earthWorld",
+                    "label": "Earth",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Mercury"
+                  "text": "Mercury",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "Mercury",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Neptune"
+                  "text": "Neptune",
+                  "picture": {
+                    "scene": "icyWorld",
+                    "label": "Neptune",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2818,15 +4087,32 @@
               "choices": [
                 {
                   "id": "one",
-                  "text": "Earth"
+                  "text": "Earth",
+                  "picture": {
+                    "scene": "earthWorld",
+                    "label": "Earth",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "two",
-                  "text": "Mercury"
+                  "text": "Mercury",
+                  "picture": {
+                    "scene": "rockyWorld",
+                    "label": "Mercury",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "gray"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Neptune"
+                  "text": "Neptune",
+                  "picture": {
+                    "scene": "icyWorld",
+                    "label": "Neptune",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure",
+                    "tone": "blueWhite"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2855,11 +4141,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Winds and clouds"
+                  "text": "Winds and clouds",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "Winds and clouds",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Trees"
+                  "text": "Trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Trees",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2872,15 +4168,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Traffic on roads"
+                  "text": "Traffic on roads",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Traffic on roads",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Its winds"
+                  "text": "Its winds",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "Its winds",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Growing trees"
+                  "text": "Growing trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Growing trees",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2893,15 +4204,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Fast road traffic"
+                  "text": "Fast road traffic",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Fast road traffic",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Powerful zonal winds and changing vortices"
+                  "text": "Powerful zonal winds and changing vortices",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "Powerful zonal winds and changing vortices",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Rapidly growing trees"
+                  "text": "Rapidly growing trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Rapidly growing trees",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2916,11 +4242,21 @@
               "choices": [
                 {
                   "id": "correct",
-                  "text": "Winds and clouds"
+                  "text": "Winds and clouds",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "Winds and clouds",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Trees"
+                  "text": "Trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Trees",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2933,15 +4269,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Traffic on roads"
+                  "text": "Traffic on roads",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Traffic on roads",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Its winds"
+                  "text": "Its winds",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "Its winds",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Growing trees"
+                  "text": "Growing trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Growing trees",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 }
               ],
               "correctChoiceID": "correct",
@@ -2954,15 +4305,30 @@
               "choices": [
                 {
                   "id": "two",
-                  "text": "Fast road traffic"
+                  "text": "Fast road traffic",
+                  "picture": {
+                    "scene": "vehicle",
+                    "label": "Fast road traffic",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "correct",
-                  "text": "Powerful zonal winds and changing vortices"
+                  "text": "Powerful zonal winds and changing vortices",
+                  "picture": {
+                    "scene": "storm",
+                    "label": "Powerful zonal winds and changing vortices",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 },
                 {
                   "id": "one",
-                  "text": "Rapidly growing trees"
+                  "text": "Rapidly growing trees",
+                  "picture": {
+                    "scene": "forest",
+                    "label": "Rapidly growing trees",
+                    "detail": "Schematic answer idea; Neptune: A Faraway Weather Adventure"
+                  }
                 }
               ],
               "correctChoiceID": "correct",

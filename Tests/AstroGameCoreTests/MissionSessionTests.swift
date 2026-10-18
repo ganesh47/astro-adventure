@@ -179,7 +179,7 @@ final class MissionSessionTests: XCTestCase {
         XCTAssertEqual(session.progress.totalScore, 100)
     }
 
-    func testPauseAbandonsIncompleteRoundAndRestartsCleanly() {
+    func testWorldVisitSuspendsIncompleteRoundWithoutLosingAnswers() {
         let session = Self.startedSession(questionCount: 2)
         session.submitAnswer(at: 0)
         session.confirm()
@@ -190,9 +190,9 @@ final class MissionSessionTests: XCTestCase {
         XCTAssertFalse(session.isMissionComplete)
         session.confirm()
         session.confirm()
-        XCTAssertEqual(session.quizQuestionIndex, 0)
-        XCTAssertEqual(session.roundScore, 0)
-        XCTAssertEqual(session.roundCorrectAnswers, 0)
+        XCTAssertEqual(session.quizQuestionIndex, 1)
+        XCTAssertEqual(session.roundScore, 100)
+        XCTAssertEqual(session.roundCorrectAnswers, 1)
         XCTAssertEqual(session.roundStars, 0)
     }
 

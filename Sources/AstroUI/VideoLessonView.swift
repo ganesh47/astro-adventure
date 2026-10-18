@@ -45,81 +45,116 @@ struct VideoLessonView: View {
         #endif
     }
 
-    private var content: some View {
-        GeometryReader { proxy in
-            let compact = proxy.size.height < 520
-            ScrollView {
-                VStack(spacing: compact ? 8 : 18) {
-                    header(compact: compact)
-                    switch session.phase {
-                    case .videoPlayback:
-                        if session.isVideoFallback {
-                            fallbackContent(compact: compact)
-                        } else {
-                            playbackContent(size: proxy.size)
+    private var presentedContent: some View {
+        Group {
+            if session.phase == .videoCheckpoint {
+                QuizChallengeView(
+                    session: session, destinationName: lesson?.title ?? "Space Cinema",
+                    ageBand: band, questionIndex: session.activeQuestionIndex,
+                    questionCount: lesson?.checkpoints.count ?? 1,
+                    onBack: { session.returnToWorlds() }, backTitle: "Worlds",
+                    identifierPrefix: "video", onReplay: { session.replayVideoClue() },
+                    isPaused: isPaused)
+            } else if session.phase == .videoFeedback {
+                QuestionFeedbackView(
+                    session: session, identifierPrefix: "video",
+                    onReplay: { session.replayVideoClue() }, isPaused: isPaused)
+            } else {
+                GeometryReader { proxy in
+                    let compact = proxy.size.height < 520
+                    ScrollView {
+                        VStack(spacing: compact ? 8 : 18) {
+                            header(compact: compact)
+                            switch session.phase {
+                            case .videoPlayback:
+                                if session.isVideoFallback {
+                                    fallbackContent(compact: compact)
+                                } else {
+                                    playbackContent(size: proxy.size)
+                                }
+                            case .videoCheckpoint:
+                                checkpointContent(
+                                    wide: proxy.size.width > 700 || compact, compact: compact)
+                            case .videoFeedback:
+                                feedbackContent(compact: compact)
+                            case .videoComplete:
+                                completionContent(compact: compact)
+                            default:
+                                EmptyView()
+                            }
+                            if let lesson {
+                                Text(lesson.credit)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
                         }
-                    case .videoCheckpoint:
-                        checkpointContent(wide: proxy.size.width > 700 || compact, compact: compact)
-                    case .videoFeedback:
-                        feedbackContent(compact: compact)
-                    case .videoComplete:
-                        completionContent(compact: compact)
-                    default:
-                        EmptyView()
-                    }
-                    if let lesson {
-                        Text(lesson.credit)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
+                        .frame(maxWidth: 1200)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, compact ? 24 : 40)
+                        .padding(.vertical, compact ? 8 : 20)
                     }
                 }
-                .frame(maxWidth: 1200)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, compact ? 24 : 40)
-                .padding(.vertical, compact ? 8 : 20)
             }
         }
         .background(Color(red: 0.025, green: 0.045, blue: 0.09).opacity(0.96))
         .preferredColorScheme(.dark)
-        .onAppear {
-            primaryFocused = true
-            if let lesson {
-                let url = Bundle.module.url(forResource: lesson.resourceName, withExtension: "mp4")
-                driver.configure(url: url, lesson: lesson, session: session)
-            }
-            synchronizePlayback()
-        }
-        .onChange(of: session.phase) {
-            if session.phase == .videoCheckpoint {
-                focusedChoiceIndex = 0
-            } else {
+    }
+
+    private var playbackManagedContent: some View {
+        presentedContent
+            .onAppear {
                 primaryFocused = true
+                if let lesson {
+                    let url = Bundle.module.url(
+                        forResource: lesson.resourceName, withExtension: "mp4")
+                    driver.configure(url: url, lesson: lesson, session: session)
+                }
+                synchronizePlayback()
             }
-            synchronizePlayback()
-            speakForState()
-        }
-        .onChange(of: session.isVideoPlaying) { synchronizePlayback() }
-        .onChange(of: session.isVideoFallback) {
-            synchronizePlayback()
-            speakForState()
-        }
-        .onChange(of: session.videoSeekTarget) { synchronizePlayback() }
-        .onChange(of: segment?.id) { speakForState() }
-        .onChange(of: session.videoFallbackCardIndex) { speakForState() }
-        .onChange(of: session.isShowingHint) {
-            if session.isShowingHint { speak(session.currentQuiz?.hint) }
-        }
-        .onChange(of: isPaused) { pauseIfNeeded() }
-        .onChange(of: scenePhase) { pauseIfNeeded() }
-        .onChange(of: narrationEnabled) { speakForState() }
-        .onChange(of: voiceOverEnabled) { speakForState() }
-        .onDisappear {
-            session.pauseVideo()
-            narrator.stopSpeaking(at: .immediate)
-            driver.stop()
-        }
-        .sheet(isPresented: $showingTranscript) { transcript }
+            .onChange(of: session.phase) {
+                if session.phase == .videoCheckpoint {
+                    focusedChoiceIndex = 0
+                } else {
+                    primaryFocused = true
+                }
+                synchronizePlayback()
+                speakForState()
+            }
+            .onChange(of: session.isVideoPlaying) { synchronizePlayback() }
+            .onChange(of: session.isVideoFallback) {
+                synchronizePlayback()
+                speakForState()
+            }
+            .onChange(of: session.videoSeekTarget) { synchronizePlayback() }
+    }
+
+    private var narrationManagedContent: some View {
+        playbackManagedContent
+            .onChange(of: segment?.id) { speakForState() }
+            .onChange(of: session.videoFallbackCardIndex) { speakForState() }
+            .onChange(of: session.isShowingHint) {
+                if session.isShowingHint && session.phase != .videoCheckpoint {
+                    speak(session.currentQuiz?.hint)
+                }
+            }
+    }
+
+    private var content: some View {
+        narrationManagedContent
+            .onChange(of: isPaused) { pauseIfNeeded() }
+            .onChange(of: scenePhase) { pauseIfNeeded() }
+            .onChange(of: narrationEnabled) { speakForState() }
+            .onChange(of: voiceOverEnabled) { speakForState() }
+            .onDisappear {
+                session.pauseVideo()
+                narrator.stopSpeaking(at: .immediate)
+                driver.stop()
+            }
+            .onChange(of: showingTranscript) {
+                session.setQuestionPaused(.story, isPaused: showingTranscript)
+            }
+            .sheet(isPresented: $showingTranscript) { transcript }
     }
 
     private func header(compact: Bool) -> some View {
@@ -460,11 +495,9 @@ struct VideoLessonView: View {
                 ? fallbackCard?.body[band]
                 : (session.isVideoPlaying ? segment?.narration[band] : nil)
         case .videoCheckpoint:
-            copy = session.currentQuiz.map { quiz in
-                quiz.prompt + ". " + quiz.choices.map(\.text).joined(separator: ". ")
-            }
+            copy = nil  // Shared question narration owns its exact pause lifetime.
         case .videoFeedback:
-            copy = session.lastFeedback
+            copy = nil  // Shared feedback supplies optional narration without overlap.
         case .videoComplete:
             copy = "Space cinema complete! Continue exploring whenever you are ready."
         default:
